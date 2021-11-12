@@ -19,6 +19,9 @@ local.properties
 # ignore properties file
 pom.properties
 
+# ignore properties file
+MANIFEST.MF
+
 # Compiled class file
 *.class
 
