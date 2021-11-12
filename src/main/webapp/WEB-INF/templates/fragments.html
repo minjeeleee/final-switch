@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+<script type="text/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
+
+/* 비동기 통신시 header는 headerObj를 가져와서 사용하고 추가로 header를 지정해야할 때도 여기에 추가해서 사용 */
+   let getCsrfHeader = () =>{
+       let headerObj = new Headers();
+       let csrfHeader = "[(${_csrf.headerName})]";
+       let csrfToken = "[(${_csrf.token})]";
+       headerObj.append(csrfHeader,csrfToken);
+       return headerObj;
+   }
+</script>
+</body>
+</html>
