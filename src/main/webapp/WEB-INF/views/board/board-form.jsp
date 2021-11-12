@@ -1,109 +1,66 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"   pageEncoding="UTF-8"%>
+ <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page session="false" %>
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" type="text/css" href="/resources/css/board/board.css">
-<style type="text/css">
-.section{
-	margin-top: 30px;
-	width: 1200px;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 60px;
-}
-.frm_post{
-	width: 80%;
-	height: 100%;
-}
-.frm_header_area{
-	width: 100%;
-	height: 46px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	border-bottom: solid;
-	border-width: 1px;
-}
-.sub_title{
-	font-size: 22px;
-	font-weight: bolder;
-}
-.btn_area{
-	height: 36px;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-.btn_area>a{
-	width: 100px;
-	height: 30px;
-	font-size: 15px;
-	background-color: #eeeeee;
-	line-height: 28px;
-	text-align: center;
-	color: black;
-}
-.btn_area>button{
-	width: 100px;
-	height: 30px;
-	font-size: 15px;
-	background-color: #eeeeee;
-	margin-left:10px;
-	
-	
-}
-/*  */
-.frm_title_area{
-	width: 100%;
-	height: 70px;
-	display: flex;
-	align-items: center;
-}
-.frm_title_area>div{
-	width: 100%;
-	height: 40px;
-	display: flex;
-	border: solid;
-	border-width: 1px;
-}
-.select_subject{
-	width: 20%;
-	height: 40px;
-	font-size: 15px;
-	border: none;
-	background-color: rgba(0,0,0,0.1);
-	text-align: center;
-}
-.post_title{
-	width: 80%;
-	height: 38px;
-	font-size: 15px;
-	border: none;
-	margin-left: 5px;
-}
-
-/*  */
-.frm_content_area{
-	width: 100%;
-	height:100%;
-	display: flex;
-	justify-content: center;
-}
-.frm_content_area>textarea{
-	width:1000px; 
-	height:400px; 
-    resize:none;
-}
-.btn{
-	border-color: transparent;
-}
-.add_file_box{
-	margin-top: 10px;
-}
-</style>
-</head>
-<body>
+   <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Switch-Switch</title>
+        <!-- Favicon-->
+        <link rel="icon" type="resources/img/x-icon" href="${pageContext.request.contextPath}/resources/assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="${pageContext.request.contextPath}/webapp/resources/css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet"  href="${pageContext.request.contextPath}/resources/css/styles.css">
+        <!-- fontawesome -->
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+   		<!-- css -->
+   		 <link rel="stylesheet"  href="${pageContext.request.contextPath}/resources/css/board/board.css">
+    </head>
+    
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#!">Switch-Switch</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link" aria-current="page" href="#!">교환마켓</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">나눔마켓</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">게시판</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">내카드</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">마이페이지</a></li>
+                        <!--- <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!">All Products</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                            </ul>
+                        </li> -->
+                    </ul>
+                    <form class="d-flex navbar-dark">
+                        <div class="login-join">
+                            <a href="" class="login">로그인</a>
+                            <a href="">회원가입</a>
+                        </div>
+                        <!-- <button class="btn btn-outline-dark" type="submit">
+                            <i class=""></i>
+                            로그인
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        </button> -->
+                    </form>
+                </div>
+            </div>
+        </nav>
+        
+        
   <section>
     <div class="container">
     
