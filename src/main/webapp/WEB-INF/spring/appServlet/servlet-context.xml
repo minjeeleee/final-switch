@@ -25,11 +25,6 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources location="file:///C:/CODE/upload/" mapping="/file/**"></resources>
 
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<beans:property name="prefix" value="/WEB-INF/views/" />
-		<beans:property name="suffix" value=".jsp" />
-	</beans:bean>
 
 	
 	<!-- 트랜잭션 관리 bean등록 : DataSourceTransactionManager -->
