@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="/resources/css/board/board.css">
+<link rel="stylesheet" href="/resources/css/board/board.css">
 <style type="text/css">
 .section{
 	margin-top: 30px;
@@ -34,15 +34,6 @@
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-}
-.btn_area>a{
-	width: 100px;
-	height: 30px;
-	font-size: 15px;
-	background-color: #eeeeee;
-	line-height: 28px;
-	text-align: center;
-	color: black;
 }
 .btn_area>button{
 	width: 100px;
@@ -98,6 +89,16 @@
 .btn{
 	border-color: transparent;
 }
+.btn_area>a {
+    width: 100px;
+    height: 30px;
+    font-size: 15px;
+    background-color: #eeeeee;
+    line-height: 28px;
+    text-align: center;
+    margin-left: 10px;
+    color: black;
+}
 .add_file_box{
 	margin-top: 10px;
 }
@@ -110,7 +111,7 @@
 		<div class='section'>
 			<form class='frm_post' action="/board/upload" method="post" enctype="multipart/form-data">
 				<div class='frm_header_area'>
-					<h2 class='sub_title'>정보공유 작성페이지</h2>
+					<h2 class='sub_title'>정보공유 수정페이지</h2>
 					
 				</div>
 				<div class='frm_title_area'>
@@ -120,11 +121,13 @@
 				</div>
 				<div class='frm_content_area'>
 					<textarea id="editor1" name="content" placeholder="내용을 입력하세요" data-sample-short></textarea>
+
 				</div>
 				<div class="add_file_box">파일 : <input type="file" name="files" id="contract_file" multiple/></div>
 				<div class='btn_area'>
-						<a class="btn" href="/switchswitch/board/board-list">목록</a>
-						<button id="btnSubmit" class="btn">작성하기</button>
+
+							<a id="btnModify" class="btn" href="/board/modify-board?bd_idx=${datas.board.bdIdx }">수정</a>
+							<a id="btnSubmit" class="btn" href="/board/delete-board?bd_idx=${datas.board.bdIdx }">삭제</a>
 					</div>
 				
 			</form>
