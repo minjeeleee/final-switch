@@ -93,6 +93,17 @@
 	border-left:none;
 	background-color:transparent;
 }
+
+input[type="number"]{
+	width:300px;
+	padding: 6px;
+	border-bottom:2px solid lightgray;
+	border-right:none; 
+	border-top:none; 
+	border-left:none;
+	background-color:transparent;
+	font-size: 40px;
+}
 .mypage-form input[type="radio"],
 .mypage-form input[type="checkbox"]{
 	cursor:pointer;
