@@ -30,17 +30,24 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
+<<<<<<< HEAD
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated_tests"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+=======
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
                                         		
         
         
         
         
         <property name="java-output-path" value="target/classes"/>
+<<<<<<< HEAD
                         
         
         <property name="context-root" value="switchswitch"/>
+=======
+        <property name="context-root" value="/"/>
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
                                         	
     
     
