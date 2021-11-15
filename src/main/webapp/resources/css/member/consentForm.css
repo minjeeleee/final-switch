@@ -1,0 +1,155 @@
+@font-face {
+  font-family: 'Hahmlet-Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+a:hover,a:focus{
+    text-decoration: none;
+    outline: none;
+}
+
+body
+{
+	background-image: url("../../img/background.jpg");
+}
+
+.demo
+{
+	padding: 100px 0;
+}
+
+.heading-title
+{
+	color:#333333;
+	font-family: 'Hahmlet-Bold';
+	font-size: 3.5em;
+	margin-bottom: 100px;
+}
+
+#accordion .panel{
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    margin-top: 0;
+}
+
+#accordion .panel-heading{
+    padding: 0;
+    border-radius: 0;
+    border: none;
+}
+
+#accordion .panel-title a{
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #554131;
+    padding: 15px 48px 15px 20px;
+    background: white;
+    position: relative;
+    transition: all 0.3s ease 0s;
+}
+
+#accordion .panel-title a.collapsed{
+    color: white;
+    background: #554131;
+    border-bottom: 1px solid #3d3537;
+}
+
+#accordion .panel-title a:after,
+#accordion .panel-title a.collapsed:after{
+    content: "";
+    display: block;
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 30px;
+    background: #554131;
+}
+
+#accordion .panel-title a.collapsed:after{
+    background: white;
+}
+
+#accordion .panel-title a:before,
+#accordion .panel-title a.collapsed:before{
+    content: "\f068";
+    font-family: FontAwesome;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    border-radius: 50%;
+    background: #554131;
+    position: absolute;
+    top: 12px;
+    right: 19px;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    z-index: 1;
+}
+
+#accordion .panel-title a.collapsed:before{
+    content: "\f067";
+    color: #554131;
+    background: white;
+}
+
+#accordion .panel-body{
+    background: white;
+    color: #554131;
+    padding: 20px 50px 15px 20px;
+    line-height: 25px;
+    border: none;
+    position: relative;
+}
+
+#accordion .panel-body:after{
+    content: "";
+    display: block;
+    width: 3px;
+    height: 100%;
+    background: #554131;
+    position: absolute;
+    top: 0;
+    right: 30px;
+}
+
+.radio_box{
+	text-align: right;
+	padding-right: 40px;
+}
+
+.radio{
+	display: inline-block;
+}
+
+.btn_box{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.next_btn, .home_btn{
+	font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background: #554131;
+    box-shadow: 0 0 8px 0 #a2a2a2;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 40px 12px 40px;
+    transition: all 0.2s ease 0s;
+    margin-left: 5px;
+}
+
+.next_btn:hover, .home_btn:hover{
+    background: #fff;
+    color: #554131;
+}
+
+@charset "utf-8";
+/* CSS Document */
+
