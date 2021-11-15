@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<title>카드 리스트</title>
+	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
+	<style type="text/css">
+	div,p,i,a{
+		color:#AEB7C2;
+	}
+	
+	</style>
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<th:block th:replace="admin/fragments/nav :: admin_nav"></th:block>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content">
+				<div class="container-fluid">
+					<div class="panel panel-profile">
+						<div class="clearfix">
+							<!-- LEFT COLUMN -->
+							<div class="profile-left">
+								<!-- PROFILE HEADER -->
+								<div class="profile-header">
+									<div class="overlay"></div>
+									<div class="profile-main">
+										<img src="/resources/img/아이폰.jpg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+										<h3 class="name" style="color: white;">홍길동</h3>
+									</div>
+									<div class="profile-stat" style="background-color: white;">
+										<div class="row">
+											<div class="col-md-4 stat-item">
+												45 <span>카드</span>
+											</div>
+											<div class="col-md-4 stat-item">
+												1500 <span>포인트</span>
+											</div>
+											<div class="col-md-4 stat-item">
+												4.7 <span>평점</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- END PROFILE HEADER -->
+								<!-- PROFILE DETAIL -->
+								<div class="profile-detail">
+									<div class="profile-info">
+										<h4 class="heading">사용자 정보</h4>
+										<ul class="list-unstyled list-justify">
+											<li>아이디 <span>test01</span></li>
+											<li>닉네임 <span>홍123</span></li>
+											<li>생년월일 <span>24 Aug, 2016</span></li>
+											<li>연락처 <span>01011110000</span></li>
+											<li>Email <span>hong@naver.com</span></li>
+										</ul>
+									</div>
+									<div class="profile-info">
+									</div>
+									<div class="profile-info">
+									</div>
+									<div class="text-center"><a href="/admin/member-profile-edit" class="btn btn-primary">회원정보수정</a></div>
+								</div>
+								<!-- END PROFILE DETAIL -->
+							</div>
+							<!-- END LEFT COLUMN -->
+							<!-- RIGHT COLUMN -->
+							<div class="profile-right" style="background-color: white;">
+								<h4 class="heading">홍길동의 카드</h4>
+								<!-- AWARDS -->
+								<div class="awards">
+									<div class="row">
+										<div class="card col-md-3 col-sm-6" style="width: 18rem; height: 24rem;">
+										  <img class="card-img-top" src="/resources/img/아이폰.jpg" alt="Card image cap" style="width: 100%; height: 60%;">
+										  <div class="card-body" style="height: 40%;">
+										  <div class="card-title" style="height: 30%; width: 100%;display: flex;justify-content: space-between;">
+										    <h5 class="text-left" style="width: 80%;height: 50%;overflow: hidden;">▷Card title</h5>
+										    <span class="input-group-text border-0" id="search-addon">
+										  </span>
+										  </div>
+										    <p class="card-text text-left" style="height:50%; overflow:hidden;">Some quick example text to build on the card title and make up sdafasfdsfdsdfsfdsfsfsfsdfsdfthe bulk of the card's content.</p>
+										  </div>
+										  </div>
+										<div class="card col-md-3 col-sm-6" style="width: 18rem; height: 24rem;">
+										  <img class="card-img-top" src="/resources/img/아이폰.jpg" alt="Card image cap" style="width: 100%; height: 60%;">
+										  <div class="card-body" style="height: 40%;">
+										  <div class="card-title" style="height: 30%; width: 100%;display: flex;justify-content: space-between;">
+										    <h5 class="text-left" style="width: 80%;height: 50%;overflow: hidden;">▷Card title</h5>
+										    <span class="input-group-text border-0" id="search-addon">
+										  </span>
+										  </div>
+										    <p class="card-text text-left" style="height:50%; overflow:hidden;">Some quick example text to build on the card title and make up sdafasfdsfdsdfsfdsfsfsfsdfsdfthe bulk of the card's content.</p>
+										  </div>
+										  </div>
+										<div class="card col-md-3 col-sm-6" style="width: 18rem; height: 24rem;">
+										  <img class="card-img-top" src="/resources/img/아이폰.jpg" alt="Card image cap" style="width: 100%; height: 60%;">
+										  <div class="card-body" style="height: 40%;">
+										  <div class="card-title" style="height: 30%; width: 100%;display: flex;justify-content: space-between;">
+										    <h5 class="text-left" style="width: 80%;height: 50%;overflow: hidden;">▷Card title</h5>
+										    <span class="input-group-text border-0" id="search-addon">
+										  </span>
+										  </div>
+										    <p class="card-text text-left" style="height:50%; overflow:hidden;">Some quick example text to build on the card title and make up sdafasfdsfdsdfsfdsfsfsfsdfsdfthe bulk of the card's content.</p>
+										  </div>
+										  </div>
+										<div class="card col-md-3 col-sm-6" style="width: 18rem; height: 24rem;">
+										  <img class="card-img-top" src="/resources/img/아이폰.jpg" alt="Card image cap" style="width: 100%; height: 60%;">
+										  <div class="card-body" style="height: 40%;">
+										  <div class="card-title" style="height: 30%; width: 100%;display: flex;justify-content: space-between;">
+										    <h5 class="text-left" style="width: 80%;height: 50%;overflow: hidden;">▷Card title</h5>
+										    <span class="input-group-text border-0" id="search-addon">
+										  </span>
+										  </div>
+										    <p class="card-text text-left" style="height:50%; overflow:hidden;">Some quick example text to build on the card title and make up sdafasfdsfdsdfsfdsfsfsfsdfsdfthe bulk of the card's content.</p>
+										  </div>
+										  </div>
+									</div>
+									<div class="text-center"><a href="#" class="btn btn-default" style="background-color: #FACE7F;color: white;">모든카드보기</a></div>
+								</div>
+								<!-- END AWARDS -->
+								<!-- TABBED CONTENT -->
+								<div class="custom-tabs-line tabs-line-bottom left-aligned">
+									<ul class="nav" role="tablist">
+										<li class="active"><a href="#tab-bottom-left1" role="tab" data-toggle="tab">포인트 전체 내역</a></li>
+										<li><a href="#tab-bottom-left2" role="tab" data-toggle="tab">포인트 충전 내역</a></li>
+										<li><a href="#tab-bottom-left3" role="tab" data-toggle="tab">포인트 환급 내역</a></li>
+									</ul>
+								</div>
+								<div class="tab-content">
+									<div class="tab-pane fade in active" id="tab-bottom-left1">
+										<div class="table-responsive">
+											<table class="table project-table text-center">
+												<thead>
+													<tr>
+														<th class="text-center">번호</th>
+														<th class="text-center">내용</th>
+														<th class="text-center">결과</th>
+														<th class="text-center">잔여포인트</th>
+														<th class="text-center">날짜</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>1</td>
+														<td>포인트 환전</td>
+														<td>-2000</td>
+														<td>0</td>
+														<td>2021-11-14 21:22:45</td>
+													</tr>
+													<tr>
+														<td>2</td>
+														<td>포인트 사용</td>
+														<td>-8000</td>
+														<td>2000</td>
+														<td>2021-11-14 20:19:45</td>
+													</tr>
+													<tr>
+														<td>3</td>
+														<td>포인트 충전</td>
+														<td>+10000</td>
+														<td>10000</td>
+														<td>2021-11-14 19:10:35</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="tab-bottom-left2">
+										<div class="table-responsive">
+											<table class="table project-table text-center">
+												<thead>
+													<tr>
+														<th class="text-center">번호</th>
+														<th class="text-center">내용</th>
+														<th class="text-center">결과</th>
+														<th class="text-center">날짜</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>1</td>
+														<td>포인트 충전</td>
+														<td>+10000</td>
+														<td>2021-11-14 19:10:35</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="tab-bottom-left3">
+										<div class="table-responsive">
+											<table class="table project-table text-center">
+												<thead>
+													<tr>
+														<th class="text-center">번호</th>
+														<th class="text-center">내용</th>
+														<th class="text-center">결과</th>
+														<th class="text-center">상태</th>
+														<th class="text-center">날짜</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>1</td>
+														<td>포인트 환급</td>
+														<td>-2000</td>
+														<td>완료</td>
+														<td>2021-11-14 21:22:45</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="margin-top-30 text-center"><a href="#" class="btn btn-default" style="background-color: #FACE7F;color: white;">상세 내역</a></div>
+								</div>
+								<!-- END TABBED CONTENT -->
+							</div>
+							<!-- END RIGHT COLUMN -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
+</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
+</body>
+
+</html>

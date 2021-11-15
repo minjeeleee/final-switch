@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:fragment="admin_nav">
+		<nav class="navbar navbar-default navbar-fixed-top" style="background-color: #4F0E0E">
+			<div class="brand" style="background-color: #4F0E0E !important;">
+				<a href="index.html" style="position: absolute;top: 22px;font-size: 25px;font-weight: bolder;color: white;">SwitchSwitch</a>
+			</div>
+			<div class="container-fluid">
+				<div class="navbar-btn" style="position: relative;left: 130px;color: white;">
+					<button type="button" class="btn-toggle-fullwidth"><i class="lnr lnr-arrow-left-circle" style="color: white;"></i></button>
+				</div>
+				<div id="navbar-menu">
+					<ul class="nav navbar-right" style="display: flex; margin-top: 20px;">
+						<li>
+							<a href="#" class="" data-toggle="" style="background-color:#4F0E0E;color: white; "><span>Admin</span></a>
+						</li>
+						<li>
+							<a href="#" style="background-color:#4F0E0E;color: white; "><i class="lnr lnr-exit" style="color: white;"></i> <span>Logout</span></a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</th:block>
+</body>
+</html>
