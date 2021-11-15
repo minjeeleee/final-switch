@@ -14,7 +14,7 @@
         <link href="../../../resources/css/styles.css" rel="stylesheet" />
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/notice.css" rel="stylesheet" />
+		<link href="../../../resources/css/board/inquiry.css" rel="stylesheet" />
 
 <style type="text/css">
 
@@ -29,45 +29,39 @@
 			<div class='section'>
 				<div class='section_wrap'>
 					<div class="section_top">
-						<h2>공지사항 상세페이지</h2>
-						<div class='btn_area'>
-
-							 <a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a>
-							 <a class="btn" href="/board/board-page">목록</a>
-							 <a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a>
-						</div>
+						<h2>문의하기 상세페이지</h2>
 					</div>
 
 
 					<div class="section_content_box">
 						<div class="section_header">
 							<div class="section_title">
-								<p>버전 업데이트 공지</p>
+							<th style="width: 10%">불편사항</th>
+								<p>불편사항이 있습니다.</p>
 							</div>
-							<div class="writer_info">
-
-								<div class="writer_profile">
-									<div>작성일: 2021-10-23</div>
-								</div>
-								<div class="writer_board_info">
-									<ul class="dep1">
-										<li><a>첨부파일</a>
-											<ul class="dep2">
-
-											</ul></li>
-									</ul>
-
-								</div>
+							<div class="writer_profile">
+								<div>닉네임</div>
+								<div>작성일</div>
 							</div>
 						</div>
-						<div class="section_container">
-							<div class="content_area" id=editor1>
-							버전 업데이트 공지 입니다. <br>
-							확인 후 이용 바랍니다. <br>
-							오늘도 즐거운 물물교환 되세요^^!
-							</div>
+						
+						<div class="content_area" id=editor1>문의내용작성</div>
+<!-- 							<script>
+							CKEDITOR.replace( 'editor1', {
+								removePlugins: 'resize',
+								height: 600,
+								readOnly: true,
+								width: '100%',
+								language: 'ko',
+								removeButtons: 'PasteFromWord'
+							} );
+						</script> -->
 
+						<div class='btn_area'>
+							<a class="btn" href="/board/modify-board?bd_idx=${datas.board.bdIdx }">수정</a>
+							<a class="btn" href="/board/delete-board?bd_idx=${datas.board.bdIdx }">삭제</a>
 						</div>
+						
 					</div>
 				</div>
 			</div>
