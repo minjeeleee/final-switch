@@ -157,31 +157,31 @@
 			<version>1.2</version>
 		</dependency>
 		
-<dependency>
-       <groupId>com.oracle.database.jdbc</groupId>
-       <artifactId>ojdbc8</artifactId>
-       <version>19.8.0.0</version>
-   </dependency>
-   <dependency>
-       <groupId>com.oracle.database.jdbc</groupId>
-       <artifactId>ucp</artifactId>
-       <version>19.8.0.0</version>
-   </dependency>
-   <dependency>
-       <groupId>com.oracle.database.security</groupId>
-       <artifactId>oraclepki</artifactId>
-       <version>19.8.0.0</version>
-   </dependency>
-   <dependency>
-       <groupId>com.oracle.database.security</groupId>
-       <artifactId>osdt_cert</artifactId>
-       <version>19.8.0.0</version>
-   </dependency>
-   <dependency>
-       <groupId>com.oracle.database.security</groupId>
-       <artifactId>osdt_core</artifactId>
-       <version>19.8.0.0</version>
-   </dependency>
+		<dependency>
+	       <groupId>com.oracle.database.jdbc</groupId>
+	       <artifactId>ojdbc8</artifactId>
+	       <version>19.8.0.0</version>
+	   </dependency>
+	   <dependency>
+	       <groupId>com.oracle.database.jdbc</groupId>
+	       <artifactId>ucp</artifactId>
+	       <version>19.8.0.0</version>
+	   </dependency>
+	   <dependency>
+	       <groupId>com.oracle.database.security</groupId>
+	       <artifactId>oraclepki</artifactId>
+	       <version>19.8.0.0</version>
+	   </dependency>
+	   <dependency>
+	       <groupId>com.oracle.database.security</groupId>
+	       <artifactId>osdt_cert</artifactId>
+	       <version>19.8.0.0</version>
+	   </dependency>
+	   <dependency>
+	       <groupId>com.oracle.database.security</groupId>
+	       <artifactId>osdt_core</artifactId>
+	       <version>19.8.0.0</version>
+	   </dependency>
 		
 		<!-- Mybatis -->
 		<dependency>
@@ -270,6 +270,11 @@
 		    <version>3.0.11.RELEASE</version>
 		</dependency>
 		<!-- spring security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>5.5.2</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
 		<dependency>
 		    <groupId>org.springframework.security</groupId>

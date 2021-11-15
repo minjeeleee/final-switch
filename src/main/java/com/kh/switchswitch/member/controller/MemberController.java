@@ -1,4 +1,4 @@
-package com.kh.switchswitch.member;
+package com.kh.switchswitch.member.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
