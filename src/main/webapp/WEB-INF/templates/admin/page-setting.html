@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<title>카드 리스트</title>
+	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
+	<style type="text/css">
+	div,p,i,a{
+		color:#AEB7C2;
+	}
+	
+	</style>
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<th:block th:replace="admin/fragments/nav :: admin_nav"></th:block>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content">
+				<div class="container-fluid">
+					<h3 class="page-title">페이지 설정</h3>
+					<div class="row" style="white-space: nowrap;">
+						<div class="col-md-6" style="display: inline-block; width: 400px;">
+							<!-- TABLE STRIPED -->
+							<div class="panel" style="background-color: white;">
+								<div class="panel-heading">
+									<h3 class="panel-title">페이지 구조</h3>
+								</div>
+								<div class="panel-body">
+									<div id="topMenu" style="display: flex;"><i class="fa fa-plus-square-o" id="plus1" aria-hidden="true"></i><div id="text1">탑메뉴</div></div>
+									<div id="menu" style="display: flex;"><i class="fa fa-plus-square-o" aria-hidden="true"></i>메뉴</div>
+									<div id="sideMenu" style="display: flex;"><i class="fa fa-plus-square-o" aria-hidden="true"></i>사이드메뉴</div>
+								</div>
+							</div>
+							<!-- END TABLE STRIPED -->
+						</div>
+						<div class="" style="display: inline-block; width: 1225px;">
+							<!-- TABLE HOVER -->
+							<div class="panel" style="background-color: white;">
+								<div class="panel-heading">
+									<h3 class="panel-title">설정</h3>
+								</div>
+								<div class="panel-body">
+									<table class="table table-hover text-center">
+										<thead>
+											<tr>
+												<th class="text-center">경로명</th>
+												<th class="text-center">경로</th>
+												<th class="text-center">위치</th>
+												<th class="text-center">집근권한</th>
+												<th class="text-center"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>로그인</td>
+												<td>/member/login</td>
+												<td>탑메뉴</td>
+												<td>전체</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>회원가입</td>
+												<td>/member/join</td>
+												<td>탑메뉴</td>
+												<td>전체</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>교환마켓</td>
+												<td>/switch-market</td>
+												<td>메뉴1</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>나눔마켓</td>
+												<td>/free-market</td>
+												<td>메뉴2</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>게시판</td>
+												<td>/board</td>
+												<td>메뉴3</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>공지사항</td>
+												<td>/board/notice</td>
+												<td>메뉴3-1</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>내카드</td>
+												<td>/mycard</td>
+												<td>메뉴4</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>마이페이지</td>
+												<td>/mypage</td>
+												<td>메뉴5</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>내정보</td>
+												<td>/mypage/info</td>
+												<td>사이드메뉴1</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+											<tr>
+												<td>포인트관리</td>
+												<td>/mypage/point</td>
+												<td>사이드메뉴2</td>
+												<td>사용자</td>
+												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											</tr>
+										</tbody>
+									</table>
+									<!-- 경로 추가 팝업창 -->
+									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" style="float: right;">페이지 추가</button>
+										<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+										  <div class="modal-dialog" role="document">
+										    <div class="modal-content">
+										      <div class="modal-header">
+										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										        <h4 class="modal-title" id="exampleModalLabel">페이지 추가</h4>
+										      </div>
+										      <div class="modal-body">
+										        <form>
+										          <div class="form-group">
+										            <label for="url-name" class="control-label">경로명:</label>
+										            <input type="text" class="form-control" id="recipient-name">
+										          </div>
+										          <div class="form-group">
+										            <label for="url" class="control-label">경로:</label>
+										            <input type="text" class="form-control" id="recipient-name">
+										          </div>
+										          <div class="form-group">
+										            <label for="url-position" class="control-label">위치:</label>
+										            <input type="text" class="form-control" id="recipient-name">
+										          </div>
+										           <div class="form-group">
+										            <label for="url-role" class="control-label">접근권한:</label>
+										            <input type="text" class="form-control" id="recipient-name">
+										          </div>
+										        </form>
+										      </div>
+										      <div class="modal-footer">
+										        <button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #FACE7F;color: white;">닫기</button>
+										        <button type="button" class="btn btn-primary">추가</button>
+										      </div>
+										    </div>
+										  </div>
+										</div>
+								</div>
+							</div>
+							<!-- END TABLE HOVER -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
+</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
+	<script type="text/javascript">
+	
+	const plus = document.querySelector('#plus1');
+	let i = 1;
+	const openMenu = plus.addEventListener('click',(e)=>{
+		document.getElementById('text1').value = '탑';
+		console.dir(i++);
+		if(i == 3) {
+			window.removeEventListener("beforeunload", openMenu);
+			i = 1;
+		}
+	});
+
+	
+	</script>
+</body>
+
+</html>
