@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+<<<<<<< HEAD
                             	
+=======
+                                	
+    
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
     
     
     
@@ -7,11 +12,21 @@
     
     
     <wb-module deploy-name="switchswitch-1.0.0-BUILD-SNAPSHOT">
+<<<<<<< HEAD
                                 
+=======
+                                        
+        
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
         
         
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+<<<<<<< HEAD
                                                         		
+=======
+                                                                		
+        
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
         
         
         
@@ -19,7 +34,12 @@
         
         
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+<<<<<<< HEAD
                                                         		
+=======
+                                                                		
+        
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
         
         
         
@@ -27,7 +47,12 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+<<<<<<< HEAD
                                                         		
+=======
+                                                                		
+        
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
         
         
         
@@ -35,13 +60,19 @@
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+<<<<<<< HEAD
                                                         
+=======
+                                                                
+        
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
         
         
         
         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
+<<<<<<< HEAD
                         
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated_tests"/>
@@ -49,6 +80,13 @@
         
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
                                                         		
+=======
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+                                                                		
+        
+                                                		
+        
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
         
         
         
@@ -56,8 +94,20 @@
         
         
         <property name="java-output-path" value="target/classes"/>
+<<<<<<< HEAD
         <property name="context-root" value="/"/>
                                                         	
+=======
+                                                                	
+    
+        
+        
+        <property name="context-root" value="switchswitch"/>
+                
+        <property name="context-root" value="switchswitch"/>
+                                                                	
+    
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
     
     
     
@@ -65,7 +115,12 @@
     
     
     </wb-module>
+<<<<<<< HEAD
                             
+=======
+                                
+
+>>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch
 
 
 

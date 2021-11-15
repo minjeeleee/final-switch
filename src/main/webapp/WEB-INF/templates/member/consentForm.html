@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="../resources/css/all.css">
+<link rel="stylesheet" href="../resources/css/reset.css">
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+	crossorigin="anonymous"></script>
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="../resources/css/member/consentForm.css">
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="demo">
+		<div class="container">
+			<div class="row text-center">
+				<h1 class="heading-title">Switch-Switch</h1>
+			</div>
+
+			<div class="row">
+				<div class="col-md-offset-3 col-md-6">
+					<div class="panel-group" id="accordion" role="tablist"
+						aria-multiselectable="true">
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="headingOne">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse"
+										data-parent="#accordion" href="#collapseOne"
+										aria-expanded="true" aria-controls="collapseOne"> [필수]
+										개인정보 수집·이용 동의 </a>
+								</h4>
+							</div>
+							<div id="collapseOne" class="panel-collapse collapse in"
+								role="tabpanel" aria-labelledby="headingOne">
+								<div class="panel-body">Lorem ipsum dolor sit amet,
+									consectetur adipiscing elit. Quisque lacinia lacinia mauris, at
+									ultricies leo ornare nec. Vivamus eu est vel felis dignissim
+									tempor. Nulla facilisi. Duis molestie tortor ac tempor
+									volutpat. Phasellus nec mi aliquet, sollicitudin neque eget,
+									consectetur libero. Vestibulum sollicitudin sapien libero,
+									egestas tempus eros scelerisque eu.</div>
+								<div class="radio_box">
+									비동의 <input type="radio" id="required_refuse" class="radio"
+										name="required_consent"> 동의 <input type="radio"
+										id="required_consent" class="radio" name="required_consent">
+								</div>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="headingTwo">
+								<h4 class="panel-title">
+									<a class="collapsed" role="button" data-toggle="collapse"
+										data-parent="#accordion" href="#collapseTwo"
+										aria-expanded="false" aria-controls="collapseTwo"> [선택]
+										개인정보 수집·이용 동의 </a>
+								</h4>
+							</div>
+							<div id="collapseTwo" class="panel-collapse collapse"
+								role="tabpanel" aria-labelledby="headingTwo">
+								<div class="panel-body">Lorem ipsum dolor sit amet,
+									consectetur adipiscing elit. Quisque lacinia lacinia mauris, at
+									ultricies leo ornare nec. Vivamus eu est vel felis dignissim
+									tempor. Nulla facilisi. Duis molestie tortor ac tempor
+									volutpat. Phasellus nec mi aliquet, sollicitudin neque eget,
+									consectetur libero. Vestibulum sollicitudin sapien libero,
+									egestas tempus eros scelerisque eu.</div>
+								<div class="radio_box">
+									비동의 <input type="radio" id="option_refuse" class="radio"
+										name="option_consent"> 동의 <input type="radio"
+										id="option_consent" class="radio" name="option_consent">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-offset-3 col-md-6">
+					<div class="btn_box">
+						<button type="button" class="home_btn">메인페이지로 이동</button>
+						<button type="button" class="next_btn">Next</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

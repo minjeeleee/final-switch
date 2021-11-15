@@ -5,8 +5,11 @@
   font-style: normal;
 }
 
+body{
+	background: linear-gradient(#554131,#f6e3c5);
+}
+
 .form-bg{
-    background-image: url("");
     background-size: cover;
     position: relative;
 }
@@ -14,6 +17,7 @@
 {
 	padding: 100px 0;
 }
+
 .heading-title
 {
 	font-family: 'Hahmlet-Bold';
@@ -137,6 +141,10 @@ form .form-footer a{
 
 form .form-footer a:hover{
     text-decoration: underline;
+}
+
+.finding{
+	float: right;
 }
 
 @media screen and (max-width: 990px){

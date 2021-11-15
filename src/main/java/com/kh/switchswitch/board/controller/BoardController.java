@@ -1,4 +1,4 @@
-package com.kh.switchswitch.board;
+package com.kh.switchswitch.board.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
