@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		.antMatchers("/switchswitch/resources/**", "/resources/**");
+		.antMatchers("/**","/switchswitch/resources/**", "/resources/**");
 	}
 	
 	@Override
@@ -56,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	}
 	
 	//@Override
-	 //public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	 //   auth.userDetailsService(memberService); 
-	// }
+	//public void configure(AuthenticationManagerBuilder auth) throws Exception {
+	//    auth.userDetailsService(memberService); 
+	//}
 
 }
