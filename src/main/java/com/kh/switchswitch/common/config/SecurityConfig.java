@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		.antMatchers("/switchswitch/resources/**");
+		.antMatchers("/switchswitch/resources/**", "/resources/**");
 	}
 	
 	@Override
@@ -55,9 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.csrf().ignoringAntMatchers("/mail");
 	}
 	
-	@Override
-	 public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	    auth.userDetailsService(memberService); 
-	 }
+	//@Override
+	 //public void configure(AuthenticationManagerBuilder auth) throws Exception {
+	 //   auth.userDetailsService(memberService); 
+	// }
 
 }
