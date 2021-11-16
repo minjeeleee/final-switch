@@ -13,6 +13,7 @@ public class Member {
 	private String memberPass;
 	private String memberEmail;
 	private int memberDelYn;
+	private String memberTell;
 	private String memberNick;
 	private String memberAddress;
 	private LocalDate memberDelDate;
