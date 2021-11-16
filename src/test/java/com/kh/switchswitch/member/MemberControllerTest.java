@@ -1,4 +1,4 @@
-package com.kh.switchswitch;
+package com.kh.switchswitch.member;
 
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
