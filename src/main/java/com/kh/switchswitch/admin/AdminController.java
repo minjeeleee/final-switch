@@ -1,21 +1,38 @@
 package com.kh.switchswitch.admin;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kh.switchswitch.admin.model.service.AdminService;
+
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("admin")
 public class AdminController {
+	
+	private final AdminService adminService;
 	
 	@GetMapping("main")
 	public void main() {}
 	
 	@GetMapping("real-time-cards")
-	public void realTimeCards() {}
+	public void realTimeCards(Model model) {
+		//model.addAllAttributes(adminService.selectRealTimeCards());
+	}
 	
 	@GetMapping("all-cards")
-	public void allCards() {}
+	public void allCards() {
+	}
+	
+	@RequestMapping("card-delete")
+	public String cardDelete(int cardIdx) {
+		adminService.deleteCard(cardIdx);
+		return "admin/real-time-cards";
+	}
 	
 	@GetMapping("all-members")
 	public void allMembers() {}
