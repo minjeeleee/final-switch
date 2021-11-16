@@ -1,5 +1,6 @@
 package com.kh.switchswitch.mypage.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class MypageController {
 	public void leaveMember() {}
 	
 	@PostMapping("leave-member")
-	public String leaveMemberImpl(@SessionAttribute(name = "authentication") Member certifiedUser
+	public String leaveMemberImpl(@AuthenticationPrincipal Member certifiedUser
 									,@RequestParam(required = false,name = "password") String password 
 									,RedirectAttributes redirectAttr
 									,Model model
