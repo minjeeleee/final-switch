@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<title>카드 리스트</title>
+	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
+	<style type="text/css">
+	div,p,i,a{
+		color:#AEB7C2;
+	}
+	
+	</style>
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<th:block th:replace="admin/fragments/nav :: admin_nav"></th:block>
+		<!-- END NAVBAR -->
+		<!-- LEFT SIDEBAR -->
+		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
+		<!-- END LEFT SIDEBAR -->
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content">
+				<div class="container-fluid">
+						<div class="clearfix">
+							<!-- LEFT COLUMN -->
+							<div class="profile-left" style="margin-left: 30%;">
+								<!-- PROFILE HEADER -->
+								<div class="profile-header">
+									<div class="overlay"></div>
+									<div class="profile-main">
+										<img src="/resources/img/아이폰.jpg" class="img-circle" alt="Avatar">
+										<h3 class="name" style="color: white;">홍길동</h3>
+									</div>
+								</div>
+								<!-- END PROFILE HEADER -->
+								<!-- PROFILE DETAIL -->
+								<div class="profile-detail">
+									<form>
+										<div class="profile-info">
+											<h4 class="heading">사용자 정보</h4>
+											<ul class="list-unstyled list-justify">
+												<li>아이디 </li>
+												<li>test01</li>
+												<li>비밀번호 <input type="password" class="form-control" placeholder="비밀번호 입력"></li>
+												<li>비밀번호 확인 <input type="password" class="form-control" placeholder="비밀번호 확인"></li>
+												<li>닉네임 <input type="text" class="form-control" placeholder="닉네임 입력"></li>
+												<li>생년월일 </li>
+												<li>24 Aug, 2016</li>
+												<li>연락처 <input type="text" class="form-control" placeholder="연락처 입력"></li>
+												<li>Email <input type="text" class="form-control" placeholder="이메일 입력"></li>
+											</ul>
+										</div>
+										<div class="profile-info">
+										</div>
+										<div class="profile-info">
+										</div>
+										<div class="text-center"><a href="/admin/member-profile-edit-success" class="btn btn-primary">수정완료</a></div>
+									</form>
+								</div>
+								<!-- END PROFILE DETAIL -->
+							</div>
+							<!-- END LEFT COLUMN -->
+						</div>
+				</div>
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<div class="clearfix"></div>
+		<footer>
+			<div class="container-fluid">
+				<p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
+</p>
+			</div>
+		</footer>
+	</div>
+	<!-- END WRAPPER -->
+	<!-- Javascript -->
+	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
+</body>
+
+</html>
