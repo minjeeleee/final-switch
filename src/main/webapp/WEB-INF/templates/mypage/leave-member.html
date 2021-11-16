@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,12 +38,13 @@
 									<br>탈퇴 후 되돌릴 수 없으니 신중하게 결정해주세요.</p>
 									<br>
 									<strong style="bo">비밀번호를 입력하시면 탈퇴가 진행됩니다</strong></br>
+									<span th:if="${message}" th:text="${message}" class="valid-msg" style="color: red; font-size: 10px;"></span>
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-user" id="password" name="password"
                                         placeholder="password">
                                 </div>
-                             	 <button type="submit" class="btn btn-primary btn-user btn-block">
+                             	 <button class="btn btn-primary btn-user btn-block">
                                    		탈퇴 하기
                                 </button>
                             </form>
