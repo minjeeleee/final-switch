@@ -287,6 +287,12 @@
 		    <artifactId>spring-security-config</artifactId>
 		    <version>5.5.2</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		    <version>5.5.2</version>
+		    <scope>test</scope>
+		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
 		<dependency>
@@ -294,7 +300,12 @@
 		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
 		    <version>3.0.4.RELEASE</version>
 		</dependency>
-		
+		<dependency>
+		    <groupId>org.springframework.security</groupId>
+		    <artifactId>spring-security-test</artifactId>
+		    <version>4.2.2.RELEASE</version>
+		    <scope>test</scope>
+		</dependency>
 
 
 		  

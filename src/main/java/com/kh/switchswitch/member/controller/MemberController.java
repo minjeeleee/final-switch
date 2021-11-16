@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberController {
 	
 	@GetMapping("login")
-	public void loginForm() {}
+	public void login() {}
 	
 	@GetMapping("join")
 	public void joinForm() {}
