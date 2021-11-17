@@ -32,7 +32,7 @@
 
        <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"
-        	style="background-image: url('../resources/img/상단탑배경.png');">
+        style="background-image: url('../resources/img/상단탑배경.png');">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -47,7 +47,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/profile">
                     <i class="fas fa-user-alt"></i>
                     <span>내 프로필</span></a>
             </li>
@@ -57,7 +57,7 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
            <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/history">
                    <i class="fas fa-history"></i>
                     <span>카드 거래 내역 관리</span></a>
             </li>            
@@ -74,8 +74,9 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">포인트</h6>
-                        <a class="collapse-item" href="buttons.html">포인트 사용 및 충전 내역</a>
-                        <a class="collapse-item" href="cards.html">포인트 충전 및 환급</a>
+                        <a class="collapse-item" href="/point/point-history">포인트 사용 및 충전 내역</a>
+                        <a class="collapse-item" href="/point/point-charge">포인트 충전</a>
+                        <a class="collapse-item" href="/point/point-return">포인트 환급</a>
                     </div>
                 </div>
             </li>
@@ -84,7 +85,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/mypage-inquiry">
                    <i class="fas fa-question-circle"></i>
                     <span>문의 내역</span></a>
             </li>
@@ -93,7 +94,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/chatting">
                    <i class="fas fa-comment-dots"></i>
                     <span>채팅 목록</span></a>
             </li>
@@ -114,31 +115,6 @@
                     </button>
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
@@ -192,7 +168,7 @@
 
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                            <a class="nav-link dropdown-toggle" href="/mypage/chatting" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->

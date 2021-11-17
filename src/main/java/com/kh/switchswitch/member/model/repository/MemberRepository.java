@@ -14,5 +14,8 @@ public interface MemberRepository {
 
 	@Insert("insert member() values()")
 	void insert(Member member);
+
+	@Select("select * from member where member_nick = #{memberNick}")
+	Member selectMemberByNickName(String memberNick);
 	
 }
