@@ -1,5 +1,6 @@
 package com.kh.switchswitch.admin.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class AdminService {
 	
 	public void insertMenu(Menu menu) {
 		adminRepository.insertMenu(menu);
+	}
+
+	public List<Menu> selectMenuList() {
+		List<Menu> menuList = adminRepository.selectMenuList();
+		return menuList;
 	}
 
 }

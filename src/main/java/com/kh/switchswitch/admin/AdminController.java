@@ -52,7 +52,10 @@ public class AdminController {
 	public void memberProfileEdit() {}
 	
 	@GetMapping("page-setting")
-	public void pageSetting() {}
+	public void pageSetting(Model model) {
+		model.addAttribute("menu",adminService.selectMenuList());
+		System.out.println(model);
+	}
 	
 	@PostMapping("add-page")
 	public String addPage(Menu menu) {
