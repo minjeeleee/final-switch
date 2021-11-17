@@ -64,10 +64,18 @@ $('#btnNickCheck').click(()=>{
 $('#frm_join').submit(e=>{
 	let email = $('#email').val();
 	let nickname = $('#nickname').val();
-		
+	let password = $('#password').val();
+	let passwordCheck = $('#passwordCheck').val();
+	
 	if(!confirmEmail && confirmEmail != email){
 		$('#emailCheck').html('이메일 중복 검사를 하지 않았습니다.');
 		$('#email').focus();
+		e.preventDefault();
+	}
+		
+	if(password != passwordCheck){
+		$('#passwordNotMatched').html('입력하신 비밀번호와 일치하지 않습니다.');
+		$('#passwordNotMatched').focus();
 		e.preventDefault();
 	}
 		

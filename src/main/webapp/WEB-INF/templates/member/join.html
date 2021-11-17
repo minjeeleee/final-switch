@@ -60,6 +60,7 @@
                                <input class="form-control" id="passwordCheck" placeholder="Password Check" type="password">
                             </div>
                         </div>
+                        <span th:unless="${#fields.hasErrors('memberPass')}" id="passwordNotMatched" class="valid-msg"></span>
                         <span th:if="${#fields.hasErrors('memberPass')}" th:errors="*{memberPass}" class="valid-msg"></span>
                         <h4 class="heading">휴대전화</h4>
                         <div class="form-group">
