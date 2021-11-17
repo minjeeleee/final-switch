@@ -59,7 +59,19 @@ $('#btnNickCheck').click(()=>{
 		$('#nickCheck').html('응답에 실패했습니다. 상태코드 : ' + error);
 	})
 });
-   
+ 
+//조소api
+var pop;
+	
+$("#searchAddr").click(function(){
+	//경로는 시스템에 맞게 수정하여 사용
+	//호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
+	pop = window.open("/member/addrPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+})
+var jusoCallBack = function(zipNo, roadFullAddr){
+	$('#zipNo').val(zipNo);
+	$('#address').val(roadFullAddr);
+} 
 
 $('#frm_join').submit(e=>{
 	let email = $('#email').val();

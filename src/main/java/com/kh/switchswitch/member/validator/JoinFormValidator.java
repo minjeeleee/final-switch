@@ -59,7 +59,7 @@ public class JoinFormValidator implements Validator {
 		}
 		
 		//6. 주소 
-		valid = Pattern.matches("^[0-6][0-3]\\\\d{3}$", form.getZipNo());
+		valid = Pattern.matches("^[0-6]\\d{4}$", form.getZipNo());
 		if(!valid) {
 			errors.rejectValue("zipNo", "error-zipNo", "올바른 주소를 입력해 주세요.");
 			errors.rejectValue("address", "error-address", "");

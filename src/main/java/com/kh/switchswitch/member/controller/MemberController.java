@@ -72,6 +72,23 @@ public class MemberController {
 		}
 	}
 	
+	@GetMapping("addrPopup")
+	public void addrPopupG(String inputYn, Model model) {
+		
+		String confmKey = "devU01TX0FVVEgyMDIxMTExODAxMTE0MDExMTkwMDg=";
+		 
+		model.addAttribute("confmKey", confmKey); 
+		model.addAttribute("inputYn", inputYn);
+	}
+	
+	@PostMapping("addrPopup")
+	public void addrPopupP(String inputYn, String roadFullAddr, String zipNo, Model model) {
+		
+		model.addAttribute("inputYn", inputYn); 
+		model.addAttribute("roadFullAddr", roadFullAddr); 
+		model.addAttribute("zipNo", zipNo);
+	}
+	
 	@GetMapping("join")
 	public void joinForm(Model model) {
 		model.addAttribute(new JoinForm())
