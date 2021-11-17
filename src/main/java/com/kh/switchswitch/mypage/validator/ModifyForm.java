@@ -8,9 +8,8 @@ public class ModifyForm {
 	private String memberPass;
 	private String newMemberPass;
 	private String checkMemberPss;
-	private String memberEmail;
 	private String memberTell;
-	private String memerNick;
+	private String memberNick;
 	private String memberAddress;
 	private String memberName;
 	

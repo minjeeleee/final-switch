@@ -53,7 +53,7 @@
 							    <span class="input-group-text border-0" id="search-addon">
 							   	<i class="fa fa-info-circle" data-toggle="modal" data-target="#myModal" style="font-size: 15px !important;width: 20%;margin-top: 75%; "></i>
 							  </span>
-							    <span class="lnr lnr-trash small" aria-hidden="true" style="font-size: 15px !important;width: 20%;margin-top: 6.5%;"></span>
+							    <span class="lnr lnr-trash small" aria-hidden="true" style="font-size: 15px !important;width: 20%;margin-top: 6.5%;" onclick="cardDelete()"></span>
 							  </div>
 							    <p class="card-text text-left" style="height:50%; overflow:hidden;">Some quick example text to build on the card title and make up sdafasfdsfdsdfsfdsfsfsfsdfsdfthe bulk of the card's content.</p>
 							  </div>
@@ -74,7 +74,7 @@
 								      </div>
 								      <div class="modal-footer">
 								        <button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #FACE7F;color: white;">닫기</button>
-								        <button type="button" class="btn btn-primary">삭제</button>
+								        <button type="button" class="btn btn-primary" onclick="cardDelete()">삭제</button>
 								      </div>
 								    </div>
 								  </div>
@@ -125,6 +125,10 @@
 					console.dir('태그삭제');
 					}
 				},5000);
+		
+		function cardDelete(){
+			location.href="real-time-cards/card-delete?";
+		}
 	</script>
 </body>
 </html>

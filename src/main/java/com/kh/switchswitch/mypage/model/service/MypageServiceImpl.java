@@ -29,4 +29,11 @@ public class MypageServiceImpl implements MypageService{
 		}
 		return 0;
 	}
+	
+	public boolean checkNickName(String nickName) {
+		if(memberRepository.selectMemberByNickName(nickName) == null) {
+			return true;
+		}
+		return false;
+	}
 }

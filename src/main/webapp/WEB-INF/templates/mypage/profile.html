@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+<th:block th:replace="fragments :: flg_head"></th:block>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Admin 2 - Dashboard</title>
+    <title>내 프로필</title>
     <!-- Custom fonts for this template-->
     <link href="../resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -47,7 +46,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/profile">
                     <i class="fas fa-user-alt"></i>
                     <span>내 프로필</span></a>
             </li>
@@ -57,7 +56,7 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
            <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/history">
                    <i class="fas fa-history"></i>
                     <span>카드 거래 내역 관리</span></a>
             </li>            
@@ -74,8 +73,9 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">포인트</h6>
-                        <a class="collapse-item" href="buttons.html">포인트 사용 및 충전 내역</a>
-                        <a class="collapse-item" href="cards.html">포인트 충전 및 환급</a>
+                        <a class="collapse-item" href="/point/point-history">포인트 사용 및 충전 내역</a>
+                        <a class="collapse-item" href="/point/point-charge">포인트 충전</a>
+                        <a class="collapse-item" href="/point/point-return">포인트 환급</a>
                     </div>
                 </div>
             </li>
@@ -84,7 +84,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/mypage-inquiry">
                    <i class="fas fa-question-circle"></i>
                     <span>문의 내역</span></a>
             </li>
@@ -93,7 +93,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/mypage/chatting">
                    <i class="fas fa-comment-dots"></i>
                     <span>채팅 목록</span></a>
             </li>
@@ -116,29 +116,7 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
+                       
 
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
@@ -193,15 +171,13 @@
 
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                            <a class="nav-link dropdown-toggle" href="/mypage/chatting" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
                                 <span class="badge badge-danger badge-counter">new</span>
                             </a>
                         </li>
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
@@ -252,70 +228,82 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
-                                <div class="card-body" style="height: 95vh;">
-                                    <form >
+                                <div class="card-body" style="height: 98vh;">
+                                    <form th:object="${modifyForm}" th:action="@{/mypage/modify}" method="post">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
-												<td><div class="team-img" style="background:url('../resources/img/no-img.jpg'); background-size:cover;"></div></td>
+												<td>
+													<div class="team-img" style="background:url('../resources/img/no-img.jpg'); background-size:cover;"></div>
+													<br/>
+													<span class="msg">JPG/GIF/PNG 파일만 업로드 가능</span>
+													<input type="file" name="teamFile" id="teamFile" onchange="fileCheck(this.files)">
+												</td>
 											</tr>
 											<tr>
 												<th>이름</th>
 												<td>이민지</td>
 											</tr>
 											<tr>
+												<th>이메일</th>
+												<td>
+													fly12035@gmail.com
+												</td>
+											</tr>
+											<tr>
 												<th>현재비밀번호</th>
 												<td>
-													<input type="password" name="password" id="password" required />
+													<input type="password" name="memberPass" id="memberPass" 
+														
+													required />
 													<button type="button" name="btnPwCheck" id="btnPwCheck"  >확인</button>
-													<span class="valid-msg" id="pwCheck" >
-													 	
-													</span>
+													<!-- <span th:unless="${#fields.hasErrors('password')}" id="passwordCheck" class="valid-msg"></span>
+           	  										<span th:if="${#fields.hasErrors('password')}" th:errors="password" class="valid-msg"></span> -->
 												</td>
 											</tr>
 											<tr>
 												<th>새 비밀번호</th>
 												<td>
-													<input type="password" name="new-password" id="new-password" placeholder="띄어쓰기 없는 6~15자 영문 대/소문자 포함" />
-													<span class="valid-msg" id="newPw">
-										               
-									                </span>
+													<input type="password" name="newMemberPass" id="newMemberPass" placeholder="띄어쓰기 없는 6~15자 영문 대/소문자 포함"
+														
+													 />
+													<!-- <span th:if="${#fields.hasErrors('new-password')}" th:errors="*{new-password}" class="valid-msg"></span> -->		
 												</td>
 											</tr>
 											<tr>
 												<th>새 비밀번호 확인</th>
 												<td>
-													<input type="password" name="check-new-password" id="check-new-password" />
-													<span class="valid-msg" id="pwCheck">
-										               
-									                </span>
-													
-												</td>
+													<input type="password" name="checkMemberPss" id="checkMemberPss"
+														
+													/>
+<!-- 													<span th:if="${#fields.hasErrors('check-password')}" th:errors="*{check-password}" class="valid-msg"></span>		
+ -->												</td>
 											</tr>
 											
 											<tr>
 												<th>닉네임</th>
 												<td>
-													<input type="text" name="nickName" id="nickName" size="6"  placeholder="2~6자의 한글,영문" required />
+													<input type="text" name="memberNick" id="memberNick" size="6"  placeholder="2~6자의 한글,영문" 
+														
+													required />
 													<button type="button" id="btnNickCheck"   >중복확인</button>
-													<span class="valid-msg" id="nickCheck">
-										              
-									                </span>
+													<!-- <span th:unless="${#fields.hasErrors('nickName')}" id="nickNameCheck" class="valid-msg"></span>
+           	  										<span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" class="valid-msg"></span> -->
 												</td>
 											</tr>
 											<tr>
 												<th>연락처</th>
 												<td>
-													<input id="tell" type="tel" name="tell" placeholder="숫자만 입력" required />
-													<span class="valid-msg" id="tellCheck">
-										             
-									                </span>
-												</td>
+													<input  type="tel" id="memberTell" name="memberTell" placeholder="숫자만 입력" 
+														
+													required />
+<!-- 													<span th:if="${#fields.hasErrors('tell')}" th:errors="*{tell}" class="valid-msg"></span>
+ -->												</td>
 											</tr>
 											<tr>
-												<th>이메일</th>
+												<th>주소</th>
 												<td>
-													<input id="email" type="email" name="email" required />
+													<input type="text" id="memberAddress" name="memberAddress" required />
 												</td>
 											</tr>
 											<tr>
@@ -325,14 +313,8 @@
 												</td>
 											</tr>
 											<tr>
-												<th>주소</th>
-												<td>
-													<input id="adress" type="text" name="text" required />
-												</td>
-											</tr>
-											<tr>
 												<td colspan="2">
-													<a href="#" class="btn btn-facebook btn-block">변경하기</a>
+													<button class="btn btn-facebook btn-block">변경하기</button>
 												</td>
 											</tr>
 										</table>
@@ -441,6 +423,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../resources/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="/js/member/modifyForm.js"></script>
 </body>
 
 </html>
