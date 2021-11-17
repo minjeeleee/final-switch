@@ -30,15 +30,15 @@ import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 @RequestMapping("mypage")
 public class MypageController {
 	
-	private MypageServiceImpl mypageServiceImpl;
+	private MypageService mypageService;
 	private ModifyFormValidator modifyFormValidator;
 	private PasswordEncoder passwordEncoder;
 
-	
-	public MypageController(MypageServiceImpl mypageServiceImpl, ModifyFormValidator modifyFormValidator,
+
+	public MypageController(MypageService mypageService, ModifyFormValidator modifyFormValidator,
 			PasswordEncoder passwordEncoder) {
 		super();
-		this.mypageServiceImpl = mypageServiceImpl;
+		this.mypageService = mypageService;
 		this.modifyFormValidator = modifyFormValidator;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -89,7 +89,7 @@ public class MypageController {
 		}
 		
 		
-		if(mypageServiceImpl.checkPwForLeave(certifiedUser, password) == 0) {
+		if(mypageService.checkPwForLeave(certifiedUser, password) == 0) {
 			redirectAttr.addFlashAttribute("message","비밀번호가 틀렸습니다"); return
 			"redirect:/member/leave-member"; 
 		}
@@ -114,7 +114,7 @@ public class MypageController {
 	@ResponseBody
 	public String nickCheck(String nickName,@AuthenticationPrincipal Member certifiedUser) {
 		
-		if(nickName.equals(certifiedUser.getMemberNick()) || mypageServiceImpl.checkNickName(nickName)) {
+		if(nickName.equals(certifiedUser.getMemberNick()) || mypageService.checkNickName(nickName)) {
 			return "available";
 		}else {
 			return "disable";

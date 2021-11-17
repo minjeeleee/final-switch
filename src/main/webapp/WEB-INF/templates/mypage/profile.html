@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+<th:block th:replace="fragments :: flg_head"></th:block>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Admin 2 - Dashboard</title>
+    <title>내 프로필</title>
     <!-- Custom fonts for this template-->
     <link href="../resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -234,7 +233,12 @@
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
-												<td><div class="team-img" style="background:url('../resources/img/no-img.jpg'); background-size:cover;"></div></td>
+												<td>
+													<div class="team-img" style="background:url('../resources/img/no-img.jpg'); background-size:cover;"></div>
+													<br/>
+													<span class="msg">JPG/GIF/PNG 파일만 업로드 가능</span>
+													<input type="file" name="teamFile" id="teamFile" onchange="fileCheck(this.files)">
+												</td>
 											</tr>
 											<tr>
 												<th>이름</th>
@@ -249,57 +253,57 @@
 											<tr>
 												<th>현재비밀번호</th>
 												<td>
-													<input type="password" name="password" id="password" 
-														th:value="*{#fields.hasErrors('password') ? '' : password}"
+													<input type="password" name="memberPass" id="memberPass" 
+														
 													required />
 													<button type="button" name="btnPwCheck" id="btnPwCheck"  >확인</button>
-													<span th:unless="${#fields.hasErrors('password')}" id="passwordCheck" class="valid-msg"></span>
-           	  										<span th:if="${#fields.hasErrors('password')}" th:errors="password" class="valid-msg"></span>
+													<!-- <span th:unless="${#fields.hasErrors('password')}" id="passwordCheck" class="valid-msg"></span>
+           	  										<span th:if="${#fields.hasErrors('password')}" th:errors="password" class="valid-msg"></span> -->
 												</td>
 											</tr>
 											<tr>
 												<th>새 비밀번호</th>
 												<td>
-													<input type="password" name="new-password" id="new-password" placeholder="띄어쓰기 없는 6~15자 영문 대/소문자 포함"
-														th:value="*{#fields.hasErrors('new-password') ? '' : new-password}"
+													<input type="password" name="newMemberPass" id="newMemberPass" placeholder="띄어쓰기 없는 6~15자 영문 대/소문자 포함"
+														
 													 />
-													<span th:if="${#fields.hasErrors('new-password')}" th:errors="*{new-password}" class="valid-msg"></span>		
+													<!-- <span th:if="${#fields.hasErrors('new-password')}" th:errors="*{new-password}" class="valid-msg"></span> -->		
 												</td>
 											</tr>
 											<tr>
 												<th>새 비밀번호 확인</th>
 												<td>
-													<input type="password" name="check-password" id="check-password"
-														th:value="*{#fields.hasErrors('check-password') ? '' : check-password}"
+													<input type="password" name="checkMemberPss" id="checkMemberPss"
+														
 													/>
-													<span th:if="${#fields.hasErrors('check-password')}" th:errors="*{check-password}" class="valid-msg"></span>		
-												</td>
+<!-- 													<span th:if="${#fields.hasErrors('check-password')}" th:errors="*{check-password}" class="valid-msg"></span>		
+ -->												</td>
 											</tr>
 											
 											<tr>
 												<th>닉네임</th>
 												<td>
-													<input type="text" name="nickName" id="nickName" size="6"  placeholder="2~6자의 한글,영문" 
-														th:value="*{#fields.hasErrors('nickName') ? '' : nickName}"
+													<input type="text" name="memberNick" id="memberNick" size="6"  placeholder="2~6자의 한글,영문" 
+														
 													required />
 													<button type="button" id="btnNickCheck"   >중복확인</button>
-													<span th:unless="${#fields.hasErrors('nickName')}" id="nickNameCheck" class="valid-msg"></span>
-           	  										<span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" class="valid-msg"></span>
+													<!-- <span th:unless="${#fields.hasErrors('nickName')}" id="nickNameCheck" class="valid-msg"></span>
+           	  										<span th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}" class="valid-msg"></span> -->
 												</td>
 											</tr>
 											<tr>
 												<th>연락처</th>
 												<td>
-													<input id="tell" type="tel" name="tell" placeholder="숫자만 입력" 
-														th:value="*{#fields.hasErrors('tell') ? '' : tell}"
+													<input  type="tel" id="memberTell" name="memberTell" placeholder="숫자만 입력" 
+														
 													required />
-													<span th:if="${#fields.hasErrors('tell')}" th:errors="*{tell}" class="valid-msg"></span>
-												</td>
+<!-- 													<span th:if="${#fields.hasErrors('tell')}" th:errors="*{tell}" class="valid-msg"></span>
+ -->												</td>
 											</tr>
 											<tr>
 												<th>주소</th>
 												<td>
-													<input id="adress" type="text" name="text" required />
+													<input type="text" id="memberAddress" name="memberAddress" required />
 												</td>
 											</tr>
 											<tr>
@@ -420,6 +424,7 @@
     <!-- Custom scripts for all pages-->
     <script src="../resources/js/sb-admin-2.min.js"></script>
     <script type="text/javascript" src="/js/member/modifyForm.js"></script>
+     <script type="text/javascript" src="/js/member/modify.js"></script>
 </body>
 
 </html>

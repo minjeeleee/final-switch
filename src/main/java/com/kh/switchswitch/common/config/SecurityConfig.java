@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import com.kh.switchswitch.member.model.service.MemberService;
@@ -27,6 +29,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	public SpringSecurityDialect springSecurityDialect() {
 		return new SpringSecurityDialect();
 	}
+	
+	@Bean
+	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+	    StrictHttpFirewall firewall = new StrictHttpFirewall();
+	    firewall.setAllowSemicolon(true);  
+	    return firewall;
+	}
+	
 	
 	
 	@Override
