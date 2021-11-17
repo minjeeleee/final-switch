@@ -1,6 +1,7 @@
 package com.kh.switchswitch.board;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -9,12 +10,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.kh.switchswitch.member.model.dto.Member;
+
+
 
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,10 +41,36 @@ public class BoardControllerTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 	}
 	
-	@Test
-	public void testGetList() throws Exception {//test할 메서드
+	@Test 
+	public void uploadBoard() throws Exception {//11/17 테스트통과 
+												//file 추가시 NullPointerException 오류 수정필요
+
+		Member member = new Member();
+		member.setMemberNick("닉네임");
 		
+		mockMvc.perform(multipart("/board/upload")
+				.param("title", "테스트 제목")
+				.param("content", "테스트 본문")
+				.sessionAttr("authentication", member))
+		.andExpect(status().is3xxRedirection())
+		.andDo(print());
 	}
+	
+	
+	//11/17 테스트통과
+	@Test
+	public void boardDetail() throws Exception{
+		Member member = new Member();
+		member.setMemberNick("닉네임");
+		
+		mockMvc.perform(get("/board/board-detail")
+				.param("bdIdx", "370")
+				.sessionAttr("authentication", member))
+		.andExpect(status().isOk())
+		.andDo(print());
+	}
+	
+	
 	
 	@After
 	public void afterTest() {

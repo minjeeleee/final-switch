@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>        
         <meta charset="utf-8" />
@@ -12,7 +12,7 @@
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../resources/css/styles.css" rel="stylesheet" />
+        <link href="../../../resources/css/board/styles.css" rel="stylesheet" />
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 		<link href="../../../resources/css/board/board.css" rel="stylesheet" />
@@ -30,52 +30,46 @@
 						<h2>정보공유 상세페이지</h2>
 						<div class='btn_area'>
 
-							<a class="btn" href="/board/delete-board?bd_idx=${datas.board.bdIdx }">글삭제</a> <a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> <a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> <a class="btn" href="/board/board-page">목록</a>
+							<a class="btn" href="/board/delete-board?bd_idx=${datas.board.bdIdx }">글삭제</a> <a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> <a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> <a class="btn" href="/board/board-list">목록</a>
 						</div>
 					</div>
 
 
 					<div class="section_content_box">
-						<div class="section_header">
+						<div class="section_header" ><!-- th:object="${board}" -->
 							<div class="section_title">
-								<p>정보공유합니다</p>
+								<span th:text="|제목 : *{title}|"></span>
 							</div>
 							<div class="writer_info">
 
 								<div class="writer_profile">
-									<div>작성일: 2021-10-23</div>
-									<div>작성자: 룰루랄라</div>
+									<span th:text="|등록일 : *{regDate}|"></span>
+									<span th:text="|작성자 : *{userId}|"></span>
 								</div>
 								<div class="writer_board_info">
-									<ul class="dep1">
-										<li><a>첨부파일</a>
-											<ul class="dep2">
+									<!-- <ol class="dep1">
+										<li th:each="file : ${board.files}" th:object="${file}">
+											<a th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
+												[[*{originFileName}]]
+											</a>
+										</li>		
+									</ol> -->
 
-											</ul></li>
-									</ul>
-
-								</div>
+								</div> 
 							</div>
 						</div>
-						<div class="section_container">
-							<div class="content_area" id=editor1>후후 좋은 정보 드리지요~키키</div>
-<!-- 							<script>
-							CKEDITOR.replace( 'editor1', {
-								removePlugins: 'resize',
-								height: 600,
-								readOnly: true,
-								width: '100%',
-								language: 'ko',
-								removeButtons: 'PasteFromWord'
-							} );
-						</script> -->
+						<div class="section_container"><!-- th:object="${board}" -->
+							<span th:text="*{content}"></span>
+
+						</div>
+								<!-- 							
 
 							<div class="comment_area">
 								<div class="line_btns">
 
 									<!-- <span>등록순</span>
 								<span>최신순</span> -->
-								</div>
+								
 								<div>
 									<div class="cmt_wrap">
 										<div class="cmt_info">
@@ -104,9 +98,17 @@
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-	</section>
 
+	</section>
+	<script type="text/javascript">
+		let downloadFile = (ofn,rfn,path) => {
+			let paramObj = {
+					originFileName : ofn,
+					renameFileName : rfn,
+					savePath : path
+			}
+			location.href = '/download?' + urlEncoder(paramObj);
+		}
+	</script>
 </body>
 </html>
