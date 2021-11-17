@@ -8,21 +8,24 @@ import lombok.Data;
 @Data
 public class JoinForm {
 	
-	private String email;
-	private String password;
-	private String tell;
-	private String nickname;
+	private String memberName;
+	private String memberEmail;
+	private String memberPass;
+	private String memberTell;
+	private String memberNick;
 	private String zipNo;
 	private String address;
-	private String detailAddress;
 	
 	public Member convertToMember() {
+		
 		Member member = new Member();
-		member.setMemberEmail(email);
-		member.setMemberPass(password);
-		member.setMemberTell(tell);
-		member.setMemberNick(nickname);
-		member.setMemberAddress("[" + zipNo + "] " + address + ", " + detailAddress);		
+		member.setMemberName(memberName);
+		member.setMemberEmail(memberEmail);
+		member.setMemberPass(memberPass);
+		member.setMemberTell(memberTell);
+		member.setMemberNick(memberNick);
+		member.setMemberAddress("[" + zipNo + "] " + address );
+		
 		return member;
 	}
 	

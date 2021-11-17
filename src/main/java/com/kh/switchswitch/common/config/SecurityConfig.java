@@ -1,6 +1,5 @@
 package com.kh.switchswitch.common.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,20 +8,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
-import com.kh.switchswitch.member.model.service.MemberService;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	@Autowired
-	MemberService memberService;
-	
+	private final UserDetailsService userDetailsService;
 	
 	
 	@Bean
@@ -42,7 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		.antMatchers("/**","/switchswitch/resources/**", "/resources/**");
+		.antMatchers("/**")
+		.mvcMatchers("/switchswitch/resources/**", "/resources/**")
+		.mvcMatchers("/member/addrPopup");
 	}
 	
 	@Override
@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.formLogin()
 			.loginProcessingUrl("/member/login")
-			.usernameParameter("email")
+			.usernameParameter("memberEmail")
 			.loginPage("/member/login")
 			.defaultSuccessUrl("/");
 		
@@ -65,9 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.csrf().ignoringAntMatchers("/mail");
 	}
 	
-	//@Override
-	//public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	//    auth.userDetailsService(memberService); 
-	//}
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+	    auth.userDetailsService(userDetailsService); 
+	}
 
 }
