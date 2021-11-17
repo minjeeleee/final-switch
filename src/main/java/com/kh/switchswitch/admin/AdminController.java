@@ -3,8 +3,10 @@ package com.kh.switchswitch.admin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
@@ -51,4 +53,11 @@ public class AdminController {
 	
 	@GetMapping("page-setting")
 	public void pageSetting() {}
+	
+	@PostMapping("add-page")
+	public String addPage(Menu menu) {
+		System.out.println(menu);
+		adminService.insertMenu(menu);
+		return "redirect:/admin/page-setting";
+	}
 }

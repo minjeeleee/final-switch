@@ -143,30 +143,51 @@
 										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 										        <h4 class="modal-title" id="exampleModalLabel">페이지 추가</h4>
 										      </div>
+										      <form action="/admin/add-page" method="post">
 										      <div class="modal-body">
-										        <form>
 										          <div class="form-group">
-										            <label for="url-name" class="control-label">경로명:</label>
-										            <input type="text" class="form-control" id="recipient-name">
-										          </div>
-										          <div class="form-group">
-										            <label for="url" class="control-label">경로:</label>
-										            <input type="text" class="form-control" id="recipient-name">
+										          	<label class="control-label">분류:</label>
+										          	<select name="division" class="form-control" id="recipient-name">
+										          		<option value="메인">메인</option>
+										          		<option value="서브">서브</option>
+										          	</select>
 										          </div>
 										          <div class="form-group">
-										            <label for="url-position" class="control-label">위치:</label>
-										            <input type="text" class="form-control" id="recipient-name">
+										            <label class="control-label">위치:</label>
+										            <select name="position" class="form-control" id="recipient-name">
+										            	<option value="탑메뉴">탑메뉴</option>
+										            	<option value="사이드바">사이드바</option>
+										            </select>
 										          </div>
-										           <div class="form-group">
-										            <label for="url-role" class="control-label">접근권한:</label>
-										            <input type="text" class="form-control" id="recipient-name">
+										          <div class="form-group">
+										            <label class="control-label">상위메뉴:</label>
+										            <select name="parent" class="form-control" id="recipient-name">
+										            	<option value="없음">없음</option>
+										            	<option value="탑메뉴">탑메뉴</option>
+										            	<option value="사이드바">사이드바</option>
+										            </select>
 										          </div>
-										        </form>
+										          <div class="form-group">
+										            <label class="control-label">접근권한:</label>
+										            <select name="code" class="form-control" id="recipient-name">
+										            	<option value="A">전체</option>
+										            	<option value="B">회원</option>
+										            	<option value="C">관리자</option>
+										            </select>
+										          </div>
+										          <div class="form-group">
+										            <label class="control-label">경로명:</label>
+										            <input type="text" class="form-control" id="recipient-name" required="required" name="urlName">
+										          </div>
+										          <div class="form-group">
+										            <label class="control-label">경로:</label>
+										            <input type="text" class="form-control" id="recipient-name" required="required" name="url">
+										          </div>
 										      </div>
 										      <div class="modal-footer">
-										        <button type="button" class="btn btn-default" data-dismiss="modal" style="background-color: #FACE7F;color: white;">닫기</button>
-										        <button type="button" type="submit" class="btn btn-primary">추가</button>
+										        <button class="btn btn-primary">추가</button>
 										      </div>
+										      </form>
 										    </div>
 										  </div>
 										</div>

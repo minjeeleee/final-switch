@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.repository.AdminRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,13 @@ public class AdminService {
 		Map<String,Object> commandMap = adminRepository.selectRealTimeCards();
 		return commandMap;
 	}
-
+	
 	public int deleteCard(int cardIdx) {
 		return adminRepository.deleteCard(cardIdx);
+	}
+	
+	public void insertMenu(Menu menu) {
+		adminRepository.insertMenu(menu);
 	}
 
 }
