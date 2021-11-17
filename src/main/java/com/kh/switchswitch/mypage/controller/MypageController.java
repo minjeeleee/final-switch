@@ -3,6 +3,7 @@ package com.kh.switchswitch.mypage.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,14 +32,18 @@ public class MypageController {
 	
 	private MypageServiceImpl mypageServiceImpl;
 	private ModifyFormValidator modifyFormValidator;
+	private PasswordEncoder passwordEncoder;
+
 	
-	
-	public MypageController(MypageServiceImpl mypageServiceImpl, ModifyFormValidator modifyFormValidator) {
+	public MypageController(MypageServiceImpl mypageServiceImpl, ModifyFormValidator modifyFormValidator,
+			PasswordEncoder passwordEncoder) {
 		super();
 		this.mypageServiceImpl = mypageServiceImpl;
 		this.modifyFormValidator = modifyFormValidator;
+		this.passwordEncoder = passwordEncoder;
 	}
-	
+
+
 	@InitBinder(value = "modifyForm")
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(modifyFormValidator);
@@ -91,6 +97,28 @@ public class MypageController {
 		
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
 		return "redirect:/";
+	}
+	
+	@GetMapping("pw-check")
+	@ResponseBody
+	public String pwCheck(String password,@AuthenticationPrincipal Member certifiedUser) {
+		
+		if(passwordEncoder.matches(password, certifiedUser.getMemberPass())) {
+			return "available";
+		}else {
+			return "disable";
+		}
+	}
+	
+	@GetMapping("nick-check")
+	@ResponseBody
+	public String nickCheck(String nickName,@AuthenticationPrincipal Member certifiedUser) {
+		
+		if(nickName.equals(certifiedUser.getMemberNick()) || mypageServiceImpl.checkNickName(nickName)) {
+			return "available";
+		}else {
+			return "disable";
+		}
 	}
 	
 

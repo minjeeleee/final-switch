@@ -5,12 +5,13 @@ import java.util.regex.Pattern;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 public class ModifyFormValidator implements Validator{
 
 	private final MemberRepository memberRepository;
+	private MemberAccount member;
 	
 	public ModifyFormValidator(MemberRepository memberRepository) {
 		super();
@@ -27,7 +28,7 @@ public class ModifyFormValidator implements Validator{
 
 		ModifyForm form = (ModifyForm) target;
 		
-		if(memberRepository.selectMemberByNickName(form.getMemberNick()) != null ) {
+		if(memberRepository.selectMemberByNickName(form.getMemberNick()) != null || !member.getMemberNick().equals(form.getMemberNick())) {
 			errors.rejectValue("nickName", "err-nickName", "이미 존재하는 닉네임 입니다.");
 		}else if(form.getMemberNick().equals("")) {
 			errors.rejectValue("nickName", "err-nickName", "올바르게 닉네임을 작성해주세요.");
