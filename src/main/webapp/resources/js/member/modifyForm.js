@@ -3,7 +3,7 @@
  */
  (()=>{
 	  let cofirmPw = "";
-	  let cofirmNick = document.querySelector('#nickName').value;
+	  let cofirmNick = document.querySelector('#memberNick').value;;
 
 	  document.querySelector('#btnPwCheck').addEventListener('click', function(){
 		  
