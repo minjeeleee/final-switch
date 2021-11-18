@@ -1,4 +1,7 @@
 @charset "UTF-8";
+body{
+	background-image: url("../../img/background.jpg");
+}
 .section *{
 	font-size: 13px;
 }

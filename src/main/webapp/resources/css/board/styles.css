@@ -3000,7 +3000,7 @@ textarea.form-control-lg {
   z-index: 3;
 }
 
-.btn {
+/* .btn {
   display: inline-block;
   font-weight: 400;
   line-height: 1.5;
@@ -3019,7 +3019,7 @@ textarea.form-control-lg {
   font-size: 1rem;
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
+} */
 @media (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
