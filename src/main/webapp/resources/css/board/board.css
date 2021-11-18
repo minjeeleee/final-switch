@@ -1,4 +1,7 @@
 @charset "UTF-8";
+body{
+	background-image: url("../../img/background.jpg");
+}
 .section *{
 	font-size: 13px;
 }
@@ -32,21 +35,22 @@
 	align-items: center;
 }
 .btn_area>a{
-	width: 70px;
+	width: 100px;
 	height: 30px;
 	font-size: 15px;
-	background-color: #eeeeee;
-	line-height: 28px;
+	background-color: #554131;
+	/* line-height: 28px; */
 	text-align: center;
 	margin-left: 10px;
-	color: black;
+	color: white;
+	text-decoration: none;
 }
 .btn_area>a>span{
 	font-size: 15px;
 }
 .section_content_box{
 	padding: 0px 20px 0 20px;
-	border: 1px solid #dddddd;
+	border: 1px solid;
 	margin-top: 15px;
 }
 .section_content_box *{
