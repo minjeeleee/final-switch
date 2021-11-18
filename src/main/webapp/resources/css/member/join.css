@@ -19,6 +19,10 @@ form{
     font-family: 'Roboto', sans-serif;
 }
 
+label{
+	margin-left: 10px;
+}
+
 .header{
     background: #554131;
     padding: 30px 25px;
