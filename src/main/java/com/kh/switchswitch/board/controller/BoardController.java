@@ -37,10 +37,11 @@ public class BoardController {
 	//11/17
 	//list받아오기
 	//paging처리
-	@GetMapping("board-list")
-	public void boardList(Model model, String bdIdx) {
-		//model.addAttribute("board", boardService.findBoardByIdx(bdIdx));
+	
+	  @GetMapping("board-list") public void boardList(Model model, String bdIdx) {
+	  //model.addAttribute("board", boardService.findBoardByIdx(bdIdx)); 
 	}
+
 	
 	@GetMapping("board-detail")
 	public void boardDetail(String bdIdx, Model model) {
@@ -52,14 +53,15 @@ public class BoardController {
 	public void boardModify() {}
 	
 	
-	//11/17 500오류   수정필요
-	@PostMapping("upload") 
-	//NullPointerException
-	//: Cannot invoke "com.kh.switchswitch.member.model.dto.Member.getMemberEmail()" because "member" is null
-	public String uploadBoard(Board board,@SessionAttribute("authentication") Member member) {//required=false, name=
-		board.setUserId(member.getMemberNick());
-		boardService.insertBoard(board);
-		return "redirect:/board/board-detail";
+	//11/18 서버 테스트 통과
+	//11/18 파일 추가중
+	@PostMapping("upload")
+	
+	public String uploadBoard(Board board, List<MultipartFile> files ){
+		//,@SessionAttribute("authentication") Member member 
+		board.setUserId("userId");
+		boardService.insertBoard(files,board);
+		return "redirect:/";
 	}
 
 

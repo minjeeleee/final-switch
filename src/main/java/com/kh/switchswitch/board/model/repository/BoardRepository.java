@@ -39,7 +39,7 @@ public interface BoardRepository {
 	
 	
 	//파일업로드
-	@Insert("insert into file_info(fl_idx,type_idx,origin_file_name, rename_file_name, save_path)"
+	@Insert("insert into file_info(fl_idx,bd_idx,origin_file_name, rename_file_name, save_path)"
 			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
 	void insertFileInfo(FileDTO fileDTO);
 	

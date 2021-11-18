@@ -2,6 +2,7 @@ package com.kh.switchswitch.board;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,13 +44,20 @@ public class BoardControllerTest {
 	}
 	
 	@Test 
-	public void uploadBoard() throws Exception {//11/17 테스트통과 
-												//file 추가시 NullPointerException 오류 수정필요
+	public void uploadBoard() throws Exception {
+												//11/18 테스트통과 파일추가완료
+												//11/17 테스트통과 (파일추가 없이)	
+												// "files" is null 오류
+												
+												
+		MockMultipartFile file1 = new MockMultipartFile("files", "OFN.txt", null, "OFN01".getBytes());
 
 		Member member = new Member();
 		member.setMemberNick("닉네임");
 		
 		mockMvc.perform(multipart("/board/upload")
+				.file(file1)
+				.contentType(MediaType.MULTIPART_FORM_DATA)
 				.param("title", "테스트 제목")
 				.param("content", "테스트 본문")
 				.sessionAttr("authentication", member))
@@ -56,6 +65,10 @@ public class BoardControllerTest {
 		.andDo(print());
 	}
 	
+	
+	//11/18 테스트오류 html문제같음
+	//THYMELEAF][main] Exception processing template "board/board-detail"
+	//: Exception evaluating SpringEL expression: "title" (template: "board/board-detail" - line 41, col 15)
 	
 	//11/17 테스트통과
 	@Test
