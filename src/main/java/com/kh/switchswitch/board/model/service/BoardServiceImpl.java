@@ -1,5 +1,6 @@
 package com.kh.switchswitch.board.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,12 +23,7 @@ public class BoardServiceImpl implements BoardService{
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BoardRepository boardRepository;
 	
-	public void insertBoard(Board board) {
-		boardRepository.insertBoard(board);
-		
-		
-		
-	}
+
 	
 	//11/17
 	@Override
@@ -35,6 +31,19 @@ public class BoardServiceImpl implements BoardService{
 		Board board = boardRepository.selectBoardByIdx(bdIdx);
 		/* List<FileDTO> files = boardRepository.selectFilesByBdIdx(bdIdx); */
 		return Map.of("board",board);
+	}
+
+	@Override
+	public void insertBoard(List<MultipartFile> files, Board board) {
+		FileUtil  fileUtil = new FileUtil();
+		
+		boardRepository.insertBoard(board);
+		
+		for (MultipartFile multipartFile : files) {
+			if(!multipartFile.isEmpty()) {
+				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
+			}
+		}
 	}
 
 
