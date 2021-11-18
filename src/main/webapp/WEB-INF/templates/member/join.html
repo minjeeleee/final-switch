@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <link rel="stylesheet" href="../resources/css/member/join.css">
 <title>Bootstrap Form Style </title>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -24,57 +25,82 @@
 
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
-                <form class="form-horizontal">
+                <form class="form-horizontal"
+                	th:object="${joinForm}" th:action="@{/member/join}" method="post" id="frm_join">
                     <div class="header">회원가입</div>
                     <div class="form-content">
+                    	<h4 class="heading">이름</h4>
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                               <input class="form-control" id="name" name="memberName" placeholder="NAME" type="text"
+                               th:value="*{#fields.hasErrors('memberName') ? '' : memberName}"
+                               required/>
+                            </div>
+                        </div>
+                        <span th:if="${#fields.hasErrors('memberName')}" th:errors="*{memberName}" class="valid-msg"></span>
                     	<h4 class="heading">EMAIL</h4>
                         <div class="form-group">
                             <div class="col-sm-6">
-                               <input class="form-control" id="email" name="email" placeholder="EMAIL" type="email">
+                               <input class="form-control" id="email" name="memberEmail" placeholder="EMAIL" type="email"
+                               th:value="*{#fields.hasErrors('memberEmail') ? '' : memberEmail}"
+                               required/>
                             </div>
-                            <button type="button" id="searchEmail" class="inner_btn">중복확인</button>
+                            <button type="button" id="btnEmailCheck" class="inner_btn">중복확인</button>
                         </div>
+                        <span th:unless="${#fields.hasErrors('memberEmail')}" id="emailCheck" class="valid-msg"></span>
+                        <span th:if="${#fields.hasErrors('memberEmail')}" th:errors="*{memberEmail}" class="valid-msg"></span>
                         <h4 class="heading">비밀번호</h4>
                         <div class="form-group">
                             <div class="col-sm-6">
-                               <input class="form-control" id="password" name="password" placeholder="Password" type="password">
+                               <input class="form-control" id="password" name="memberPass" placeholder="Password" type="password"
+                               th:value="*{#fields.hasErrors('memberPass') ? '' : memberPass}"
+                               required/>
                             </div>
                             <div class="col-sm-6">
                                <input class="form-control" id="passwordCheck" placeholder="Password Check" type="password">
                             </div>
                         </div>
-                        
+                        <span th:unless="${#fields.hasErrors('memberPass')}" id="passwordNotMatched" class="valid-msg"></span>
+                        <span th:if="${#fields.hasErrors('memberPass')}" th:errors="*{memberPass}" class="valid-msg"></span>
                         <h4 class="heading">휴대전화</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-                               <input class="form-control" id="tell" name="tell" placeholder="Phone Number" type="tel">
+                               <input class="form-control" id="tell" name="memberTell" placeholder="Phone Number" type="tel"
+                               th:value="*{#fields.hasErrors('memberTell') ? '' : memberTell}"
+                               required/>
                             </div>
                         </div>
+                        <span th:if="${#fields.hasErrors('memberTell')}" th:errors="*{memberTell}" class="valid-msg"></span>
                         <h4 class="heading">닉네임</h4>
                         <div class="form-group">
-                            <div class="col-sm-12">
-                               <input class="form-control" id="nickname" name="nickname"  placeholder="Nickname" type="text" read>
+                            <div class="col-sm-6">
+                               <input class="form-control" id="nickname" name="memberNick"  placeholder="Nickname" type="text" 
+                               th:value="*{#fields.hasErrors('memberNick') ? '' : memberNick}"
+                               required/>
                             </div>
+                            <button type="button" id="btnNickCheck" class="inner_btn">중복확인</button>
                         </div>
+                        <span th:unless="${#fields.hasErrors('memberNick')}" id="nickCheck" class="valid-msg"></span>
+                        <span th:if="${#fields.hasErrors('memberNick')}" th:errors="*{memberNick}" class="valid-msg"></span>
                         <h4 class="heading">주소</h4>
                         <div class="form-group">
                             <div class="col-sm-6">
-                               <input class="form-control" id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly">
+                               <input class="form-control" id="zipNo" name="zipNo" placeholder="우편번호" type="text" 
+                               th:value="*{#fields.hasErrors('zipNo') ? '' : zipNo}"
+                               readonly="readonly" required/>
                             </div>
 							<button type="button" id="searchAddr" class="inner_btn">주소검색</button>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
-                               <input class="form-control" id="address" name="address" type="text" readonly="readonly">
+                               <input class="form-control" id="address" name="address" type="text" 
+                               th:value="*{#fields.hasErrors('address') ? '' : address}"
+                               readonly="readonly" required/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                               <input class="form-control" id="detailAddress" name="detailAddress" placeholder="상세주소" type="text">
-                            </div>
-                        </div>
+                        <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="valid-msg"></span>
                         <div class="clearfix">
-                        	<button type="submit" class="btn btn-default">취소</button>
+                        	<button type="button" class="btn btn-default" id="btn_cancel">취소</button>
                             <button type="submit" class="btn btn-default">회원가입</button>
                         </div>
                     </div>
@@ -83,6 +109,6 @@
         </div>
     </div>
 </div>
-
+<script type="text/javascript" src="../resources/js/member/join.js"></script>
 </body>
 </html>

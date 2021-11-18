@@ -19,6 +19,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kh.switchswitch.member.validator.JoinForm;
+
 import lombok.With;
 
 
@@ -43,8 +45,44 @@ public class MemberControllerTest {
 		this.mockMvc = webAppContextSetup(context).build();
 	}
 	
+	//이메일 중복검사 - 성공
+	@Test
+	public void emailCheckWithSuccess() throws Exception {
+		mockMvc.perform(get("/member/email-check")
+				.param("memberEmail","prac@abc.com"))
+			.andExpect(status().isOk())
+			.andExpect(content().string("available"))
+			.andDo(print());
+	}
 	
+	//이메일 중복검사 - 실패
+	@Test
+	public void emailCheckWithFailure() throws Exception {
+		mockMvc.perform(get("/member/email-check")
+				.param("memberEmail","test@email.com"))
+			.andExpect(status().isOk())
+			.andExpect(content().string("disable"))
+			.andDo(print());
+	}
 	
+	//이메일 발송 이후 회원가입 완료처리
+	@Test
+	public void joinImpl() throws Exception {
+		JoinForm form = new JoinForm();
+		form.setMemberName("test");
+		form.setMemberEmail("test@email.com");
+		form.setMemberPass("123qwe!@#");
+		form.setMemberTell("01012341234");
+		form.setMemberNick("testNick");
+		form.setZipNo("0123");
+		form.setAddress("서울시");
+		
+		mockMvc.perform(get("/member/join-impl/1234")
+				.sessionAttr("persistToken","1234")
+				.sessionAttr("persistUser", form))
+			.andExpect(status().is3xxRedirection())
+			.andDo(print());
+	}
 
 	
 }
