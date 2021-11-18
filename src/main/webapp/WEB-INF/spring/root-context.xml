@@ -55,8 +55,8 @@
 	
 	<!-- 파일업로드 : CommonsMultipartResolver -->
 	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
-		<property name="maxInMemorySize" value="5242880"></property>
-		<property name="maxUploadSize" value="5242880"></property>
+		<property name="maxInMemorySize" value="20971520"></property>
+		<property name="maxUploadSize" value="20971520"></property>
 	</bean>
 	
 	
