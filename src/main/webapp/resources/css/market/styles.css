@@ -92,7 +92,7 @@ body {
   line-height: var(--bs-body-line-height);
   color: var(--bs-body-color);
   text-align: var(--bs-body-text-align);
-  background-image: url("/01/배경.jpg");
+  background-image: url("../../img/배경.jpg");
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-family: 'Hahmlet-Bold', serif;
@@ -4047,7 +4047,7 @@ textarea.form-control-lg {
   justify-content: space-between;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  background-image: url("/01/상단탑배경.png");
+  background-image: url("../../img/상단탑배경.png");
   box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.383);
 }
 .navbar > .container,
@@ -11352,7 +11352,7 @@ textarea.form-control-lg {
   background-color: #04414d;
   top: 10%;
   left: 10%;
-  background-image: url("/01/아이폰.jpg");
+  background-image: url("../../img/아이폰.jpg");
 }
 
 .category {
