@@ -228,16 +228,21 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
-                                <div class="card-body" style="height: 98vh;">
-                                    <form th:object="${modifyForm}" th:action="@{/mypage/modify}" method="post">
+                                <div class="card-body" style="overflow: scroll;">
+                                    <form th:object="${modifyForm}" th:action="@{/mypage/modify}" method="post" id="frm_modify'">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
 												<td>
-													<div class="team-img" style="background:url('../resources/img/no-img.jpg'); background-size:cover;"></div>
+												
+													<img class="team-img" ></img>
 													<br/>
 													<span class="msg">JPG/GIF/PNG 파일만 업로드 가능</span>
-													<input type="file" name="teamFile" id="teamFile" onchange="fileCheck(this.files)">
+													<input type="file" name="teamFile" id="image" onchange="fileCheck(this.files)">
+													<div class="rejectMsg"></div>
+													<div class="preview">
+						                               <p>No files currently selected for upload</p>
+						                            </div>
 												</td>
 											</tr>
 											<tr>
@@ -303,7 +308,11 @@
 											<tr>
 												<th>주소</th>
 												<td>
-													<input type="text" id="memberAddress" name="memberAddress" required />
+													<input id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly" style="width: 150px" required/>
+						                               <button type="button" id="searchAddr" >주소검색</button>
+						                               <div class="col-sm-12">
+							                           <input class="form-control" id="address" name="address" type="text" readonly="readonly" style="width: 300px" required/>
+							                            </div>
 												</td>
 											</tr>
 											<tr>
@@ -314,7 +323,7 @@
 											</tr>
 											<tr>
 												<td colspan="2">
-													<button class="btn btn-facebook btn-block">변경하기</button>
+													<button type="submit" class="btn btn-facebook btn-block">변경하기</button>
 												</td>
 											</tr>
 										</table>
@@ -423,7 +432,90 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../resources/js/sb-admin-2.min.js"></script>
-    <script type="text/javascript" src="/js/member/modifyForm.js"></script>
+    <script type="text/javascript" src="../resources/js/member/modifyForm.js"></script>
+    <script type="text/javascript">
+    var input = document.querySelector('#image');
+    var preview = document.querySelector('.preview');
+
+    input.addEventListener('change', updateImageDisplay);
+
+    function updateImageDisplay() {
+    	  while(preview.firstChild) {
+    	    preview.removeChild(preview.firstChild);
+    	  }
+
+    	  const curFiles = input.files;
+    	  if(curFiles.length === 0) {
+    	    const para = document.createElement('p');
+    	    para.textContent = 'No files currently selected for upload';
+    	    preview.appendChild(para);
+    	  } else {
+    	    for(const file of curFiles) {
+    	      const para = document.createElement('p');
+    	      if(validFileType(file)) {
+    	        const image = document.querySelector('.team-img');
+    	       
+    	        image.src = URL.createObjectURL(file);
+
+    	      } else {
+    	        para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+    	        listItem.appendChild(para);
+    	      }
+    	    }
+    	  }
+    }
+    	
+    const fileTypes = [
+    	  "image/gif",
+    	  "image/jpeg",
+    	  "image/png",
+    	  "image/jpg"
+    ];
+
+    function validFileType(file) {
+    	 return fileTypes.includes(file.type);
+    }
+    	
+    function returnFileSize(number) {
+    	if(number < 1024) {
+    		return number + 'bytes';
+    	} else if(number >= 1024 && number < 1048576) {
+    		return (number/1024).toFixed(1) + 'KB';
+    	} else if(number >= 1048576) {
+    		return (number/1048576).toFixed(1) + 'MB';
+    	}
+    }
+    
+    let fileCheck = (e) => {
+        
+    	console.dir(e);
+    	let file = e[0].name.split('.');
+   		let filetype = file[file.length-1].toLowerCase();
+   		if(filetype == 'jpg' || filetype == 'gif' || filetype == 'jpeg' || filetype=='png'){
+   			document.querySelector(".rejectMsg").innerHTML = '';
+   		} else{
+   			document.querySelector(".rejectMsg").innerHTML = '<i class="fas fa-times-circle"></i>JPG/GIF/PNG 파일만 업로드 가능합니다.';
+   			let files = document.getElementsByName('teamFile');
+   			files[0].value='';
+   			return false;
+   		}
+	
+    }
+    
+   
+    
+    var pop;
+	
+    $("#searchAddr").click(function(){
+    	//경로는 시스템에 맞게 수정하여 사용
+    	//호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
+    	pop = window.open("/member/addrPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+    })
+    var jusoCallBack = function(zipNo, roadFullAddr){
+    	$('#zipNo').val(zipNo);
+    	$('#address').val(roadFullAddr);
+    } 
+    </script>
 </body>
 
 </html>
