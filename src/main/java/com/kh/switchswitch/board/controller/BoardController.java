@@ -32,12 +32,20 @@ public class BoardController {
 	
 	@GetMapping("board-form")
 	public void boardForm() {}
-	
+
+	//11/18 서버 테스트 통과
+	//11/18 파일 추가중
+	@PostMapping("upload")
+	public String uploadBoard(Board board, List<MultipartFile> files) {
+		// ,@SessionAttribute("authentication") Member member
+		board.setUserId("userId");
+		boardService.insertBoard(files, board);
+		return "redirect:/";
+	}
 	
 	//11/17
 	//list받아오기
-	//paging처리
-	
+	//paging처리필요	
 	  @GetMapping("board-list") public void boardList(Model model, String bdIdx) {
 	  //model.addAttribute("board", boardService.findBoardByIdx(bdIdx)); 
 	}
@@ -53,16 +61,6 @@ public class BoardController {
 	public void boardModify() {}
 	
 	
-	//11/18 서버 테스트 통과
-	//11/18 파일 추가중
-	@PostMapping("upload")
-	
-	public String uploadBoard(Board board, List<MultipartFile> files ){
-		//,@SessionAttribute("authentication") Member member 
-		board.setUserId("userId");
-		boardService.insertBoard(files,board);
-		return "redirect:/";
-	}
 
 
 }

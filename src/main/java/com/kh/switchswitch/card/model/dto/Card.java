@@ -23,5 +23,5 @@ public class Card {
 	private String regionDetail;
 	private String method;
 	private int isDel;
-
+	private String hopeKind;
 }
