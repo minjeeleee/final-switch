@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.model.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService, UserDetailsService {
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private final RestTemplate http;
 	private final MemberRepository memberRepository;

@@ -54,6 +54,9 @@ public class MemberController {
 	@GetMapping("login")
 	public void login() {}
 	
+	@PostMapping("logout")
+	public void logout() {}
+	
 	@GetMapping("email-check")
 	@ResponseBody
 	public String emailCheck(String memberEmail) {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -13,7 +14,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="../resources/css/market/styles.css" rel="stylesheet" />
         <!-- fontawesome -->
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>   	
     </head>
     <body>
         <!-- Navigation-->
@@ -38,17 +39,21 @@
                             </ul>
                         </li> -->
                     </ul>
-                    <form class="d-flex navbar-dark">
-                        <div class="login-join">
-                            <a href="/member/login" class="login">로그인</a>
-                            <a href="/member/consentForm">회원가입</a>
-                        </div>
-                        <!-- <button class="btn btn-outline-dark" type="submit">
-                            <i class=""></i>
-                            로그인
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button> -->
-                    </form>
+                    <div class="login-join" sec:authorize="isAnonymous()">
+                        <a href="/member/login">로그인</a>
+	                    <a href="/member/consentForm">회원가입</a>
+                    </div>
+                    <!-- <button class="btn btn-outline-dark" type="submit">
+                        <i class=""></i>
+                        로그인
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button> -->
+                    <div class="login-join" sec:authorize="isAuthenticated()">
+                        <form class="d-flex navbar-dark" id="logout" th:action="@{/member/logout}" method="post">
+                        	<a onclick="logout.submit()">로그아웃</a>
+                        </form>
+	                    <a href="/mypage/profile">마이페이지</a>
+                    </div>
                 </div>
             </div>
         </nav>
