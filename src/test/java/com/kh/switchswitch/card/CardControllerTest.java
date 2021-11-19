@@ -50,7 +50,7 @@ public class CardControllerTest {
 		
 		
 		Member member = new Member();
-		member.setMemberIdx(1);
+		member.setMemberIdx(5);
 
 		mockMvc.perform(multipart("/card/card-form")
 				.file(file1)
