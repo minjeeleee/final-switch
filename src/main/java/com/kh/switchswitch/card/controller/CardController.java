@@ -33,6 +33,7 @@ public class CardController {
 		System.out.println(card.toString());
 		card.setMemberIdx(1);
 		cardService.insertCard(imgList, card); 
+
 		return "redirect:/";
 	}
 	

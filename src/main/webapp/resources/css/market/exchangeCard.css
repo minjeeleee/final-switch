@@ -42,7 +42,7 @@
     background-color: #04414d;
     top: 10%;
     left: 10%;
-    background-image: url("/01/아이폰.jpg");
+    background-image: url("../../img/아이폰.jpg");
   }
   
   .category {

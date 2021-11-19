@@ -79,7 +79,7 @@
 	   document.querySelector('#frm_modify').addEventListener('submit',e=>{
 		   let password = document.querySelector('#memberPass').value;
 		   let nickName = document.querySelector('#memberNick').value;
-			console.dir(password);
+			
 		   
 			if(cofirmNick != nickName){
 			   alert('닉네임 중복 검사를 하지 않았습니다');
@@ -92,17 +92,6 @@
 			   document.querySelector('#memberPass').focus();
 			   e.preventDefault();
 		   }
-		   
-		   let file = e[0].name.split('.');
-			let filetype = file[file.length-1].toLowerCase();
-			if(filetype == 'jpg' || filetype == 'gif' || filetype == 'jpeg' || filetype=='png'){
-				
-			} else{
-				drawMsg('<i class="fas fa-times-circle"></i><br>JPG/GIF/PNG 파일만 업로드 가능합니다.');
-				let files = document.getElementsByName('teamFile');
-				console.dir(files);
-				files[0].value='';
-				return false;
-			}
+
 	   })
   })();
