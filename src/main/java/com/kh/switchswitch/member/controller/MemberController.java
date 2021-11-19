@@ -13,9 +13,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -90,7 +92,12 @@ public class MemberController {
 	}
 	
 	@GetMapping("join")
-	public void joinForm(Model model) {
+	public void joinForm(@ModelAttribute("consent") String consent, Model model) {
+		//동의 없이 /member/join 으로 접근 제한
+		if(!consent.equals("consent")) {
+			throw new HandlableException(ErrorCode.UNAUTHORIZED_PAGE);
+		}
+		
 		model.addAttribute(new JoinForm())
 		.addAttribute("error",new ValidatorResult().getError());
 	}
@@ -138,6 +145,15 @@ public class MemberController {
 	
 	@GetMapping("consentForm")
 	public void consentForm() {}
+	
+	@PostMapping("consentForm")
+	public String consentForm(@RequestParam String consent
+			, RedirectAttributes redirectAttrs) {
+		//url(/member/join)에 파라미터 값 안보이도록 
+		//RedirectAttributes의 FlashAttribute에 값 담고 redirect
+		redirectAttrs.addFlashAttribute("consent", consent);
+		return "redirect:/member/join";
+	}
 	
 	@GetMapping("findingId")
 	public void findingId() {}
