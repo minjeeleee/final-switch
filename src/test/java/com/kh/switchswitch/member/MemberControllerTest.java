@@ -1,5 +1,6 @@
 package com.kh.switchswitch.member;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -17,6 +18,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.validator.JoinForm;
 
 
@@ -76,6 +79,21 @@ public class MemberControllerTest {
 		mockMvc.perform(get("/member/join-impl/1234")
 				.sessionAttr("persistToken","1234")
 				.sessionAttr("persistUser", form))
+			.andExpect(status().is3xxRedirection())
+			.andDo(print());
+	}
+	
+	//security 로그인 test... controller PostMapping 필요?? status ??
+	@Test
+	public void login() throws Exception {
+		Member member = new Member();
+		member.setMemberEmail("projectteamyong@gmail.com");
+		member.setMemberPass("asdf1234*");
+		member.setCode("B");
+		MemberAccount memberAccount = new MemberAccount(member);
+		
+		mockMvc.perform(post("/member/login")
+				.with(user(memberAccount)))
 			.andExpect(status().is3xxRedirection())
 			.andDo(print());
 	}

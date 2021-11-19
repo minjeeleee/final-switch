@@ -32,7 +32,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Member member = memberRepository.selectMemberByEmail(username);
+		Member member = memberRepository.selectMemberByEmailAndDelN(username);
 		return new MemberAccount(member);
 	}
 	
@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     public void insertMember(JoinForm form) {
        Member member = form.convertToMember();
        member.setMemberPass(passwordEncoder.encode(form.getMemberPass()));
-       memberRepository.insert(member);
+       memberRepository.insertMember(member);
     }
 
 	public void authenticateByEmail(JoinForm form, String token) {

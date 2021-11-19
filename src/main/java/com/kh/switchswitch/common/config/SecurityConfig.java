@@ -3,12 +3,10 @@ package com.kh.switchswitch.common.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
@@ -19,9 +17,6 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	
-	private final UserDetailsService userDetailsService;
-	
 	
 	@Bean
 	public SpringSecurityDialect springSecurityDialect() {
@@ -40,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		.antMatchers("/**")
 		.mvcMatchers("/switchswitch/resources/**", "/resources/**")
 		.mvcMatchers("/member/addrPopup");
 	}
@@ -63,11 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		
 		http.csrf().ignoringAntMatchers("/mail");
-	}
-	
-	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-	    auth.userDetailsService(userDetailsService); 
+		http.csrf().ignoringAntMatchers("/member/addrPopup");
 	}
 
 }
