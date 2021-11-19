@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("exchange")
-public class ExchangeController {
+@RequestMapping("market")
+public class MarketController {
 	
-	@GetMapping("exchangeForm")
-	public void exchangeForm() {}
+	@GetMapping("exchangeCard")
+	public void exchangeCard() {}
 
 }
