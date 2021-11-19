@@ -26,29 +26,42 @@
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
                 <form class="form-horizontal"
-                	th:object="${joinForm}" th:action="@{/member/join}" method="post" id="frm_join" enctype="multipart/form-data">
+                	th:action="@{/card/card-form}" method="post" name="card" id="frm_card" enctype="multipart/form-data">
                     <div class="header">new card</div>
                     <div class="form-content">
                     	<h4 class="heading">교환 나눔</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-								<label><input type="radio" name="method" value="1">교환</label>
-								<label><input type="radio"  name="method" value="2">나눔</label>
+								<label><input type="radio" name="isfree" value="N">교환</label>
+								<label><input type="radio"  name="isfree" value="Y">나눔</label>
                             </div>
                         </div>
                     	<h4 class="heading">카테고리</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-                              <select name="bank"  style="font-size: 20px;">
-									<option value="전자기기">전자기기</option>
-									<option value="인형">인형</option>
+                              <select name="category"  style="font-size: 20px;">
+	                             	<option disabled>-카테고리-</option>
+                             		<option value="전자기기">전자기기</option>
+									<option value="생활가전">생활가전</option>
+									<option value="가구/인테리어">가구/인테리어</option>
+									<option value="유아동">유아동</option>
+									<option value="생활/가공식품">생활/가공식품</option>
+									<option value="스포츠/레저">스포츠/레저</option>
+									<option value="여성패션/잡화">여성패션/잡화</option>
+									<option value="남성패션/잡화">남성패션/잡화</option>
+									<option value="게임/만화">게임/만화</option>
+									<option value="뷰티/미용">뷰티/미용</option>
+									<option value="반려 동물 용품">반려 동물 용품</option>
+									<option value="도서/티켓/음반">도서/티켓/음반</option>
+									<option value="식물관련">식물관련</option>
+									<option selected value="기타">기타</option>
 							  </select>
                             </div>
                         </div>
                     	<h4 class="heading">이름</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-                               <input class="form-control" id="email" name="memberEmail" type="text"required/>
+                               <input class="form-control" id="email" name="name" type="text" required/>
                             </div>
                         </div>
                         <h4 class="heading">상태</h4>
@@ -65,15 +78,22 @@
                         <h4 class="heading">이미지</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-                               <input class="form-control" id="image" name="cardImage" type="file" multiple="multiple"
-                               required/>
+                               <input class="form-control" id="image" name="imgList" type="file" multiple="multiple"
+                               onchange="fileCheck(this.files)" required/>
+                            </div>
+                        </div>
+                        <div class="rejectMsg"></div>
+                        <div class="form-group">
+                            <div class="preview">
+                               <p>No files currently selected for upload</p>
                             </div>
                         </div>
                         <h4 class="heading">지역</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-                              <select name="h_area1" style="font-size: 18px;"  onChange="cat1_change(this.value,h_area2)" class="h_area1">
-								  <option>-선택-</option>
+                              <select name="region" style="font-size: 18px;"  onChange="cat1_change(this.value,regionDetail)" class="region">
+								  <option disabled="disabled">-시/도-</option>
+								  <option value='0'>전국</option>
 								  <option value='1'>서울</option>
 								  <option value='2'>부산</option>
 								  <option value='3'>대구</option>
@@ -91,38 +111,38 @@
 								  <option value='15'>충남</option>
 								  <option value='16'>충북</option>
 								</select>
-								<select name="h_area2" style="font-size: 18px;" onChange="cat2_change(this.value)">
-								  <option>-선택-</option>
+								<select name="regionDetail" style="font-size: 18px;">
+								  <option disabled="disabled">-구/군/시-</option>
 								</select>
                             </div>
                         </div>
                         <h4 class="heading">배송비 여부</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-								<label><input type="radio" name="delivery-cost" value="1">유</label>
-								<label><input type="radio"  name="delivery-cost" value="2">무</label>
+								<label><input type="radio" name="deliveryCharge" value="Y">유</label>
+								<label><input type="radio"  name="deliveryCharge" value="N">무</label>
                             </div>
                         </div>
                         <h4 class="heading">거래방식</h4>
                         <div class="form-group">
                            <div class="col-sm-12">
-                              <select name="bank"  style="font-size: 20px;">
+                              <select name="method"  style="font-size: 20px;">
 									<option value="배송">배송</option>
 									<option value="직거래">직거래</option>
 									<option value="상관 없음">상관 없음</option>
-									<option value="협의 후 결정">협의 후 결정</option>
+									<option value="협의 후 결정" selected>협의 후 결정</option>
 							  </select>
                             </div>
                         </div>
                         <h4 class="heading">설명</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
-                              <textarea rows="" cols=""></textarea>
+                              <textarea name="content" rows="" cols=""></textarea>
                             </div>
                         </div>
                         <div class="clearfix">
                         	<button type="button" class="btn btn-default" id="btn_cancel">취소</button>
-                            <button type="submit" class="btn btn-default">회원가입</button>
+                            <button type="submit" class="btn btn-default" >카드등록</button>
                         </div>
                     </div>
                 </form>
@@ -132,6 +152,102 @@
 </div>
 <script type="text/javascript" src="../resources/js/member/join.js"></script>
 <script type="text/javascript">
+
+var input = document.querySelector('#image');
+var preview = document.querySelector('.preview');
+
+input.addEventListener('change', updateImageDisplay);
+
+function updateImageDisplay() {
+	  while(preview.firstChild) {
+	    preview.removeChild(preview.firstChild);
+	  }
+
+	  const curFiles = input.files;
+	  if(curFiles.length === 0) {
+	    const para = document.createElement('p');
+	    para.textContent = 'No files currently selected for upload';
+	    preview.appendChild(para);
+	  } else {
+	    const list = document.createElement('ol');
+	    preview.appendChild(list);
+
+	    for(const file of curFiles) {
+	      const listItem = document.createElement('li');
+	      const para = document.createElement('p');
+	      if(validFileType(file)) {
+	        para.textContent = `File name ${file.name}, file size ${returnFileSize(file.size)}.`;
+	        const image = document.createElement('img');
+	        
+	        image.style.setProperty("width","300px");
+	        image.style.setProperty("height","200px");
+	        
+	        image.src = URL.createObjectURL(file);
+
+	        listItem.appendChild(image);
+	        listItem.appendChild(para);
+	      } else {
+	        para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+	        listItem.appendChild(para);
+	      }
+
+	      list.appendChild(listItem);
+	    }
+	  }
+}
+	
+const fileTypes = [
+	  "image/gif",
+	  "image/jpeg",
+	  "image/png",
+	  "image/jpg"
+];
+
+function validFileType(file) {
+	 return fileTypes.includes(file.type);
+}
+	
+function returnFileSize(number) {
+	if(number < 1024) {
+		return number + 'bytes';
+	} else if(number >= 1024 && number < 1048576) {
+		return (number/1024).toFixed(1) + 'KB';
+	} else if(number >= 1048576) {
+		return (number/1048576).toFixed(1) + 'MB';
+	}
+}
+
+let fileCheck = (e) => {
+    if (e.length > 4) {
+        alert("이미지는 최대 4개까지 업로드 가능합니다.");
+        document.getElementById("image").value = "";
+        return;
+    }
+    if (e.length < 1) {
+        alert("이미지는 최소 1개이상 업로드 해야 합니다.");
+        document.getElementById("image").value = "";
+        return;
+    }
+	
+	for(let i of e){
+		cnt += 1;
+		let file = i.name.split('.');
+		let filetype = file[file.length-1].toLowerCase();
+		if(filetype == 'jpg' || filetype == 'gif' || filetype == 'jpeg' || filetype=='png'){
+			document.querySelector(".rejectMsg").innerHTML = '';
+		} else{
+			document.querySelector(".rejectMsg").innerHTML = '<i class="fas fa-times-circle"></i>JPG/GIF/PNG 파일만 업로드 가능합니다.';
+			i.value='';
+			return false;
+		}
+	}
+	
+	
+}
+
+
+
+
 var cat1_num = new Array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
 var cat1_name = new Array('서울','부산','대구','인천','광주','대전','울산','강원','경기','경남','경북','전남','전북','제주','충남','충북');
 
@@ -199,6 +315,10 @@ for(i=0; i<name.length; i++){
 }
 }
 
+
+document.querySelector("#btn_cancel").addEventListener("click", ()=>{
+	history.back;
+})
 </script>
 </body>
 </html>

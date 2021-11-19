@@ -6,13 +6,14 @@ import lombok.Data;
 
 @Data
 public class FileDTO {
-	private String flIdx;
-	private String typeIdx;
+	private int flIdx;
+	private int bdIdx;
 	private String originFileName;
 	private String renameFileName;
 	private String savePath;
 	private Date regDate;
 	private int isDel;
+	private int cardIdx;
 	
 	public String getDownloadURL() {
 		return"/file/"+ savePath + renameFileName;
