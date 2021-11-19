@@ -30,7 +30,7 @@ public class CardController {
 			, Card card
 			) {
 		
-		card.setMemberIdx(1);
+		card.setMemberIdx(5);
 		cardService.insertCard(imgList, card);
 		return "redirect:/";
 	}
