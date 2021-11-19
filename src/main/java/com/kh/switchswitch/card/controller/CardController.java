@@ -28,10 +28,13 @@ public class CardController {
 	public String createCard(@RequestParam(required = false) List<MultipartFile> imgList
 			//,@AuthenticationPrincipal MemberAccount member
 			, Card card
+
 			) {
-		
-		card.setMemberIdx(5);
-		cardService.insertCard(imgList, card);
+		System.out.println(card.toString());
+		card.setMemberIdx(1);
+		cardService.insertCard(imgList, card); 
+
 		return "redirect:/";
 	}
+	
 }
