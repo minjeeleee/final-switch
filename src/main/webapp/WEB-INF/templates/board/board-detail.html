@@ -39,7 +39,7 @@ test
 
 
 					<div class="section_content_box">
-						<div class="section_header" th:object="${board}">
+						<div class="section_header">
 							<div class="section_title"  th:object="${board}">
 								<span th:text="|제목 : *{title}|"></span>
 							</div>
@@ -49,7 +49,7 @@ test
 									<span th:text="|등록일 : *{regDate}|"></span>
 									<span th:text="|작성자 : *{userId}|"></span>
 								</div>
-								<div class="info file_info">
+								<!-- <div class="info file_info">
 									<ol>
 										<li th:each="file : ${board.files}" th:object="${file}">
 											<a th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
@@ -58,7 +58,7 @@ test
 										</li>		
 									</ol>
 
-								</div> 
+								</div>  -->
 							</div>
 						</div>
 						<div class="section_container" th:object="${board}">
