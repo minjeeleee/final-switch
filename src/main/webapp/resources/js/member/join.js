@@ -4,7 +4,8 @@ $('#btnEmailCheck').click(()=>{
 	let email = $('#email').val();
 	   
 	if(!email){
-		$('#email').html('이메일을 입력하지 않았습니다.');
+		$('#emailCheck').html('이메일을 입력하지 않았습니다.');
+		$('#emailCheck').css('color','red');
 		return;
 	}
 	   
@@ -20,12 +21,15 @@ $('#btnEmailCheck').click(()=>{
 		if(text == 'available'){
 			confirmEmail = email;
 			$('#emailCheck').html('사용 가능한 이메일 입니다.');
+			$('#emailCheck').css('color','blue');
 		}else{
 			$('#emailCheck').html('사용 불가능한 이메일 입니다.');
+			$('#emailCheck').css('color','red');
 		}
 	})
 	.catch(error => {
 		$('#emailCheck').html('응답에 실패했습니다. 상태코드 : ' + error);
+		$('#nickCheck').css('color','red');
 	})
 });
    
@@ -35,7 +39,8 @@ $('#btnNickCheck').click(()=>{
 	let nickname = $('#nickname').val();
 	   
 	if(!nickname){
-		$('#nickname').html('닉네임을 입력하지 않았습니다.');
+		$('#nickCheck').html('닉네임을 입력하지 않았습니다.');
+		$('#nickCheck').css('color','red');
 		return;
 	}
 	   
@@ -51,12 +56,15 @@ $('#btnNickCheck').click(()=>{
 		if(text == 'available'){
 			confirmNickname = nickname;
 			$('#nickCheck').html('사용 가능한 닉네임 입니다.');
+			$('#nickCheck').css('color','blue');
 		}else{
 			$('#nickCheck').html('사용 불가능한 닉네임 입니다.');
+			$('#nickCheck').css('color','red');
 		}
 	})
 	.catch(error => {
 		$('#nickCheck').html('응답에 실패했습니다. 상태코드 : ' + error);
+		$('#nickCheck').css('color','red');
 	})
 });
  
@@ -79,20 +87,23 @@ $('#frm_join').submit(e=>{
 	let password = $('#password').val();
 	let passwordCheck = $('#passwordCheck').val();
 	
-	if(!confirmEmail && confirmEmail != email){
+	if(confirmEmail != email){
 		$('#emailCheck').html('이메일 중복 검사를 하지 않았습니다.');
+		$('#emailCheck').css('color','red');
 		$('#email').focus();
 		e.preventDefault();
 	}
 		
 	if(password != passwordCheck){
 		$('#passwordNotMatched').html('입력하신 비밀번호와 일치하지 않습니다.');
+		$('#passwordNotMatched').css('color','red');
 		$('#passwordNotMatched').focus();
 		e.preventDefault();
 	}
 		
-	if(!confirmNickname && confirmNickname != nickname){
+	if(confirmNickname != nickname){
 		$('#nickCheck').html('닉네임 중복 검사를 하지 않았습니다.');
+		$('#nickCheck').css('color','red');
 		$('#nickname').focus();
 		e.preventDefault();
 	}

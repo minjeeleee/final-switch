@@ -42,6 +42,10 @@ label{
     text-transform: capitalize;
 }
 
+.valid-msg-e{
+	color: red;
+}
+
 .form-content{
     padding: 25px;
     background: #fff;
