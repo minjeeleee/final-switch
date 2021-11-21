@@ -43,7 +43,7 @@ public class BoardController {
 		return "redirect:/";
 	}
 	
-	//11/17
+	//11/21 수정필요
 	//list받아오기
 	//paging처리필요	
 	  @GetMapping("board-list") public void boardList(Model model, String bdIdx) {
@@ -51,6 +51,9 @@ public class BoardController {
 	}
 
 	
+	//11/21 수정필요
+	  //ERROR: org.thymeleaf.TemplateEngine - [THYMELEAF][main] 
+	  //Exception processing template "board/board-detail": Exception evaluating SpringEL expression: "title" (template: "board/board-detail" - line 43, col 15)
 	@GetMapping("board-detail")
 	public void boardDetail(String bdIdx, Model model) {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);

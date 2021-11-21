@@ -13,10 +13,7 @@ import com.kh.switchswitch.common.util.FileDTO;
 
 @Mapper
 public interface BoardRepository {
-	
 
-	
-	
 	//글작성
 	@Insert("insert into community(bd_idx, user_id, title, content)"
 			+ " values(sc_bd_idx.nextval, #{userId}, #{title}, #{content})")
@@ -43,7 +40,8 @@ public interface BoardRepository {
 			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
 	void insertFileInfo(FileDTO fileDTO);
 	
-	@Select("select * from file_info where type_idx = #{bdIdx}")
+	//파일다운
+	@Select("select * from file_info where bd_idx = #{bdIdx}")
 	List<FileDTO> selectFilesByBdIdx(String bdIdx);
 
 	
