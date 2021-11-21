@@ -70,7 +70,11 @@ public class BoardControllerTest {
 	//THYMELEAF][main] Exception processing template "board/board-detail"
 	//: Exception evaluating SpringEL expression: "title" (template: "board/board-detail" - line 41, col 15)
 	
-	//11/17 테스트통과
+
+	//11/21 수정필요
+	  //ERROR: org.thymeleaf.TemplateEngine - [THYMELEAF][main] 
+	  //Exception processing template "board/board-detail": Exception evaluating SpringEL expression: "title" (template: "board/board-detail" - line 43, col 15)
+
 	@Test
 	public void boardDetail() throws Exception{
 		Member member = new Member();
