@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.model.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService, UserDetailsService {
 	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private final RestTemplate http;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -32,7 +36,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Member member = memberRepository.selectMemberByEmail(username);
+		Member member = memberRepository.selectMemberByEmailAndDelN(username);
 		return new MemberAccount(member);
 	}
 	
@@ -40,7 +44,7 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
     public void insertMember(JoinForm form) {
        Member member = form.convertToMember();
        member.setMemberPass(passwordEncoder.encode(form.getMemberPass()));
-       memberRepository.insert(member);
+       memberRepository.insertMember(member);
     }
 
 	public void authenticateByEmail(JoinForm form, String token) {

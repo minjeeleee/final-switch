@@ -23,16 +23,6 @@ public class BoardServiceImpl implements BoardService{
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BoardRepository boardRepository;
 	
-
-	
-	//11/17
-	@Override
-	public Map<String, Object> selectBoardByIdx(String bdIdx) {
-		Board board = boardRepository.selectBoardByIdx(bdIdx);
-		/* List<FileDTO> files = boardRepository.selectFilesByBdIdx(bdIdx); */
-		return Map.of("board",board);
-	}
-
 	@Override
 	public void insertBoard(List<MultipartFile> files, Board board) {
 		FileUtil  fileUtil = new FileUtil();
@@ -45,6 +35,23 @@ public class BoardServiceImpl implements BoardService{
 			}
 		}
 	}
+	
+	//11/17
+	@Override
+	public Map<String, Object> selectBoardByIdx(String bdIdx) {
+		Board board = boardRepository.selectBoardByIdx(bdIdx);
+		List<FileDTO> files = boardRepository.selectFilesByBdIdx(bdIdx);
+		return Map.of("board",board,"files",files);
+	}
+
+	//11/21 수정필요
+	@Override
+	public Map<String, Object> findBoardsByPage(String bdIdx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 
 
