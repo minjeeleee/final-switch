@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 @Component
@@ -27,10 +28,14 @@ public class ModifyFormValidator implements Validator{
 	public void validate(Object target, Errors errors) {
 
 		ModifyForm form = (ModifyForm) target;
+		Member member = memberRepository.selectMemberByEmailAndDelN(form.getMemberEmail());
 		
 		System.out.println(form);
+		System.out.println( member.getMemberNick());
+		System.out.println(form.getMemberNick());
+		System.out.println(form.getMemberNick().equals(member.getMemberNick()));
 		
-	    if(memberRepository.selectMemberByNickName(form.getMemberNick()) != null) {
+	    if(memberRepository.selectMemberByNickName(form.getMemberNick()) != null && !form.getMemberNick().equals(member.getMemberNick())) {
 		    errors.rejectValue("memberNick", "err-memberNick", "이미 존재하는 닉네임 입니다."); 
 	    }else if(form.getMemberNick().equals("")) { 
 	    	errors.rejectValue("memberNick",
@@ -41,7 +46,7 @@ public class ModifyFormValidator implements Validator{
 			errors.rejectValue("memberNick", "error-memberNick", "닉네임은 2글자 이상의 숫자 또는 한글 또는 영문 조합 입니다.");
 		}
 	  
-	    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}",form.getNewMemberPass())) { 
+	    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}",form.getNewMemberPass()) && form.getNewMemberPass() != "") { 
 	    	errors.rejectValue("newMemberPass","err-newMemberPass", "비밀번호는 숫자 영문자 특수문자 조합인 8글자 이상의 문자열입니다."); 
 	    }
 	  

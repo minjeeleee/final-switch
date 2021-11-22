@@ -228,7 +228,7 @@
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
                                 <div class="card-body" style="overflow: scroll;">
-                                    <form  th:object="${modifyForm}" th:action="@{/mypage/modify}" method="post" id="frm_modify'">
+                                    <form  th:object="${modifyForm}" th:action="@{/mypage/modify}" method="post" id="frm_modify">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
@@ -246,11 +246,13 @@
 											</tr>
 											<tr>
 												<th>이름</th>
-												<td th:text="${member.memberName}"></td>
+												<td th:text="${#authentication.principal.memberName}"></td>
 											</tr>
 											<tr>
 												<th>이메일</th>
-												<td  th:text="${member.memberEmail}"></td>
+												<td>
+													<input type="email" name="memberEmail" id="memberEmail" th:value="${#authentication.principal.memberEmail}" readonly="readonly"/>
+												</td>
 											</tr>
 											<tr>
 												<th>현재비밀번호</th>
@@ -282,7 +284,7 @@
 												<th>닉네임</th>
 												<td>
 													<input type="text" name="memberNick" id="memberNick" size="6"  placeholder="2~6자의 한글,영문" 
-													th:value="${member.memberNick}"
+													th:value="${#authentication.principal.memberNick}"
 													required />
 													<button type="button" id="btnNickCheck">중복확인</button>
 													<br/>
@@ -294,7 +296,7 @@
 												<th>연락처</th>
 												<td>
 													<input  type="tel" id="memberTell" name="memberTell" placeholder="숫자만 입력" 
-												 	th:value="${member.memberTell}"		
+												 	th:value="${#authentication.principal.memberTell}"		
 													required />
 													<br/>
 													<span th:if="${#fields.hasErrors('memberTell')}" th:errors="*{memberTell}" class="valid-msg"></span>
@@ -304,12 +306,12 @@
 												<th>주소</th>
 												<td>
 													<input id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly" style="width: 150px" 
-															th:value="${#strings.arraySplit(#strings.replace(member.memberAddress,'[',''),']')[0]}"
+															th:value="${#strings.arraySplit(#strings.replace(#authentication.principal.memberAddress,'[',''),']')[0]}"
 													required/>
 					                               <button type="button" id="searchAddr" >주소검색</button>
 					                               <div class="col-sm-12">
 						                           <input class="form-control" id="address" name="address" type="text" readonly="readonly" style="width: 300px"
-						                           		th:value="${#strings.arraySplit(member.memberAddress,']')[1]}"	
+						                           		th:value="${#strings.arraySplit(#authentication.principal.memberAddress,']')[1]}"	
 						                            required/>
 						                           </div>
 						                           <br/>
@@ -319,7 +321,7 @@
 											<tr>
 												<th>회원 탈퇴</th>
 												<td>
-													<button type="button" id="btnNickCheck" onclick="location.href='leave-member'">탈퇴하기</button>
+													<button type="button"  onclick="location.href='leave-member'">탈퇴하기</button>
 												</td>
 											</tr>
 											<tr>

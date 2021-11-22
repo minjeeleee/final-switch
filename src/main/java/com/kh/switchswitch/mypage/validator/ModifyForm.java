@@ -6,6 +6,7 @@ import lombok.Data;
 public class ModifyForm {
 
 	private String memberPass;
+	private String memberEmail;
 	private String newMemberPass;
 	private String checkMemberPss;
 	private String memberTell;

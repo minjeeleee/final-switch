@@ -3,7 +3,7 @@
  */
  (()=>{
 	  let cofirmPw = "";
-	  let cofirmNick = document.querySelector('#memberNick').value;;
+	  let cofirmNick = document.querySelector('#memberNick').value;
 
 	  document.querySelector('#btnPwCheck').addEventListener('click', function(){
 		  
@@ -77,19 +77,19 @@
 			
 		   
 			if(cofirmNick != nickName){
-			   document.querySelector('#nickNameCheck').innerHTML = '닉네임 중복 검사를 하지 않았습니다';
+			   alert('닉네임 중복 검사를 하지 않았습니다');
 			   document.querySelector('#memberNick').focus();
 			   e.preventDefault();
 		   }
 
 		   if(cofirmPw != password){
-			 document.querySelector('#passwordCheck').innerHTML = '비밀번호 일치 검사를 하지 않습니다';
+			   alert('비밀번호 일치 검사를 하지 않습니다');
 			   document.querySelector('#memberPass').focus();
 			   e.preventDefault();
 		   }
 		   
-		   if(!password){
-			  document.querySelector('#passwordCheck').innerHTML = '현재비밀번호를 입력하지 않았습니다.';
+		   if(password){
+			   alert('현재비밀번호를 입력하지 않았습니다.');
 			   document.querySelector('#memberPass').focus();
 			   e.preventDefault();
 		   }
