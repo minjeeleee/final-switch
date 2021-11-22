@@ -42,14 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		
 		.mvcMatchers("/switchswitch/resources/**", "/resources/**");
 	}
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-			.mvcMatchers(HttpMethod.GET,"/notice/noticeList","/member/logout").authenticated()
+			.mvcMatchers(HttpMethod.GET,"/notice/noticeList","/mypage/profile","/member/logout").authenticated()
 			.anyRequest().permitAll();
 		
 		http.formLogin()

@@ -20,6 +20,10 @@ public class MemberAccount extends User {
 	public Member getMember() {
 		return member;
 	}
+	
+	public String getMemberTell() {
+		return member.getMemberTell();
+	}
 
 	public int getMemberIdx() {
 		return member.getMemberIdx();
