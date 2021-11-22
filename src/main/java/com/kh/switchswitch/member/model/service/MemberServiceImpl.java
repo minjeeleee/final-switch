@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.model.service;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
+import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
@@ -70,5 +73,38 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 	
 	public Member selectMemberByNicknameAndDelN(String memberNick) {
 		return memberRepository.selectMemberByNicknameAndDelN(memberNick);
+	}
+
+	public KakaoLogin selectKakaoLoginById(String id) {
+		return memberRepository.selectKakaoLoginById(id);
+	}
+
+	public void insertMemberWithKakao(Member member, String id) {
+		int cnt = 0;
+		//이메일 존재여부 확인
+		Member searchedmember = memberRepository.selectMemberByEmailAndDelN(member.getMemberEmail());
+		//비밀번호 encoding
+		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
+		//이메일 존재 시
+		if(searchedmember != null) {
+			//기존회원idx와 함께 kakao login 인스턴스 생성
+			memberRepository.insertKakaoLogin(Map.of(searchedmember.getMemberIdx(),id));
+		} else {
+			//중복 닉네임 존재시 닉네임 뒤에 1씩 증가
+			while(memberRepository.selectMemberByNicknameAndDelN(member.getMemberNick()) != null) {
+				member.setMemberNick(member.getMemberNick()+cnt);
+				cnt++;
+			}
+			//null값 허용X -> default null
+			member.setMemberAddress("null");
+			member.setMemberName("null");
+			//회원 인스턴스 및 kakao login 인스턴스 생성
+			memberRepository.insertMember(member);
+			memberRepository.insertKakaoLoginWithId(id);
+		}
+	}
+
+	public void updateMemberDelYN(Member member) {
+		memberRepository.updateMember(member);
 	};
 }
