@@ -19,5 +19,9 @@ public interface MemberService {
 	void insertMemberWithKakao(Member member, String id);
 
 	void updateMemberDelYN(Member member);
+
+	String getAccessTokenJsonData(String code);
+
+	String getUserInfo(String accessToken);
 	
 }
