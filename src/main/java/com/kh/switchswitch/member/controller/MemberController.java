@@ -1,7 +1,6 @@
 package com.kh.switchswitch.member.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;

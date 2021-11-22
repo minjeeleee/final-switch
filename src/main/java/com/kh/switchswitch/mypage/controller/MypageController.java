@@ -15,14 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.model.service.MypageService;
-import com.kh.switchswitch.mypage.model.service.MypageServiceImpl;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 
@@ -31,14 +29,16 @@ import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 public class MypageController {
 	
 	private MypageService mypageService;
+	private MemberService memberService;
 	private ModifyFormValidator modifyFormValidator;
 	private PasswordEncoder passwordEncoder;
 
 
-	public MypageController(MypageService mypageService, ModifyFormValidator modifyFormValidator,
+	public MypageController(MypageService mypageService, MemberService memberService, ModifyFormValidator modifyFormValidator,
 			PasswordEncoder passwordEncoder) {
 		super();
 		this.mypageService = mypageService;
+		this.memberService = memberService;
 		this.modifyFormValidator = modifyFormValidator;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -64,7 +64,6 @@ public class MypageController {
 			) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
-		
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
 			return "mypage/profile";
@@ -101,9 +100,12 @@ public class MypageController {
 	
 	@GetMapping("pw-check")
 	@ResponseBody
-	public String pwCheck(String password,@AuthenticationPrincipal Member certifiedUser) {
+	public String pwCheck(String password) {
 		
-		if(passwordEncoder.matches(password, certifiedUser.getMemberPass())) {
+		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+
+		System.out.println(password);
+		if(passwordEncoder.matches(password, member.getMemberPass())) {
 			return "available";
 		}else {
 			return "disable";
@@ -112,9 +114,12 @@ public class MypageController {
 	
 	@GetMapping("nick-check")
 	@ResponseBody
-	public String nickCheck(String nickName,@AuthenticationPrincipal Member certifiedUser) {
+	public String nickCheck(String nickName) {
 		
-		if(nickName.equals(certifiedUser.getMemberNick()) || mypageService.checkNickName(nickName)) {
+		System.out.println(nickName);
+		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+		
+		if(nickName.equals(member.getMemberNick()) || mypageService.checkNickName(nickName)) {
 			return "available";
 		}else {
 			return "disable";
