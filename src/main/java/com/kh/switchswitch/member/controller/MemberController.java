@@ -1,13 +1,13 @@
 package com.kh.switchswitch.member.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -22,8 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
@@ -40,6 +45,8 @@ public class MemberController {
 	
 	private MemberService memberService;
 	private JoinFormValidator joinFormValidator;
+	@Autowired
+	RestTemplate http;
 	
 	public MemberController(MemberService memberService, JoinFormValidator joinFormValidator) {
 		super();
@@ -57,15 +64,53 @@ public class MemberController {
 	@GetMapping("login")
 	public void login() {}
 	
-	@PostMapping("kakaoLogin")
-	public String kakaoLogin(String id, String nickname, @RequestParam(required = false) String email) throws UnsupportedEncodingException {
+	@RequestMapping("kakaoLogin")
+	public String kakaoLogin(@RequestParam("code") String code, RedirectAttributes redirectAttr) {
+		String id = "";
+		String nickname = "";
+		String email = "";
+		
+		try {
+			//access_token이 포함된 JSON String을 받아온다.
+	        String accessTokenJsonData = memberService.getAccessTokenJsonData(code);
+	        if(accessTokenJsonData.equals("error")) return "error";
+
+	        //JSON String -> Object(Map)
+	        ObjectMapper accessTokenJsonObject= new ObjectMapper();
+	        Map<String, Object> map = accessTokenJsonObject.readValue(accessTokenJsonData, Map.class);
+			
+			//access_token 추출
+	        String accessToken = map.get("access_token").toString();
+	        if(accessToken.equals("error")) return "error";
+	        
+	        //유저 정보가 포함된 JSON String을 받아온다.
+	        String userInfo = memberService.getUserInfo(accessToken);
+	        
+	        //JSON String -> Object(Map)
+	        ObjectMapper userInfoMapper= new ObjectMapper();
+	        map = userInfoMapper.readValue(userInfo, new TypeReference<Map<String, Object>>() {});
+	    	id = map.get("id").toString();
+	    	Map<String, String> propertyKeys = (Map<String, String>) map.get("properties");
+	    	nickname = propertyKeys.get("nickname");
+	    	Map<String, String> kakaoAccount = (Map<String, String>) map.get("kakao_account");
+	    	email = kakaoAccount.get("email");
+	        if(map.get("error") != null) return "error";
+	        
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Member member = new Member();
 		//email null일 경우
-		if(email == null) {
+		if(email.isEmpty()) {
 			throw new HandlableException(ErrorCode.FAILED_TO_JOIN_WITH_KAKAO);
 		}
 		if(memberService.selectKakaoLoginById(id) == null) {
 			
-			Member member = new Member();
 			member.setMemberPass(id);
 			member.setMemberEmail(email);
 			member.setMemberNick(nickname);
@@ -73,7 +118,7 @@ public class MemberController {
 			memberService.insertMemberWithKakao(member,id);
 		}
 		if(memberService.selectKakaoLoginById(id) != null) {
-			Member member = memberService.selectMemberByEmailAndDelN(email);
+			member = memberService.selectMemberByEmailAndDelN(email);
 			if(member == null) {
 				member = new Member();
 				member.setMemberDelDate(null);
@@ -82,7 +127,10 @@ public class MemberController {
 			};
 		}
 		
-		return "redirect:/member/login";
+		redirectAttr.addFlashAttribute("email", email);
+		redirectAttr.addFlashAttribute("password", id);
+		
+		return "redirect:/member/login?kakao=valid";
 		
 	}
 	

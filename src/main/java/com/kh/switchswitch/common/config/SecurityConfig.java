@@ -78,7 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.csrf().ignoringAntMatchers("/mail");
 		http.csrf().ignoringAntMatchers("/member/addrPopup");
-		http.csrf().ignoringAntMatchers("/member/kakaoLogin");
 	}
 
 }
