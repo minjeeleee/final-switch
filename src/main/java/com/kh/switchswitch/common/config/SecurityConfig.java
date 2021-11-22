@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		.antMatchers("/**")
+		
 		.mvcMatchers("/switchswitch/resources/**", "/resources/**");
 	}
 	
@@ -84,6 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.csrf().ignoringAntMatchers("/mail");
 		http.csrf().ignoringAntMatchers("/member/addrPopup");
+		http.csrf().ignoringAntMatchers("/member/kakaoLogin");
 	}
 
 }

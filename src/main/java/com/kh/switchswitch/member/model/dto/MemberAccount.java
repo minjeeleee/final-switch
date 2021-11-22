@@ -1,6 +1,6 @@
 package com.kh.switchswitch.member.model.dto;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,7 +29,7 @@ public class MemberAccount extends User {
 		return member.getCode();
 	}
 
-	public LocalDate getMemberRegDate() {
+	public Date getMemberRegDate() {
 		return member.getMemberRegDate();
 	}
 
@@ -53,7 +53,7 @@ public class MemberAccount extends User {
 		return member.getMemberAddress();
 	}
 
-	public LocalDate getMemberDelDate() {
+	public Date getMemberDelDate() {
 		return member.getMemberDelDate();
 	}
 

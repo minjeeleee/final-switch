@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.member.validator.JoinForm;
 import com.kh.switchswitch.member.validator.JoinFormValidator;
@@ -53,6 +56,35 @@ public class MemberController {
 	
 	@GetMapping("login")
 	public void login() {}
+	
+	@PostMapping("kakaoLogin")
+	public String kakaoLogin(String id, String nickname, @RequestParam(required = false) String email) throws UnsupportedEncodingException {
+		//email null일 경우
+		if(email == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_JOIN_WITH_KAKAO);
+		}
+		if(memberService.selectKakaoLoginById(id) == null) {
+			
+			Member member = new Member();
+			member.setMemberPass(id);
+			member.setMemberEmail(email);
+			member.setMemberNick(nickname);
+			
+			memberService.insertMemberWithKakao(member,id);
+		}
+		if(memberService.selectKakaoLoginById(id) != null) {
+			Member member = memberService.selectMemberByEmailAndDelN(email);
+			if(member == null) {
+				member = new Member();
+				member.setMemberDelDate(null);
+				member.setMemberDelYn(0);
+				memberService.updateMemberDelYN(member);
+			};
+		}
+		
+		return "redirect:/member/login";
+		
+	}
 	
 	@PostMapping("logout")
 	public void logout() {}
