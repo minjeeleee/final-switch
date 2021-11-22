@@ -88,7 +88,7 @@
 			   e.preventDefault();
 		   }
 		   
-		   if(password){
+		   if(!password){
 			   alert('현재비밀번호를 입력하지 않았습니다.');
 			   document.querySelector('#memberPass').focus();
 			   e.preventDefault();

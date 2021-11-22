@@ -31,9 +31,7 @@ public class ModifyFormValidator implements Validator{
 		Member member = memberRepository.selectMemberByEmailAndDelN(form.getMemberEmail());
 		
 		System.out.println(form);
-		System.out.println( member.getMemberNick());
-		System.out.println(form.getMemberNick());
-		System.out.println(form.getMemberNick().equals(member.getMemberNick()));
+		System.out.println(form.convertToMember());
 		
 	    if(memberRepository.selectMemberByNickName(form.getMemberNick()) != null && !form.getMemberNick().equals(member.getMemberNick())) {
 		    errors.rejectValue("memberNick", "err-memberNick", "이미 존재하는 닉네임 입니다."); 

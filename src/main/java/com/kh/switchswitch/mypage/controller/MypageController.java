@@ -68,6 +68,7 @@ public class MypageController {
 			vr.addErrors(errors);
 			return "mypage/profile";
 		}
+		memberService.updateMemberDelYN(form.convertToMember());
 		return "redirect:/mypage/profile";
 	}
 
