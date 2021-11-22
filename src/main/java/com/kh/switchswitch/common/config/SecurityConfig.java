@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final DataSource dataSource;
 	private final UserDetailsService memberService;
-	
-	@Bean
-	public SpringSecurityDialect springSecurityDialect() {
-		return new SpringSecurityDialect();
-	}
 	
 	@Bean
 	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
@@ -48,14 +42,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		.antMatchers("/**")
 		.mvcMatchers("/switchswitch/resources/**", "/resources/**");
 	}
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-			.mvcMatchers(HttpMethod.GET,"/notice/noticeList","/member/logout").authenticated()
+			.mvcMatchers(HttpMethod.GET,"/notice/noticeList","/mypage/profile","/member/logout").authenticated()
 			.anyRequest().permitAll();
 		
 		http.formLogin()
@@ -68,13 +61,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.logoutUrl("/member/logout")
 		.logoutSuccessUrl("/member/login");
 		
+		//remember-me 기능
 		http.rememberMe()
 			.userDetailsService(memberService)
 			.tokenRepository(tokenRepository());
-			
+		
+		//동시 로그인 차단
+		http.sessionManagement()
+		//.invalidSessionUrl("/member/login")			//세션이 유효하지 않을 때 이동할 URL
+		.maximumSessions(1)								//최대 허용 가능 세션 수
+		//.maxSessionsPreventsLogin(true) 				//false : 기존 세션 만료(defualt)
+        .expiredUrl("/member/login?session=expired");	//세션이 만료된 경우 이동할 URL
+
+		
 		
 		http.csrf().ignoringAntMatchers("/mail");
 		http.csrf().ignoringAntMatchers("/member/addrPopup");
+		http.csrf().ignoringAntMatchers("/member/kakaoLogin");
 	}
 
 }
