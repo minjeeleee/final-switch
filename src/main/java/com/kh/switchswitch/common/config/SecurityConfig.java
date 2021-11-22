@@ -48,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-		
+		.mvcMatchers("/mypage/profile")
+		.mvcMatchers("/mypage/modify")
 		.mvcMatchers("/switchswitch/resources/**", "/resources/**");
 	}
 	

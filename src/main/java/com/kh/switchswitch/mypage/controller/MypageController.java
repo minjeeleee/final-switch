@@ -31,14 +31,16 @@ import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 public class MypageController {
 	
 	private MypageService mypageService;
+	private MemberService memberService;
 	private ModifyFormValidator modifyFormValidator;
 	private PasswordEncoder passwordEncoder;
 
 
-	public MypageController(MypageService mypageService, ModifyFormValidator modifyFormValidator,
+	public MypageController(MypageService mypageService, MemberService memberService, ModifyFormValidator modifyFormValidator,
 			PasswordEncoder passwordEncoder) {
 		super();
 		this.mypageService = mypageService;
+		this.memberService = memberService;
 		this.modifyFormValidator = modifyFormValidator;
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -52,7 +54,10 @@ public class MypageController {
 
 	@GetMapping("profile")
 	public void profile(Model model) {
+		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+		System.out.println(member);
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
+		model.addAttribute("member", member);
 	}
 	
 	@PostMapping("modify")
@@ -64,11 +69,13 @@ public class MypageController {
 			) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
-		
+		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
+			model.addAttribute("member", member);
 			return "mypage/profile";
 		}
+		model.addAttribute("member", member);
 		return "redirect:/mypage/profile";
 	}
 
@@ -101,9 +108,12 @@ public class MypageController {
 	
 	@GetMapping("pw-check")
 	@ResponseBody
-	public String pwCheck(String password,@AuthenticationPrincipal Member certifiedUser) {
+	public String pwCheck(String password) {
 		
-		if(passwordEncoder.matches(password, certifiedUser.getMemberPass())) {
+		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+
+		System.out.println(password);
+		if(passwordEncoder.matches(password, member.getMemberPass())) {
 			return "available";
 		}else {
 			return "disable";
@@ -112,9 +122,12 @@ public class MypageController {
 	
 	@GetMapping("nick-check")
 	@ResponseBody
-	public String nickCheck(String nickName,@AuthenticationPrincipal Member certifiedUser) {
+	public String nickCheck(String nickName) {
 		
-		if(nickName.equals(certifiedUser.getMemberNick()) || mypageService.checkNickName(nickName)) {
+		System.out.println(nickName);
+		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+		
+		if(nickName.equals(member.getMemberNick()) || mypageService.checkNickName(nickName)) {
 			return "available";
 		}else {
 			return "disable";

@@ -38,7 +38,6 @@
 	document.querySelector('#btnNickCheck').addEventListener('click', function(){
 		  
 		   let nickName = document.querySelector('#memberNick').value;
-		   let nickReg = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$/;
 
 		   if(!nickName){
 			   document.querySelector('#nickNameCheck').innerHTML = '닉네임을 입력하지 않았습니다';
@@ -49,11 +48,7 @@
 			   document.querySelector('#nickNameCheck').innerHTML = '원래 닉네임 입니다';
 			   return;
 		   }
-
-		   if(!nickReg.test(nickName)) {
-		   	   document.querySelector('#nickNameCheck').innerHTML = '닉네임은 4~10자로 설정해야합니다.';
-			   return;
-           }
+		 
 
 		   fetch("/mypage/nick-check?nickName="+nickName)
 		   .then(response =>{
@@ -82,13 +77,19 @@
 			
 		   
 			if(cofirmNick != nickName){
-			   alert('닉네임 중복 검사를 하지 않았습니다');
+			   document.querySelector('#nickNameCheck').innerHTML = '닉네임 중복 검사를 하지 않았습니다';
 			   document.querySelector('#memberNick').focus();
 			   e.preventDefault();
 		   }
 
 		   if(cofirmPw != password){
-			   alert('비밀번호 일치 검사를 하지 않습니다');
+			 document.querySelector('#passwordCheck').innerHTML = '비밀번호 일치 검사를 하지 않습니다';
+			   document.querySelector('#memberPass').focus();
+			   e.preventDefault();
+		   }
+		   
+		   if(!password){
+			  document.querySelector('#passwordCheck').innerHTML = '현재비밀번호를 입력하지 않았습니다.';
 			   document.querySelector('#memberPass').focus();
 			   e.preventDefault();
 		   }
