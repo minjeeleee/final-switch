@@ -22,6 +22,8 @@
   		<if test="memberAddress != null">, member_address=#{memberAddress}</if>
   		<if test="memberDelDate != null">, member_del_date=#{memberDelDate}</if>
   		<if test="memberScore != null">, member_score=#{memberScore}</if>
+  		<if test="memberNick != null">, member_nick=#{memberNick}</if>
+  		<if test="memberTell != null">, member_tell=#{memberTell}</if>
   		where member_idx = #{memberIdx}
   	</update>
   </mapper>
