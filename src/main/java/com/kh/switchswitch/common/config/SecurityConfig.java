@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final DataSource dataSource;
 	private final UserDetailsService memberService;
-	
-	@Bean
-	public SpringSecurityDialect springSecurityDialect() {
-		return new SpringSecurityDialect();
-	}
 	
 	@Bean
 	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {

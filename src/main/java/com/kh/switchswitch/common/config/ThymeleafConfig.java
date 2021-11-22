@@ -1,5 +1,7 @@
 package com.kh.switchswitch.common.config;
 
+import java.util.Set;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -12,6 +14,7 @@ import org.springframework.format.datetime.DateFormatter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -24,12 +27,9 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
 
   private ApplicationContext applicationContext;
 
-
-
   public ThymeleafConfig() {
       super();
   }
-
 
   public void setApplicationContext(final ApplicationContext applicationContext)
           throws BeansException {
@@ -103,6 +103,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
       // across different data types, so this flag is "false" by default
       // for safer backwards compatibility.
       templateEngine.setEnableSpringELCompiler(true);
+      templateEngine.setAdditionalDialects(Set.of(new SpringSecurityDialect()));
       return templateEngine;
   }
 

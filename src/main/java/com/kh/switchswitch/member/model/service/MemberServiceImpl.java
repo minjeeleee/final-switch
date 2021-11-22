@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.model.service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -57,14 +59,21 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 		body.add("email", form.getMemberEmail());
 		body.add("persistToken", token);
 		
-		//RestTemplate의 기본 ContentType이 application/json이다.
-		RequestEntity<MultiValueMap<String, String>> request =
-				RequestEntity.post(Config.DOMAIN.DESC + "/mail")
-				.accept(MediaType.APPLICATION_FORM_URLENCODED)
-				.body(body);
 		
-		String htmlText = http.exchange(request, String.class).getBody();
-		mailSender.sendEmail(form.getMemberEmail(), "회원가입을 축하합니다.", htmlText);
+		try {
+			URI uri = new URI(Config.DOMAIN.DESC + "/mail");
+			
+			//RestTemplate의 기본 ContentType이 application/json이다.
+			RequestEntity<MultiValueMap<String, String>> request =
+					RequestEntity.post(uri)
+					.accept(MediaType.APPLICATION_FORM_URLENCODED)
+					.body(body);
+			
+			String htmlText = http.exchange(request, String.class).getBody();
+			mailSender.sendEmail(form.getMemberEmail(), "회원가입을 축하합니다.", htmlText);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Member selectMemberByEmailAndDelN(String memberEmail) {
