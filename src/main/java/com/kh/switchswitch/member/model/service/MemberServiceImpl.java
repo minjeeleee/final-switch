@@ -20,13 +20,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
 import com.kh.switchswitch.common.util.FileDTO;
@@ -34,6 +34,7 @@ import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.member.model.repository.KakaoRepository;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 import com.kh.switchswitch.member.validator.JoinForm;
 
@@ -47,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	private final RestTemplate http;
 	private final MemberRepository memberRepository;
+	private final KakaoRepository kakaoRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MailSender mailSender;
 	
@@ -59,7 +61,6 @@ public class MemberServiceImpl implements MemberService {
 		return new MemberAccount(member);
 	}
 	
-	@Transactional
     public void insertMember(JoinForm form) {
        Member member = form.convertToMember();
        member.setMemberPass(passwordEncoder.encode(form.getMemberPass()));
@@ -99,21 +100,40 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	public KakaoLogin selectKakaoLoginById(String id) {
-		return memberRepository.selectKakaoLoginById(id);
+		return kakaoRepository.selectKakaoLoginById(id);
 	}
 
 	public void insertMemberWithKakao(Member member, String id) {
 		int cnt = 0;
-		//이메일 존재여부 확인
-		Member searchedmember = memberRepository.selectMemberByEmailAndDelN(member.getMemberEmail());
-		//비밀번호 encoding
-		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
-		//이메일 존재 시
+		//이메일 존재여부 확인 (전체)
+		Member searchedmember = memberRepository.selectMemberByEmail(member.getMemberEmail());
+		//이메일 존재 O
 		if(searchedmember != null) {
-			//기존회원idx와 함께 kakao login 인스턴스 생성
-			memberRepository.insertKakaoLogin(Map.of(searchedmember.getMemberIdx(),id));
+			//카카오 존재 X
+			if(kakaoRepository.selectKakaoLoginById(id) == null) {
+				//비밀번호 업데이트
+				member.setMemberPass(passwordEncoder.encode(id));
+				memberRepository.updateMember(member);
+				//기존회원idx와 함께 kakao login 인스턴스 생성
+				kakaoRepository.insertKakaoLoginWithMemberIdxAndId(Map.of(searchedmember.getMemberIdx(),id));
+			}
+			//탈퇴 O
+			if(member.getMemberDelYn() == 1) {
+				//기존 정보 업데이트
+				member.setMemberIdx(searchedmember.getMemberIdx());
+				member.setMemberDelYn(0);
+				member.setMemberDelDate(null);
+				//비밀번호 encoding
+				member.setMemberPass(passwordEncoder.encode(id));
+				//닉네임 중복시 cnt 1씩 증가
+				while(memberRepository.selectMemberByNicknameAndDelN(member.getMemberNick()) != null) {
+					member.setMemberNick(member.getMemberNick()+cnt);
+					cnt++;
+				}
+				memberRepository.updateMember(member);
+			}
 		} else {
-			//중복 닉네임 존재시 닉네임 뒤에 1씩 증가
+			//닉네임 중복시 cnt 1씩 증가
 			while(memberRepository.selectMemberByNicknameAndDelN(member.getMemberNick()) != null) {
 				member.setMemberNick(member.getMemberNick()+cnt);
 				cnt++;
@@ -121,9 +141,11 @@ public class MemberServiceImpl implements MemberService {
 			//null값 허용X -> default null
 			member.setMemberAddress("null");
 			member.setMemberName("null");
+			//비밀번호 encoding
+			member.setMemberPass(passwordEncoder.encode(id));
 			//회원 인스턴스 및 kakao login 인스턴스 생성
 			memberRepository.insertMember(member);
-			memberRepository.insertKakaoLoginWithId(id);
+			kakaoRepository.insertKakaoLoginWithId(id);
 		}
 	}
 
@@ -188,15 +210,38 @@ public class MemberServiceImpl implements MemberService {
 			bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
 			String line;
 			while((line = bf.readLine()) != null) {
-				jsonData=line;
+				jsonData+=line;
 			}
 			
 			return jsonData;
 			
 		} catch(Exception e) {
-			return "success";
+			return "error";
 		}
 		
+	}
+	
+	public void logoutKakao(String accessToken) {
+		try {
+			String jsonData = "";
+			
+			URL url = new URL("https://kapi.kakao.com/v1/user/logout?access_token=" + accessToken);
+		    
+			BufferedReader bf;
+			bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+			
+			String line;
+			while((line = bf.readLine()) != null) {
+				jsonData+=line;
+			}
+			ObjectMapper logoutMapper = new ObjectMapper();
+			Map<String, Object> logoutMap = logoutMapper.readValue(jsonData, Map.class);
+			logger.debug(logoutMap.get("id").toString());
+			
+		} catch(Exception e) {
+			logger.debug("카카오 로그아웃 중 오류 발생!!!");
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -207,7 +252,6 @@ public class MemberServiceImpl implements MemberService {
 		return false;
 	}
 
-	@Override
 	public FileDTO selectFileInfoByFlIdx(int flIdx) {
 		return memberRepository.selectFileInfoByFlIdx(flIdx);
 	}

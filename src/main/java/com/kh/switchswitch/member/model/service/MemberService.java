@@ -36,4 +36,6 @@ public interface MemberService extends UserDetailsService {
 	boolean checkNickName(String nickName);
 
 	FileDTO selectFileInfoByFlIdx(int flIdx);
+
+	void logoutKakao(String accessToken);
 }

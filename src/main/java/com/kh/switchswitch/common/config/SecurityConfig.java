@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	    firewall.setAllowSemicolon(true);  
 	    return firewall;
 	}
+
 	
 	//remember-me 기능
 	public PersistentTokenRepository tokenRepository() {
