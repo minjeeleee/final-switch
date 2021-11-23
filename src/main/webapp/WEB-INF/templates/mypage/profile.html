@@ -228,16 +228,15 @@
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
                                 <div class="card-body" style="overflow: scroll;">
-                                    <form  th:object="${modifyForm}" th:action="@{/mypage/profile}" method="post" id="frm_modify">
+                                    <form  th:object="${modifyForm}" th:action="@{/mypage/profile}" method="post" id="frm_modify" enctype="multipart/form-data">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
 												<td>
-												
-													<img class="team-img" ></img>
+													<img class="profile-img" th:if ="${profileImage == null}" src="../resources/img/no-img.jpg"></img>
 													<br/>
 													<span class="msg">JPG/GIF/PNG 파일만 업로드 가능</span>
-													<input type="file" name="teamFile" id="image" onchange="fileCheck(this.files)">
+													<input type="file" name="profileImage" id="profileImage" onchange="fileCheck(this.files)">
 													<div class="rejectMsg"></div>
 													<div class="preview">
 						                               <p>No files currently selected for upload</p>
@@ -437,7 +436,7 @@
     <script src="../resources/js/sb-admin-2.min.js"></script>
     <script type="text/javascript" src="../resources/js/member/modifyForm.js"></script>
     <script type="text/javascript">
-    var input = document.querySelector('#image');
+    var input = document.querySelector('#profileImage');
     var preview = document.querySelector('.preview');
 
     input.addEventListener('change', updateImageDisplay);
@@ -456,7 +455,7 @@
     	    for(const file of curFiles) {
     	      const para = document.createElement('p');
     	      if(validFileType(file)) {
-    	        const image = document.querySelector('.team-img');
+    	        const image = document.querySelector('.profile-img');
     	       
     	        image.src = URL.createObjectURL(file);
 
@@ -498,7 +497,7 @@
    			document.querySelector(".rejectMsg").innerHTML = '';
    		} else{
    			document.querySelector(".rejectMsg").innerHTML = '<i class="fas fa-times-circle"></i>JPG/GIF/PNG 파일만 업로드 가능합니다.';
-   			let files = document.getElementsByName('teamFile');
+   			let files = document.getElementsByName('profileImage');
    			files[0].value='';
    			return false;
    		}

@@ -25,10 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
+import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
@@ -123,8 +126,20 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 	}
 
 	public void updateMemberDelYN(Member member) {
+		memberRepository.updateMember(member);
+	}
+	
+	public void updateMemberWithFile(Member member, MultipartFile profileImage) {
 		member.setMemberIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getMemberIdx());
 		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
+		
+		System.out.println(profileImage);
+		if(profileImage != null) {
+			FileUtil fileUtil = new FileUtil();
+			FileDTO file = memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
+			member.setFlIdx(file.getFlIdx());
+		}
+		
 		memberRepository.updateMember(member);
 	}
 
@@ -182,10 +197,16 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 		
 	}
 	
+
 	public boolean checkNickName(String nickName) {
 		if(memberRepository.selectMemberByNickName(nickName) == null) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public FileDTO selectFileInfoByFlIdx(int flIdx) {
+		return memberRepository.selectFileInfoByFlIdx(flIdx);
 	}
 }
