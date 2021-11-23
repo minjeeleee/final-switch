@@ -30,7 +30,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">회원 탈퇴</h1>
                             </div>
-                            <form class="user" action="/mypage/leave-member" method="post">
+                            <form class="user"  th:action="@{/mypage/leave-member}" method="post" id="leave_form">
                                 <div class="form-group">
 	                                <p class="leave-msg">회원 탈퇴 후에도 사이트에서 제공하는 비회원 서비스를 이용하실 수 있으며, 
 									<br>무분별한 회원가입을 막기위해 
@@ -44,7 +44,7 @@
                                     <input type="password" class="form-control form-control-user" id="password" name="password"
                                         placeholder="password">
                                 </div>
-                             	 <button class="btn btn-primary btn-user btn-block">
+                             	 <button type="submit" class="btn btn-primary btn-user btn-block">
                                    		탈퇴 하기
                                 </button>
                             </form>
@@ -55,7 +55,14 @@
         </div>
 
     </div>
-
+	<script type="text/javascript">
+	 document.querySelector('#leave_form').addEventListener('submit',e=>{
+		   
+	   });
+	
+	
+	
+	</script>
     <!-- Bootstrap core JavaScript-->
     <script src="../resources/vendor/jquery/jquery.min.js"></script>
     <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

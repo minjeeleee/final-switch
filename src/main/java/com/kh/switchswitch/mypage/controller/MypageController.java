@@ -21,7 +21,6 @@ import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
-import com.kh.switchswitch.mypage.model.service.MypageService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 
@@ -29,16 +28,14 @@ import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 @RequestMapping("mypage")
 public class MypageController {
 	
-	private MypageService mypageService;
 	private MemberService memberService;
 	private ModifyFormValidator modifyFormValidator;
 	private PasswordEncoder passwordEncoder;
 
 
-	public MypageController(MypageService mypageService, MemberService memberService, ModifyFormValidator modifyFormValidator,
+	public MypageController(MemberService memberService, ModifyFormValidator modifyFormValidator,
 			PasswordEncoder passwordEncoder) {
 		super();
-		this.mypageService = mypageService;
 		this.memberService = memberService;
 		this.modifyFormValidator = modifyFormValidator;
 		this.passwordEncoder = passwordEncoder;
@@ -78,8 +75,8 @@ public class MypageController {
 	public void leaveMember() {}
 	
 	@PostMapping("leave-member")
-	public String leaveMemberImpl(@AuthenticationPrincipal Member certifiedUser
-									,@RequestParam(required = false,name = "password") String password 
+	public String leaveMemberImpl(//@AuthenticationPrincipal Member certifiedUser
+									 String password 
 									,RedirectAttributes redirectAttr
 									,Model model
 								){
@@ -87,16 +84,18 @@ public class MypageController {
 		System.out.println("비밀번호 : "+password);
 		if(password.equals("")) {
 			redirectAttr.addFlashAttribute("message","비밀번호가 입력되지 않았습니다");
-			return "redirect:/mypage/leave-member";
+			return "mypage/leave-member";
 		}
 		
+		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 		
-		if(mypageService.checkPwForLeave(certifiedUser, password) == 0) {
-			redirectAttr.addFlashAttribute("message","비밀번호가 틀렸습니다"); return
-			"redirect:/member/leave-member"; 
+		if(!passwordEncoder.matches(password,member.getMemberPass())) {
+			redirectAttr.addFlashAttribute("message","비밀번호가 틀렸습니다"); 
+			return "mypage/leave-member"; 
 		}
-		 
 		
+		member.setMemberDelYn(1);
+		/* memberService.updateMemberDelYN(member); */
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
 		return "redirect:/";
 	}
@@ -121,7 +120,7 @@ public class MypageController {
 		
 		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 		
-		if(nickName.equals(member.getMemberNick()) || mypageService.checkNickName(nickName)) {
+		if(nickName.equals(member.getMemberNick()) || memberService.checkNickName(nickName)) {
 			return "available";
 		}else {
 			return "disable";
