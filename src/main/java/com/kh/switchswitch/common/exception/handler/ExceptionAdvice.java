@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.kh.switchswitch.common.exception.HandlableException;
 
 @Component
-@ControllerAdvice(basePackages = "com.kh.spring")
+@ControllerAdvice(basePackages = "com.kh.switchswitch")
 public class ExceptionAdvice {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
