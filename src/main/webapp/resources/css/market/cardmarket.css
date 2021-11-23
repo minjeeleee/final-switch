@@ -73,9 +73,10 @@ section {
 .search input {
     width: 200px;
     background: none;
-    padding: 5px 20px;
+    padding: 5px 25px;
     border: none;
     border-bottom: 1px solid black;
+    background: url("/resources/img/searchicon.png") no-repeat 2% 45%;
 }
 
 .search input:focus {
