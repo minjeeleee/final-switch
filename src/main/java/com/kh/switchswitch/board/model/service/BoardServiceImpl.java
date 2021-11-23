@@ -48,18 +48,18 @@ public class BoardServiceImpl implements BoardService{
 	//11/23 리스트받아오기
 	@Override
 	public Map<String, Object> selectBoardList(int page) {
-		Paging paging = Paging.builder()
-				.cuurentPage(page)
-				.blockCnt(5)
-				.cntPerPage(10)
-				.type("board")
-				.sort("bd_idx")
-				.direction("desc")
+		int cntPerPage = 5;
+		Paging pageUtil = Paging.builder()
+				.url("/board/board-list")
+				.total(10)
+				.curPage(page)
+				.blockCnt(10)
+				.cntPerPage(cntPerPage)
 				.build();
-		
+
 		Map<String,Object> commandMap = new HashMap<String,Object>();
-		commandMap.put("paging", paging);
-		commandMap.put("boardList", boardRepository.selectBoardList(paging));
+		commandMap.put("paging", pageUtil);
+		commandMap.put("boardList", boardRepository.selectBoardList(pageUtil));
 		return commandMap;
 	}
 
