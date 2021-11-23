@@ -1,11 +1,15 @@
 package com.kh.switchswitch.member.validator;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import com.kh.switchswitch.common.code.ErrorCode;
+import com.kh.switchswitch.common.exception.HandlableException;
+import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 @Component
@@ -41,7 +45,7 @@ public class JoinFormValidator implements Validator {
 		}
 		
 		//3. 비밀번호가 8글자 이상, 숫자 영문자 특수문자 조합인지 확인
-		valid = Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}", form.getMemberPass());
+		valid = Pattern.matches("^(?=.*[^ㄱ-ㅣ가-힣])(?=.*?[a-zA-Z0-9!?@$%^&*-]).{8,}$", form.getMemberPass());
 		if(!valid) {
 			errors.rejectValue("memberPass", "error-memberPass", "비밀번호는 8글자 이상의 숫자 영문자 특수문자 조합 입니다.");
 		}
@@ -63,6 +67,16 @@ public class JoinFormValidator implements Validator {
 		if(!valid) {
 			errors.rejectValue("zipNo", "error-zipNo", "올바른 주소를 입력해 주세요.");
 			errors.rejectValue("address", "error-address", "");
+		}
+		
+		//7. 재회원가입 (3개월 이후)
+		Member member = memberRepository.selectMemberByEmailAndDelY(form.getMemberEmail());
+		if(member != null) {
+			int flg = member.getMemberDelDate().toLocalDate().plusMonths(3l).compareTo(LocalDate.now());
+			if(flg > 0) {
+				throw new HandlableException(ErrorCode.FAILED_TO_JOIN_LIMIT_DATE);
+			}
+			;
 		}
 	}
 	

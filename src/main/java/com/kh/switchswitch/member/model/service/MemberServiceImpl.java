@@ -123,6 +123,8 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 	}
 
 	public void updateMemberDelYN(Member member) {
+		member.setMemberIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getMemberIdx());
+		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
 		memberRepository.updateMember(member);
 	}
 

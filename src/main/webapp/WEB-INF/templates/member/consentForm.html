@@ -61,12 +61,14 @@
 <br>□ 개인정보의 보관 및 이용 기간
 <br>- 귀하의 개인정보를 다음과 같이 보관하며, 수집, 이용 및 제공목적이 달성된 경우 [개인정보 보호법] 제21조에 따라 처리합니다. 
 								</div>
+								<form th:action="@{/member/consentForm}" method="post">
 								<div class="radio_box">
 									비동의 
 									<input type="radio" value="refuse" class="radio" name="requiredConsent" > 
 									동의 
 									<input type="radio" value="consent" class="radio" name="requiredConsent">
 								</div>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -80,6 +82,11 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript" src="../resources/js/member/consentForm.js"></script>
+	<script type="text/javascript" th:inline="javascript">
+	let csrfHeader = "[(${_csrf.headerName})]";
+    let csrfToken = "[(${_csrf.token})]";
+	</script>
+	<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/member/consentForm.js}"></script>
+	
 </body>
 </html>

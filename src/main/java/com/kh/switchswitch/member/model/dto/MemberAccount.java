@@ -13,7 +13,7 @@ public class MemberAccount extends User {
 	private Member member;
 	
 	public MemberAccount(Member member) {
-		super(member.getMemberEmail(),member.getMemberPass(),List.of(new SimpleGrantedAuthority(member.getCode())));
+		super(member.getMemberEmail(),member.getMemberPass(),List.of(new SimpleGrantedAuthority("ROLE_" + member.getCode())));
 		this.member = member;
 	}
 
@@ -39,10 +39,6 @@ public class MemberAccount extends User {
 
 	public String getMemberPass() {
 		return member.getMemberPass();
-	}
-
-	public String getMemberEmail() {
-		return member.getMemberEmail();
 	}
 
 	public int getMemberDelYn() {
