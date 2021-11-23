@@ -1,12 +1,12 @@
 package com.kh.switchswitch.member.model.dto;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-public class MemberAccount extends User {
+public class MemberAccount extends User{
 	
 	private static final long serialVersionUID = -771193703920731890L;
 	
@@ -20,6 +20,15 @@ public class MemberAccount extends User {
 	public Member getMember() {
 		return member;
 	}
+	
+	public String getMemberTell() {
+		return member.getMemberTell();
+	}
+	
+	public String getMemberEmail() {
+		return member.getMemberEmail();
+	}
+
 
 	public int getMemberIdx() {
 		return member.getMemberIdx();
@@ -29,16 +38,12 @@ public class MemberAccount extends User {
 		return member.getCode();
 	}
 
-	public LocalDate getMemberRegDate() {
+	public Date getMemberRegDate() {
 		return member.getMemberRegDate();
 	}
 
 	public String getMemberPass() {
 		return member.getMemberPass();
-	}
-
-	public String getMemberEmail() {
-		return member.getMemberEmail();
 	}
 
 	public int getMemberDelYn() {
@@ -53,7 +58,7 @@ public class MemberAccount extends User {
 		return member.getMemberAddress();
 	}
 
-	public LocalDate getMemberDelDate() {
+	public Date getMemberDelDate() {
 		return member.getMemberDelDate();
 	}
 

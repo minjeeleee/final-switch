@@ -59,6 +59,10 @@
 		<property name="maxUploadSize" value="20971520"></property>
 	</bean>
 	
+	<bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+		
+	</bean>
+	
 	
 		
 	<mybatis-spring:scan base-package="com.kh.switchswitch" annotation="org.apache.ibatis.annotations.Mapper"/>

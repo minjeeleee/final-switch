@@ -20,7 +20,6 @@
 </head>
 <body>
 
-test
 	<section>
 		<div class="container">
 
@@ -30,16 +29,16 @@ test
 						<h2>정보공유 상세페이지</h2>
 						<div class='btn_area'>
 
-							<a class="btn" href="/board/delete-board?bd_idx=${datas.board.bdIdx }">글삭제</a> 
+							<a class="btn" th:href="@{/board/delete-board(bd_idx=${datas.board.bdIdx})}">글삭제</a> 
 							<a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> 
 							<a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> 
-							<a class="btn" href="/board/board-list">목록</a>
+							<a class="btn" th:href="@{/board/board-list}">목록</a>
 						</div>
 					</div>
 
 
 					<div class="section_content_box">
-						<div class="section_header" th:object="${board}">
+						<div class="section_header">
 							<div class="section_title"  th:object="${board}">
 								<span th:text="|제목 : *{title}|"></span>
 							</div>
@@ -49,7 +48,7 @@ test
 									<span th:text="|등록일 : *{regDate}|"></span>
 									<span th:text="|작성자 : *{userId}|"></span>
 								</div>
-								<div class="info file_info">
+								<!-- <div class="info file_info">
 									<ol>
 										<li th:each="file : ${board.files}" th:object="${file}">
 											<a th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
@@ -58,21 +57,13 @@ test
 										</li>		
 									</ol>
 
-								</div> 
+								</div>  -->
 							</div>
 						</div>
-						<div class="section_container" th:object="${board}">
-							<span th:text="|본문 : *{content}|"></span>
+						<div class="section_container">
 							<pre>[[${board.content}]]</pre>
 
 						</div>
-								<!-- 							
-
-							<div class="comment_area">
-								<div class="line_btns">
-
-									<!-- <span>등록순</span>
-								<span>최신순</span> -->
 								
 								<div>
 									<div class="cmt_wrap">

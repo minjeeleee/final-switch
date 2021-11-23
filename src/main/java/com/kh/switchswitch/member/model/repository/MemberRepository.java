@@ -1,18 +1,18 @@
 package com.kh.switchswitch.member.model.repository;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 
 @Mapper
 public interface MemberRepository {
 	
-	@Insert("insert into member(MEMBER_IDX,CODE,MEMBER_REG_DATE,MEMBER_PASS,MEMBER_EMAIL,MEMBER_DEL_YN,MEMBER_TELL"
-			+ " ,MEMBER_NICK,MEMBER_ADDRESS,MEMBER_DEL_DATE,MEMBER_SCORE,MEMBER_NAME) "
-			+ " values(SC_MEMBER_IDX.NEXTVAL,'B',sysdate,#{memberPass},#{memberEmail},0,#{memberTell}"
-			+ " ,#{memberNick},#{memberAddress},null,null,#{memberName})")
 	void insertMember(Member member);
 
 	@Select("select * from member where member_nick = #{memberNick}")
@@ -23,5 +23,25 @@ public interface MemberRepository {
 
 	@Select("select * from member where member_nick = #{memberNick} and member_del_yn = 0")
 	Member selectMemberByNicknameAndDelN(String memberNick);
+
+	@Select("select * from kakao_login where kakao_id = #{id}")
+	KakaoLogin selectKakaoLoginById(String id);
+
+	void updateMember(Member member);
+
+	@Insert("insert into kakao_login values(sc_kakao_idx.nextval,#{memberIdx},#{id})")
+	void insertKakaoLogin(Map<Integer, String> map);
 	
+	@Insert("insert into kakao_login values(sc_kakao_idx.nextval,sc_member_idx.currval,#{id})")
+	void insertKakaoLoginWithId(String id);
+
+	@Select("select * from member where member_email = #{memberEmail} and member_del_yn = 1")
+	Member selectMemberByEmailAndDelY(String memberEmail);
+	
+	@Insert("insert into file_info(FL_IDX,ORIGIN_FILE_NAME,RENAME_FILE_NAME,SAVE_PATH "
+			+ " values(sc_file_idx.nextval,#{originFileName},#{renameFileName},#{savePath})")
+	FileDTO insertFileInfo(FileDTO fileUpload);
+
+	@Select("select * from file_info where fl_idx = #{flIdx}")
+	FileDTO selectFileInfoByFlIdx(int flIdx);
 }
