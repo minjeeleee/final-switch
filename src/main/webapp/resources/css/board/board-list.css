@@ -215,6 +215,7 @@ rem
 
 .section *{
 	font-size: 13px;
+	text-align: center;
 }
 .section{
 	margin-top: 30px;
@@ -266,6 +267,7 @@ rem
 th{
 	background-color: #dddddd;
 	line-height: 30px;
+	text-align: center;
 }
 td{
 	text-align: center;
