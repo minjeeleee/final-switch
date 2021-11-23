@@ -1,6 +1,6 @@
 package com.kh.switchswitch.board.model.service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +13,7 @@ import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.repository.BoardRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
+import com.kh.switchswitch.common.util.pagination.Paging;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,12 +45,27 @@ public class BoardServiceImpl implements BoardService{
 		return Map.of("board",board,"files",files);
 	}
 
-	//11/21 수정필요
+	//11/23 리스트받아오기
 	@Override
-	public Map<String, Object> findBoardsByPage(String bdIdx) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Object> selectBoardList(int page) {
+		Paging paging = Paging.builder()
+				.cuurentPage(page)
+				.blockCnt(5)
+				.cntPerPage(10)
+				.type("board")
+				.sort("bd_idx")
+				.direction("desc")
+				.build();
+		
+		Map<String,Object> commandMap = new HashMap<String,Object>();
+		commandMap.put("paging", paging);
+		commandMap.put("boardList", boardRepository.selectBoardList(paging));
+		return commandMap;
 	}
+
+
+
+
 
 
 

@@ -41,10 +41,6 @@ public class MemberAccount extends User {
 		return member.getMemberPass();
 	}
 
-	public String getMemberEmail() {
-		return member.getMemberEmail();
-	}
-
 	public int getMemberDelYn() {
 		return member.getMemberDelYn();
 	}
