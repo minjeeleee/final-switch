@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-			.mvcMatchers("/notice/noticeList","/mypage/**","/member/logout").authenticated()
+			.mvcMatchers("/notice/**","/mypage/**","/member/logout").authenticated()
 			.anyRequest().permitAll();
 		
 		http.formLogin()
