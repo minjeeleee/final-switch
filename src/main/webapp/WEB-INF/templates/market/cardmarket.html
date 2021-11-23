@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/subHeader :: head"></head>
+
+<body>
+
+    <header th:replace="fragments/subBodyHeader :: header">
+    </header>
+
+    <section>
+
+        <div class="exmk-title-container">
+
+            <div class="exmk-innerwrap inner-size">
+                <div class="exmk-title">
+                    <h1>교환마켓</h1>
+                </div>
+
+                <div class="exmk-img">
+                    <img src="../resources/img/marketimg.png" alt="">
+                </div>
+
+            </div>
+
+            <div class="select-form inner-size">
+                <div class="category">
+                    <select name="category">
+                        <option value="">카테고리</option>
+                        <option value="전자기기">전자기기</option>
+                        <option value="생활가전">생활가전</option>
+                        <option value="가구/인테리어">가구/인테리어</option>
+                    </select>
+                </div>
+                <div class="location">
+                    <select name="category">
+                        <option value="">지역</option>
+                        <option value="서울">서울</option>
+                        <option value="경기도">경기도</option>
+                        <option value="제주도">제주도</option>
+                    </select>
+                </div>
+                <div class="search">
+                    <input type="text" placeholder="검색어를 입력해주세요." maxlength="15">
+                </div>
+            </div>
+
+            <div class="mk-card-list inner-size">
+                <div class="search-info">
+                    <p>120개 카드 찾음</p>
+                    <div class="divid"></div>
+                    <p>검색 조건 : "전체검색"</p>
+                </div>
+
+                <div class="card-list">
+
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/ddongCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/BrownCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/diaCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/goldCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/silverCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/ddongCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/BrownCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/diaCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/goldCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="card-container">
+                        <div class="card-name">
+                            <p>아이폰</p>
+                        </div>
+                        <div class="grade-container">
+                            <div class="icon">
+                                <!-- 아이콘 변경 -->
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="user-grade">
+                                <p>사용자 평점</p>
+                                <!-- 사용자 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="item-grade">
+                                <p>물건 평점</p>
+                                <!-- 물건 별점 -->
+                                <div class="star">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address">
+                            <!-- 주소 -->
+                            <p>지역 <span>강남</span> <span>강서구</span></p>
+                        </div>
+                        <div class="card">
+                            <img src="../resources/img/silverCard.png" alt="">
+                            <div class="card-img">
+                                <!-- 카드 물건 이미지 -->
+                                <img src="../resources/img/iphone.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+       <footer>
+       <div th:replace="fragments/footer :: footer" />
+   		</footer>
+</body>
+
+</html>
