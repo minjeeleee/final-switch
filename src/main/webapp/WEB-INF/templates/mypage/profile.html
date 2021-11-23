@@ -228,7 +228,7 @@
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
                                 <div class="card-body" style="overflow: scroll;">
-                                    <form  th:object="${modifyForm}" th:action="@{/mypage/modify}" method="post" id="frm_modify">
+                                    <form  th:object="${modifyForm}" th:action="@{/mypage/profile}" method="post" id="frm_modify">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
@@ -251,7 +251,7 @@
 											<tr>
 												<th>이메일</th>
 												<td>
-													<input type="email" name="memberEmail" id="memberEmail" th:value="${#authentication.principal.memberEmail}" readonly="readonly"/>
+													<input type="email" name="memberEmail" id="memberEmail" th:value="${#authentication.name}" readonly="readonly"/>
 												</td>
 											</tr>
 											<tr>

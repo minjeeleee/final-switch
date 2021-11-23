@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.model.service.MypageService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
@@ -55,8 +56,8 @@ public class MypageController {
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
-	@PostMapping("modify")
-	public String modify(@Validated ModifyForm form
+	@PostMapping("profile")
+	public String profileModify(@Validated ModifyForm form
 							,Errors errors
 							,Model model
 							,HttpSession session
@@ -68,6 +69,7 @@ public class MypageController {
 			vr.addErrors(errors);
 			return "mypage/profile";
 		}
+		
 		memberService.updateMemberDelYN(form.convertToMember());
 		return "redirect:/mypage/profile";
 	}
@@ -103,10 +105,9 @@ public class MypageController {
 	@ResponseBody
 	public String pwCheck(String password) {
 		
-		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 
-		System.out.println(password);
-		if(passwordEncoder.matches(password, member.getMemberPass())) {
+		if(passwordEncoder.matches(password,member.getMemberPass())) {
 			return "available";
 		}else {
 			return "disable";
@@ -115,10 +116,10 @@ public class MypageController {
 	
 	@GetMapping("nick-check")
 	@ResponseBody
-	public String nickCheck(String nickName) {
+	public String nickCheck(@AuthenticationPrincipal MemberAccount certifiedUser,String nickName) {
 		
-		System.out.println(nickName);
-		Member member = memberService.selectMemberByEmailAndDelN("projectteamyong@gmail.com");
+		
+		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 		
 		if(nickName.equals(member.getMemberNick()) || mypageService.checkNickName(nickName)) {
 			return "available";
