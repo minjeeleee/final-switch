@@ -47,10 +47,6 @@ public class ModifyFormValidator implements Validator{
 	    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}",form.getNewMemberPass()) && form.getNewMemberPass() != "") { 
 	    	errors.rejectValue("newMemberPass","err-newMemberPass", "비밀번호는 숫자 영문자 특수문자 조합인 8글자 이상의 문자열입니다."); 
 	    }
-	    
-	    if(form.getNewMemberPass().contains("#")) { 
-	    	errors.rejectValue("newMemberPass","err-newMemberPass", "특수문자 #는 비밀번호로 사용할 수 없습니다."); 
-	    }
 	  
 	    if(!form.getNewMemberPass().equals(form.getCheckMemberPss())) {
 	    	errors.rejectValue("checkMemberPss", "err-checkMemberPss","비밀번호가 일치하지 않습니다.");

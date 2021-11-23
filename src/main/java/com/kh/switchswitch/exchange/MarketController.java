@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("market")
 public class MarketController {
 	
-	@GetMapping("exchangeCard")
+	@GetMapping("cardmarket")
 	public void exchangeCard() {}
 
 }

@@ -16,6 +16,12 @@
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
+	
+	<annotation-driven>
+	    <argument-resolvers>
+	        <beans:bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver"/>
+	    </argument-resolvers>
+	</annotation-driven>
 
 	<!-- Spring batch 어노테이션 등록 -->
 	<task:annotation-driven/>
@@ -72,7 +78,6 @@
 	</aop:config>
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
-	
 	
 
 	<context:component-scan base-package="com.kh.switchswitch" />
