@@ -181,4 +181,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 		}
 		
 	}
+	
+	public boolean checkNickName(String nickName) {
+		if(memberRepository.selectMemberByNickName(nickName) == null) {
+			return true;
+		}
+		return false;
+	}
 }
