@@ -33,5 +33,8 @@ public interface MemberRepository {
 	
 	@Insert("insert into kakao_login values(sc_kakao_idx.nextval,sc_member_idx.currval,#{id})")
 	void insertKakaoLoginWithId(String id);
+
+	@Select("select * from member where member_email = #{memberEmail} and member_del_yn = 1")
+	Member selectMemberByEmailAndDelY(String memberEmail);
 	
 }
