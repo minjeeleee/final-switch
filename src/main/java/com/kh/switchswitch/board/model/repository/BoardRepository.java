@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.common.util.pagination.Paging;
 
 @Mapper
 public interface BoardRepository {
@@ -24,8 +25,11 @@ public interface BoardRepository {
 	Board selectBoardByIdx(String bdIdx);
 	
 	//게시글목록
-	@Select("select * from community where bd_idx = #{bdIdx} order by bd_idx desc")
-	Board findBoardByIdx(String bdIdx);
+	@Select("select * from community") 
+	List<Board> selectBoardList(Paging paging);
+
+
+	
 	
 	//수정
 	@Update("")
@@ -43,6 +47,7 @@ public interface BoardRepository {
 	//파일다운
 	@Select("select * from file_info where bd_idx = #{bdIdx}")
 	List<FileDTO> selectFilesByBdIdx(String bdIdx);
+
 
 	
 }

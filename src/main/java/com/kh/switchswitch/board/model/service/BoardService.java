@@ -14,8 +14,8 @@ public interface BoardService {
 	Map<String, Object> selectBoardByIdx(String bdIdx);
 	
 	//게시글 목록
-	//11/21 수정필요
-	Map<String, Object> findBoardsByPage(String bdIdx);
+	Map<String,Object> selectBoardList(int page);
+
 
 
 }
