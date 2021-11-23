@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.model.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.common.util.FileDTO;
@@ -7,7 +9,9 @@ import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.validator.JoinForm;
 
-public interface MemberService {
+public interface MemberService extends UserDetailsService {
+	
+	UserDetails loadUserByUsername(String username);
 	
 	void insertMember(JoinForm form);
 
