@@ -24,4 +24,5 @@ public interface MemberService {
 
 	String getUserInfo(String accessToken);
 	
+	boolean checkNickName(String nickName);
 }
