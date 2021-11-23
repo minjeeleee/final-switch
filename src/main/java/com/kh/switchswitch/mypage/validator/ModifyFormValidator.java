@@ -2,7 +2,6 @@ package com.kh.switchswitch.mypage.validator;
 
 import java.util.regex.Pattern;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

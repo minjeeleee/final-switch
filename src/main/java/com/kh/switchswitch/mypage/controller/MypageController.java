@@ -1,5 +1,7 @@
 package com.kh.switchswitch.mypage.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.common.validator.ValidatorResult;
@@ -50,25 +53,29 @@ public class MypageController {
 
 	@GetMapping("profile")
 	public void profile(Model model) {
-	
+		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
+		model.addAttribute("profileImage", memberService.selectFileInfoByFlIdx(member.getFlIdx()));
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
 	@PostMapping("profile")
 	public String profileModify(@Validated ModifyForm form
 							,Errors errors
+							,@RequestParam(required = false) MultipartFile profileImage
 							,Model model
 							,HttpSession session
 							,RedirectAttributes redirectAttr
 			) {
+		
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
+		System.out.println("안녕");
+		System.out.println(profileImage);
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
 			return "mypage/profile";
 		}
-		
-		memberService.updateMemberDelYN(form.convertToMember());
+		memberService.updateMemberWithFile(form.convertToMember(),profileImage);
 		return "redirect:/mypage/profile";
 	}
 
@@ -83,7 +90,7 @@ public class MypageController {
 								){
 
 		System.out.println("비밀번호 : "+password);
-		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
+		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
 		
 		if(!passwordEncoder.matches(password,member.getMemberPass())) {
 			model.addAttribute("message","비밀번호가 틀렸습니다"); 
@@ -98,9 +105,10 @@ public class MypageController {
 	
 	@GetMapping("pw-check")
 	@ResponseBody
-	public String pwCheck(@AuthenticationPrincipal MemberAccount certifiedUser,String password) {
+	public String pwCheck(//@AuthenticationPrincipal MemberAccount certifiedUser,
+			String password) {
 		
-		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
+		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
 
 		if(passwordEncoder.matches(password,member.getMemberPass())) {
 			return "available";
@@ -111,9 +119,10 @@ public class MypageController {
 	
 	@GetMapping("nick-check")
 	@ResponseBody
-	public String nickCheck(@AuthenticationPrincipal MemberAccount certifiedUser,String nickName) {
+	public String nickCheck(//@AuthenticationPrincipal MemberAccount certifiedUser,
+			String nickName) {
 		
-		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
+		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
 		
 		if(nickName.equals(member.getMemberNick()) || memberService.checkNickName(nickName)) {
 			return "available";
