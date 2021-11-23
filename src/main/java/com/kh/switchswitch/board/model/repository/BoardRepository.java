@@ -25,9 +25,12 @@ public interface BoardRepository {
 	Board selectBoardByIdx(String bdIdx);
 	
 	//게시글목록
-	@Select("select * from community") 
-	List<Board> selectBoardList(Paging paging);
+	@Select("select * from community ORDER BY bd_idx DESC") 
+	List<Board> selectBoardList(Paging pageUtil);
 
+	//총 게시글 갯수 출력
+	@Select("select count(*) from community")
+	int selectContentCnt();
 
 	
 	

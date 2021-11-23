@@ -5,16 +5,20 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.service.BoardService;
+import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,21 +34,20 @@ public class BoardController {
 	@GetMapping("board-form")
 	public void boardForm() {}
 
-	//11/18 서버 테스트 통과
-	//11/18 파일 추가성공
+	//11/23 403오류
 	@PostMapping("upload")
-	public String uploadBoard(Board board, List<MultipartFile> files) {
-		// ,@SessionAttribute("authentication") Member member
+	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount memeberAccount ) {
+		//,@SessionAttribute("authentication") Member member
 		board.setUserId("userId");
 		boardService.insertBoard(files, board);
 		return "redirect:/";
 	}
 	
-	//11/21 수정필요
+	//11/23
 	//list받아오기 성공
 	//paging처리필요	
 	  @GetMapping("board-list") 
-	  public String boardList(Model model, @RequestParam(required = false, defaultValue = "1") int page) {
+	  public String boardList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		  model.addAllAttributes(boardService.selectBoardList(page));
 			return "board/board-list";
 	}
