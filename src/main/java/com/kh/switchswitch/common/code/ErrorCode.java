@@ -10,7 +10,8 @@ public enum ErrorCode {
 	UNAUTHORIZED_PAGE("접근 권한이 없는 페이지 입니다"),
 	REDIRECT_LOGIN_PAGE_NO_MESSAGE("","/member/login"),
 	FAILED_FILE_UPLOAD_ERROR("파일업로드에 실해했습니다"),
-	FAILED_TO_JOIN_WITH_KAKAO("이메일 제공은 필수 입니다.", "/member/login");
+	FAILED_TO_JOIN_WITH_KAKAO("이메일 제공은 필수 입니다.", "/member/login"),
+	FAILED_TO_JOIN_LIMIT_DATE("탈퇴 후 3개월 이후에 재가입 가능합니다.","/");
 	
 	public final String MESSAGE;
 	public final String URL;
