@@ -50,6 +50,7 @@ public class MypageController {
 
 	@GetMapping("profile")
 	public void profile(Model model) {
+	
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
@@ -82,20 +83,15 @@ public class MypageController {
 								){
 
 		System.out.println("비밀번호 : "+password);
-		if(password.equals("")) {
-			redirectAttr.addFlashAttribute("message","비밀번호가 입력되지 않았습니다");
-			return "mypage/leave-member";
-		}
-		
 		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 		
 		if(!passwordEncoder.matches(password,member.getMemberPass())) {
-			redirectAttr.addFlashAttribute("message","비밀번호가 틀렸습니다"); 
+			model.addAttribute("message","비밀번호가 틀렸습니다"); 
 			return "mypage/leave-member"; 
 		}
 		
 		member.setMemberDelYn(1);
-		/* memberService.updateMemberDelYN(member); */
+		memberService.updateMemberDelYN(member);
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
 		return "redirect:/";
 	}
@@ -116,7 +112,6 @@ public class MypageController {
 	@GetMapping("nick-check")
 	@ResponseBody
 	public String nickCheck(@AuthenticationPrincipal MemberAccount certifiedUser,String nickName) {
-		
 		
 		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 		

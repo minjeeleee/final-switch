@@ -57,7 +57,13 @@
     </div>
 	<script type="text/javascript">
 	 document.querySelector('#leave_form').addEventListener('submit',e=>{
+		   let paswsord = document.querySelector('#password').value;
 		   
+		   if(!paswsord){
+			   alert('비밀번호를 작성하지 않았습니다.');
+			   document.querySelector('#password').focus();
+			   e.preventDefault();
+		   }
 	   });
 	
 	
