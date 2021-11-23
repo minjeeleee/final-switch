@@ -103,7 +103,7 @@ public class MypageController {
 	
 	@GetMapping("pw-check")
 	@ResponseBody
-	public String pwCheck(String password) {
+	public String pwCheck(@AuthenticationPrincipal MemberAccount certifiedUser,String password) {
 		
 		Member member = memberService.selectMemberByEmailAndDelN("modify@email.com");
 
