@@ -32,6 +32,7 @@ public class ModifyFormValidator implements Validator{
 		
 		System.out.println(form);
 		System.out.println(form.convertToMember());
+		System.out.println(form.getNewMemberPass().equals(""));
 		
 	    if(memberRepository.selectMemberByNickName(form.getMemberNick()) != null && !form.getMemberNick().equals(member.getMemberNick())) {
 		    errors.rejectValue("memberNick", "err-memberNick", "이미 존재하는 닉네임 입니다."); 
@@ -44,7 +45,7 @@ public class ModifyFormValidator implements Validator{
 			errors.rejectValue("memberNick", "error-memberNick", "닉네임은 2글자 이상의 숫자 또는 한글 또는 영문 조합 입니다.");
 		}
 	  
-	    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}",form.getNewMemberPass()) && form.getNewMemberPass() != "") { 
+	    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}",form.getNewMemberPass()) && !form.getNewMemberPass().equals("")) { 
 	    	errors.rejectValue("newMemberPass","err-newMemberPass", "비밀번호는 숫자 영문자 특수문자 조합인 8글자 이상의 문자열입니다."); 
 	    }
 	  

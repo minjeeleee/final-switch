@@ -18,7 +18,7 @@ public class ModifyForm {
 
 	public Member convertToMember() {
 		
-		String newPw = newMemberPass == "" ? memberPass : newMemberPass;
+		String newPw = newMemberPass.equals("") ? memberPass : newMemberPass;
 		
 		Member member = new Member();
 		member.setMemberEmail(memberEmail);

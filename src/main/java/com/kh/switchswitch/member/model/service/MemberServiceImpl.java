@@ -158,12 +158,12 @@ public class MemberServiceImpl implements MemberService {
 		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
 		
 		System.out.println(profileImage);
-		if(profileImage != null) {
+		if(profileImage.getSize() != 0) {
 			FileUtil fileUtil = new FileUtil();
-			FileDTO file = memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
-			member.setFlIdx(file.getFlIdx());
+			memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
+			memberRepository.updateMemberForFile(member);
+			return;
 		}
-		
 		memberRepository.updateMember(member);
 	}
 
