@@ -68,7 +68,7 @@ public class MypageController {
 		
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
-		System.out.println("안녕");
+
 		System.out.println(profileImage);
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
@@ -103,8 +103,7 @@ public class MypageController {
 	
 	@GetMapping("pw-check")
 	@ResponseBody
-	public String pwCheck(@AuthenticationPrincipal MemberAccount member,
-			String password) {
+	public String pwCheck(@AuthenticationPrincipal MemberAccount member,String password) {
 		
 		if(passwordEncoder.matches(password,member.getMemberPass())) {
 			return "available";
@@ -115,9 +114,7 @@ public class MypageController {
 	
 	@GetMapping("nick-check")
 	@ResponseBody
-	public String nickCheck(@AuthenticationPrincipal MemberAccount member,
-			String nickName) {
-		
+	public String nickCheck(@AuthenticationPrincipal MemberAccount member,String nickName) {
 		
 		if(nickName.equals(member.getMemberNick()) || memberService.checkNickName(nickName)) {
 			return "available";
