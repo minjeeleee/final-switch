@@ -217,7 +217,7 @@
 
                
                     <!-- Content Row -->
-                    <div class="row">
+                    <div class="row">  
 
                         <!-- Content Column -->
                         <div class="col-lg-6 mb-4">
@@ -228,7 +228,7 @@
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
                                 <div class="card-body" style="overflow: scroll;">
-                                    <form  th:object="${modifyForm}" th:action="@{/mypage/profile}" method="post" id="frm_modify" enctype="multipart/form-data">
+                                    <form  th:object="${modifyForm}" th:action="|/mypage/profile?${_csrf.parameterName}=${_csrf.token}|" method="post" id="frm_modify"   enctype="multipart/form-data">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
