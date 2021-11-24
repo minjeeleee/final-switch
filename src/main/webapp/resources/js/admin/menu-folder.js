@@ -29,18 +29,3 @@
 		subMenuBySideMenu.style.display = 'none';
 	});
 	
-//sideSubMenu 효과
-	const expandSideSubMenu = document.querySelector('#expandSideSubMenu');
-	const foldSideSubMenu = document.querySelector('#foldSideSubMenu');
-	const subMenuBySideSubMenu = document.querySelector('#subMenuBySideSubMenu');
-	expandSideSubMenu.addEventListener('click',(e)=>{
-		expandSideSubMenu.style.display = 'none';	
-		foldSideSubMenu.style.display = 'block';
-		subMenuBySideSubMenu.style.display = 'block';
-	});
-	
-	foldSideSubMenu.addEventListener('click',(e)=>{
-		expandSideSubMenu.style.display = 'block';	
-		foldSideSubMenu.style.display = 'none';
-		subMenuBySideSubMenu.style.display = 'none';
-	});

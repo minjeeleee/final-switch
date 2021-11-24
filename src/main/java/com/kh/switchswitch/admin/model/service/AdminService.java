@@ -11,6 +11,7 @@ import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.repository.AdminRepository;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.member.model.dto.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,8 +37,11 @@ public class AdminService {
 	}
 
 	public List<Menu> selectMenuList() {
-		List<Menu> menuList = adminRepository.selectMenuList();
-		return menuList;
+		return adminRepository.selectMenuList();
+	}
+	
+	public List<Menu> selectSideMenu() {
+		return adminRepository.selectSideMenu();
 	}
 	
 	public List<Code> selectCodeList(){
@@ -55,12 +59,32 @@ public class AdminService {
 		return parentsMenuList;
 	}
 	
-	public List<Menu> selectSubMenu() {
-		return adminRepository.selectSubMenu();
-	}
+	
 
 	public void deleteMenu(int urlIdx) {
 		adminRepository.deleteMenu(urlIdx);
+	}
+
+	public List<Menu> selectChildMenu(String parent) {
+		return adminRepository.selectChildMenu(parent);
+	}
+
+	public List<Menu> selectMenuAllList() {
+		return adminRepository.selectMenuAllList();
+	}
+
+	public List<Member> selectMemberAllList() {
+		return adminRepository.selectMemberAllList();
+	}
+
+	public void updateMemberCode(String code, int memberIdx) {
+		code = code.equals("B") ? "D" : "B";
+		System.out.println(code);
+		adminRepository.updateMemberCode(code, memberIdx);
+	}
+
+	public List<Member> selectMemberBlackList() {
+		return adminRepository.selectMemberBlackList();
 	}
 	
 

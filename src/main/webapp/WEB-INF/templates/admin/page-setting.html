@@ -42,9 +42,15 @@
 										<i class="fa fa-minus-square-o" id="foldMenu" aria-hidden="true" style="display: none; margin-top: 0.7%; height: 100%;"></i>
 										<div id="menuWrapper" style="display: flex; flex-direction: column;">
 											<div>메뉴</div>
-											<div id="subMenuByMenu" style="display: none;">
-												<div>마이페이지</div>
-												<div>교환마켓</div>
+											<div id="subMenuByMenu" style="display: none; padding-left: 33%;">
+												<div th:each="entry : ${childMenuList}" style="display: flex;">
+													<div id="subMenuWrapper" style="display: flex; flex-direction: column;">
+													<div th:text="${entry.key}"></div>
+														<div id="subMenuBySubMenu" th:each="list : ${entry.value}" style="display: block; padding-left: 20%; ">
+																<div th:text="${list.urlName}"></div>
+														</div>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -53,17 +59,13 @@
 										<i class="fa fa-minus-square-o" id="foldSideMenu" aria-hidden="true" style="display: none; margin-top: 0.7%; height: 100%;"></i>
 										<div id="menuWrapper" style="display: flex; flex-direction: column;">
 											<div>사이드메뉴</div>
-											<div id="subMenuBySideMenu" style="display: block; padding-left: 20%;">
-												<div th:each="menu : ${menuList}" th:if="${menu.position.toString().equals('사이드바') and menu.parent.toString().equals('없음')}" th:with="var=${menu.urlName.toString()}" style="display: flex;">
-													<i class="fa fa-plus-square-o" id="expandSideSubMenu" aria-hidden="true" style="display: block; margin-top: 2.2%;height: 100%;"></i>
-													<i class="fa fa-minus-square-o" id="foldSideSubMenu" aria-hidden="true" style="display: none; margin-top: 2.2%;height: 100%;"></i>
+											<div id="subMenuBySideMenu" style="display: none; padding-left: 20%;">
+												<div th:each="entry : ${childSideMenuList}" style="display: flex;">
 													<div id="subMenuWrapper" style="display: flex; flex-direction: column;">
-													<div th:text="${menu.urlName}"></div>
-														<th:block th:each="subMenu : ${subMenuList}">
-														<div th:if="${subMenu.parent.toString().equals(menu.urlName.toString())}" id="subMenuBySideSubMenu" style="display: block; padding-left: 20%; ">
-																<div th:text="${subMenu.urlName}"></div>
+													<div th:text="${entry.key}"></div>
+														<div id="subMenuBySideSubMenu" th:each="list : ${entry.value}" style="display: block; padding-left: 20%; ">
+																<div th:text="${list.urlName}"></div>
 														</div>
-														</th:block>
 													</div>
 												</div>
 											</div>
@@ -83,6 +85,7 @@
 									<table class="table table-hover text-center">
 										<thead>
 											<tr>
+												<th class="text-center">상위경로명</th>
 												<th class="text-center">경로명</th>
 												<th class="text-center">경로</th>
 												<th class="text-center">위치</th>
@@ -91,82 +94,13 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr th:each="menu : ${menuList}">
+											<tr th:each="menu : ${menuAllList}">
+												<td th:text="${menu.parent}"></td>
 												<td th:text="${menu.urlName}"></td>
 												<td th:text="${menu.url}"></td>
 												<td th:text="${menu.position}"></td>
-												<td th:text="${menu.code}">전체</td>
+												<td th:text="${menu.code}"></td>
 												<td><a th:href="@{/admin/delete-menu(urlIdx=${menu.urlIdx})}"><i class="fa fa-minus-square-o" aria-hidden="true"></i></a></td>
-											</tr>
-											<tr>
-												<td>로그인</td>
-												<td>/member/login</td>
-												<td>탑메뉴</td>
-												<td>전체</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>회원가입</td>
-												<td>/member/join</td>
-												<td>탑메뉴</td>
-												<td>전체</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>교환마켓</td>
-												<td>/switch-market</td>
-												<td>메뉴1</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>나눔마켓</td>
-												<td>/free-market</td>
-												<td>메뉴2</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>게시판</td>
-												<td>/board</td>
-												<td>메뉴3</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>공지사항</td>
-												<td>/board/notice</td>
-												<td>메뉴3-1</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>내카드</td>
-												<td>/mycard</td>
-												<td>메뉴4</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>마이페이지</td>
-												<td>/mypage</td>
-												<td>메뉴5</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>내정보</td>
-												<td>/mypage/info</td>
-												<td>사이드메뉴1</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>포인트관리</td>
-												<td>/mypage/point</td>
-												<td>사이드메뉴2</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
 											</tr>
 										</tbody>
 									</table>
@@ -242,8 +176,7 @@
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
-	<!-- <script src="/resources/js/admin/menu-folder.js"></script>
-	 -->
+	<script src="/resources/js/admin/menu-folder.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 	
 	function changeMenuType(key) {
