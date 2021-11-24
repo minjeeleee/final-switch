@@ -11,7 +11,7 @@ public class MemberAccount extends User{
 	private static final long serialVersionUID = -771193703920731890L;
 	
 	private Member member;
-	
+
 	public MemberAccount(Member member) {
 		super(member.getMemberEmail(),member.getMemberPass(),List.of(new SimpleGrantedAuthority(member.getCode())));
 		this.member = member;
@@ -70,7 +70,9 @@ public class MemberAccount extends User{
 		return member.getMemberName();
 	}
 	
-
+	public int getFlIdx() {
+		return member.getFlIdx();
+	}
 	
 	
 

@@ -112,10 +112,10 @@ public class MemberServiceImpl implements MemberService {
 			//카카오 존재 X
 			if(kakaoRepository.selectKakaoLoginById(id) == null) {
 				//비밀번호 업데이트
-				member.setMemberPass(passwordEncoder.encode(id));
-				memberRepository.updateMember(member);
+				searchedmember.setMemberPass(passwordEncoder.encode(id));
+				memberRepository.updateMember(searchedmember);
 				//기존회원idx와 함께 kakao login 인스턴스 생성
-				kakaoRepository.insertKakaoLoginWithMemberIdxAndId(Map.of(searchedmember.getMemberIdx(),id));
+				kakaoRepository.insertKakaoLoginWithMemberIdxAndId(Map.of("memberIdx",searchedmember.getMemberIdx(),"id",id));
 			}
 			//탈퇴 O
 			if(member.getMemberDelYn() == 1) {
@@ -221,6 +221,13 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 	
+	public void updateMemberPass(int memberIdx, String id) {
+		Member member = new Member();
+		member.setMemberIdx(memberIdx);
+		member.setMemberPass(passwordEncoder.encode(id));
+		memberRepository.updateMember(member);
+	}
+	
 	public void logoutKakao(String accessToken) {
 		try {
 			String jsonData = "";
@@ -255,4 +262,36 @@ public class MemberServiceImpl implements MemberService {
 	public FileDTO selectFileInfoByFlIdx(int flIdx) {
 		return memberRepository.selectFileInfoByFlIdx(flIdx);
 	}
+
+	public String selectEmailByNicknameAndTell(String nickname, String tell) {
+		return memberRepository.selectEmailByNicknameAndTell(Map.of("nickname",nickname,"tell", tell));
+	}
+
+	public void reissuePwAndSendToEmail(Member foundMember) {
+		String reissuedPw = String.valueOf(((int)(Math.random()*100000)+1));
+		foundMember.setMemberPass(passwordEncoder.encode(reissuedPw));
+		memberRepository.updateMember(foundMember);
+		
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("mail-template", "reissue-pw-email");
+		body.add("name", foundMember.getMemberName());
+		body.add("password", reissuedPw);
+		
+		try {
+			URI uri = new URI(Config.DOMAIN.DESC + "/mail");
+			
+			//RestTemplate의 기본 ContentType이 application/json이다.
+			RequestEntity<MultiValueMap<String, String>> request =
+					RequestEntity.post(uri)
+					.accept(MediaType.APPLICATION_FORM_URLENCODED)
+					.body(body);
+			
+			String htmlText = http.exchange(request, String.class).getBody();
+			mailSender.sendEmail(foundMember.getMemberEmail(), "SwitchSwitch 새로운 비밀번호가 발급되었습니다.", htmlText);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

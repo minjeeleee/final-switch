@@ -134,6 +134,10 @@ public class MemberController {
 			//업데이트 or 새로 생성된 member 객체
 			member = memberService.selectMemberByEmailAndDelN(email);
 		}
+		//비밀번호가 임의로 변경된 경우
+		if(!passwordEncoder.matches(id, member.getMemberPass())) {
+			memberService.updateMemberPass(member.getMemberIdx(), id);
+		}
 		
 		redirectAttr.addFlashAttribute("kakao", "valid");
 		redirectAttr.addFlashAttribute("email", email);
@@ -250,6 +254,37 @@ public class MemberController {
 	@GetMapping("findingId")
 	public void findingId() {}
 	
-	@GetMapping("findingPw")
-	public void findingPw() {}
+	@PostMapping("findingId")
+	public String findingId(String nickname, String tell, Model model) {
+		
+		String foundEmail = memberService.selectEmailByNicknameAndTell(nickname, tell);
+		
+		if(foundEmail == null) {
+			model.addAttribute("error","입력하신 정보와 일치하는 회원이 존재하지 않습니다.");
+			return "/member/findingId";
+		}
+		
+		model.addAttribute("email", foundEmail);
+		return "/member/findingId";
+		
+	}
+	
+	@GetMapping("reissuePw")
+	public void reissuePw() {}
+	
+	@PostMapping("reissuePw")
+	public String reissuePw(String email, Model model) {
+		
+		Member foundMember = memberService.selectMemberByEmailAndDelN(email);
+		
+		if(foundMember == null) {
+			model.addAttribute("error","존재하지 않는 Email입니다.");
+			return "/member/reissuePw";
+		}
+		
+		memberService.reissuePwAndSendToEmail(foundMember);
+		model.addAttribute("success","입력하신 Email로 새로운 비밀번호를 전송하였습니다.");
+		return "/member/reissuePw";
+		
+	}
 }

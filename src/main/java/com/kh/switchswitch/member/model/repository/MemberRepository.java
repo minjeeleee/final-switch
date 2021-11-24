@@ -1,5 +1,7 @@
 package com.kh.switchswitch.member.model.repository;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -35,4 +37,7 @@ public interface MemberRepository {
 
 	@Select("select * from member where member_email = #{memberEmail}")
 	Member selectMemberByEmail(String memberEmail);
+
+	@Select("select member_email from member where member_nick = #{nickname} and member_tell = #{tell} and member_del_yn = 0")
+	String selectEmailByNicknameAndTell(Map<String, String> map);
 }
