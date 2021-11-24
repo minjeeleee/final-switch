@@ -46,7 +46,7 @@
                         <span class="form-footer">아직 회원이 아니신가요? <a href="/member/consentForm">회원가입</a></span>
                         <div class="finding">
                         	<span class="form-footer"><a href="/member/findingId">아이디 찾기</a></span> / 
-                        	<span class="form-footer"><a href="/member/findingPw">비밀번호 찾기</a></span>
+                        	<span class="form-footer"><a href="/member/reissuePw">비밀번호 재발급</a></span>
                         </div>
                     </form>
                     <form class="btn2_box" id="kakaoLogin">
@@ -56,12 +56,13 @@
             </div>
         </div>
     </div>
-    
+    <input type="hidden" id="kakao" th:value="${kakao}">
     <input type="hidden" id="expired" th:value="${param.session}">
-	<input type="hidden" id="kakao" th:value="${param.kakao}">
-	<input type="hidden" id="email" th:value="${email}">
-	<input type="hidden" id="pw" th:value="${password}">
-	<script type="text/javascript" src="../resources/js/member/login.js"></script>
+	<script type="text/javascript" th:inline="javascript">
+    let email = "[(${email})]";
+    let pw = "[(${password})]";
+	</script>
+	<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/member/login.js}"></script>
 	
 </body>
 </html>

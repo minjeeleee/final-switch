@@ -52,9 +52,8 @@ public class MypageController {
 
 
 	@GetMapping("profile")
-	public void profile(Model model) {
-		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
-		model.addAttribute("profileImage", memberService.selectFileInfoByFlIdx(member.getFlIdx()));
+	public void profile(@AuthenticationPrincipal MemberAccount member,Model model) {
+		model.addAttribute("profileImage", memberService.selectFileInfoByFlIdx(member.getMember().getFlIdx()));
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
@@ -83,33 +82,30 @@ public class MypageController {
 	public void leaveMember() {}
 	
 	@PostMapping("leave-member")
-	public String leaveMemberImpl(//@AuthenticationPrincipal Member certifiedUser
-									 String password 
+	public String leaveMemberImpl(@AuthenticationPrincipal MemberAccount member
+									 ,String password 
 									,RedirectAttributes redirectAttr
 									,Model model
 								){
 
 		System.out.println("비밀번호 : "+password);
-		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
 		
 		if(!passwordEncoder.matches(password,member.getMemberPass())) {
 			model.addAttribute("message","비밀번호가 틀렸습니다"); 
 			return "mypage/leave-member"; 
 		}
 		
-		member.setMemberDelYn(1);
-		memberService.updateMemberDelYN(member);
+		member.getMember().setMemberDelYn(1);
+		memberService.updateMemberDelYN(member.getMember());
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
 		return "redirect:/";
 	}
 	
 	@GetMapping("pw-check")
 	@ResponseBody
-	public String pwCheck(//@AuthenticationPrincipal MemberAccount certifiedUser,
+	public String pwCheck(@AuthenticationPrincipal MemberAccount member,
 			String password) {
 		
-		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
-
 		if(passwordEncoder.matches(password,member.getMemberPass())) {
 			return "available";
 		}else {
@@ -119,10 +115,9 @@ public class MypageController {
 	
 	@GetMapping("nick-check")
 	@ResponseBody
-	public String nickCheck(//@AuthenticationPrincipal MemberAccount certifiedUser,
+	public String nickCheck(@AuthenticationPrincipal MemberAccount member,
 			String nickName) {
 		
-		Member member = memberService.selectMemberByEmailAndDelN("leave@email.com");
 		
 		if(nickName.equals(member.getMemberNick()) || memberService.checkNickName(nickName)) {
 			return "available";

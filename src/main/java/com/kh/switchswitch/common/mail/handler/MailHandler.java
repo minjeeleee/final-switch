@@ -12,7 +12,9 @@ public class MailHandler {
 	
 	@PostMapping("mail")
 	public String writeMailTemplate(@RequestParam Map<String, String> template, Model model) {
-		model.addAttribute("persistToken",template.get("persistToken"));
+		if(template.containsKey("persistToken")) {
+			model.addAttribute("persistToken",template.get("persistToken"));
+		}
 		return "mail-template/"+template.get("mail-template");
 	}
 	

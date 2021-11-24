@@ -14,8 +14,7 @@ public class ModifyForm {
 	private String memberNick;
 	private String memberAddress;
 	private String address;
-	private String zipNo;
-	
+	private String zipNo;	
 
 	public Member convertToMember() {
 		
