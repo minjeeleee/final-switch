@@ -14,7 +14,7 @@
 			   return;
 		   }
 		   
-		   fetch("/mypage/pw-check?password="+password)
+		   fetch("/mypage/pw-check?password="+encodeURIComponent(password))
 		   .then(response =>{
 				if(response.ok){
 					return response.text()

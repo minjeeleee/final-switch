@@ -1,7 +1,6 @@
 package com.kh.switchswitch.mypage.validator;
 
 import com.kh.switchswitch.member.model.dto.Member;
-
 import lombok.Data;
 
 @Data
@@ -15,7 +14,7 @@ public class ModifyForm {
 	private String memberNick;
 	private String memberAddress;
 	private String address;
-	private String zipNo;
+	private String zipNo;	
 
 	public Member convertToMember() {
 		

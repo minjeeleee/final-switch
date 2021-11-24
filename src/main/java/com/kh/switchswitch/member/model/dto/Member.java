@@ -19,5 +19,6 @@ public class Member {
 	private Date memberDelDate;
 	private int memberScore;
 	private String memberName;
+	private int flIdx;
 	
 }

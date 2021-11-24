@@ -9,6 +9,7 @@
   	</settings>
   
 	<mappers>
-	  	<mapper resource="mybatis/mapper/mybatisMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/memberMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/kakaoMapper.xml"/>
 	</mappers>
   </configuration>

@@ -24,6 +24,7 @@
   		<if test="memberScore != null">, member_score=#{memberScore}</if>
   		<if test="memberNick != null">, member_nick=#{memberNick}</if>
   		<if test="memberTell != null">, member_tell=#{memberTell}</if>
+  		<if test="flIdx != 0">, fl_idx=#{flIdx}</if>
   		where member_idx = #{memberIdx}
   	</update>
   </mapper>

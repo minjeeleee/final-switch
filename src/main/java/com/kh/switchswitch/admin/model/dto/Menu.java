@@ -10,7 +10,7 @@ public class Menu {
 	private String url;
 	private String urlName;
 	private String position;
-	private String division;
+	private int depth;
 	private String parent;
 
 }

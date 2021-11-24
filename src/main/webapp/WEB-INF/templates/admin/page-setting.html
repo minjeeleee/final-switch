@@ -37,9 +37,40 @@
 									<h3 class="panel-title">페이지 구조</h3>
 								</div>
 								<div class="panel-body">
-									<div id="topMenu" style="display: flex;"><i class="fa fa-plus-square-o" id="plus1" aria-hidden="true"></i><div id="text1">탑메뉴</div></div>
-									<div id="menu" style="display: flex;"><i class="fa fa-plus-square-o" aria-hidden="true"></i>메뉴</div>
-									<div id="sideMenu" style="display: flex;"><i class="fa fa-plus-square-o" aria-hidden="true"></i>사이드메뉴</div>
+									<div id="menu" style="display: flex;">
+										<i class="fa fa-plus-square-o" id="expandMenu" aria-hidden="true" style="display: block; margin-top: 0.7%; height: 100%;"></i>
+										<i class="fa fa-minus-square-o" id="foldMenu" aria-hidden="true" style="display: none; margin-top: 0.7%; height: 100%;"></i>
+										<div id="menuWrapper" style="display: flex; flex-direction: column;">
+											<div>메뉴</div>
+											<div id="subMenuByMenu" style="display: none; padding-left: 33%;">
+												<div th:each="entry : ${childMenuList}" style="display: flex;">
+													<div id="subMenuWrapper" style="display: flex; flex-direction: column;">
+													<div th:text="${entry.key}"></div>
+														<div id="subMenuBySubMenu" th:each="list : ${entry.value}" style="display: block; padding-left: 20%; ">
+																<div th:text="${list.urlName}"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="sideMenu" style="display: flex;">
+										<i class="fa fa-plus-square-o" id="expandSideMenu" aria-hidden="true" style="display: block; margin-top: 0.7%; height: 100%;"></i>
+										<i class="fa fa-minus-square-o" id="foldSideMenu" aria-hidden="true" style="display: none; margin-top: 0.7%; height: 100%;"></i>
+										<div id="menuWrapper" style="display: flex; flex-direction: column;">
+											<div>사이드메뉴</div>
+											<div id="subMenuBySideMenu" style="display: none; padding-left: 20%;">
+												<div th:each="entry : ${childSideMenuList}" style="display: flex;">
+													<div id="subMenuWrapper" style="display: flex; flex-direction: column;">
+													<div th:text="${entry.key}"></div>
+														<div id="subMenuBySideSubMenu" th:each="list : ${entry.value}" style="display: block; padding-left: 20%; ">
+																<div th:text="${list.urlName}"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 							<!-- END TABLE STRIPED -->
@@ -54,6 +85,7 @@
 									<table class="table table-hover text-center">
 										<thead>
 											<tr>
+												<th class="text-center">상위경로명</th>
 												<th class="text-center">경로명</th>
 												<th class="text-center">경로</th>
 												<th class="text-center">위치</th>
@@ -62,75 +94,13 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>로그인</td>
-												<td>/member/login</td>
-												<td>탑메뉴</td>
-												<td>전체</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>회원가입</td>
-												<td>/member/join</td>
-												<td>탑메뉴</td>
-												<td>전체</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>교환마켓</td>
-												<td>/switch-market</td>
-												<td>메뉴1</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>나눔마켓</td>
-												<td>/free-market</td>
-												<td>메뉴2</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>게시판</td>
-												<td>/board</td>
-												<td>메뉴3</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>공지사항</td>
-												<td>/board/notice</td>
-												<td>메뉴3-1</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>내카드</td>
-												<td>/mycard</td>
-												<td>메뉴4</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>마이페이지</td>
-												<td>/mypage</td>
-												<td>메뉴5</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>내정보</td>
-												<td>/mypage/info</td>
-												<td>사이드메뉴1</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
-											</tr>
-											<tr>
-												<td>포인트관리</td>
-												<td>/mypage/point</td>
-												<td>사이드메뉴2</td>
-												<td>사용자</td>
-												<td><i class="fa fa-minus-square-o" aria-hidden="true"></i></td>
+											<tr th:each="menu : ${menuAllList}">
+												<td th:text="${menu.parent}"></td>
+												<td th:text="${menu.urlName}"></td>
+												<td th:text="${menu.url}"></td>
+												<td th:text="${menu.position}"></td>
+												<td th:text="${menu.code}"></td>
+												<td><a th:href="@{/admin/delete-menu(urlIdx=${menu.urlIdx})}"><i class="fa fa-minus-square-o" aria-hidden="true"></i></a></td>
 											</tr>
 										</tbody>
 									</table>
@@ -143,36 +113,30 @@
 										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 										        <h4 class="modal-title" id="exampleModalLabel">페이지 추가</h4>
 										      </div>
-										      <form action="/admin/add-page" method="post">
+										      <form action="/admin/add-menu" method="post">
 										      <div class="modal-body">
 										          <div class="form-group">
-										          	<label class="control-label">분류:</label>
-										          	<select name="division" class="form-control" id="recipient-name">
-										          		<option value="메인">메인</option>
-										          		<option value="서브">서브</option>
-										          	</select>
-										          </div>
-										          <div class="form-group">
 										            <label class="control-label">위치:</label>
-										            <select name="position" class="form-control" id="recipient-name">
-										            	<option value="탑메뉴">탑메뉴</option>
+										            <select name="position" class="form-control" id="recipient-name select1" onchange="changeMenuType(this.value)">
+										            	<option value="메뉴바">메뉴바</option>
 										            	<option value="사이드바">사이드바</option>
 										            </select>
 										          </div>
 										          <div class="form-group">
-										            <label class="control-label">상위메뉴:</label>
-										            <select name="parent" class="form-control" id="recipient-name">
+										            <label class="control-label">상위경로:</label>
+										            <select name="parent" class="form-control menu" id="recipient-name">
 										            	<option value="없음">없음</option>
-										            	<option value="탑메뉴">탑메뉴</option>
-										            	<option value="사이드바">사이드바</option>
+										            	<option th:each="parentsMenu : ${parentsMenuList}" th:value="${parentsMenu.urlName}" th:text="${parentsMenu.urlName}"></option>
+										            </select>
+										            <select name="parent" class="form-control side-menu" id="recipient-name" style="display: none;" disabled="disabled">
+										            	<option value="없음">없음</option>
+										            	<option th:each="parentsSideMenu : ${parentsSideMenuList}" th:value="${parentsSideMenu.urlName}" th:text="${parentsSideMenu.urlName}"></option>
 										            </select>
 										          </div>
 										          <div class="form-group">
 										            <label class="control-label">접근권한:</label>
 										            <select name="code" class="form-control" id="recipient-name">
-										            	<option value="A">전체</option>
-										            	<option value="B">회원</option>
-										            	<option value="C">관리자</option>
+										            	<option th:each="code : ${codeList}" th:value="${code.code}" th:text="${code.name}"></option>
 										            </select>
 										          </div>
 										          <div class="form-group">
@@ -212,19 +176,33 @@
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
-	<script type="text/javascript">
+	<script src="/resources/js/admin/menu-folder.js"></script>
+	<script type="text/javascript" th:inline="javascript">
 	
-	const plus = document.querySelector('#plus1');
-	let i = 1;
-	const openMenu = plus.addEventListener('click',(e)=>{
-		document.getElementById('text1').value = '탑';
-		console.dir(i++);
-		if(i == 3) {
-			window.removeEventListener("beforeunload", openMenu);
-			i = 1;
+	function changeMenuType(key) {
+		
+		const menu = document.querySelector('.menu');
+		const sideMenu = document.querySelector('.side-menu');
+		if(key == '메뉴바'){
+			sideMenu.style.display = 'none';
+			sideMenu.disabled = true;
+			sideMenu.disabled = 'disabled';
+			menu.style.display = '';
+			menu.disabled = false;
+			menu.removeAttribute("disabled");
 		}
-	});
-
+		if(key == '사이드바'){
+			menu.style.display = 'none';
+			menu.disabled = true;
+			menu.disabled = 'disabled';
+			sideMenu.style.display = '';
+			sideMenu.disabled = false;
+			sideMenu.removeAttribute("disabled");
+		}
+	}
+	
+	
+	
 	
 	</script>
 </body>

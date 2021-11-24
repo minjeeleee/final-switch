@@ -1,3 +1,7 @@
+const myInit = {
+	method: "GET",
+	headers: getCsrfHeader()
+};
 let confirmEmail = '';
 $('#btnEmailCheck').click(()=>{
 	   
@@ -9,7 +13,7 @@ $('#btnEmailCheck').click(()=>{
 		return;
 	}
 	   
-	fetch("/member/email-check?memberEmail=" + email)
+	fetch("/member/email-check?memberEmail=" + email, myInit)
 	.then(response =>{
 		if(response.ok){
 			return response.text()
@@ -44,7 +48,7 @@ $('#btnNickCheck').click(()=>{
 		return;
 	}
 	   
-	fetch("/member/nickname-check?memberNick=" + nickname)
+	fetch("/member/nickname-check?memberNick=" + nickname, myInit)
 	.then(response =>{
 		if(response.ok){
 			return response.text()

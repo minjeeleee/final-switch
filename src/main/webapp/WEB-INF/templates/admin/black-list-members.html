@@ -57,7 +57,7 @@
 									<thead>
 										<tr class="">
 											<th class="text-center">회원번호</th>
-											<th class="text-center">아이디</th>
+											<th class="text-center">이메일</th>
 											<th class="text-center">이름</th>
 											<th class="text-center">닉네임</th>
 											<th class="text-center">연락처</th>
@@ -66,15 +66,14 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr class="">
-											<td><a>000001</a></td>
-											<td>test01</td>
-											<td>홍길동</td>
-											<td>홍123</td>
-											<td>01011110000</td>
-											<td>21-10-23</td>
-											<td><button type="button"
-													class="btn btn-secondary btn-sm">해제하기</button></td>
+										<tr class="" th:each="memberList : ${memberList}">
+											<td th:text="${memberList.memberIdx}"></td>
+											<td th:text="${memberList.memberEmail}"></td>
+											<td th:text="${memberList.memberName}"></td>
+											<td th:text="${memberList.memberNick}"></td>
+											<td th:text="${memberList.memberTell}"></td>
+											<td th:text="${memberList.memberRegDate}"></td>
+											<td><button type="button" class="btn btn-secondary btn-sm" th:text="해제하기" th:onclick="'location.href=\''+ @{/admin/removeMemberBlack(code=${memberList.code},memberIdx=${memberList.memberIdx})}+'\''"></button></td>
 										</tr>
 										<tr class="">
 											<td><a>000002</a></td>
