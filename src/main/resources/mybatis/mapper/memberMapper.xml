@@ -24,7 +24,20 @@
   		<if test="memberScore != null">, member_score=#{memberScore}</if>
   		<if test="memberNick != null">, member_nick=#{memberNick}</if>
   		<if test="memberTell != null">, member_tell=#{memberTell}</if>
-  		<if test="flIdx != 0">, fl_idx=#{flIdx}</if>
+  		where member_idx = #{memberIdx}
+  	</update>
+  	
+  	<update id="updateMemberForFile">
+  		update member set 
+  		<if test="memberPass != null">member_pass=#{memberPass}</if>
+  		<if test="memberEmail != null">, member_email=#{memberEmail}</if>
+  		<if test="memberDelYn != null">, member_del_yn=#{memberDelYn}</if>
+  		<if test="memberAddress != null">, member_address=#{memberAddress}</if>
+  		<if test="memberDelDate != null">, member_del_date=#{memberDelDate}</if>
+  		<if test="memberScore != null">, member_score=#{memberScore}</if>
+  		<if test="memberNick != null">, member_nick=#{memberNick}</if>
+  		<if test="memberTell != null">, member_tell=#{memberTell}</if>
+  		, fl_idx= sc_file_idx.currval
   		where member_idx = #{memberIdx}
   	</update>
   </mapper>
