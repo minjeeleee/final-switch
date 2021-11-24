@@ -36,7 +36,7 @@ public class BoardController {
 
 	//11/23 403오류
 	@PostMapping("upload")
-	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount memeberAccount ) {
+	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount certifiedMember ) {
 		//,@SessionAttribute("authentication") Member member
 		board.setUserId("userId");
 		boardService.insertBoard(files, board);
