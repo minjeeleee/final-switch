@@ -1,7 +1,10 @@
 package com.kh.switchswitch.card.model.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
@@ -20,6 +23,12 @@ public interface CardRepository {
 			+ " values(sc_file_idx.nextval,#{originFileName},#{renameFileName},#{savePath}"
 			+ " ,sc_card_idx.currval)")
 	void insertFileInfo(FileDTO fileUpload);
+
+	@Select("select * from card where member_idx=#{certifiedMemberIdx} and is_del=0 and exchange_status in('request','requested')")
+	List<Card> selectCardListIsDelAndStatus(int certifiedMemberIdx);
+
+	@Select("select * from file_info where card_idx=#{cardIdx}")
+	List<FileDTO> selectFileInfoByCardIdx(int cardIdx);
 
 	
 }
