@@ -13,7 +13,7 @@
 <body>
     
     <section class="exchange-section">
-
+		<form th:action="@{/exchange/exchangeForm}" method="post">
         <div class="exchange-container">
             <div class="list-info">
                 <div class="mycard-list-container">
@@ -79,6 +79,7 @@
             </div>
             <div class="wishCard">
                 <p>교환 희망 카드 리스트</p>
+                <!-- <input type="hidden" name="wishCardIdx" th:value="${whishCard.cardInfo.cardIdx}">-->
                 <div class="wishCard-container">
                     <div class="top-container">
                         <div class="card-container" style="width: 180px;">
@@ -131,6 +132,7 @@
                     </div>
                     <div class="bottom-container" id="appendArea">
                         <!-- 카드 추가 -->
+                        <!-- 교환요청 버튼 클릭 시 카드 idx list 생성해서 넘기기, forEach? -->
                     </div>
                 </div>
             </div>
@@ -138,13 +140,13 @@
                 <div class="balance">
                     <div class="balance-inner">
                         <p>Point 잔액</p>
-                        <input type="text"><span>P</span>
+                        <input type="number" name="balance" th:value="${balance}" readonly><span>P</span>
                     </div>
                 </div>
                 <div class="proposal">
                     <div class="proposal-inner">
                         <p>제시 잔액</p>
-                        <input type="text"><span>P</span>
+                        <input type="number" name="offerPoint"><span>P</span>
                     </div>
                 </div>
             </div>
@@ -153,6 +155,7 @@
                 <button>취소</button>
             </div>
         </div>
+        </form>
 
     </section>
 <script type="text/javascript" th:inline="javascript" >

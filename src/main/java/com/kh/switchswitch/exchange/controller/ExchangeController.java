@@ -9,10 +9,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
@@ -61,6 +63,29 @@ public class ExchangeController {
 		
 		model.addAttribute("balance", balance);
 		
+	}
+	
+	@PostMapping("exchangeForm")
+	public void exchangeForm(
+			@AuthenticationPrincipal MemberAccount certifiedMember
+			//, int wishCardIdx
+			, int offerPoint
+			, Model model) {
+		//ExchangeStatus exchangeStatus = new ExchangeStatus();
+		//Card wishCard = exchangeService.selectCardByCardIdx(wishCardIdx);
+		//교환신청 받은 사람
+		//exchangeStatus.setUserIdx2(wishCard.getMemberIdx());
+		//교환신청자
+		//exchangeStatus.setUserIdx1(certifiedMember.getMemberIdx());
+		//교환타입?
+		//exchangeStatus.setExchangeType(wishCard.getExchangeStatus());
+		//교환진행 레벨
+		//exchangeStatus.setType("REQUEST");
+		
+		//포인트 잔액
+		//int balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
+		//포인트 holding ?? 후 가용 포인트
+		//int afterBalance = balance - offerPoint;
 	}
 
 }
