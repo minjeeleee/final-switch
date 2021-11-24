@@ -24,11 +24,14 @@ public interface CardRepository {
 			+ " ,sc_card_idx.currval)")
 	void insertFileInfo(FileDTO fileUpload);
 
-	@Select("select * from card where member_idx=#{certifiedMemberIdx} and is_del=0 and exchange_status in('request','requested')")
+	@Select("select * from card where member_idx=#{certifiedMemberIdx} and is_del=0 and exchange_status in('NONE','REQUEST','REQUESTED')")
 	List<Card> selectCardListIsDelAndStatus(int certifiedMemberIdx);
 
 	@Select("select * from file_info where card_idx=#{cardIdx}")
 	List<FileDTO> selectFileInfoByCardIdx(int cardIdx);
+
+	@Select("select * from card where card_idx=#{wishCardIdx}")
+	Card selectCardByCardIdx(int wishCardIdx);
 
 	
 }

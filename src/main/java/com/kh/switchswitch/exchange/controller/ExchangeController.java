@@ -28,26 +28,38 @@ public class ExchangeController {
 	@GetMapping("exchangeForm")
 	public void exchangeForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
+			//, int wishCardIdx
 			, Model model) {
-		
-		List<List> cardlist = new ArrayList<>();
+		//내카드 리스트
+		List<Map<String,Object>> cardlist = new ArrayList<>();
 		List<Card> myCardList = exchangeService.selecAvailableMyCardList(certifiedMember.getMemberIdx());
 		
 		if(myCardList != null) {
 			for (Card card : myCardList) {
 				FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
-				cardlist.add(List.of(card, fileDTO));
+				cardlist.add(Map.of("card", card, "fileDTO", fileDTO));
 			}
 		}
 		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
 		
-		for (List card : cardlist) {
-			System.out.println(card);
+		for (Map map : cardlist) {
+			System.out.println(((Card)map.get("card")).toString());
 		}
 		
 		model.addAttribute("cardlist", cardlist);
 		model.addAttribute("myRate",myRate);
 		
+		//교환 희망 카드
+		//Card cardInfo = exchangeService.selectCardByCardIdx(wishCardIdx);
+		//FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(wishCardIdx);
+		//float userRate = exchangeService.selectMyRate(cardInfo.getMemberIdx());
+		
+		//model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
+		
+		//포인트 잔액
+		int balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
+		
+		model.addAttribute("balance", balance);
 		
 	}
 

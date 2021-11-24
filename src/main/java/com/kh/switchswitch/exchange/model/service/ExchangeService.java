@@ -13,4 +13,8 @@ public interface ExchangeService {
 
 	FileDTO selectImgFileByCardIdx(int cardIdx);
 
+	Card selectCardByCardIdx(int wishCardIdx);
+
+	int selectBalanceByMemberIdx(int memberIdx);
+
 }

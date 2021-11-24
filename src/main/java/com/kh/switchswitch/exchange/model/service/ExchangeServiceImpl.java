@@ -8,6 +8,7 @@ import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
+import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	
 	private final CardRepository cardRepository;
 	private final RatingRepository ratingRepository;
+	private final SavePointRepository savePointRepository;
 
 	public List<Card> selecAvailableMyCardList(int certifiedMemberIdx) {
 		return cardRepository.selectCardListIsDelAndStatus(certifiedMemberIdx);
@@ -28,12 +30,23 @@ public class ExchangeServiceImpl implements ExchangeService{
 		for (Float f : ratingList) {
 			sum += f;
 		}
+		if(sum == 0) {
+			return 0;
+		}
 		return sum/ratingList.size();
 	}
 
 	public FileDTO selectImgFileByCardIdx(int cardIdx) {
 		List<FileDTO> fileDTOList = cardRepository.selectFileInfoByCardIdx(cardIdx);
 		return fileDTOList.get(0);
+	}
+
+	public Card selectCardByCardIdx(int wishCardIdx) {
+		return cardRepository.selectCardByCardIdx(wishCardIdx);
+	}
+
+	public int selectBalanceByMemberIdx(int memberIdx) {
+		return savePointRepository.selectBalanceByMemberIdx(memberIdx);
 	}
 	
 	
