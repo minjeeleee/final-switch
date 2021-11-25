@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class PointHistory {
 	
-	private int phIdx;
+	private Integer phIdx;
 	private String userId;
-	private int type;
-	private int points;
-	private int resultPoint;
-	private int key;
-	private int registrationDate;
+	private Integer type;
+	private Integer points;
+	private Integer resultPoint;
+	private Integer key;
+	private Integer registrationDate;
 
 }

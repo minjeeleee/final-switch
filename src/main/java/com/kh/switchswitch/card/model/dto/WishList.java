@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class WishList {
 
-	private int wlIdx;
-	private int memberIdx;
+	private Integer wlIdx;
+	private Integer memberIdx;
 	private String code;
-	private int cardIdx;
+	private Integer cardIdx;
 }

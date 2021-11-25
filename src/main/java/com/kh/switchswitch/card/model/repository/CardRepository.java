@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
@@ -35,6 +36,14 @@ public interface CardRepository {
 	
 	@Select("select * from card")
 	List<Card> selectCardAll();
+
+	@Select("select member_idx from card where card_idx=#{wishCardIdx}")
+	int selectMemberIdxByCardIdx(int wishCardIdx);
+
+	@Select("select member_idx from card where card_idx=#{wishCardIdx}")
+	int selectCardMemberIdxWithCardIdx(int wishCardIdx);
+
+	void updateCard(Card card);
 
 	
 }

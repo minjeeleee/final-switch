@@ -23,6 +23,7 @@
                     		<div class="card-container" style="width:180px;" 
                     			th:each="card : ${cardlist}" th:object="${card}"
                     			th:id="*{card.cardIdx}" onclick="transfer(this)">
+                    			<input type="hidden" th:value="*{card.cardIdx}">
 	                            <div class="card-name">
 	                                <p>[[*{card.name}]]</p>
 	                            </div>
@@ -180,12 +181,19 @@ function transfer(e) {
 	if(e.parentElement.className == 'mycard-list'){
 		if(document.querySelector("#appendArea").childElementCount < 4){
 			appendArea = document.querySelector("#appendArea");
+			let cardIdx = e.getElementsByTagName("input")[0].value;
+			let input = document.createElement("input");
+			input.setAttribute("type","hidden");
+			input.setAttribute("name","cardIdxList");
+			input.setAttribute("value",cardIdx);
+			e.appendChild(input);
 			appendArea.appendChild(e);
 		} else {
 			alert("카드는 최대 4개만 교환 가능합니다.");
 		}
 	} else {
 		appendArea = document.querySelector(".mycard-list");
+		e.lastChild.remove();
 		appendArea.appendChild(e);
 	}
 }

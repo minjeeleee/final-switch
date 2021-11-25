@@ -5,10 +5,11 @@ import lombok.Data;
 @Data
 public class ExchangeStatus {
 	
-	private int eIdx;
-	private String exchangeType;
-	private int userIdx1;
-	private int userIdx2;
+	private Integer eIdx;
+	private Integer reqIdx;
+	private Integer userIdx1;
+	private Integer userIdx2;
 	private String type;
+	private Integer propBalance;
 
 }

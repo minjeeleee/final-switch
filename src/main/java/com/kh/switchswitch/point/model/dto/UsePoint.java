@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class UsePoint {
 	
-	private int pointIdx;
-	private int memberIdx;
-	private int code;
-	private int balance;
+	private Integer pointIdx;
+	private Integer memberIdx;
+	private Integer code;
+	private Integer balance;
 
 }
