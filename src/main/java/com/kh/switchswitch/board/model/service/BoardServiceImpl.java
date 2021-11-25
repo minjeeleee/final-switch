@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
@@ -24,7 +25,6 @@ public class BoardServiceImpl implements BoardService{
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BoardRepository boardRepository;
 	
-	@Override
 	public void insertBoard(List<MultipartFile> files, Board board) {
 		FileUtil  fileUtil = new FileUtil();
 		
@@ -46,7 +46,6 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	//11/23 리스트받아오기
-	@Override
 	public Map<String, Object> selectBoardList(int page) {
 		int cntPerPage = 5;
 		Paging pageUtil = Paging.builder()
@@ -62,6 +61,20 @@ public class BoardServiceImpl implements BoardService{
 		commandMap.put("boardList", boardRepository.selectBoardList(pageUtil));
 		return commandMap;
 	}
+
+	public Map<String, Object> boardModify(Board board) {
+		return boardRepository.boardModify(board);
+	}
+
+	@Override
+	public Map<String, Object> findBoardToModify(String bdIdx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
 
 
 
