@@ -66,9 +66,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("login")
-	public String login() {
-		return "member/login2";
-	}
+	public void login() {}
 	
 	@GetMapping("kakaoLogin")
 	public String kakaoLogin(@RequestParam("code") String code, RedirectAttributes redirectAttr) {

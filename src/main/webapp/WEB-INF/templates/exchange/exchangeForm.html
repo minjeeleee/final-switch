@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,171 +7,79 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
     <link rel="stylesheet" href="../resources/css/exchange/exchangeForm.css">
-    <link rel="stylesheet" href="../resources/css/card/card.css">
     <link rel="stylesheet" href="../resources/css/card/card2.css">
     <title>switchswitch</title>
 </head>
 <body>
     
     <section class="exchange-section">
-
+		<form th:action="@{/exchange/exchangeForm}" method="post">
         <div class="exchange-container">
             <div class="list-info">
                 <div class="mycard-list-container">
                     <p>내 카드 리스트</p>
-                    <div class="mycard-list">
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
+	                <div class="mycard-list">
+                    	<th:block th:if="${cardlist}">
+                    		<div class="card-container" style="width:180px;" 
+                    			th:each="card : ${cardlist}" th:object="${card}"
+                    			th:id="*{card.cardIdx}" onclick="transfer(this)">
+	                            <div class="card-name">
+	                                <p>[[*{card.name}]]</p>
+	                            </div>
+	                            <div class="grade-container">
+	                                <div class="icon">
+	                                    <!-- 아이콘 변경 -->
+	                                    <i class="fas fa-bolt"></i>
+	                                </div>
+	                                <div class="user-grade">
+	                                    <p>사용자 평점</p>
+	                                    <!-- 사용자 별점 -->
+	                                    <div class="star">
+	                                    	<th:block th:if="${myRate} >= 1">
+	                                    		<th:block th:each="num : ${#numbers.sequence(1,myRate)}">
+												<i class="fas fa-star full-star"></i>
+												</th:block>
+	                                    	</th:block>
+											<th:block th:if="${myRate%1!=0}">
+												<i class="fas fa-star-half-alt"></i>
+											</th:block>
+											<th:block th:each="num : ${#numbers.sequence(0,5-myRate)}">
+												<i th:unless="${num == 0}" class="far fa-star"></i>
+											</th:block>
+	                                    </div>
+	                                </div>
+	                                <div class="item-grade">
+	                                    <p>물건 평점</p>
+	                                    <!-- 물건 별점 -->
+	                                    <div class="star">
+	                                    	<th:block th:each="num : *{#numbers.sequence(1,card.condition)}">
+												<i class="fas fa-star full-star"></i>
+											</th:block>
+											<th:block th:each="num : *{#numbers.sequence(0,5-card.condition)}">
+												<i th:unless="${num == 0}" class="far fa-star"></i>
+											</th:block>
+	                                    </div>
+	                                </div>
+	                            </div>
                             <div class="address">
                                 <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
+                                <p>지역 <span th:text="*{card.region}"></span> <span th:text="*{card.regionDetail}"></span></p>
                             </div>
                             <div class="card">
                                 <img src="../resources/img/ddongCard.png" alt="">
                                 <div class="card-img">
                                     <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
+                                    <img th:src="*{fileDTO.getDownloadURL()}" alt="">
                                 </div>
                             </div>
                         </div>
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="address">
-                                <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
-                            </div>
-                            <div class="card">
-                                <img src="../resources/img/ddongCard.png" alt="">
-                                <div class="card-img">
-                                    <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="address">
-                                <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
-                            </div>
-                            <div class="card">
-                                <img src="../resources/img/ddongCard.png" alt="">
-                                <div class="card-img">
-                                    <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-info-container">
-                    <p>카드 정보</p>
-                    <div class="card-info">
-                        <p>물품 설명 </p>
-                        <span>구데기 입니다</span>
-                        <p>거래 방식</p>
-                        <span>직거래</span>
-                        <p>배송비</p>
-                        <span>유</span>
-                        <p>물품 이미지</p>
-                        <div class="item-images">
-                            <img src="" alt="">
-                        </div>
+                    	</th:block>
                     </div>
                 </div>
             </div>
             <div class="wishCard">
                 <p>교환 희망 카드 리스트</p>
+                <!-- <input type="hidden" name="wishCardIdx" th:value="${whishCard.cardInfo.cardIdx}">-->
                 <div class="wishCard-container">
                     <div class="top-container">
                         <div class="card-container" style="width: 180px;">
@@ -222,183 +130,9 @@
                     <div class="exchange-icon">
                         <i class="fas fa-sync-alt"></i>
                     </div>
-                    <div class="bottom-container">
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="address">
-                                <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
-                            </div>
-                            <div class="card">
-                                <img src="../resources/img/ddongCard.png" alt="">
-                                <div class="card-img">
-                                    <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="address">
-                                <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
-                            </div>
-                            <div class="card">
-                                <img src="../resources/img/ddongCard.png" alt="">
-                                <div class="card-img">
-                                    <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="address">
-                                <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
-                            </div>
-                            <div class="card">
-                                <img src="../resources/img/ddongCard.png" alt="">
-                                <div class="card-img">
-                                    <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-container" style="width:180px;">
-                            <div class="card-name">
-                                <p>아이폰</p>
-                            </div>
-                            <div class="grade-container">
-                                <div class="icon">
-                                    <!-- 아이콘 변경 -->
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="user-grade">
-                                    <p>사용자 평점</p>
-                                    <!-- 사용자 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="item-grade">
-                                    <p>물건 평점</p>
-                                    <!-- 물건 별점 -->
-                                    <div class="star">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="address">
-                                <!-- 주소 -->
-                                <p>지역 <span>강남</span> <span>강서구</span></p>
-                            </div>
-                            <div class="card">
-                                <img src="../resources/img/ddongCard.png" alt="">
-                                <div class="card-img">
-                                    <!-- 카드 물건 이미지 -->
-                                    <img src="../resources/img/iphone.png" alt="">
-                                </div>
-                            </div>
-                        </div>
+                    <div class="bottom-container" id="appendArea">
+                        <!-- 카드 추가 -->
+                        <!-- 교환요청 버튼 클릭 시 카드 idx list 생성해서 넘기기, forEach? -->
                     </div>
                 </div>
             </div>
@@ -406,13 +140,13 @@
                 <div class="balance">
                     <div class="balance-inner">
                         <p>Point 잔액</p>
-                        <input type="text"><span>P</span>
+                        <input type="number" name="balance" th:value="${balance}" readonly><span>P</span>
                     </div>
                 </div>
                 <div class="proposal">
                     <div class="proposal-inner">
                         <p>제시 잔액</p>
-                        <input type="text"><span>P</span>
+                        <input type="number" name="offerPoint"><span>P</span>
                     </div>
                 </div>
             </div>
@@ -421,8 +155,24 @@
                 <button>취소</button>
             </div>
         </div>
+        </form>
 
     </section>
-
+<script type="text/javascript" th:inline="javascript" >
+function transfer(e) {
+	let appendArea;
+	if(e.parentElement.className == 'mycard-list'){
+		if(document.querySelector("#appendArea").childElementCount < 4){
+			appendArea = document.querySelector("#appendArea");
+			appendArea.appendChild(e);
+		} else {
+			alert("카드는 최대 4개만 교환 가능합니다.");
+		}
+	} else {
+		appendArea = document.querySelector(".mycard-list");
+		appendArea.appendChild(e);
+	}
+}
+</script>
 </body>
 </html>

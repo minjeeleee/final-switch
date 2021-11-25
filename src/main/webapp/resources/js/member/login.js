@@ -9,7 +9,7 @@ function kakaoLogin(){
 if(expired == 'expired') alert("다른 브라우저에서 로그인 중 있습니다.");
 
 if($("#kakao").val() == 'valid') {
-	$("#memberEmail").val(email);
-	$("#password").val(pw);
-	$("#login").submit();
+	$(".memberEmail").val(email);
+	$(".password").val(pw);
+	$(".login").submit();
 };

@@ -1,4 +1,4 @@
-package com.kh.switchswitch.point;
+package com.kh.switchswitch.point.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
