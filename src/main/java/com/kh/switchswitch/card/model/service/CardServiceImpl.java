@@ -30,7 +30,11 @@ public class CardServiceImpl implements CardService {
 				cardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
 			}
 		}
+	}
+	
+	public List<Card> selectCard() {
 		
+		return cardRepository.selectCardAll();
 	}
 	
 

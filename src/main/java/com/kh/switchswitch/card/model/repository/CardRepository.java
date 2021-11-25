@@ -32,6 +32,9 @@ public interface CardRepository {
 
 	@Select("select * from card where card_idx=#{wishCardIdx}")
 	Card selectCardByCardIdx(int wishCardIdx);
+	
+	@Select("select * from card")
+	List<Card> selectCardAll();
 
 	
 }
