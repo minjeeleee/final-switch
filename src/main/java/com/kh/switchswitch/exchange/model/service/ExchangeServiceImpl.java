@@ -56,6 +56,10 @@ public class ExchangeServiceImpl implements ExchangeService{
 		exchangeRepository.insertExchangeStatus(exchangeStatus);
 		
 	}
+
+	public List<Integer> selectMyRateCnt(int memberIdx) {
+		return ratingRepository.selectMyRateCnt(memberIdx);
+	}
 	
 	
 

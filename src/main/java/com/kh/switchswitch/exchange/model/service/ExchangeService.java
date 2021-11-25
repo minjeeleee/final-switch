@@ -20,6 +20,7 @@ public interface ExchangeService {
 
 	void insertExchangeStatus(ExchangeStatus exchangeStatus);
 	
+	List<Integer> selectMyRateCnt(int memberIdx);
 	
 
 }
