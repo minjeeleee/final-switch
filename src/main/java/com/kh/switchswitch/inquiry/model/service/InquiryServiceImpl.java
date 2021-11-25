@@ -1,4 +1,4 @@
-package com.kh.switchswitch.board.model.service;
+package com.kh.switchswitch.inquiry.model.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,41 +15,34 @@ import com.kh.switchswitch.board.model.repository.BoardRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.inquiry.model.dto.Inquiry;
+import com.kh.switchswitch.inquiry.model.repository.InquiryRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class InquiryServiceImpl implements InquiryService{
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final BoardRepository boardRepository;
+	private final InquiryRepository inquiryRepository;
 	
-	public void insertBoard(List<MultipartFile> files, Board board) {
-		FileUtil  fileUtil = new FileUtil();
-		
-		boardRepository.insertBoard(board);
-		
-		for (MultipartFile multipartFile : files) {
-			if(!multipartFile.isEmpty()) {
-				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
-			}
-		}
+	public void insertInquiry(Inquiry inquiry) {
+		inquiryRepository.insertInquiry(inquiry);
 	}
 	
 	//11/17
 	@Override
-	public Map<String, Object> selectBoardByIdx(String bdIdx) {
-		Board board = boardRepository.selectBoardByIdx(bdIdx);
-		List<FileDTO> files = boardRepository.selectFilesByBdIdx(bdIdx);
-		return Map.of("board",board,"files",files);
+	public Map<String, Object> selectInquiryByIdx(String inquiryIdx) {
+		Inquiry inquiry = inquiryRepository.selectInquiryByIdx(inquiryIdx);
+		return Map.of("inquiry",inquiry);
 	}
 
 	//11/23 리스트받아오기
-	public Map<String, Object> selectBoardList(int page) {
+	public Map<String, Object> selectInquiryList(int page) {
 		int cntPerPage = 5;
 		Paging pageUtil = Paging.builder()
-				.url("/board/board-list")
+				.url("/inquiry/inquiry-list")
 				.total(10)
 				.curPage(page)
 				.blockCnt(10)
@@ -58,19 +51,11 @@ public class BoardServiceImpl implements BoardService{
 
 		Map<String,Object> commandMap = new HashMap<String,Object>();
 		commandMap.put("paging", pageUtil);
-		commandMap.put("boardList", boardRepository.selectBoardList(pageUtil));
+		commandMap.put("inquiryList", inquiryRepository.selectInquiryList(pageUtil));
 		return commandMap;
 	}
 
-	public Map<String, Object> boardModify(Board board) {
-		return boardRepository.boardModify(board);
-	}
 
-	@Override
-	public Map<String, Object> findBoardToModify(String bdIdx) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 
 

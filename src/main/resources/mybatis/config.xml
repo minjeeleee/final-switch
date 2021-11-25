@@ -15,5 +15,6 @@
 	  	<mapper resource="mybatis/mapper/savePointMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/alarmMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/exchangeStatusMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/boardMapper.xml"/>
 	</mappers>
   </configuration>

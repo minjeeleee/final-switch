@@ -183,34 +183,20 @@ td{
 								
 							</tr>
 						</thead>
-						
-						<tbody>
-							<tr style="height: 30px; line-height: 30px;">
-								<td align="center">불편사항</td>
+						<tbody>	
+							<tr th:each="inquiry : ${inquiryList}" style="height: 30px; line-height: 30px;">
+								<td th:text="${inquiry.type}"></td>
 								<td>답변대기</td>
-								<td align="center">당근</td>
-								<td align="center">2021/11/23</td>
+								<td>
+								<a th:text="${inquiry.title}" th:href="@{/inquiry/inquiry-detail(inquiryIdx=${inquiry.inquiryIdx})}"></a>
+								</td>
+								<td th:text="${inquiry.regDate}"></td>
 							</tr>
-							<tr style="height: 30px; line-height: 30px;">
-								<td align="center">신고</td>
-								<td>답변완료</td>
-								<td align="center">당근</td>
-								<td align="center">2021/11/23</td>
-							</tr>
-							<tr style="height: 30px; line-height: 30px;">
-								<td align="center">기타</td>
-								<td>답변완료</td>
-								<td align="center">당근</td>
-								<td align="center">2021/11/23</td>
-							</tr>
-						
-							<tr style="height: 30px; line-height: 30px;">
-								<td rowspan="3" style="text-align: center">게시글이 없습니다.</td>
-
-							</tr>
-							
-							
+					
+<!-- 							<tr style="height: 30px; line-height: 30px;">
+								<td rowspan="3" style="text-align: center">게시글이 없습니다.</td> -->
 						</tbody>
+						
 					</table>
 				</div>
 				
@@ -239,20 +225,6 @@ td{
 	    </li>
 	  </ul>
 	</nav>
-
-	<div class="paging" th:object=${paging} >
-		<a th:href="*{url}"> <i class="fas fa-angle-double-left"></i> </a>
-		<a th:href="|*{url}?page=*{prev}|"> <i class="fas fa-angle-left"></i></a> 
-		
-		<a th:each = "p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}"
-		   th:href="|*{url}?page=${p}|">
-			<span th:text="${p}"></span>
-		</a>
-		
-		<a th:href="|*{url}?page=*{next}|"> <i class="fas fa-angle-right"></i> </a>
-		<a th:href="|*{url}?page=*{lastPage}|"> <i class="fas fa-angle-double-right"></i> </a>
-	</div>
-					
 					
 				</div>
 				

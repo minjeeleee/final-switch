@@ -1,4 +1,4 @@
-package com.kh.switchswitch.board.model.repository;
+package com.kh.switchswitch.inquiry.model.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -12,35 +12,36 @@ import org.apache.ibatis.annotations.Update;
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 
 @Mapper
-public interface BoardRepository {
+public interface InquiryRepository {
 
 	//글작성
-	@Insert("insert into community(bd_idx, user_id, title, content)"
-			+ " values(sc_bd_idx.nextval, #{userId}, #{title}, #{content})")
-	void insertBoard(Board board);
+	@Insert("insert into inquiry(inquiry_idx, user_id, title, content,type)"
+			+ " values(sc_inquiry_idx.nextval, #{userId}, #{title}, #{content}, #{type})")
+	void insertInquiry(Inquiry inquiry);
 
 	//상세글조회 
-	@Select("select * from community where bd_idx = #{bdIdx}")
-	Board selectBoardByIdx(String bdIdx);
+	@Select("select * from inquiry where inquiry_idx = #{inquiryIdx}")
+	Inquiry selectInquiryByIdx(String inquiryIdx);
 	
 	//게시글목록
-	@Select("select * from community ORDER BY bd_idx DESC") 
-	List<Board> selectBoardList(Paging pageUtil);
+	@Select("select * from inquiry ORDER BY inquiry_idx DESC") 
+	List<Inquiry> selectInquiryList(Paging pageUtil);
 
 	//총 게시글 갯수 출력
-	@Select("select count(*) from community")
+	@Select("select count(*) from inquiry")
 	int selectContentCnt();
 
 	
 	
 	//수정
 	@Update("")
-	void updateBoard(Board board);
+	void updateInquiry(Inquiry inquiry);
 	
 	@Delete("")
-	void deleteBoard(String bdIdx);
+	void deleteInquiry(String inquiryIdx);
 	
 	
 	//파일업로드
@@ -49,12 +50,18 @@ public interface BoardRepository {
 	void insertFileInfo(FileDTO fileDTO);
 	
 	//파일다운
-	@Select("select * from file_info where bd_idx = #{bdIdx}")
-	List<FileDTO> selectFilesByBdIdx(String bdIdx);
+	@Select("select * from inquiry where inquiryIdx = #{inquiryIdx}")
+	List<FileDTO> selectFilesByInquiryIdx(String inquiryIdx);
 
 	//수정
 	@Update("")
-	Map<String, Object> boardModify(Board board);
+	Map<String, Object> inquiryModify(Inquiry inquiry);
+
+	
+
+	
+
+	
 
 
 
