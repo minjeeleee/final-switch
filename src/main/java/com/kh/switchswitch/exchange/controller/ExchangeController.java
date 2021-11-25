@@ -35,6 +35,7 @@ public class ExchangeController {
 		//내카드 리스트
 		List<Map<String,Object>> cardlist = new ArrayList<>();
 		List<Card> myCardList = exchangeService.selecAvailableMyCardList(certifiedMember.getMemberIdx());
+		int wishCardIdx = 393;
 		
 		if(myCardList != null) {
 			for (Card card : myCardList) {
@@ -44,6 +45,7 @@ public class ExchangeController {
 		}
 		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
 		
+		
 		for (Map map : cardlist) {
 			System.out.println(((Card)map.get("card")).toString());
 		}
@@ -52,11 +54,12 @@ public class ExchangeController {
 		model.addAttribute("myRate",myRate);
 		
 		//교환 희망 카드
-		//Card cardInfo = exchangeService.selectCardByCardIdx(wishCardIdx);
-		//FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(wishCardIdx);
-		//float userRate = exchangeService.selectMyRate(cardInfo.getMemberIdx());
+		Card cardInfo = exchangeService.selectCardByCardIdx(wishCardIdx);
+		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(wishCardIdx);
+		float userRate = exchangeService.selectMyRate(cardInfo.getMemberIdx());
 		
-		//model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
+		model.addAttribute("userRate", userRate);
+		model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
 		
 		//포인트 잔액
 		int balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
@@ -66,26 +69,28 @@ public class ExchangeController {
 	}
 	
 	@PostMapping("exchangeForm")
-	public void exchangeForm(
+	public String exchangeForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
-			//, int wishCardIdx
+			, int wishCardIdx
 			, int offerPoint
 			, Model model) {
-		//ExchangeStatus exchangeStatus = new ExchangeStatus();
-		//Card wishCard = exchangeService.selectCardByCardIdx(wishCardIdx);
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		Card wishCard = exchangeService.selectCardByCardIdx(wishCardIdx);
 		//교환신청 받은 사람
-		//exchangeStatus.setUserIdx2(wishCard.getMemberIdx());
+		exchangeStatus.setUserIdx2(wishCard.getMemberIdx());
 		//교환신청자
-		//exchangeStatus.setUserIdx1(certifiedMember.getMemberIdx());
-		//교환타입?
-		//exchangeStatus.setExchangeType(wishCard.getExchangeStatus());
-		//교환진행 레벨
-		//exchangeStatus.setType("REQUEST");
+		exchangeStatus.setUserIdx1(certifiedMember.getMemberIdx());
+		
+		exchangeService.insertExchangeStatus(exchangeStatus);
 		
 		//포인트 잔액
-		//int balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
+		int balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
+		
 		//포인트 holding ?? 후 가용 포인트
-		//int afterBalance = balance - offerPoint;
+		int afterBalance = balance - offerPoint;
+		System.out.println(balance);
+		System.out.println(afterBalance);
+		return "redirect:/";
 	}
 
 }

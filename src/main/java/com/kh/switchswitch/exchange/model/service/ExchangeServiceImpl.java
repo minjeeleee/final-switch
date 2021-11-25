@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
@@ -19,6 +21,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	private final CardRepository cardRepository;
 	private final RatingRepository ratingRepository;
 	private final SavePointRepository savePointRepository;
+	private final ExchangeRepository exchangeRepository;
 
 	public List<Card> selecAvailableMyCardList(int certifiedMemberIdx) {
 		return cardRepository.selectCardListIsDelAndStatus(certifiedMemberIdx);
@@ -47,6 +50,11 @@ public class ExchangeServiceImpl implements ExchangeService{
 
 	public int selectBalanceByMemberIdx(int memberIdx) {
 		return savePointRepository.selectBalanceByMemberIdx(memberIdx);
+	}
+
+	public void insertExchangeStatus(ExchangeStatus exchangeStatus) {
+		exchangeRepository.insertExchangeStatus(exchangeStatus);
+		
 	}
 	
 	
