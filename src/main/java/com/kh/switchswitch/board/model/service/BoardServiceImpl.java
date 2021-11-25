@@ -61,15 +61,25 @@ public class BoardServiceImpl implements BoardService{
 		commandMap.put("boardList", boardRepository.selectBoardList(pageUtil));
 		return commandMap;
 	}
-
-	public Map<String, Object> boardModify(Board board) {
-		return boardRepository.boardModify(board);
-	}
-
+	
 	@Override
-	public Map<String, Object> findBoardToModify(String bdIdx) {
-		// TODO Auto-generated method stub
-		return null;
+	public void modifyBoard(Board board, List<MultipartFile> files) {
+		FileUtil  fileUtil = new FileUtil();
+		
+		boardRepository.modifyBoard(board);
+		
+		for (MultipartFile multipartFile : files) {
+			if(!multipartFile.isEmpty()) {
+				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
+			}
+		}
+	}
+	
+	
+//11/26수정필요
+	@Override
+	public Map<String, Object> findBoardByIdx(String bdIdx) {
+		return boardRepository.boardModify(bdIdx);
 	}
 
 
