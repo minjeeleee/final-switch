@@ -2,9 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/subHeader :: head"></head>
+<head th:replace="fragments/subHeader :: subHeader"></head>
 
 <body>
+
+	<div th:replace="fragments/carddetail" :: cardDetail> 
+	</div>
 
     <header th:replace="fragments/subBodyHeader :: header">
     </header>
@@ -512,9 +515,28 @@
 
     </section>
 
-       <footer>
-       <div th:replace="fragments/footer :: footer" />
-   		</footer>
+    <footer>
+       <div th:replace="fragments/footer :: footer" ></div>
+   	</footer>
+   		
+   	<script>
+   	
+        $('.detail-img').slick({
+            autoplay:true,
+            infinite:true,
+            dots:false,
+            arrows: false,
+        });
+
+        $('.card-container').click(() => {
+            $('.popup-detail').removeClass('hide')
+        })
+
+        $('.close-button').click(() => {
+            $('.popup-detail').addClass('hide')
+        })
+        
+   	</script>
 </body>
 
 </html>
