@@ -37,31 +37,30 @@
 					</div>
 
 
-					<div class="section_content_box">
+					<div class="section_content_box" th:object="${datas}">
 						<div class="section_header">
-							<div class="section_title"  th:object="${board}">
-								<span th:text="|제목 : *{title}|"></span>
+							<div class="section_title">
+								<span th:text="|제목 : *{board.title}|"></span>
 							</div>
 							<div class="writer_info">
 
-								<div class="writer_profile"  th:object="${board}">
-									<span th:text="|등록일 : *{regDate}|"></span>
-									<span th:text="|작성자 : *{userId}|"></span>
+								<div class="writer_profile" >
+									<span th:text="|등록일 : *{board.regDate}|"></span>
+									<span th:text="|작성자 : *{board.userId}|"></span>
 								</div>
-								<!-- <div class="info file_info">
+								<div class="info file_info">
 									<ol>
-										<li th:each="file : ${board.files}" th:object="${file}">
+										<li th:each="file : ${datas.files}" th:object="${file}">
 											<a th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
 												[[*{originFileName}]]
 											</a>
 										</li>		
 									</ol>
-
-								</div>  -->
+								</div>
 							</div>
 						</div>
 						<div class="section_container">
-							<pre>[[${board.content}]]</pre>
+							<pre>[[*{board.content}]]</pre>
 
 						</div>
 								

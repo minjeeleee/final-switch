@@ -10,7 +10,9 @@ import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.common.util.FileUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
@@ -30,7 +32,11 @@ public class CardServiceImpl implements CardService {
 				cardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
 			}
 		}
-		
+	}
+
+	@Override
+	public List<Card> selectAllCard() {
+		return cardRepository.selectAllCard();
 	}
 	
 

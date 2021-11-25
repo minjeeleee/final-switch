@@ -36,9 +36,9 @@ public class BoardController {
 
 	//11/23 403오류
 	@PostMapping("upload")
-	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount memeberAccount ) {
+	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member ) {
 		//,@SessionAttribute("authentication") Member member
-		board.setUserId("userId");
+		board.setUserId(member.getMemberNick());
 		boardService.insertBoard(files, board);
 		return "redirect:/";
 	}
@@ -53,10 +53,10 @@ public class BoardController {
 	}
 
 	
-	//11/21 수정필요
-	  //ERROR: org.thymeleaf.TemplateEngine - [THYMELEAF][main] 
-	  //Exception processing template "board/board-detail": Exception evaluating SpringEL expression: "title" (template: "board/board-detail" - line 43, col 15)
-	@GetMapping("board-detail")
+	//11/25
+	  //detail 받아오기 성공
+	  //file다운기능 필요
+	  @GetMapping("board-detail")
 	public void boardDetail(String bdIdx, Model model) {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);

@@ -74,6 +74,7 @@ public class MypageController {
 			vr.addErrors(errors);
 			return "mypage/profile";
 		}
+
 		memberService.updateMemberWithFile(form.convertToMember(),profileImage);
 		return "redirect:/mypage/profile";
 	}

@@ -1,14 +1,14 @@
-package com.kh.switchswitch.exchange;
+package com.kh.switchswitch.alarm.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("exchange")
-public class ExchangeController {
+@RequestMapping("alarm")
+public class AlarmController {
 	
-	@GetMapping("exchangeForm")
-	public void exchangeForm() {}
+	@GetMapping("alarmList")
+	public void alarmList() {}
 
 }

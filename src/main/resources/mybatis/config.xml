@@ -9,7 +9,11 @@
   	</settings>
   
 	<mappers>
+	  	<mapper resource="mybatis/mapper/cardMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/memberMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/kakaoMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/savePointMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/alarmMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/exchangeStatusMapper.xml"/>
 	</mappers>
   </configuration>
