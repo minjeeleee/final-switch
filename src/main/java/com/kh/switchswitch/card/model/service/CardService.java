@@ -11,5 +11,6 @@ public interface CardService {
 	void insertCard(List<MultipartFile> imgList, Card card);
 
 	int selectCardMemberIdxWithCardIdx(int wishCardIdx);
-
+	
+	List<Card> selectAllCard();
 }

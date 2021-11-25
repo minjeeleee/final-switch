@@ -23,4 +23,5 @@ public class Card {
 	private String method;
 	private Integer isDel;
 	private String hopeKind;
+	private String dateParse;
 }

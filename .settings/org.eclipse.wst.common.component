@@ -12,8 +12,7 @@
     
     
     <wb-module deploy-name="switchswitch-1.0.0-BUILD-SNAPSHOT">
-                                                                        
-        
+                                                                
         
         
         
@@ -85,9 +84,8 @@
         
         
         <property name="java-output-path" value="target/classes"/>
-        <property name="context-root" value="switchswitch"/>
-                                                                                                	
-    
+        <property name="context-root" value="/"/>
+                                                                                        	
     
     
     
@@ -99,8 +97,7 @@
     
     
     </wb-module>
-                                                
-
+                                            
 
 
 
