@@ -68,7 +68,8 @@ input::placeholder {
     color: rgb(206, 206, 206);
 }
 
-input:focus {
+.id-input input:focus,
+.pass-input input:focus {
     outline-color: rgb(230, 178, 95);;
     border: 1px solid rgb(230, 178, 95);
 }
@@ -96,6 +97,24 @@ form {
     width: 100%;
 }
 
+.kakao-sm {
+    display: flex;
+    justify-content: center;
+}
+
+.login-sm button,
+.kakao-sm button {
+    transition: 0.3s;
+}
+
+.kakao-sm button:hover {
+    color: rgb(121, 121, 121);
+}
+
+.login-sm button:hover {
+	color: #fff;
+}
+
 .loginButton {
     width: 100%;
     padding: 10px 50px;
@@ -110,8 +129,12 @@ form {
     background-color: rgb(211, 211, 211);
 }
 
+.loginButton:hover {
+	background-color: rgb(129, 129, 129);
+}
+
 .kakaoButton {
-    width: 100%;
+    width: 345px;
     padding: 10px 50px;
     text-align: center;
     color: rgb(255, 255, 255);
@@ -121,6 +144,10 @@ form {
     border: none;
     margin-bottom: 12px;
     background-color: antiquewhite;
+}
+
+.kakaoButton:hover {
+	background-color: rgb(233, 195, 146);
 }
 
 .find-container {
