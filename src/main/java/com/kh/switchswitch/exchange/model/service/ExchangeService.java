@@ -22,6 +22,7 @@ public interface ExchangeService {
 
 	int selectMemberIdxByCardIdx(int wishCardIdx);
 	
+	List<Integer> selectMyRateCnt(int memberIdx);
 	
 
 }

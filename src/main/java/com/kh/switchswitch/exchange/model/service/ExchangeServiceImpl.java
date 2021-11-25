@@ -98,6 +98,8 @@ public class ExchangeServiceImpl implements ExchangeService{
 		
 	}
 	
-	
+	public List<Integer> selectMyRateCnt(int memberIdx) {
+		return ratingRepository.selectMyRateCnt(memberIdx);
+	}
 
 }
