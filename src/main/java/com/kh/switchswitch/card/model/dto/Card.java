@@ -1,6 +1,7 @@
 package com.kh.switchswitch.card.model.dto;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class Card {
 	private String name;
 	private int condition;
 	private String deliveryCharge;
-	private LocalDate regDate;
+	private Date regDate;
 	private String isfree;
 	private String exchangeStatus;
 	private String content;

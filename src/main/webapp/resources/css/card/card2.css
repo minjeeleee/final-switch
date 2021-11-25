@@ -9,6 +9,10 @@
     width: 180px;
 }
 
+.card-container:hover {
+    width: 175px;
+}
+
 .card {
     position: absolute;
     top: 0;
