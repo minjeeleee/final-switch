@@ -1,6 +1,10 @@
 package com.kh.switchswitch.exchange.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.service.CardService;
 
@@ -41,13 +46,15 @@ public class MarketController {
 		response.addHeader("Access-Control-Allow-Origin","*");
 		
 		List<Card> allCard = cardService.selectAllCard();
-		String json = "";
-		try {
-			json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(allCard);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		for (Card content : allCard) {
+            Date regDt = content.getRegDate();
+            SimpleDateFormat dt = new SimpleDateFormat("MM.dd");
+            String dateFormat = dt.format(regDt);
+            content.setDateParse(dateFormat);
+        }
+		
+		String json = new Gson().toJson(allCard);
 		
 		log.info("json={}" ,json);
 		return json;

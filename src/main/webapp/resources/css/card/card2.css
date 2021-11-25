@@ -7,6 +7,7 @@
     position: relative;
     /* 카드 크기수정 */
     width: 180px;
+    transition: 0.3s;
 }
 
 .card-container:hover {
