@@ -44,4 +44,6 @@ public interface MemberService extends UserDetailsService {
 	void reissuePwAndSendToEmail(Member foundMember);
 
 	void updateMemberPass(int memberIdx, String id);
+
+	String selectMemberNickWithMemberIdx(Integer requestMemIdx);
 }

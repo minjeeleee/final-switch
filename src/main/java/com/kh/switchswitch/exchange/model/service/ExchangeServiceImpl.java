@@ -94,6 +94,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 				card.setCardIdx(cardRequestList.getRequestCard1());
 				card.setExchangeStatus("REQUEST");
 				cardRepository.updateCard(card);
+				break;
 			default : logger.debug("왜 0이 들어오지??");
 			}
 		

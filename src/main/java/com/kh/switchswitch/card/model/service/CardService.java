@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 
 public interface CardService {
 
@@ -13,4 +14,10 @@ public interface CardService {
 	int selectCardMemberIdxWithCardIdx(int wishCardIdx);
 	
 	List<Card> selectAllCard();
+
+	CardRequestList selectCardRequestListWithReqIdx(Integer reqIdx);
+
+	Card selectCardWithCardIdx(Integer requestedCard);
+
+	List<Card> CardListWithMemberIdx(Integer requestMemIdx);
 }

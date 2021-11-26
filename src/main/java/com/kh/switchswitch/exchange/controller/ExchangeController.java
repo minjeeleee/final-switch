@@ -1,8 +1,10 @@
 package com.kh.switchswitch.exchange.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +16,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.switchswitch.alarm.model.dto.Alarm;
+import com.kh.switchswitch.alarm.model.service.AlarmService;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.common.code.ErrorCode;
+import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.service.PointService;
 
@@ -35,6 +42,8 @@ public class ExchangeController {
 	private final ExchangeService exchangeService;
 	private final PointService pointService;
 	private final CardService cardService;
+	private final AlarmService alarmService;
+	private final MemberService memberService;
 	
 	@GetMapping("exchangeForm")
 	public void exchangeForm(
@@ -67,8 +76,10 @@ public class ExchangeController {
 		
 		//포인트 잔액
 		SavePoint savePoint = exchangeService.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
-		model.addAttribute("availableBal", savePoint.getAvailableBal());
-		model.addAttribute("balance", savePoint.getBalance());
+		if(savePoint != null) {
+			model.addAttribute("availableBal", savePoint.getAvailableBal());
+			model.addAttribute("balance", savePoint.getBalance());
+		}
 		
 	}
 	
@@ -102,6 +113,60 @@ public class ExchangeController {
 		pointService.updateSavePointWithAvailableBal(availableBal - offerPointInt, certifiedMember.getMemberIdx());
 		
 		return "redirect:/";
+	}
+	
+	@GetMapping("detail")
+	public void detail(
+			@AuthenticationPrincipal MemberAccount certifiedMember,
+			//Alarm alarm, 
+			Model model) {
+		Alarm alarm = new Alarm();
+		alarm.setAlarmIdx(1);
+		alarm.setReqIdx(450);
+		
+		//알림 테이블 is_read 업데이트
+		alarmService.updateAlarm(alarm);
+		
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(alarm.getReqIdx());
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		Card card = cardService.selectCardWithCardIdx(cardRequestList.getRequestedCard());
+		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
+		
+		//요청 유저 카드 리스트
+		List<Map<String,Object>> cardList = new ArrayList<Map<String,Object>>();
+		Set<Integer> cardIdxSet = new LinkedHashSet<Integer>();
+		cardIdxSet.add(cardRequestList.getRequestCard1());
+		cardIdxSet.add(cardRequestList.getRequestCard2());
+		cardIdxSet.add(cardRequestList.getRequestCard3());
+		cardIdxSet.add(cardRequestList.getRequestCard4());
+		cardIdxSet.remove(null);
+		for (Integer cardIdx : cardIdxSet) {
+			Card reqCard = cardService.selectCardWithCardIdx(cardIdx);
+			FileDTO reqfileDTO = exchangeService.selectImgFileByCardIdx(reqCard.getCardIdx());
+			cardList.add(Map.of("card",reqCard,"fileDTO",reqfileDTO));
+		}
+		
+		//요청받은 유저 카드
+		model.addAttribute("requestedCard", Map.of("card",card, "fileDTO", fileDTO));
+		//요청받은 유저 평점
+		model.addAttribute("requestedMemRate",exchangeService.selectMyRate(cardRequestList.getRequestedMemIdx()));
+		
+		//상대방 닉네임
+		if(certifiedMember.getMemberIdx().equals(cardRequestList.getRequestMemIdx())) {
+			model.addAttribute("counterpartNick",memberService.selectMemberNickWithMemberIdx(cardRequestList.getRequestedMemIdx()));
+		} else {
+			model.addAttribute("counterpartNick",memberService.selectMemberNickWithMemberIdx(cardRequestList.getRequestMemIdx()));
+		}
+		
+		//요청 유저 평점
+		model.addAttribute("reqMemRate", exchangeService.selectMyRate(cardRequestList.getRequestMemIdx()));
+		
+		//요청 유저 제시 포인트
+		model.addAttribute("propBalance",cardRequestList.getPropBalance());
+		model.addAttribute("reqCardList", cardList);
 	}
 
 }

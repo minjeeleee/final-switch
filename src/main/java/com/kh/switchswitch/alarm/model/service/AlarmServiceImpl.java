@@ -33,4 +33,9 @@ public class AlarmServiceImpl implements AlarmService {
 		
 	}
 
+	public void updateAlarm(Alarm alarm) {
+		alarm.setIsRead(1);
+		alarmRepository.updateAlarmIsRead(alarm);
+	}
+
 }
