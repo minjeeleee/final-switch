@@ -98,7 +98,6 @@ public class ExchangeServiceImpl implements ExchangeService{
 				break;
 			default : logger.debug("왜 0이 들어오지??");
 			}
-		
 	}
 	
 	public List<Integer> selectMyRateCnt(int memberIdx) {
@@ -142,5 +141,14 @@ public class ExchangeServiceImpl implements ExchangeService{
 			default : logger.debug("왜 0이 들어오지??");
 			}
 		
+	}
+
+
+	public boolean checkExchangeOngoing(Integer memberIdx) {
+		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEhByMemberIdxAndTypeOngoing(memberIdx);
+		if(exchangeStatus.size() != 0) {
+			return true;
+		}
+		return false;
 	}
 }

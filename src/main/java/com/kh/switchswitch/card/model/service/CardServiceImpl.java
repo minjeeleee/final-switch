@@ -132,12 +132,15 @@ public class CardServiceImpl implements CardService {
 		return cardList;
 	}
 
-	@Override
 	public void updateCardWithStatus(int previousCardIdx, String status) {
 		Card card = new Card();
 		card.setCardIdx(previousCardIdx);
 		card.setExchangeStatus(status);
 		cardRepository.updateCard(card);
+	}
+
+	public List<Card> searchCategoryCard(String category) {
+		return cardRepository.searchCategoryCard(category);
 	}
 	
 

@@ -44,4 +44,6 @@ public interface CardService {
 	List<Card> selectCardList(Set<Integer> cardIdxSet);
 
 	void updateCardWithStatus(int previousCardIdx, String status);
+	
+	List<Card> searchCategoryCard(String category);
 }

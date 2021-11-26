@@ -86,6 +86,15 @@ public class AdminService {
 	public List<Member> selectMemberBlackList() {
 		return adminRepository.selectMemberBlackList();
 	}
+
+	public Map<String, Object> searchDetailMemberProfile(int memberIdx) {
+		Member member = adminRepository.searchDetailMemberProfile(memberIdx);
+		return Map.of("member",member);
+	}
+
+	public void updateMemberInfo(Member convertToMember, int memberIdx) {
+		adminRepository.updateMemberInfo(convertToMember,memberIdx);
+	}
 	
 
 	

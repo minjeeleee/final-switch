@@ -29,6 +29,8 @@ public interface ExchangeService {
 	void insertExchangeHistory(ExchangeStatus exchangeStatus);
 
 	void updateRequestExchange(CardRequestList cardRequestList, int length);
+
+	boolean checkExchangeOngoing(Integer memberIdx);
 	
 
 }

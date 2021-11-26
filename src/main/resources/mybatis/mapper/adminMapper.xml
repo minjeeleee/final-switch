@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.kh.switchswitch.admin.model.repository.AdminRepository">
+  	<update id="updateMemberInfo">
+  		update member set 
+  		<if test="memberPass != null">member_pass=#{memberPass}</if>
+  		<if test="memberAddress != null">, member_address=#{memberAddress}</if>
+  		<if test="memberNick != null">, member_nick=#{memberNick}</if>
+  		<if test="memberTell != null">, member_tell=#{memberTell}</if>
+  		<if test="flIdx != 0">, fl_idx=#{flIdx}</if>
+  		where member_idx = #{memberIdx}
+  	</update>
+  </mapper>

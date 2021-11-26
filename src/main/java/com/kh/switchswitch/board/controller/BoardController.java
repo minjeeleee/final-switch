@@ -61,14 +61,18 @@ public class BoardController {
 	}
 	
 	@GetMapping("board-modify")
-	public void boardModify(String bdIdx, Model model) {
-		model.addAttribute("board",boardService.findBoardByIdx(bdIdx));
+	public void boardModify(Model model, String bdIdx) {
+		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
+		model.addAttribute("datas", commandMap);
 	}
 	
 
 	@PostMapping("modify")
 	public String modifyBoard(Board board,  List<MultipartFile> files) {
-		
+		System.out.println(board);
+		for (MultipartFile multipartFile : files) {
+			System.out.println(multipartFile);
+		}
 		boardService.modifyBoard(board,files);
 		return "redirect:/board/board-detail?bdIdx="+board.getBdIdx();
 	}

@@ -1,6 +1,8 @@
 package com.kh.switchswitch.exchange.model.repository;
 
 import org.apache.ibatis.annotations.Delete;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -17,6 +19,9 @@ public interface ExchangeRepository {
 
 	@Select("select type from exchange_satus where req_idx=#{reqIdx}")
 	String selectExchangeStatusType(Integer reqIdx);
+
+	@Select("select * from exchange_status where (user_idx1=#{memberIdx} or user_idx2 =#{memberIdx}) and type='ONGOING'")
+	List<ExchangeStatus> selectEhByMemberIdxAndTypeOngoing(Integer memberIdx);
 
 	@Delete("delete from exchange_status where req_idx=#{reqIdx}")
 	void deleteExchangeStatusWithReqIdx(Integer reqIdx);

@@ -28,8 +28,8 @@
 					<div class="section_top">
 						<h2>정보공유 상세페이지</h2>
 						<div class='btn_area'>
-
-							<a class="btn" th:href="@{/board/delete-board(bd_idx=${datas.board.bdIdx})}">글삭제</a> 
+							<a class="btn" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a> 
+							<a class="btn" th:href="@{/board/delete-board(bdIdx=${datas.board.bdIdx})}">글삭제</a> 
 							<a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> 
 							<a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> 
 							<a class="btn" th:href="@{/board/board-list}">목록</a>
@@ -68,7 +68,7 @@
 									<div class="cmt_wrap">
 										<div class="cmt_info">
 											<div>
-												작성자 <a href="/reply/delete-reply?rp_idx=${reply.rpIdx }&bd_idx=${board.bdIdx }" style="margin-left: 10px;"><i class="fas fa-times"></i></a>
+												작성자 <a href="/reply/delete-reply?rp_idx=${reply.rpIdx }&bdIdx=${board.bdIdx }" style="margin-left: 10px;"><i class="fas fa-times"></i></a>
 											</div>
 
 										</div>
@@ -76,7 +76,7 @@
 									</div>
 								</div>
 
-								<form class="frm_write_cmt" action="/reply/add-reply?bd_idx=${board.bdIdx }" method="POST">
+								<form class="frm_write_cmt" action="/reply/add-reply?bdIdx=${board.bdIdx }" method="POST">
 									<div class="cmt_write_box">
 
 										<div class="cmt_writer_id"></div>
