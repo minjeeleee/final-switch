@@ -115,6 +115,7 @@ public class MypageController {
 			return "mypage/leave-member"; 
 		}
 		
+		System.out.println(exchangeService.checkExchangeOngoing(member.getMemberIdx()));
 		if(exchangeService.checkExchangeOngoing(member.getMemberIdx())) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LEAVE_MEMBER);
  		}

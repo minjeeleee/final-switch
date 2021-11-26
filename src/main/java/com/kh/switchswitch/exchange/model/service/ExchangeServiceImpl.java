@@ -106,7 +106,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 
 	public boolean checkExchangeOngoing(Integer memberIdx) {
 		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEhByMemberIdxAndTypeOngoing(memberIdx);
-		if(exchangeStatus != null) {
+		if(exchangeStatus.size() != 0) {
 			return true;
 		}
 		return false;
