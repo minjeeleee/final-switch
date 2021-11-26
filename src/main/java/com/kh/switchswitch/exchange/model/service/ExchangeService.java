@@ -31,6 +31,8 @@ public interface ExchangeService {
 	void updateRequestExchange(CardRequestList cardRequestList, int length);
 
 	boolean checkExchangeOngoing(Integer memberIdx);
+
+	List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx);
 	
 
 }

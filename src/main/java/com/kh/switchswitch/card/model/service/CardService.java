@@ -1,6 +1,7 @@
 package com.kh.switchswitch.card.model.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -46,4 +47,12 @@ public interface CardService {
 	void updateCardWithStatus(int previousCardIdx, String status);
 	
 	List<Card> searchCategoryCard(String category);
+
+	Card selectCardByReqIdx(Integer reqIdx);
+
+	List<Map<String, Object>> selectRequestedCardList(Integer memberIdx);
+
+	List<Map<String, Object>> selectOngoingCardList(Integer memberIdx);
+
+	List<Map<String, Object>> selectRequestCardList(Integer memberIdx);
 }
