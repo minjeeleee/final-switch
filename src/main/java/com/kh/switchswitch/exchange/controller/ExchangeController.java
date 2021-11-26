@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -19,6 +20,7 @@ import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.service.PointService;
 
 import lombok.RequiredArgsConstructor;
@@ -52,11 +54,6 @@ public class ExchangeController {
 		}
 		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
 		
-		
-		for (Map map : cardlist) {
-			System.out.println(((Card)map.get("card")).toString());
-		}
-		
 		model.addAttribute("cardlist", cardlist);
 		model.addAttribute("myRate",myRate);
 		
@@ -69,9 +66,9 @@ public class ExchangeController {
 		model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
 		
 		//포인트 잔액
-		int balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
-		
-		model.addAttribute("balance", balance);
+		SavePoint savePoint = exchangeService.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
+		model.addAttribute("availableBal", savePoint.getAvailableBal());
+		model.addAttribute("balance", savePoint.getBalance());
 		
 	}
 	
@@ -80,28 +77,28 @@ public class ExchangeController {
 			@AuthenticationPrincipal MemberAccount certifiedMember
 			, int wishCardIdx
 			, int offerPoint
-			, int balance
-			, String[] cardIdxList
+			, int availableBal
+			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = new CardRequestList();
 		cardRequestList.setRequestedCard(wishCardIdx);
-		switch(5-cardIdxList.length) {
+		if(cardIdxList != null) {
+			switch(5-cardIdxList.length) {
 			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
 			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
 			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
 			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0]));
 			default : logger.debug("왜 0이 들어오지??");
+			}
 		}
 		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
 		cardRequestList.setPropBalance(offerPoint);
 		exchangeService.requestExchange(cardRequestList, cardIdxList.length);
 		
-		//포인트 잔액
-		balance = exchangeService.selectBalanceByMemberIdx(certifiedMember.getMemberIdx());
 		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(balance - offerPoint, certifiedMember.getMemberIdx());
+		pointService.updateSavePointWithAvailableBal(availableBal - offerPoint, certifiedMember.getMemberIdx());
 		
 		return "redirect:/";
 	}

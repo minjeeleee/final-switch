@@ -14,6 +14,7 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -55,8 +56,8 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return cardRepository.selectCardByCardIdx(wishCardIdx);
 	}
 
-	public int selectBalanceByMemberIdx(int memberIdx) {
-		return savePointRepository.selectBalanceByMemberIdx(memberIdx);
+	public SavePoint selectSavePointByMemberIdx(int memberIdx) {
+		return savePointRepository.selectSavePointByMemberIdx(memberIdx);
 	}
 
 	public void insertExchangeStatus(ExchangeStatus exchangeStatus) {
