@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -164,9 +165,60 @@ public class ExchangeController {
 		//요청 유저 평점
 		model.addAttribute("reqMemRate", exchangeService.selectMyRate(cardRequestList.getRequestMemIdx()));
 		
-		//요청 유저 제시 포인트
-		model.addAttribute("propBalance",cardRequestList.getPropBalance());
-		model.addAttribute("reqCardList", cardList);
+		//cardRequestList
+		model.addAttribute("cardRequestList",cardRequestList);
 	}
+	
+	@GetMapping("reject/{reqIdx}")
+	public void reject(@PathVariable Integer reqIdx) {
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		//card status ->'REQUEST->'NONE'
+		Set<Integer> cardIdxSet = new LinkedHashSet<Integer>();
+		cardIdxSet.add(cardRequestList.getRequestCard1());
+		cardIdxSet.add(cardRequestList.getRequestCard2());
+		cardIdxSet.add(cardRequestList.getRequestCard3());
+		cardIdxSet.add(cardRequestList.getRequestCard4());
+		cardIdxSet.remove(null);
+		cardService.updateCardStatusWithCardIdxSet(cardIdxSet,"NONE");
+		
+		//돈 돌려줘야됨
+		pointService.updateSavePoint(cardRequestList);
+		
+		//교환요청리스트 삭제
+		cardService.deleteCardRequestList(cardRequestList.getReqIdx());
+		
+		//거절 알림 보내기
+		alarmService.sendRejectAlarm(cardRequestList);
+	}
+	
+	@GetMapping("accept/{reqIdx}")
+	public void accept(@PathVariable Integer reqIdx) {
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		//card status ->'REQUEST->'NONE'
+		Set<Integer> cardIdxSet = new LinkedHashSet<Integer>();
+		cardIdxSet.add(cardRequestList.getRequestCard1());
+		cardIdxSet.add(cardRequestList.getRequestCard2());
+		cardIdxSet.add(cardRequestList.getRequestCard3());
+		cardIdxSet.add(cardRequestList.getRequestCard4());
+		cardIdxSet.remove(null);
+		cardService.updateCardStatusWithCardIdxSet(cardIdxSet,"ONGOING");
+		
+		//교환형황 테이블 생성
+		cardService.insertExchangeStatus(cardRequestList);
+		
+		//거절 알림 보내기
+		alarmService.sendRejectAlarm(cardRequestList);
+	}
+	
+	
+	
 
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.switchswitch.alarm.model.dto.Alarm;
 import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +37,16 @@ public class AlarmServiceImpl implements AlarmService {
 	public void updateAlarm(Alarm alarm) {
 		alarm.setIsRead(1);
 		alarmRepository.updateAlarmIsRead(alarm);
+	}
+
+	public void sendRejectAlarm(CardRequestList cardRequestList) {
+		Alarm alarm = new Alarm();
+		alarm.setAlarmType("요청거절");
+		alarm.setReceiverIdx(cardRequestList.getRequestMemIdx());
+		alarm.setSenderIdx(cardRequestList.getRequestedMemIdx());
+		alarm.setReqIdx(cardRequestList.getReqIdx());
+		alarmRepository.insertAlarm(alarm);
+		
 	}
 
 }

@@ -2,6 +2,7 @@ package com.kh.switchswitch.card.model.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -44,6 +45,9 @@ public interface CardRepository {
 	int selectCardMemberIdxWithCardIdx(int wishCardIdx);
 
 	void updateCard(Card card);
+
+	@Delete("delete from card_request_list where req_idx=#{reqIdx}")
+	void deleteCardRequestListWithReqIdx(Integer reqIdx);
 
 	
 }

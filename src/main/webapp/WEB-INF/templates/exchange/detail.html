@@ -14,7 +14,6 @@
 <body>
     
     <section class="exchange-section">
-		<form id="submit" th:action="@{/exchange/accept}" method="post">
         <div class="exchange-container">
             <div class="wishCard">
                 <p>교환 요청 세부사항</p>
@@ -139,9 +138,6 @@
                             </div>
                         </div>
                     	</th:block>
-                        
-                   
-                   
                     </div>
                 </div>
             </div>
@@ -149,16 +145,15 @@
                 <div class="proposal">
                     <div class="proposal-inner">
                         <p>제시 잔액</p>
-                        <span>[[${propBalance}]]P</span>
+                        <span>[[${cardRequestList.propBalance}]]P</span>
                     </div>
                 </div>
             </div>
             <div class="button">
-                <button id="accept-btn" type="button">요청수락</button>
-                <button type="button">취소</button>
+                <button id="accept-btn" th:onclick="|/exchange/accept/${cardRequestList.reqIdx}|" type="button">요청수락</button>
+                <button id="reject-btn" th:onclick="|/exchange/reject/${cardRequestList.reqIdx}|"type="button">요청거절</button>
             </div>
         </div>
-        </form>
 
     </section>
 <script type="text/javascript" th:inline="javascript" >

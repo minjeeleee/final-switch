@@ -7,8 +7,8 @@ public class ExchangeStatus {
 	
 	private Integer eIdx;
 	private Integer reqIdx;
-	private Integer userIdx1;
-	private Integer userIdx2;
+	private Integer requestMemIdx;
+	private Integer requestedMemIdx;
 	private String type;
 	private Integer propBalance;
 

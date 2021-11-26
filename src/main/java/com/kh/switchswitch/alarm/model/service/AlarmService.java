@@ -3,6 +3,7 @@ package com.kh.switchswitch.alarm.model.service;
 import java.util.List;
 
 import com.kh.switchswitch.alarm.model.dto.Alarm;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 
 public interface AlarmService {
 	
@@ -11,4 +12,6 @@ public interface AlarmService {
 	void insertAndUpdateAlarmList(List<Alarm> alarmList);
 
 	void updateAlarm(Alarm alarm);
+
+	void sendRejectAlarm(CardRequestList cardRequestList);
 }

@@ -1,6 +1,7 @@
 package com.kh.switchswitch.card.model.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,4 +21,12 @@ public interface CardService {
 	Card selectCardWithCardIdx(Integer requestedCard);
 
 	List<Card> CardListWithMemberIdx(Integer requestMemIdx);
+
+	void updateCardWithCardIdx(Card card);
+
+	void deleteCardRequestList(Integer reqIdx);
+
+	void updateCardStatusWithCardIdxSet(Set<Integer> cardIdxSet, String status);
+
+	void insertExchangeStatus(CardRequestList cardRequestList);
 }
