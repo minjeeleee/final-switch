@@ -86,6 +86,20 @@ public class BoardServiceImpl implements BoardService{
 
 
 
+	public Map<String, Object> boardModify(Board board) {
+		return boardRepository.boardModify(board);
+	}
+
+	@Override
+	public Map<String, Object> findBoardToModify(String bdIdx) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
+
 
 
 
