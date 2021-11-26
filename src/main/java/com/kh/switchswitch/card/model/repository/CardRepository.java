@@ -44,6 +44,9 @@ public interface CardRepository {
 
 	@Select("select member_idx from card where card_idx=#{wishCardIdx}")
 	int selectCardMemberIdxWithCardIdx(int wishCardIdx);
+	
+	@Select("select * from card where category=#{category}")
+	List<Card> searchCategoryCard(String category);
 
 	void updateCard(Card card);
 	
