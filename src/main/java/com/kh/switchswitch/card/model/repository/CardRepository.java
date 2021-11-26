@@ -2,12 +2,14 @@ package com.kh.switchswitch.card.model.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.common.util.FileDTO;
 
 @Mapper
@@ -47,6 +49,15 @@ public interface CardRepository {
 	List<Card> searchCategoryCard(String category);
 
 	void updateCard(Card card);
+	
+	@Select("select * from card_request_list where REQUESTED_MEM_IDX=#{memberIdx} or REQUEST_MEM_IDX=#{memberIdx}")
+	List<CardRequestList> selectCardRequestListByMemIdx(Integer memberIdx);
+
+	@Delete("delete from card_request_list where REQUESTED_MEM_IDX=#{memberIdx} or REQUEST_MEM_IDX=#{memberIdx}")
+	void deleteAllCardRequestByMemIdx(Integer memberIdx);
+
+	@Update("update card set IS_DEL=1 where member_idx =#{memberIdx}")
+	void updateAllCardByMemIdx(Integer memberIdx);
 
 	
 }

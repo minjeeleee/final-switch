@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
 import com.kh.switchswitch.common.util.FileDTO;
@@ -50,6 +51,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberRepository memberRepository;
 	private final KakaoRepository kakaoRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final CardRepository cardRepository;
 	private final MailSender mailSender;
 	
 	@Override
@@ -150,6 +152,16 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	public void updateMemberDelYN(Member member) {
+		memberRepository.updateMember(member);
+	}
+	
+	public void updateMemberDelYNForLeave(Member member) {
+		if(cardRepository.selectCardRequestListByMemIdx(member.getMemberIdx()) != null) {
+			cardRepository.deleteAllCardRequestByMemIdx(member.getMemberIdx());
+			cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
+		}else {
+			cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
+		}
 		memberRepository.updateMember(member);
 	}
 	
