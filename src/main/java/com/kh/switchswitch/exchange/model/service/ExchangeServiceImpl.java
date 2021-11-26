@@ -2,6 +2,7 @@ package com.kh.switchswitch.exchange.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,8 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public float selectMyRate(int certifiedMemberIdx) {
-		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx);
+		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx).orElse(List.of(0f));
+		
 		float sum = 0;
 		for (Float f : ratingList) {
 			sum += f;
@@ -145,10 +147,14 @@ public class ExchangeServiceImpl implements ExchangeService{
 
 
 	public boolean checkExchangeOngoing(Integer memberIdx) {
-		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEhByMemberIdxAndTypeOngoing(memberIdx);
+		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEsByMemberIdxAndTypeOngoing(memberIdx);
 		if(exchangeStatus.size() != 0) {
 			return true;
 		}
 		return false;
+	}
+
+	public List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx) {
+		return exchangeRepository.selectEsByMemberIdxAndTypeOngoing(memberIdx);
 	}
 }

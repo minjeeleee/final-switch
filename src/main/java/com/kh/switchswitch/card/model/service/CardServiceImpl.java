@@ -3,6 +3,7 @@ package com.kh.switchswitch.card.model.service;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -141,6 +142,51 @@ public class CardServiceImpl implements CardService {
 
 	public List<Card> searchCategoryCard(String category) {
 		return cardRepository.searchCategoryCard(category);
+	}
+
+	public Card selectCardByReqIdx(Integer reqIdx) {
+		return cardRepository.selectCardByReqIdx(reqIdx);
+	}
+
+	public List<Map<String, Object>> selectRequestedCardList(Integer memberIdx) {
+		List<Map<String, Object>> requestedCardList = new ArrayList<>();
+		
+		List<Integer> crlCardIdxList = cardRequestListRepository.selectCardIdxWithMemberIdx(memberIdx);
+		
+		for (Integer crlCardIdx : crlCardIdxList) {
+			for (Integer esCardIdx : exchangeRepository.selectCardIdxWithMemberIdx(memberIdx)) {
+				if(crlCardIdx.equals(esCardIdx)) {
+					crlCardIdxList.remove(crlCardIdx);
+				}
+			}
+		}
+		
+		List<Card> cardList = new ArrayList();
+		for (Integer cardIdx : crlCardIdxList) {
+			cardList.add(cardRepository.selectCardByCardIdx(cardIdx));
+		}
+		for (Card card : cardList) {
+			requestedCardList.add(Map.of("requestedCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		return requestedCardList;
+	}
+
+	public List<Map<String, Object>> selectOngoingCardList(Integer memberIdx) {
+		List<Map<String, Object>> ongoingCardList = new ArrayList<>();
+		List<Card> cardList = cardRepository.selectCardByMemberIdxWithOngoing(memberIdx);
+		for (Card card : cardList) {
+			ongoingCardList.add(Map.of("ongoingCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		return ongoingCardList;
+	}
+
+	public List<Map<String, Object>> selectRequestCardList(Integer memberIdx) {
+		List<Map<String, Object>> requestCardList = new ArrayList<>();
+		List<Card> myRequestCardList = cardRepository.selectCardByMemberIdxWithRequest(memberIdx);
+		for (Card card : myRequestCardList) {
+			requestCardList.add(Map.of("requestCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		return requestCardList;
 	}
 	
 
