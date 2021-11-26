@@ -305,5 +305,9 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 	}
+
+	public String selectMemberNickWithMemberIdx(Integer requestMemIdx) {
+		return memberRepository.selectMemberNickWithMemberIdx(requestMemIdx);
+	}
 	
 }

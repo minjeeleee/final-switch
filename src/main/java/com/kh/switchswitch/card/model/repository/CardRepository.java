@@ -59,5 +59,8 @@ public interface CardRepository {
 	@Update("update card set IS_DEL=1 where member_idx =#{memberIdx}")
 	void updateAllCardByMemIdx(Integer memberIdx);
 
+	@Delete("delete from card_request_list where req_idx=#{reqIdx}")
+	void deleteCardRequestListWithReqIdx(Integer reqIdx);
+
 	
 }
