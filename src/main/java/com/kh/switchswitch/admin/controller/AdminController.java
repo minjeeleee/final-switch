@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 
 import lombok.RequiredArgsConstructor;
@@ -104,6 +107,17 @@ public class AdminController {
 		}
 		//adminService.updateMemberInfo(form.convertToMember(),memberIdx);
 		return "redirect:/admin/member-profile?memberIdx="+memberIdx;
+	}
+	
+	@GetMapping("nick-check")
+	@ResponseBody
+	public String nickCheck(String nickName) {
+		
+		if(nickName.equals(adminService.checkNickName(nickName))) {
+			return "available";
+		}else {
+			return "disable";
+		}
 	}
 	
 	@GetMapping("page-setting")

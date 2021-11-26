@@ -95,6 +95,13 @@ public class AdminService {
 	public void updateMemberInfo(Member convertToMember, int memberIdx) {
 		adminRepository.updateMemberInfo(convertToMember,memberIdx);
 	}
+
+	public boolean checkNickName(String nickName) {
+		if(adminRepository.selectMemberByNickName(nickName) == null) {
+			return true;
+		}
+		return false;
+	}
 	
 
 	

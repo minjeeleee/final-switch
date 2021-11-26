@@ -50,7 +50,7 @@
 		   }
 		 
 
-		   fetch("/mypage/nick-check?nickName="+nickName)
+		   fetch("/admin/nick-check?nickName="+nickName)
 		   .then(response =>{
 				if(response.ok){
 					return response.text()

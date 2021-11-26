@@ -66,7 +66,9 @@ public interface AdminRepository {
 	Member searchDetailMemberProfile(int memberIdx);
 	
 	void updateMemberInfo(Member convertToMember, int memberIdx);
-
+	
+	@Select("select * from member where member_nick = #{memberNick}")
+	Member selectMemberByNickName(String memberNick);
 	
 
 	
