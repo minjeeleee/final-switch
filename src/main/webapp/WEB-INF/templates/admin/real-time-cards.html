@@ -10,7 +10,9 @@
 	div,p,i,a{
 		color:#AEB7C2;
 	}
-	
+	.test{
+		margin-top:100px
+	}
 	</style>
 </head>
 
@@ -42,8 +44,13 @@
  					 </div>
 					<div class="panel panel-headline demo-icons" style="background-color: white;">
 						<div class="panel-heading">
+							<select class="form-control" style="width: 120px; float: right;" onchange="changeReloadTime(this.value)">
+								  <option value="7000">7초</option>
+								  <option selected="selected" value="5000">5초</option>
+								  <option value="3000">3초</option>
+							</select>
 						</div>
-						<div class="panel-body">
+						<div class="test">
 							<ul class="list-unstyled row" style="padding-left: 4%;">
 							<li class="card col-md-2 col-sm-4 col-xs-6" style="width: 18rem; height: 24rem;">
 							  <img class="card-img-top" src="/resources/img/아이폰.jpg" alt="Card image cap" style="width: 100%; height: 60%;">
@@ -115,19 +122,41 @@
 			}
 		})
 		
-		setInterval(function(){
-					$('.panel-body').load(location.href+' .panel-body');
-					console.dir('새로고침');
-					if($('div').hasClass('modal-backdrop')){
-					$("div").remove(".modal-backdrop");
-					//$('#myModal').removeClass("in");
-					//$('#myModal').css("display","none");
-					console.dir('태그삭제');
-					}
-				},5000);
+		let cnt = 0;
 		
-		function cardDelete(){
-			location.href="real-time-cards/card-delete?";
+		
+		//function changeReloadTime(time) {
+			//if (cnt < 2) {
+				//cnt++;
+				setInterval(function() {
+					$('.panel-body').load(location.href + '.test');
+					console.dir('새로고침');
+					/* if ($('div').hasClass('modal-backdrop')) {
+						$("div").remove(".modal-backdrop");
+						//$('#myModal').removeClass("in");
+						//$('#myModal').css("display","none");
+					 	console.dir('태그삭제');
+					}*/
+				}, 20000);
+				/*
+			} else {
+				cnt--;
+				clearInterval(timer);
+				setInterval(function() {
+					$('.panel-body').load(location.href + ' .panel-body');
+					console.dir('새로고침');
+					if ($('div').hasClass('modal-backdrop')) {
+						$("div").remove(".modal-backdrop");
+						//$('#myModal').removeClass("in");
+						//$('#myModal').css("display","none");
+						console.dir('태그삭제');
+					}
+				}, time);
+			}
+		}
+*/
+		function cardDelete() {
+			location.href = "real-time-cards/card-delete?";
 		}
 	</script>
 </body>

@@ -27,6 +27,8 @@ public interface MemberService extends UserDetailsService {
 
 	void updateMemberDelYN(Member member);
 	
+	void updateMemberDelYNForLeave(Member member);
+	
 	void updateMemberWithFile(Member member, MultipartFile profileImage);
 
 	String getAccessTokenJsonData(String code);

@@ -7,14 +7,19 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
+import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.mypage.validator.ModifyForm;
 
 import lombok.RequiredArgsConstructor;
 
@@ -72,10 +77,34 @@ public class AdminController {
 	public void refundsHistory() {}
 	
 	@GetMapping("member-profile")
-	public void memberProfile() {}
+	public void memberProfile(@RequestParam int memberIdx, Model model) {
+		Map<String, Object> memberInfo = adminService.searchDetailMemberProfile(memberIdx);
+		model.addAttribute("memberInfo",memberInfo);
+	}
 	
 	@GetMapping("member-profile-edit")
-	public void memberProfileEdit() {}
+	public void memberProfileEdit(@RequestParam int memberIdx, Model model) {
+		Map<String, Object> memberInfo = adminService.searchDetailMemberProfile(memberIdx);
+		model.addAttribute("memberInfo",memberInfo);
+		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
+	}
+	
+	@PostMapping("member-profile-edit-success")
+	public String memberProfileEditSuccess(@Validated ModifyForm form,
+										Model model,
+										@RequestParam int memberIdx,
+										Errors errors,
+										RedirectAttributes redirectAttr) {
+		System.out.println(form);
+		ValidatorResult vr = new ValidatorResult();
+		model.addAttribute("error", vr.getError());
+		if(errors.hasErrors()) {
+			vr.addErrors(errors);
+			return "redirect:/admin/member-profile-edit?memberIdx="+memberIdx;
+		}
+		//adminService.updateMemberInfo(form.convertToMember(),memberIdx);
+		return "redirect:/admin/member-profile?memberIdx="+memberIdx;
+	}
 	
 	@GetMapping("page-setting")
 	public void pageSetting(Model model) {

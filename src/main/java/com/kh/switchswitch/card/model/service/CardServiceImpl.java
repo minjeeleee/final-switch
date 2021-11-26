@@ -42,6 +42,11 @@ public class CardServiceImpl implements CardService {
 	public int selectCardMemberIdxWithCardIdx(int wishCardIdx) {
 		return cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx);
 	}
+
+	@Override
+	public List<Card> searchCategoryCard(String category) {
+		return cardRepository.searchCategoryCard(category);
+	}
 	
 
 }

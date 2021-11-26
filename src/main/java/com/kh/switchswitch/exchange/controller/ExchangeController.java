@@ -76,7 +76,7 @@ public class ExchangeController {
 	public String exchangeForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
 			, int wishCardIdx
-			, int offerPoint
+			, String offerPoint
 			, int availableBal
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
@@ -88,17 +88,18 @@ public class ExchangeController {
 			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
 			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
 			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
-			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0]));
+			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
 			default : logger.debug("왜 0이 들어오지??");
 			}
 		}
 		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
-		cardRequestList.setPropBalance(offerPoint);
+		Integer offerPointInt = Integer.parseInt(offerPoint);
+		cardRequestList.setPropBalance(offerPointInt);
 		exchangeService.requestExchange(cardRequestList, cardIdxList.length);
 		
 		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(availableBal - offerPoint, certifiedMember.getMemberIdx());
+		pointService.updateSavePointWithAvailableBal(availableBal - offerPointInt, certifiedMember.getMemberIdx());
 		
 		return "redirect:/";
 	}

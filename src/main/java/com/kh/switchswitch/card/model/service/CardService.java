@@ -13,4 +13,6 @@ public interface CardService {
 	int selectCardMemberIdxWithCardIdx(int wishCardIdx);
 	
 	List<Card> selectAllCard();
+	
+	List<Card> searchCategoryCard(String category);
 }

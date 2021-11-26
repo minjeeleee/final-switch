@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.common.code.ErrorCode;
+import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
@@ -112,8 +115,13 @@ public class MypageController {
 			return "mypage/leave-member"; 
 		}
 		
+		System.out.println(exchangeService.checkExchangeOngoing(member.getMemberIdx()));
+		if(exchangeService.checkExchangeOngoing(member.getMemberIdx())) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LEAVE_MEMBER);
+ 		}
+		
 		member.getMember().setMemberDelYn(1);
-		memberService.updateMemberDelYN(member.getMember());
+		memberService.updateMemberDelYNForLeave(member.getMember());
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
 		return "redirect:/";
 	}
