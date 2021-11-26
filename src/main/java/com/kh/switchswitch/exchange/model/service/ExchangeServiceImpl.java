@@ -11,6 +11,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
@@ -100,6 +101,15 @@ public class ExchangeServiceImpl implements ExchangeService{
 	
 	public List<Integer> selectMyRateCnt(int memberIdx) {
 		return ratingRepository.selectMyRateCnt(memberIdx);
+	}
+
+
+	public boolean checkExchangeOngoing(Integer memberIdx) {
+		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEhByMemberIdxAndTypeOngoing(memberIdx);
+		if(exchangeStatus != null) {
+			return true;
+		}
+		return false;
 	}
 
 }
