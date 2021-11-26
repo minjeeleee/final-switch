@@ -179,7 +179,7 @@
 	<script src="/resources/js/admin/menu-folder.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 	
-	function changeMenuType(key) {
+	changeMenuType(key) => {
 		
 		const menu = document.querySelector('.menu');
 		const sideMenu = document.querySelector('.side-menu');
@@ -200,10 +200,6 @@
 			sideMenu.removeAttribute("disabled");
 		}
 	}
-	
-	
-	
-	
 	</script>
 </body>
 
