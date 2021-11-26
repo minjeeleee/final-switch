@@ -17,7 +17,6 @@ public class ModifyForm {
 	private String zipNo;	
 
 	public Member convertToMember() {
-		
 
 		String newPw = newMemberPass.equals("") ? memberPass : newMemberPass;
 		

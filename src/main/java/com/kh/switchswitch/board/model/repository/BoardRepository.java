@@ -55,6 +55,11 @@ public interface BoardRepository {
 	//수정
 	@Update("")
 	Map<String, Object> boardModify(Board board);
+	@Update("update community set title=#{title}, content=#{content}, ")
+	void modifyBoard(Board board);
+
+	Map<String, Object> boardModify(String bdIdx);
+
 
 
 

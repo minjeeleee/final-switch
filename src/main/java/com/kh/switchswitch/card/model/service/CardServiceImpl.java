@@ -38,6 +38,10 @@ public class CardServiceImpl implements CardService {
 	public List<Card> selectAllCard() {
 		return cardRepository.selectAllCard();
 	}
+
+	public int selectCardMemberIdxWithCardIdx(int wishCardIdx) {
+		return cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx);
+	}
 	
 
 }

@@ -30,7 +30,7 @@ public class MemberAccount extends User{
 	}
 
 
-	public int getMemberIdx() {
+	public Integer getMemberIdx() {
 		return member.getMemberIdx();
 	}
 
@@ -46,7 +46,7 @@ public class MemberAccount extends User{
 		return member.getMemberPass();
 	}
 
-	public int getMemberDelYn() {
+	public Integer getMemberDelYn() {
 		return member.getMemberDelYn();
 	}
 
@@ -62,7 +62,7 @@ public class MemberAccount extends User{
 		return member.getMemberDelDate();
 	}
 
-	public int getMemberScore() {
+	public Integer getMemberScore() {
 		return member.getMemberScore();
 	}
 
@@ -70,7 +70,7 @@ public class MemberAccount extends User{
 		return member.getMemberName();
 	}
 	
-	public int getFlIdx() {
+	public Integer getFlIdx() {
 		return member.getFlIdx();
 	}
 	

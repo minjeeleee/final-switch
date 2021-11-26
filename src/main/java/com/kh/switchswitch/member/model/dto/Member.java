@@ -7,18 +7,18 @@ import lombok.Data;
 @Data
 public class Member {
 	
-	private int memberIdx;
+	private Integer memberIdx;
 	private String code;
 	private Date memberRegDate;
 	private String memberPass;
 	private String memberEmail;
-	private int memberDelYn;
+	private Integer memberDelYn;
 	private String memberTell;
 	private String memberNick;
 	private String memberAddress;
 	private Date memberDelDate;
-	private int memberScore;
+	private Integer memberScore;
 	private String memberName;
-	private int flIdx;
+	private Integer flIdx;
 	
 }
