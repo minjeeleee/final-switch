@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class ExchangeHistory {
 
-	private int ehIdx;
-	private int eIdx;
+	private Integer ehIdx;
+	private Integer eIdx;
 	private Date exchangeDate;
-	private int userIdx1;
-	private int userIdx2;
+	private Integer userIdx1;
+	private Integer userIdx2;
 }

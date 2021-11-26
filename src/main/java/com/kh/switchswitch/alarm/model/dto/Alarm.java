@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class Alarm {
 	
-	private int alarmIdx;
-	private int senderIdx;
-	private int receiverIdx;
+	private Integer alarmIdx;
+	private Integer senderIdx;
+	private Integer receiverIdx;
 	private String alarmType;
-	private int isRead;
+	private Integer isRead;
 	
 }

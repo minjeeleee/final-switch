@@ -3,8 +3,9 @@ package com.kh.switchswitch.exchange.model.service;
 import java.util.List;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.common.util.FileDTO;
-import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 
 public interface ExchangeService {
 
@@ -16,9 +17,11 @@ public interface ExchangeService {
 
 	Card selectCardByCardIdx(int wishCardIdx);
 
-	int selectBalanceByMemberIdx(int memberIdx);
+	SavePoint selectSavePointByMemberIdx(int memberIdx);
 
-	void insertExchangeStatus(ExchangeStatus exchangeStatus);
+	void requestExchange(CardRequestList cardRequestList, int length);
+
+	int selectMemberIdxByCardIdx(int wishCardIdx);
 	
 	List<Integer> selectMyRateCnt(int memberIdx);
 	

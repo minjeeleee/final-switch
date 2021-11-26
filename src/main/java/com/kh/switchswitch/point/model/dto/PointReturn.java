@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 public class PointReturn {
 	
-	private int prIdx;
+	private Integer prIdx;
 	private String userKey;
-	private int field2;
-	private int sysCode;
-	private int sysType;
+	private Integer field2;
+	private Integer sysCode;
+	private Integer sysType;
 	private String sysKey;
 	private String statueCode; 
 	private Date registrationDate;

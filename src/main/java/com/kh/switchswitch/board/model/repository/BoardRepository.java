@@ -1,6 +1,7 @@
 package com.kh.switchswitch.board.model.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -39,7 +40,7 @@ public interface BoardRepository {
 	void updateBoard(Board board);
 	
 	@Delete("")
-	void deleteBoard(Board board);
+	void deleteBoard(String bdIdx);
 	
 	
 	//파일업로드
@@ -50,6 +51,17 @@ public interface BoardRepository {
 	//파일다운
 	@Select("select * from file_info where bd_idx = #{bdIdx}")
 	List<FileDTO> selectFilesByBdIdx(String bdIdx);
+
+	//수정
+	@Update("")
+	Map<String, Object> boardModify(Board board);
+	@Update("update community set title=#{title}, content=#{content}, ")
+	void modifyBoard(Board board);
+
+	Map<String, Object> boardModify(String bdIdx);
+
+
+
 
 
 	

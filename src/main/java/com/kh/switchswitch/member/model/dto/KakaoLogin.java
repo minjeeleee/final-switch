@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class KakaoLogin {
 	
-	private int socialIdx;
-	private int memberIdx;
+	private Integer socialIdx;
+	private Integer memberIdx;
 	private String kakaoId;
 
 }

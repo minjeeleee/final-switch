@@ -112,6 +112,7 @@ public class MypageController {
 			return "mypage/leave-member"; 
 		}
 		
+		
 		member.getMember().setMemberDelYn(1);
 		memberService.updateMemberDelYN(member.getMember());
 		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");

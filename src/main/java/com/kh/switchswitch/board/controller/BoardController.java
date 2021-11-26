@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.service.BoardService;
-import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
@@ -63,8 +61,19 @@ public class BoardController {
 	}
 	
 	@GetMapping("board-modify")
-	public void boardModify() {}
+	public void boardModify(String bdIdx, Model model) {
+		model.addAttribute("board",boardService.findBoardByIdx(bdIdx));
+	}
 	
+
+	@PostMapping("modify")
+	public String modifyBoard(Board board,  List<MultipartFile> files) {
+		
+		boardService.modifyBoard(board,files);
+		return "redirect:/board/board-detail?bdIdx="+board.getBdIdx();
+	}
+
+
 	
 
 
