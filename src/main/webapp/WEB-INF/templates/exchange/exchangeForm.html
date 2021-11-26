@@ -13,7 +13,7 @@
 <body>
     
     <section class="exchange-section">
-		<form id="exchange-btn" th:action="@{/exchange/exchangeForm}" method="post">
+		<form id="submit" th:action="@{/exchange/exchangeForm}" method="post">
         <div class="exchange-container">
             <div class="list-info">
                 <div class="mycard-list-container">
@@ -171,7 +171,7 @@
             </div>
             <div class="button">
                 <button id="request-btn" type="button">요청</button>
-                <button>취소</button>
+                <button type="button">취소</button>
             </div>
         </div>
         </form>
@@ -204,25 +204,26 @@ function transfer(e) {
 }
 
 function checkBalance(e){
-	let myBalance = document.querySelector("#available_bal").value;
-	console.dir(myBalance);
-	console.dir(e.value);
+	let myBalance = parseInt("문자열 아님", document.querySelector("#available_bal").value);
+	if(e.value == ""){
+		e.value = 0;
+	}
+	let offerPoint =  parseInt("문자열 아님", e.value);
 	if(e.value > myBalance){
 		alert("사용 가능 포인트보다 많은 포인트는 제시할 수 없습니다.");
 		e.value = 0;
 	}
-	//오류
 }
 
 document.querySelector("#request-btn").addEventListener("click", function(e){
 	let checkPoint = document.querySelector("#offerPoint");
 	checkBalance(checkPoint);
-	console.dir(document.querySelector(".bottom-container").childElementCount);
-	if(document.querySelector(".bottom-container").childElementCount == 0){
+	let cardCount = document.querySelector(".bottom-container").childElementCount;
+	if(cardCount == 0){
 		alert("교환할 카드를 선택해 주세요.");
 		e.preventDefault();
 	} else {
-		//제출
+		document.querySelector("#submit").submit();
 	}
 })
 
