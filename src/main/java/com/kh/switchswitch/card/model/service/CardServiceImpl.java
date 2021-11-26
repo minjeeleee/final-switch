@@ -1,6 +1,7 @@
 package com.kh.switchswitch.card.model.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -69,8 +70,8 @@ public class CardServiceImpl implements CardService {
 		cardRepository.updateCard(card);
 	}
 	
-	public void updateCardStatusWithCardIdxSet(Set<Integer> cardIdxSet, String status) {
-		for (Integer cardIdx : cardIdxSet) {
+	public void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status) {
+		for (Integer cardIdx : getCardIdxSet(cardRequestList)) {
 			Card card = new Card();
 			card.setCardIdx(cardIdx);
 			card.setExchangeStatus(status);
@@ -90,6 +91,53 @@ public class CardServiceImpl implements CardService {
 		exchangeStatus.setRequestedMemIdx(cardRequestList.getRequestedMemIdx());
 		exchangeStatus.setRequestMemIdx(cardRequestList.getRequestMemIdx());
 		exchangeRepository.insertExchangeStatus(exchangeStatus);
+	}
+	
+
+
+	public Set<Integer> getCardIdxSet(CardRequestList cardRequestList){
+		Set<Integer> cardIdxSet = new LinkedHashSet<Integer>();
+		cardIdxSet.add(cardRequestList.getRequestCard1());
+		cardIdxSet.add(cardRequestList.getRequestCard2());
+		cardIdxSet.add(cardRequestList.getRequestCard3());
+		cardIdxSet.add(cardRequestList.getRequestCard4());
+		cardIdxSet.remove(null);
+		return cardIdxSet;
+	}
+
+	public String selectExchangeStatusType(Integer reqIdx) {
+		return exchangeRepository.selectExchangeStatusType(reqIdx);
+	}
+
+	public void deleteExchangeStatus(Integer reqIdx) {
+		exchangeRepository.deleteExchangeStatusWithReqIdx(reqIdx);
+	}
+
+	public void updateExchangeStatus(Integer reqIdx, String type) {
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		exchangeStatus.setReqIdx(reqIdx);
+		exchangeStatus.setType(type);
+		exchangeRepository.updateExchangeStatus(exchangeStatus);
+	}
+
+	public ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx) {
+		return exchangeRepository.selectExchangeStatusWithReqIdx(reqIdx);
+	}
+
+	public List<Card> selectCardList(Set<Integer> cardIdxSet) {
+		List<Card> cardList = new ArrayList<Card>();
+		for (Integer cardIdx : cardIdxSet) {
+			cardList.add(cardRepository.selectCardByCardIdx(cardIdx));
+		}
+		return cardList;
+	}
+
+	@Override
+	public void updateCardWithStatus(int previousCardIdx, String status) {
+		Card card = new Card();
+		card.setCardIdx(previousCardIdx);
+		card.setExchangeStatus(status);
+		cardRepository.updateCard(card);
 	}
 	
 

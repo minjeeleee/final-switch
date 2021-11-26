@@ -150,8 +150,22 @@
                 </div>
             </div>
             <div class="button">
-                <button id="accept-btn" th:onclick="|/exchange/accept/${cardRequestList.reqIdx}|" type="button">요청수락</button>
-                <button id="reject-btn" th:onclick="|/exchange/reject/${cardRequestList.reqIdx}|"type="button">요청거절</button>
+	           <th:block th:if="!#{status}">
+	               <th:block th:if="${cardRequestList.requestedMemIdx} == ${#authentication.principal.memberIdx}">
+	               <button id="accept-btn" th:onclick="|/exchange/accept/${cardRequestList.reqIdx}|" type="button">요청수락</button>
+	               <button id="reject-btn" th:onclick="|/exchange/reject/${cardRequestList.reqIdx}|"type="button">요청거절</button>
+	               </th:block>
+	               <th:block th:if="${cardRequestList.requestMemIdx} == ${#authentication.principal.memberIdx}">
+	               <button id="accept-btn" th:onclick="|/exchange/revise/${cardRequestList.reqIdx}|" type="button">요청수정</button>
+	               <button id="accept-btn" th:onclick="|/exchange/request-cancel/${cardRequestList.reqIdx}|" type="button">요청취소</button>
+	               </th:block>
+	           </th:block>
+	           <th:block th:if="#{status}">
+	           	<th:block th:if="${cardRequestList.requestedMemIdx} == ${#authentication.principal.memberIdx}">
+	               <button id="accept-btn" th:onclick="|/exchange/complete/${cardRequestList.reqIdx}|" type="button">교환완료</button>
+	               </th:block>
+	               <button id="reject-btn" th:onclick="|/exchange/exchange-cancel/${cardRequestList.reqIdx}|"type="button">교환취소</button>
+	           </th:block>
             </div>
         </div>
 

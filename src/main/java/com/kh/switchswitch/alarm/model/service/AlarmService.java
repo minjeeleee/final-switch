@@ -13,5 +13,5 @@ public interface AlarmService {
 
 	void updateAlarm(Alarm alarm);
 
-	void sendRejectAlarm(CardRequestList cardRequestList);
+	void sendAlarmWithStatus(CardRequestList cardRequestList, String type);
 }

@@ -11,6 +11,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
@@ -104,4 +105,42 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return ratingRepository.selectMyRateCnt(memberIdx);
 	}
 
+	public void insertExchangeHistory(ExchangeStatus exchangeStatus) {
+		ExchangeHistory exchangeHistory = new ExchangeHistory();
+		exchangeHistory.setEIdx(exchangeStatus.getEIdx());
+		exchangeHistory.setRequestedMemIdx(exchangeStatus.getRequestedMemIdx());
+		exchangeHistory.setRequestMemIdx(exchangeStatus.getRequestMemIdx());
+		exchangeRepository.insertExchangeHistory(exchangeHistory);
+	}
+
+	public void updateRequestExchange(CardRequestList cardRequestList, int length) {
+		//card_request_list 테이블에 추가
+		//cardRequestListRepository.updateCardRequestList(cardRequestList);
+			Card card;
+			switch(5-length) {
+			case 1 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard4());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card);
+			case 2 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard3());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card); 
+			case 3 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard2());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card);
+			case 4 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard1());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card);
+				break;
+			default : logger.debug("왜 0이 들어오지??");
+			}
+		
+	}
 }

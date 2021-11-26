@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 
 public interface CardService {
 
@@ -26,7 +27,21 @@ public interface CardService {
 
 	void deleteCardRequestList(Integer reqIdx);
 
-	void updateCardStatusWithCardIdxSet(Set<Integer> cardIdxSet, String status);
+	void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status);
 
 	void insertExchangeStatus(CardRequestList cardRequestList);
+	
+	Set<Integer> getCardIdxSet(CardRequestList cardRequestList);
+
+	String selectExchangeStatusType(Integer reqIdx);
+
+	void deleteExchangeStatus(Integer reqIdx);
+
+	void updateExchangeStatus(Integer reqIdx, String type);
+
+	ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx);
+
+	List<Card> selectCardList(Set<Integer> cardIdxSet);
+
+	void updateCardWithStatus(int previousCardIdx, String status);
 }
