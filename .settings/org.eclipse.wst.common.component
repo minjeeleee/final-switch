@@ -85,6 +85,9 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
                                                                                                                 		
         
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated_tests"/>
+                                                                                                                		
+        
         
         
         
@@ -98,7 +101,9 @@
         
         
         <property name="java-output-path" value="target/classes"/>
-        <property name="context-root" value="switchswitch"/>
+                                                                                                        	
+    
+        <property name="context-root" value="/"/>
                                                                                                         	
     
     

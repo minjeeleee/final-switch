@@ -25,21 +25,17 @@ public interface BoardRepository {
 	@Select("select * from community where bd_idx = #{bdIdx}")
 	Board selectBoardByIdx(String bdIdx);
 	
-	//게시글목록
-	@Select("select * from community ORDER BY bd_idx DESC") 
+	 //게시글목록
+	 @Select("select * from community ORDER BY bd_idx DESC")
 	List<Board> selectBoardList(Paging pageUtil);
 
 	//총 게시글 갯수 출력
 	@Select("select count(*) from community")
 	int selectContentCnt();
 
-	
-	
 	//수정
-	@Update("")
-	void updateBoard(Board board);
+	void modifyBoard(Board board);
 	
-	@Delete("")
 	void deleteBoard(String bdIdx);
 	
 	
@@ -51,14 +47,6 @@ public interface BoardRepository {
 	//파일다운
 	@Select("select * from file_info where bd_idx = #{bdIdx}")
 	List<FileDTO> selectFilesByBdIdx(String bdIdx);
-
-	//수정
-	@Update("")
-	Map<String, Object> boardModify(Board board);
-	@Update("update community set title=#{title}, content=#{content}, ")
-	void modifyBoard(Board board);
-
-	Map<String, Object> boardModify(String bdIdx);
 
 
 

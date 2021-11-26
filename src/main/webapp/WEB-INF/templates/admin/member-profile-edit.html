@@ -42,7 +42,7 @@
 								<!-- END PROFILE HEADER -->
 								<!-- PROFILE DETAIL -->
 								<div class="profile-detail">
-									<form action="/admin/member-profile-edit-success" th:object="${modifyForm}" method="post">
+									<form th:action="/admin/member-profile-edit-success?${_csrf.headerName}=${_csrf.token}" th:object="${modifyForm}" method="post">
 										<div class="profile-info">
 											<h4 class="heading">사용자 정보</h4>
 											<ul class="list-unstyled list-justify">
