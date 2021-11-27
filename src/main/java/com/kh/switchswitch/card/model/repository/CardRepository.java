@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.common.util.FileDTO;
 
 @Mapper
@@ -73,5 +74,7 @@ public interface CardRepository {
 
 	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='ONGOING'")
 	List<Card> selectCardByMemberIdxWithOngoing(Integer memberIdx);
+	
+	List<Card> selectCardTrim(SearchCard searchCard);
 	
 }

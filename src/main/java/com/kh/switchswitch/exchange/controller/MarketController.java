@@ -9,6 +9,7 @@ import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.service.CardService;
 
 import lombok.RequiredArgsConstructor;
@@ -72,12 +75,11 @@ public class MarketController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@PostMapping("category")
     @ResponseBody
-    public String search(@RequestBody Map<String, Object> param, HttpServletResponse response) {
+    public String search(@RequestBody SearchCard searchCard, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
         
-//		response.addHeader("Access-Control-Allow-Origin","*");
-		log.info("sting={}" ,param);
-        
-        List<Card> allCard = cardService.searchCategoryCard(param.get("category").toString());
+		log.info("sting={}" ,searchCard);
+		
+        List<Card> allCard = cardService.selectCardTrim(searchCard);
         
         String json = new Gson().toJson(allCard);
         log.info("json={}" ,json);
