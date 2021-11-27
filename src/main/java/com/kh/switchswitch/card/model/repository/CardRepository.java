@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.common.util.FileDTO;
 
 @Mapper
@@ -86,4 +87,7 @@ public interface CardRepository {
 			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
 			+ "where e_idx =#{eIdx}")
 	CardRequestList selectCardRequestByEIdx(Integer eIdx);
+
+	List<Card> selectCardTrim(SearchCard searchCard);
+	
 }

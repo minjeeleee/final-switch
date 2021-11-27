@@ -23,4 +23,13 @@
   		</trim>
   		where card_idx = #{cardIdx}
   	</update>
+  	
+  	<select id="selectCardTrim" resultType="com.kh.switchswitch.card.model.dto.Card">
+  		select * from card
+  		<trim prefix="where" prefixOverrides="and|or">
+  			<if test="category != null and !category.equals('')" >and category = #{category}</if>
+  			<if test="region != null and !region.equals('')">and region = #{region}</if>
+  			<if test="content != null and !content.equals('')">and (name like '%'||#{content}||'%' or content like '%'||#{content}||'%')</if>
+  		</trim>
+  	</select>
   </mapper>
