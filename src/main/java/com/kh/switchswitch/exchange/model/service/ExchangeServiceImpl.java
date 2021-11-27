@@ -186,17 +186,8 @@ public class ExchangeServiceImpl implements ExchangeService{
 				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestMemIdx()));
 			}
 		}
-		List<String> requestedCardNameList = new ArrayList();
-		List<String> requestCardNameList = new ArrayList();
-		for (CardRequestList cardRequestList : crlList) {
-			requestedCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()).getName());
-			requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard1()).getName());
-			if(cardRequestList.getRequestCard2()!= null)requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard2()).getName());
-			if(cardRequestList.getRequestCard3()!= null)requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard3()).getName());
-			if(cardRequestList.getRequestCard4()!= null)requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard4()).getName());
-		}
-		
-		
+		List<String> requestedCardNameList = getRequestCardNameList(crlList);
+		List<String> requestCardNameList = getRequestedCardNameList(crlList);
 		
 		List<Map<String, Object>> exchangeHistoryList = new ArrayList();
 		for (int i = 0; i < ehList.size(); i++) {
@@ -206,10 +197,28 @@ public class ExchangeServiceImpl implements ExchangeService{
 					,"opponentNickList",opponentNickList.get(i)));
 		}
 		
-		System.out.println(exchangeHistoryList);
 		return exchangeHistoryList;
 	}
-
 	
+	public List<String> getRequestCardNameList(List<CardRequestList> crlList){
+		List<String> requestedCardNameList = new ArrayList();
+		for (CardRequestList cardRequestList : crlList) {
+			requestedCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()).getName());
+		}
+		return requestedCardNameList;
+	}
+	
+	public List<String> getRequestedCardNameList(List<CardRequestList> crlList){
+		List<String> requestCardNameList = new ArrayList();
+		for (CardRequestList cardRequestList : crlList) {
+			String cardNames = "";
+			cardNames += cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard1()).getName();
+			if(cardRequestList.getRequestCard2()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard2()).getName();
+			if(cardRequestList.getRequestCard3()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard3()).getName();
+			if(cardRequestList.getRequestCard4()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard4()).getName();
+			requestCardNameList.add(cardNames);
+		}
+		return requestCardNameList;
+	}
 
 }
