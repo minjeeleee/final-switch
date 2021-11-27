@@ -166,7 +166,6 @@ public class MypageController {
 		model.addAttribute("myRate", exchangeService.selectMyRate(member.getMemberIdx()));
 		//거래 완료된 카드들
 		model.addAttribute("doneCardList",cardService.selectDoneCardList(member.getMemberIdx()));
-		System.out.println(cardService.selectDoneCardList(member.getMemberIdx()));
 		//교환내역 찾기
 		model.addAttribute("ehList", exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
 	}
