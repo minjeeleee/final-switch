@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 
 public interface ExchangeService {
@@ -25,7 +26,13 @@ public interface ExchangeService {
 	
 	List<Integer> selectMyRateCnt(int memberIdx);
 
+	void insertExchangeHistory(ExchangeStatus exchangeStatus);
+
+	void updateRequestExchange(CardRequestList cardRequestList, int length);
+
 	boolean checkExchangeOngoing(Integer memberIdx);
+
+	List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx);
 	
 
 }

@@ -61,6 +61,11 @@ public interface AdminRepository {
 	
 	@Select("select * from member where code = 'D'")
 	List<Member> selectMemberBlackList();
+	
+	@Select("select * from member where member_Idx = #{memberIdx}")
+	Member searchDetailMemberProfile(int memberIdx);
+	
+	void updateMemberInfo(Member convertToMember, int memberIdx);
 
 	
 

@@ -232,6 +232,9 @@ public class MemberController {
 		}
 		
 		memberService.insertMember(form);
+		
+		//SavePoint 생성
+		
 		redirectAttrs.addFlashAttribute("message", "회원가입을 환영합니다. 로그인 해주세요");
 		session.removeAttribute("persistToken");
 		session.removeAttribute("persistUser");

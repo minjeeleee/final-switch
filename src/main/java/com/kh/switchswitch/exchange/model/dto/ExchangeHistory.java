@@ -10,6 +10,6 @@ public class ExchangeHistory {
 	private Integer ehIdx;
 	private Integer eIdx;
 	private Date exchangeDate;
-	private Integer userIdx1;
-	private Integer userIdx2;
+	private Integer requestMemIdx;
+	private Integer requestedMemIdx;
 }

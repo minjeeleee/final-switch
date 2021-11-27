@@ -2,6 +2,7 @@ package com.kh.switchswitch.exchange.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,8 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public float selectMyRate(int certifiedMemberIdx) {
-		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx);
+		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx).orElse(List.of(0f));
+		
 		float sum = 0;
 		for (Float f : ratingList) {
 			sum += f;
@@ -95,6 +97,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 				card.setCardIdx(cardRequestList.getRequestCard1());
 				card.setExchangeStatus("REQUEST");
 				cardRepository.updateCard(card);
+				break;
 			default : logger.debug("왜 0이 들어오지??");
 			}
 	}
@@ -104,12 +107,56 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 
+	public void insertExchangeHistory(ExchangeStatus exchangeStatus) {
+		ExchangeHistory exchangeHistory = new ExchangeHistory();
+		exchangeHistory.setEIdx(exchangeStatus.getEIdx());
+		exchangeHistory.setRequestedMemIdx(exchangeStatus.getRequestedMemIdx());
+		exchangeHistory.setRequestMemIdx(exchangeStatus.getRequestMemIdx());
+		exchangeRepository.insertExchangeHistory(exchangeHistory);
+	}
+
+	public void updateRequestExchange(CardRequestList cardRequestList, int length) {
+		//card_request_list 테이블에 추가
+		//cardRequestListRepository.updateCardRequestList(cardRequestList);
+			Card card;
+			switch(5-length) {
+			case 1 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard4());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card);
+			case 2 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard3());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card); 
+			case 3 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard2());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card);
+			case 4 : 
+				card = new Card();
+				card.setCardIdx(cardRequestList.getRequestCard1());
+				card.setExchangeStatus("REQUEST");
+				cardRepository.updateCard(card);
+				break;
+			default : logger.debug("왜 0이 들어오지??");
+			}
+		
+	}
+
+
 	public boolean checkExchangeOngoing(Integer memberIdx) {
-		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEhByMemberIdxAndTypeOngoing(memberIdx);
+		List<ExchangeStatus> exchangeStatus = exchangeRepository.selectEsByMemberIdxAndTypeOngoing(memberIdx);
 		if(exchangeStatus.size() != 0) {
 			return true;
 		}
 		return false;
+	}
+
+	public List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx) {
+		return exchangeRepository.selectEsByMemberIdxAndTypeOngoing(memberIdx);
 	}
 
 }

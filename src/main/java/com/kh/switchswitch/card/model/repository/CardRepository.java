@@ -59,5 +59,19 @@ public interface CardRepository {
 	@Update("update card set IS_DEL=1 where member_idx =#{memberIdx}")
 	void updateAllCardByMemIdx(Integer memberIdx);
 
+	@Delete("delete from card_request_list where req_idx=#{reqIdx}")
+	void deleteCardRequestListWithReqIdx(Integer reqIdx);
+
+	@Select("select * from card where req_idx=#{reqIdx}")
+	Card selectCardByReqIdx(Integer reqIdx);
+
+	@Select("select * from card where member_idx=#{memberIdx}")
+	List<Card> selectCardByMemberIdx(Integer memberIdx);
+
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='REQUEST'")
+	List<Card> selectCardByMemberIdxWithRequest(Integer memberIdx);
+
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='ONGOING'")
+	List<Card> selectCardByMemberIdxWithOngoing(Integer memberIdx);
 	
 }

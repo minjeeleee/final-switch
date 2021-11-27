@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <link rel="stylesheet" href="../resources/css/exchange/exchangeForm.css">
+    <link rel="stylesheet" href="../resources/css/card/card2.css">
+    <title>switchswitch</title>
+</head>
+<body>
+    
+    <section class="exchange-section">
+        <div class="exchange-container">
+            <div class="wishCard">
+                <p>교환 요청 세부사항</p>
+                <div class="wishCard-container">
+                    <div class="top-container" th:object="${requestedCard}">
+                    	<p th:unless="*{card.memberIdx} == ${#authentication.principal.memberIdx}"
+                    		th:text="${counterpartNick}"></p>
+                        <div class="card-container" style="width: 180px;">
+                            <div class="card-name">
+                                <p>[[*{card.name}]]</p>
+                            </div>
+                            <div class="grade-container">
+                                <div class="icon">
+                                    <!-- 아이콘 변경 -->
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="user-grade">
+                                    <p>사용자 평점</p>
+                                    <!-- 사용자 별점 -->
+                                    <div class="star">
+                                    <th:block th:if="${requestedMemRate} >= 1">
+	                                    		<th:block th:each="num : ${#numbers.sequence(1,requestedMemRate)}">
+												<i class="fas fa-star full-star"></i>
+												</th:block>
+	                                    	</th:block>
+											<th:block th:if="${requestedMemRate%1!=0}">
+												<i class="fas fa-star-half-alt"></i>
+											</th:block>
+											<th:block th:each="num : ${#numbers.sequence(0,5-requestedMemRate)}">
+												<i th:unless="${num == 0}" class="far fa-star"></i>
+											</th:block>
+                                    </div>
+                                </div>
+                                <div class="item-grade">
+                                    <p>물건 평점</p>
+                                    <!-- 물건 별점 -->
+                                    <div class="star">
+	                                    	<th:block th:each="num : *{#numbers.sequence(1,card.condition)}">
+												<i class="fas fa-star full-star"></i>
+											</th:block>
+											<th:block th:each="num : *{#numbers.sequence(0,5-card.condition)}">
+												<i th:unless="${num == 0}" class="far fa-star"></i>
+											</th:block>
+	                                    </div>
+                                </div>
+                            </div>
+                            <div class="address">
+                                <!-- 주소 -->
+                                <p>지역 <span th:text="*{card.region}"></span> <span th:text="*{card.regionDetail}"></span></p>
+                            </div>
+                            <div class="card">
+                                <input type="hidden" th:value="*{card.condition}">
+                                <img class="card-box" alt="">
+                                <div class="card-img">
+                                    <!-- 카드 물건 이미지 -->
+                                   <img th:src="*{fileDTO.getDownloadURL()}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exchange-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="bottom-container" id="appendArea">
+                    	<p th:if="${requestedCard.card.memberIdx} == ${#authentication.principal.memberIdx}"
+                    		th:text="${counterpartNick}"></p>
+                        <th:block th:if="${reqCardList}">
+                    		<div class="card-container" style="width:180px;" 
+                    			th:each="card : ${reqCardList}" th:object="${card}"
+                    			th:id="*{card.cardIdx}" onclick="transfer(this)">
+                    			<input type="hidden" th:value="*{card.cardIdx}">
+	                            <div class="card-name">
+	                                <p>[[*{card.name}]]</p>
+	                            </div>
+	                            <div class="grade-container">
+	                                <div class="icon">
+	                                    <!-- 아이콘 변경 -->
+	                                    <input type="hidden" th:value="*{card.category}">
+	                                    <i id="icon-val"></i>
+	                                </div>
+	                                <div class="user-grade">
+	                                    <p>사용자 평점</p>
+	                                    <!-- 사용자 별점 -->
+	                                    <div class="star">
+	                                    	<th:block th:if="${reqMemRate} >= 1">
+	                                    		<th:block th:each="num : ${#numbers.sequence(1,reqMemRate)}">
+												<i class="fas fa-star full-star"></i>
+												</th:block>
+	                                    	</th:block>
+											<th:block th:if="${reqMemRate%1!=0}">
+												<i class="fas fa-star-half-alt"></i>
+											</th:block>
+											<th:block th:each="num : ${#numbers.sequence(0,5-reqMemRate)}">
+												<i th:unless="${num == 0}" class="far fa-star"></i>
+											</th:block>
+	                                    </div>
+	                                </div>
+	                                <div class="item-grade">
+	                                    <p>물건 평점</p>
+	                                    <!-- 물건 별점 -->
+	                                    <div class="star">
+	                                    	<th:block th:each="num : *{#numbers.sequence(1,card.condition)}">
+												<i class="fas fa-star full-star"></i>
+											</th:block>
+											<th:block th:each="num : *{#numbers.sequence(0,5-card.condition)}">
+												<i th:unless="${num == 0}" class="far fa-star"></i>
+											</th:block>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            <div class="address">
+                                <!-- 주소 -->
+                                <p>지역 <span th:text="*{card.region}"></span> <span th:text="*{card.regionDetail}"></span></p>
+                            </div>
+                            <div class="card">
+                            	<input type="hidden" th:value="*{card.condition}">
+                                <img class="card-box" alt="">
+                                <div class="card-img">
+                                    <!-- 카드 물건 이미지 -->
+                                    <img th:src="*{fileDTO.getDownloadURL()}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    	</th:block>
+                    </div>
+                </div>
+            </div>
+            <div class="point">
+                <div class="proposal">
+                    <div class="proposal-inner">
+                        <p>제시 잔액</p>
+                        <span>[[${cardRequestList.propBalance}]]P</span>
+                    </div>
+                </div>
+            </div>
+            <div class="button">
+	           <th:block th:if="!#{status}">
+	               <th:block th:if="${cardRequestList.requestedMemIdx} == ${#authentication.principal.memberIdx}">
+	               <button id="accept-btn" th:onclick="|/exchange/accept/${cardRequestList.reqIdx}|" type="button">요청수락</button>
+	               <button id="reject-btn" th:onclick="|/exchange/reject/${cardRequestList.reqIdx}|"type="button">요청거절</button>
+	               </th:block>
+	               <th:block th:if="${cardRequestList.requestMemIdx} == ${#authentication.principal.memberIdx}">
+	               <button id="accept-btn" th:onclick="|/exchange/revise/${cardRequestList.reqIdx}|" type="button">요청수정</button>
+	               <button id="accept-btn" th:onclick="|/exchange/request-cancel/${cardRequestList.reqIdx}|" type="button">요청취소</button>
+	               </th:block>
+	           </th:block>
+	           <th:block th:if="#{status}">
+	           	<th:block th:if="${cardRequestList.requestedMemIdx} == ${#authentication.principal.memberIdx}">
+	               <button id="accept-btn" th:onclick="|/exchange/complete/${cardRequestList.reqIdx}|" type="button">교환완료</button>
+	               </th:block>
+	               <button id="reject-btn" th:onclick="|/exchange/exchange-cancel/${cardRequestList.reqIdx}|"type="button">교환취소</button>
+	           </th:block>
+            </div>
+        </div>
+
+    </section>
+<script type="text/javascript" th:inline="javascript" >
+
+document.querySelectorAll(".card-box").forEach(function(e){
+	switch(e.previousElementSibling.value){
+	case '1' : e.setAttribute("src","../resources/img/ddongCard.png"); break;
+	case '2' : e.setAttribute("src","../resources/img/BrownCard.png"); break;
+	case '3' : e.setAttribute("src","../resources/img/silverCard.png"); break;
+	case '4' : e.setAttribute("src","../resources/img/goldCard.png"); break;
+	case '5' : e.setAttribute("src","../resources/img/diaCard.png"); break;
+	default : console.dir("error!!!");
+	};
+})
+
+document.querySelectorAll("#icon-val").forEach(function(e){
+	switch(e.previousElementSibling.value){
+	case '전자기기/생활가전' : e.setAttribute("class","fas fa-bolt"); break;
+	case '가구/인테리어' : e.setAttribute("class","fas fa-couch"); break;
+	case '유아동' : e.setAttribute("class","fal fa-baby"); break;
+	case '생활/가공식품' : e.setAttribute("class","fas fa-utensils"); break;
+	case '스포츠/레저' : e.setAttribute("class","fas fa-basketball-ball"); break;
+	case '패션/잡화' : e.setAttribute("class","fas fa-tshirt"); break;
+	case '게임/만화' : e.setAttribute("class","fas fa-gamepad"); break;
+	case '뷰티/미용' : e.setAttribute("class","fas fa-air-freshener"); break;
+	case '반려 동물 용품' : e.setAttribute("class","fas fa-paw"); break;
+	case '도서/티켓/음반' : e.setAttribute("class","fas fa-compact-disc"); break;
+	case '기타' : e.setAttribute("class","fas fa-cogs"); break;
+	default : console.dir("error!!!");
+	};
+})
+
+
+</script>
+</body>
+</html>
