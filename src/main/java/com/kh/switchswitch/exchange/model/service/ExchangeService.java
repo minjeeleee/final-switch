@@ -1,6 +1,7 @@
 package com.kh.switchswitch.exchange.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -33,6 +34,7 @@ public interface ExchangeService {
 	boolean checkExchangeOngoing(Integer memberIdx);
 
 	List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx);
+
 	
 
 }

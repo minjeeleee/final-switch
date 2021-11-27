@@ -55,4 +55,6 @@ public interface CardService {
 	List<Map<String, Object>> selectOngoingCardList(Integer memberIdx);
 
 	List<Map<String, Object>> selectRequestCardList(Integer memberIdx);
+	
+	List<Map<String,Object>> selectDoneCardList(Integer memberIdx);
 }

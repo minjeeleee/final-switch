@@ -188,6 +188,16 @@ public class CardServiceImpl implements CardService {
 		}
 		return requestCardList;
 	}
+
+	
+	public List<Map<String, Object>> selectDoneCardList(Integer memberIdx) {
+		List<Map<String, Object>> doneCardList = new ArrayList<>();
+		List<Card> cardList = cardRepository.selectCardByMemberIdxWithDONE(memberIdx);
+		for (Card card : cardList) {
+			doneCardList.add(Map.of("doneCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		return doneCardList;
+	}
 	
 
 }

@@ -1,6 +1,7 @@
 package com.kh.switchswitch.exchange.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public float selectMyRate(int certifiedMemberIdx) {
-		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx).orElse(List.of(0f));
+		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx);
 		
 		float sum = 0;
 		for (Float f : ratingList) {
@@ -158,5 +159,4 @@ public class ExchangeServiceImpl implements ExchangeService{
 	public List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx) {
 		return exchangeRepository.selectEsByMemberIdxAndTypeOngoing(memberIdx);
 	}
-
 }

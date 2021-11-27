@@ -74,4 +74,7 @@ public interface CardRepository {
 	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='ONGOING'")
 	List<Card> selectCardByMemberIdxWithOngoing(Integer memberIdx);
 	
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='DONE'")
+	List<Card> selectCardByMemberIdxWithDONE(Integer memberIdx);
+	
 }

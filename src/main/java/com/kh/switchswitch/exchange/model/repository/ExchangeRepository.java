@@ -3,6 +3,7 @@ package com.kh.switchswitch.exchange.model.repository;
 
 import org.apache.ibatis.annotations.Delete;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -42,5 +43,6 @@ public interface ExchangeRepository {
 
 	@Select("select req_idx from exchange_status where requested_mem_idx=#{memberIdx}")
 	List<Integer> selectCardIdxWithMemberIdx(Integer memberIdx);
+	
 	
 }
