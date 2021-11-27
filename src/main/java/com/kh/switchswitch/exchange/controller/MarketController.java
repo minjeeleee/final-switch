@@ -42,6 +42,7 @@ public class MarketController {
 	@GetMapping("cardmarket")
 	public void exchangeCard() {}
 
+//	전체카드조회
 	@ResponseStatus(code = HttpStatus.OK)
     @ResponseBody
 //    @GetMapping(value = "getcard", produces = "application/json; charset=utf8")
@@ -65,7 +66,8 @@ public class MarketController {
 		log.info("json={}" ,json);
 		return json;
 	}
-	
+
+//	카테고리
 	@CrossOrigin("*")
 	@ResponseStatus(code = HttpStatus.OK)
 	@PostMapping("category")
