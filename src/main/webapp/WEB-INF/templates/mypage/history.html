@@ -17,6 +17,7 @@
     <link href="../resources/css/mypage/sb-admin-2.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="../resources/css/mypage/mypage-form.css" />
 	<link href="../resources/css/mypage/styles.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../resources/css/card/card2.css">
 	<style type="text/css">
 	.card-header{
 		background-image: url("../resources/img/상단탑배경.png");
@@ -225,12 +226,14 @@
                                 <div class="card-header" >
                                     <h6 class="m-0 font-weight-bold ">거래내역</h6>
                                     <form action="" style="margin-top: 5px">
-                                    	<label>
-			                        		<input type="radio"> 교환 기록
-			                        	</label>
-			                        	<label>
-			                        		<input type="radio"> 나눔 기록
-			                        	</label>
+                                    	<div>
+	                                    	<label>
+				                        		<input type="radio"> 교환 기록
+				                        	</label>
+				                        	<label>
+				                        		<input type="radio"> 나눔 기록
+				                        	</label>
+			                        	</div>
 			                        </form>
                                 </div> 
                                 <div class="card-body" style="height: 93vh; padding: 0;overflow-y:scroll; ">
@@ -241,58 +244,41 @@
                                             <th style="width: 12%;">거래 일자</th>
                                             <th style="width: 28%">기존 카드</th>
                                             <th style="width: 28%">교환 카드</th>
-                                            <th  style="width: 13%"> 교환 포인트</th>
-                                            <th>거래 방식</th>
+                                            <th  style="width: 13%">포인트</th>
+                                            <th>상대방 닉네임</th>
                                             <th>별점</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>2011/04/25</td>
-                                            <td>아이폰,카메라,노트북,헤드셋</td>
-                                            <td>갤럭시,애플워치,닌텐도 스위치</td>
-                                            <td>800</td>
-                                            <td>교환</td>
+                                        <tr th:each="ehInfo: ${ehList}" th:object="${ehInfo}">
+                                            <td th:text="*{eh.exchangeDate}"></td>
                                             <td>
-                                            	<a href="#" class="btn btn-success btn-circle btn-sm">
-			                                       <i class="far fa-star"></i>
-			                                    </a>
-                                        	</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2011/07/25</td>
-                                            <td>곰인형</td>
-                                            <td><i class="fas fa-times"></i></td>
-                                            <td>0</td>
-                                            <td>나눔</td>
+                                            	<th:block th:if="${#authentication.principal.memberIdx} == *{eh.requestedMemIdx}">
+                                            		[[*{requestedCardName}]]
+                                            	</th:block>
+                                            	<th:block th:unless="${#authentication.principal.memberIdx} == *{eh.requestedMemIdx}">
+                                            		[[*{requestCardName}]]
+                                            	</th:block>
+                                            </td>
                                             <td>
-                                            	<a href="#" class="btn btn-danger btn-circle btn-sm">
-			                                       <i class="far fa-star"></i>
-			                                    </a>
-                                        	</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2009/01/12</td>
-                                            <td>조던1</td>
-                                            <td>스투시 후드티</td>
-                                            <td>6,000</td>
-                                            <td>교환</td>
+                                            	<th:block th:if="${#authentication.principal.memberIdx} == *{eh.requestMemIdx}">
+                                            		[[*{requestedCardName}]]
+                                            	</th:block>
+                                            	<th:block th:unless="${#authentication.principal.memberIdx} == *{eh.requestMemIdx}">
+                                            		[[*{requestCardName}]]
+                                            	</th:block>
+                                            </td>
+                                            <td th:text="*{crl.propBalance}"></td>
+                                            <td th:text="*{opponentNickList}"></td>
                                             <td>
-                                            	<a href="#" class="btn btn-danger btn-circle btn-sm">
-			                                       <i class="far fa-star"></i>
-			                                    </a>
-                                        	</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2012/03/29</td>
-                                            <td>냄비, 후라이팬</td>
-                                            <td>접시 세트, 수저 세트</td>
-                                            <td>0</td>
-                                            <td>교환</td>
-                                            <td>
-                                            	<a href="#" class="btn btn-success btn-circle btn-sm">
-			                                       <i class="far fa-star"></i>
-			                                    </a>
+                                            	<th:block>
+                                            		<a th:unless="*{isRate == 0}" href="#" class="btn btn-success btn-circle btn-sm">
+				                                       <i class="far fa-star"></i>
+				                                    </a>
+				                                    <a th:if="*{isRate == 0}" href="#" class="btn btn-danger btn-circle btn-sm">
+				                                       <i class="far fa-star"></i>
+				                                    </a>
+                                            	</th:block>
                                         	</td>
                                         </tr>
                                     </tbody>
@@ -304,20 +290,22 @@
 						
 					   <!-- Content Column 완료된 카드 리스트 -->
                        <div class="col-lg-3 mb-4">
-                            <div class="card shadow mb-4">
+                            <div class="card shadow mb-4" style="width: auto;">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold " >완료된 카드 리스트</h6>
                                 </div> 
                                 <div class="card-body" style="height: 93vh; overflow-y:scroll; ">
-                                	<input type="hidden" th:value="*{card.cardIdx}">
+                                <div class="card-container" style="width:180px;" 
+                                	 th:each="doneCard : ${doneCardList}" th:object="${doneCard}">
+                                	<input type="hidden" th:value="*{doneCard.cardIdx}">
                                 	<!-- card -->
 		                            <div class="card-name">
-		                                <p>[[*{card.name}]]</p>
+		                                <p>[[*{doneCard.name}]]</p>
 		                            </div>
 		                            <div class="grade-container">
 		                                <div class="icon">
 		                                    <!-- 아이콘 변경 -->
-		                                    <input type="hidden" th:value="*{card.category}">
+		                                    <input type="hidden" th:value="*{doneCard.category}">
 		                                    <i id="icon-val"></i>
 		                                </div>
 		                                <div class="user-grade">
@@ -341,10 +329,10 @@
 		                                    <p>물건 평점</p>
 		                                    <!-- 물건 별점 -->
 		                                    <div class="star">
-		                                    	<th:block th:each="num : *{#numbers.sequence(1,card.condition)}">
+		                                    	<th:block th:each="num : *{#numbers.sequence(1,doneCard.condition)}">
 													<i class="fas fa-star full-star"></i>
 												</th:block>
-												<th:block th:each="num : *{#numbers.sequence(0,5-card.condition)}">
+												<th:block th:each="num : *{#numbers.sequence(0,5-doneCard.condition)}">
 													<i th:unless="${num == 0}" class="far fa-star"></i>
 												</th:block>
 		                                    </div>
@@ -352,15 +340,16 @@
 		                            </div>
 		                           <div class="address">
 		                               <!-- 주소 -->
-		                               <p>지역 <span th:text="*{card.region}"></span> <span th:text="*{card.regionDetail}"></span></p>
+		                               <p>지역 <span th:text="*{doneCard.region}"></span> <span th:text="*{doneCard.regionDetail}"></span></p>
 		                           </div>
 		                           <div class="card">
-		                           	<input type="hidden" th:value="*{card.condition}">
+		                           	<input type="hidden" th:value="*{doneCard.condition}">
 		                               <img class="card-box" alt="">
 		                               <div class="card-img">
 		                                   <!-- 카드 물건 이미지 -->
 		                                   <img th:src="*{fileDTO.getDownloadURL()}" alt="">
 		                               </div>
+		                           </div>
 		                           </div>	
                                 </div>
                             </div>
@@ -403,6 +392,37 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../resources/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" th:inline="javascript" >
+    document.querySelectorAll(".card-box").forEach(function(e){
+    	switch(e.previousElementSibling.value){
+    	case '1' : e.setAttribute("src","../resources/img/ddongCard.png"); break;
+    	case '2' : e.setAttribute("src","../resources/img/BrownCard.png"); break;
+    	case '3' : e.setAttribute("src","../resources/img/silverCard.png"); break;
+    	case '4' : e.setAttribute("src","../resources/img/goldCard.png"); break;
+    	case '5' : e.setAttribute("src","../resources/img/diaCard.png"); break;
+    	default : console.dir("error!!!");
+    	};
+    })
+
+    document.querySelectorAll("#icon-val").forEach(function(e){
+    	switch(e.previousElementSibling.value){
+    	case '전자기기/생활가전' : e.setAttribute("class","fas fa-bolt"); break;
+    	case '가구/인테리어' : e.setAttribute("class","fas fa-couch"); break;
+    	case '유아동' : e.setAttribute("class","fal fa-baby"); break;
+    	case '생활/가공식품' : e.setAttribute("class","fas fa-utensils"); break;
+    	case '스포츠/레저' : e.setAttribute("class","fas fa-basketball-ball"); break;
+    	case '패션/잡화' : e.setAttribute("class","fas fa-tshirt"); break;
+    	case '게임/만화' : e.setAttribute("class","fas fa-gamepad"); break;
+    	case '뷰티/미용' : e.setAttribute("class","fas fa-air-freshener"); break;
+    	case '반려 동물 용품' : e.setAttribute("class","fas fa-paw"); break;
+    	case '도서/티켓/음반' : e.setAttribute("class","fas fa-compact-disc"); break;
+    	case '기타' : e.setAttribute("class","fas fa-cogs"); break;
+    	default : console.dir("error!!!");
+    	};
+    })
+    
+    
+    </script>
 </body>
 
 </html>

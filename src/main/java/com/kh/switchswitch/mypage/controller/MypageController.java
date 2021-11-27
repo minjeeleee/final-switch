@@ -24,10 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
@@ -163,8 +166,9 @@ public class MypageController {
 		model.addAttribute("myRate", exchangeService.selectMyRate(member.getMemberIdx()));
 		//거래 완료된 카드들
 		model.addAttribute("doneCardList",cardService.selectDoneCardList(member.getMemberIdx()));
-		//거래내역 구하기
-		
+		System.out.println(cardService.selectDoneCardList(member.getMemberIdx()));
+		//교환내역 찾기
+		model.addAttribute("ehList", exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
 	}
 	
 	@GetMapping("mypage-inquiry")

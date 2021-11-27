@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -43,6 +44,11 @@ public interface ExchangeRepository {
 
 	@Select("select req_idx from exchange_status where requested_mem_idx=#{memberIdx}")
 	List<Integer> selectCardIdxWithMemberIdx(Integer memberIdx);
+
+	@Select("select * from exchange_history where requested_mem_idx=#{memberIdx} or request_mem_idx=#{memberIdx}")
+	List<ExchangeHistory> selectExchangeHistoryByMemIdx(Integer memberIdx);
+
+	
 	
 	
 }

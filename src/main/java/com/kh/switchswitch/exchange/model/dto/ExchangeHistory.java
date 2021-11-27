@@ -1,6 +1,6 @@
 package com.kh.switchswitch.exchange.model.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.Data;
 

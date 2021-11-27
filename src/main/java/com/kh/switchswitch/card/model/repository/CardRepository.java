@@ -77,4 +77,13 @@ public interface CardRepository {
 	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='DONE'")
 	List<Card> selectCardByMemberIdxWithDONE(Integer memberIdx);
 	
+	@Select("select name from card where card_idx=#{cardIdx}")
+	String selectCardNameByCardIdx(Integer cardIdx);
+
+	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
+			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
+			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
+			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
+			+ "where e_idx =#{eIdx}")
+	CardRequestList selectCardRequestByEIdx(Integer eIdx);
 }

@@ -1,9 +1,15 @@
 package com.kh.switchswitch.exchange.model.service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.ibatis.reflection.ArrayUtil;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.attoparser.config.ParseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +23,7 @@ import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
+import com.kh.switchswitch.member.model.repository.MemberRepository;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
@@ -32,6 +39,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	private final RatingRepository ratingRepository;
 	private final SavePointRepository savePointRepository;
 	private final ExchangeRepository exchangeRepository;
+	private final MemberRepository memberRepository;
 	private final CardRequestListRepository cardRequestListRepository;
 
 	public List<Card> selecAvailableMyCardList(int certifiedMemberIdx) {
@@ -159,4 +167,49 @@ public class ExchangeServiceImpl implements ExchangeService{
 	public List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx) {
 		return exchangeRepository.selectEsByMemberIdxAndTypeOngoing(memberIdx);
 	}
+
+	
+	public List<Map<String,Object>> selectExchangeHistoryByMemIdx(Integer memberIdx) {
+		List<ExchangeHistory> ehList = exchangeRepository.selectExchangeHistoryByMemIdx(memberIdx);
+		//필요한 정보 거래날짜(exchange_history) 교환포인트(prop_balance) 교환카드 기존카드 별점 등록여부 상대방 닉네임
+		//필요한 정보 가져오기
+		List<CardRequestList> crlList = new ArrayList<>();
+		List<String> opponentNickList = new ArrayList<>();
+
+		List<Integer> isRateList = new ArrayList<>();
+		for (ExchangeHistory exchangeHistory : ehList) {
+			crlList.add(cardRepository.selectCardRequestByEIdx(exchangeHistory.getEIdx()));
+			isRateList.add(ratingRepository.selectRatingByMemIdxAndEhIdx(memberIdx,exchangeHistory.getEhIdx()));
+			if(memberIdx.equals(exchangeHistory.getRequestMemIdx())) {
+				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestedMemIdx()));
+			} else {
+				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestMemIdx()));
+			}
+		}
+		List<String> requestedCardNameList = new ArrayList();
+		List<String> requestCardNameList = new ArrayList();
+		for (CardRequestList cardRequestList : crlList) {
+			requestedCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()).getName());
+			requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard1()).getName());
+			if(cardRequestList.getRequestCard2()!= null)requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard2()).getName());
+			if(cardRequestList.getRequestCard3()!= null)requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard3()).getName());
+			if(cardRequestList.getRequestCard4()!= null)requestCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard4()).getName());
+		}
+		
+		
+		
+		List<Map<String, Object>> exchangeHistoryList = new ArrayList();
+		for (int i = 0; i < ehList.size(); i++) {
+			exchangeHistoryList.add(Map.of("eh",ehList.get(i),"crl",crlList.get(i)
+					,"isRate",isRateList.get(i),"requestedCardName",requestedCardNameList.get(i)
+					,"requestCardName",requestCardNameList.get(i)
+					,"opponentNickList",opponentNickList.get(i)));
+		}
+		
+		System.out.println(exchangeHistoryList);
+		return exchangeHistoryList;
+	}
+
+	
+
 }
