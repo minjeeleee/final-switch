@@ -4,12 +4,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,20 +19,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
+import com.kh.switchswitch.admin.validator.MemberUpdateForm;
+import com.kh.switchswitch.admin.validator.MemberUpdateValidator;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
-import com.kh.switchswitch.member.model.dto.MemberAccount;
-import com.kh.switchswitch.member.model.service.MemberService;
-import com.kh.switchswitch.mypage.validator.ModifyForm;
 
-import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("admin")
 public class AdminController {
 	
-	private final AdminService adminService;
+	private AdminService adminService;
+	private MemberUpdateValidator memberUpdateValidator;
+	
+	public AdminController(AdminService adminService,MemberUpdateValidator memberUpdateValidator) {
+		super();
+		this.adminService = adminService;
+		this.memberUpdateValidator = memberUpdateValidator;
+	}
+	
+	@InitBinder(value="memberUpdateForm")
+	public void initBinder(WebDataBinder webDataBinder) {
+		webDataBinder.addValidators(memberUpdateValidator);
+	}
 	
 	@GetMapping("main")
 	public void main() {}
@@ -76,44 +86,60 @@ public class AdminController {
 		return "redirect:/admin/black-list-members";
 	}
 	
+	@GetMapping("memberLeave")
+	public String memberLeave(@RequestParam Integer memberIdx) {
+		adminService.deleteMember(memberIdx);
+		return "redirect:/admin/all-members";
+	}
+	
 	@GetMapping("refunds-history")
 	public void refundsHistory() {}
 	
 	@GetMapping("member-profile")
 	public void memberProfile(@RequestParam int memberIdx, Model model) {
-		Map<String, Object> memberInfo = adminService.searchDetailMemberProfile(memberIdx);
+		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
 		model.addAttribute("memberInfo",memberInfo);
 	}
 	
 	@GetMapping("member-profile-edit")
 	public void memberProfileEdit(@RequestParam int memberIdx, Model model) {
-		Map<String, Object> memberInfo = adminService.searchDetailMemberProfile(memberIdx);
+		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
 		model.addAttribute("memberInfo",memberInfo);
-		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
+		model.addAttribute(new MemberUpdateForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
 	@PostMapping("member-profile-edit-success")
-	public String memberProfileEditSuccess(@Validated ModifyForm form,
+	public String memberProfileEditSuccess(@Validated MemberUpdateForm form,
 										Model model,
-										@RequestParam int memberIdx,
+										@RequestParam Integer memberIdx,
 										Errors errors,
-										RedirectAttributes redirectAttr) {
-		System.out.println(form);
+										RedirectAttributes redirectAttr
+										) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
 			return "redirect:/admin/member-profile-edit?memberIdx="+memberIdx;
 		}
-		//adminService.updateMemberInfo(form.convertToMember(),memberIdx);
+		adminService.updateMemberInfo(form.convertToMember(),memberIdx);
 		return "redirect:/admin/member-profile?memberIdx="+memberIdx;
 	}
 	
 	@GetMapping("nick-check")
 	@ResponseBody
 	public String nickCheck(String nickName) {
-		
 		if(nickName.equals(adminService.checkNickName(nickName))) {
+			return "available";
+		}else {
+			return "disable";
+		}
+	}
+	
+	@GetMapping("profile-img-delete")
+	@ResponseBody
+	public String profileImgDelete(Integer flIdx) {
+		if(flIdx != null) {
+			adminService.deleteMemberProfileImg(flIdx);
 			return "available";
 		}else {
 			return "disable";

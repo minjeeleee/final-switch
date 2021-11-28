@@ -26,7 +26,7 @@ public interface AdminRepository {
 	
 	int deleteCard(int cardIdx);
 	
-	@Select("select * from member")
+	@Select("select * from member where member_del_yn=0")
 	List<Member> selectMemberAllList();
 	
 	@Insert("insert into menu(url_idx,code,url,url_name,position,depth,parent) values(sc_url_idx.nextval, #{code},#{url},#{urlName},#{position},#{depth},#{parent})")
@@ -59,16 +59,27 @@ public interface AdminRepository {
 	@Update("update member set code=#{code} where member_idx=#{memberIdx}")
 	void updateMemberCode(@Param("code")String code,@Param("memberIdx") int memberIdx);
 	
-	@Select("select * from member where code = 'D'")
+	@Select("select * from member where code = 'D' and member_del_yn=0")
 	List<Member> selectMemberBlackList();
 	
-	@Select("select * from member where member_Idx = #{memberIdx}")
-	Member searchDetailMemberProfile(int memberIdx);
+	@Select("select * from member where member_idx = #{memberIdx} and member_del_yn=0")
+	Member selectMemberByIdx(int memberIdx);
 	
-	void updateMemberInfo(Member convertToMember, int memberIdx);
+	@Select("select * from file_info where fl_idx = #{flIdx} and is_del=0")
+	FileDTO selectFileByMemberIdx(int flIdx);
+	
+	void updateMemberInfo(Member convertToMember);
 	
 	@Select("select * from member where member_nick = #{memberNick}")
-	Member selectMemberByNickName(String memberNick);
+	Member selectMemberByNickName(@Param("memberNick") String memberNick);
+	
+	@Update("update member set member_del_yn=1,member_del_date=sysdate where member_Idx=#{memberIdx}")
+	void deleteMember(Integer memberIdx);
+	
+	@Update("update file_info set is_del=1 where fl_Idx = #{flIdx}")
+	void deleteMemberProfileImg(Integer flIdx);
+
+	
 	
 
 	

@@ -36,8 +36,11 @@
 								<div class="profile-header">
 									<div class="overlay"></div>
 									<div class="profile-main">
-										<img src="/resources/img/아이폰.jpg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+										<img th:if="${memberInfo.member.flIdx}" th:src="${memberInfo.memberImg.getDownloadURL()}" class="img-circle" alt="Avatar" id="memberImg" style="width: 55px; height: 55px;">
+										<img th:unless="${memberInfo.member.flIdx}" src="/resources/img/undraw_profile.svg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
 										<h3 class="name" style="color: white;" th:text="${memberInfo.member.memberName}"></h3>
+										<input type="hidden" id="fileNo" th:value="${memberInfo.member.flIdx}">
+										<span id="imgConfirm" class="valid-msg"></span>
 									</div>
 									<div class="profile-stat" style="background-color: white;">
 										<div class="row">
@@ -244,6 +247,7 @@
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
+	<script src="/resources/js/admin/profile-img-delete.js"></script>
 </body>
 
 </html>

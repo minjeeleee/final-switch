@@ -17,5 +17,6 @@
 	  	<mapper resource="mybatis/mapper/exchangeStatusMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/cardRequestListRepositoryMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/boardMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/adminMapper.xml"/>
 	</mappers>
   </configuration>
