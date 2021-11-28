@@ -11,6 +11,7 @@ public class Notice {
    private Date regDate;
    private String title;
    private String content;
-   private String inportant;
+   private String important;
+   private String type;
    private int isDel;
 }
