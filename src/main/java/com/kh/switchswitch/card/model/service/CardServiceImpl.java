@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
 import com.kh.switchswitch.common.util.FileUtil;
@@ -187,6 +188,21 @@ public class CardServiceImpl implements CardService {
 			requestCardList.add(Map.of("requestCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 		}
 		return requestCardList;
+	}
+
+	
+	public List<Map<String, Object>> selectDoneCardList(Integer memberIdx) {
+		List<Map<String, Object>> doneCardList = new ArrayList<>();
+		List<Card> cardList = cardRepository.selectCardByMemberIdxWithDONE(memberIdx);
+		for (Card card : cardList) {
+			doneCardList.add(Map.of("doneCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		return doneCardList;
+	}	
+
+	@Override
+	public List<Card> selectCardTrim(SearchCard searchCard) {
+		return cardRepository.selectCardTrim(searchCard);
 	}
 	
 

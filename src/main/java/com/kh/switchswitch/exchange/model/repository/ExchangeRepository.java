@@ -1,10 +1,13 @@
 package com.kh.switchswitch.exchange.model.repository;
 
+
 import org.apache.ibatis.annotations.Delete;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -16,6 +19,10 @@ public interface ExchangeRepository {
 
 	@Insert("insert into exchange_status values(sc_e_idx.nextval, #{requestMemIdx}, #{requestedMemIdx}, 'ONGOING', #{propBalance}, #{reqIdx})" )
 	void insertExchangeStatus(ExchangeStatus exchangeStatus);
+
+
+	@Select("select * from exchange_status where (user_idx1=#{memberIdx} or user_idx2 =#{memberIdx}) and type='ONGOING'")
+	List<ExchangeStatus> selectEhByMemberIdxAndTypeOngoing(Integer memberIdx);
 
 	@Select("select type from exchange_satus where req_idx=#{reqIdx}")
 	String selectExchangeStatusType(Integer reqIdx);
@@ -37,5 +44,11 @@ public interface ExchangeRepository {
 
 	@Select("select req_idx from exchange_status where requested_mem_idx=#{memberIdx}")
 	List<Integer> selectCardIdxWithMemberIdx(Integer memberIdx);
+
+	@Select("select * from exchange_history where requested_mem_idx=#{memberIdx} or request_mem_idx=#{memberIdx}")
+	List<ExchangeHistory> selectExchangeHistoryByMemIdx(Integer memberIdx);
+
+	
+	
 	
 }

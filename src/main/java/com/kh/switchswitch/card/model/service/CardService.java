@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 
 public interface CardService {
@@ -55,4 +56,8 @@ public interface CardService {
 	List<Map<String, Object>> selectOngoingCardList(Integer memberIdx);
 
 	List<Map<String, Object>> selectRequestCardList(Integer memberIdx);
+	
+	List<Map<String,Object>> selectDoneCardList(Integer memberIdx);
+
+	List<Card> selectCardTrim(SearchCard searchCard);
 }
