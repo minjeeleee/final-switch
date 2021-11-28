@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class Board {
-   private String bdIdx;
+   private Integer bdIdx;
    private String userId;
    private Date regDate;
    private String title;

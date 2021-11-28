@@ -38,7 +38,7 @@ public class BoardServiceImpl implements BoardService{
 		}
 	}
 
-	public Map<String, Object> selectBoardByIdx(String bdIdx) {
+	public Map<String, Object> selectBoardByIdx(int bdIdx) {
 		Board board = boardRepository.selectBoardByIdx(bdIdx);
 		List<FileDTO> files = boardRepository.selectFilesByBdIdx(bdIdx);
 		return Map.of("board",board,"files",files);
@@ -70,6 +70,12 @@ public class BoardServiceImpl implements BoardService{
 				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
 			}
 		}
+	}
+	
+	@Transactional
+	public void deleteBoard(int bdIdx) {
+		boardRepository.deleteBoard(bdIdx);
+		
 	}
 
 
