@@ -1,6 +1,8 @@
 package com.kh.switchswitch.mypage.validator;
 
 import com.kh.switchswitch.member.model.dto.Member;
+
+
 import lombok.Data;
 
 @Data
@@ -19,6 +21,7 @@ public class ModifyForm {
 	public Member convertToMember() {
 
 		String newPw = newMemberPass.equals("") ? memberPass : newMemberPass;
+		
 		
 		Member member = new Member();
 		member.setMemberEmail(memberEmail);

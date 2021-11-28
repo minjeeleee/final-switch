@@ -95,6 +95,7 @@ public class MypageController {
 		}
 
 		memberService.updateMemberWithFile(form.convertToMember(),profileImage);
+		memberService.updateMemberDelYN(form.convertToMember());
 		return "redirect:/mypage/profile";
 	}
 
