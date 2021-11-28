@@ -138,6 +138,7 @@ public class AdminController {
 	@GetMapping("profile-img-delete")
 	@ResponseBody
 	public String profileImgDelete(Integer flIdx) {
+		System.out.println("비동기통신 성공");
 		if(flIdx != null) {
 			adminService.deleteMemberProfileImg(flIdx);
 			return "available";
