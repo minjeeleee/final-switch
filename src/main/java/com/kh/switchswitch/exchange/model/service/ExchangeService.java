@@ -1,10 +1,12 @@
 package com.kh.switchswitch.exchange.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 
@@ -31,6 +33,13 @@ public interface ExchangeService {
 	void updateRequestExchange(CardRequestList cardRequestList, int length);
 
 	boolean checkExchangeOngoing(Integer memberIdx);
+
+	List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx);
+
+	List<Map<String,Object>> selectExchangeHistoryByMemIdx(Integer memberIdx);
+
+
+	
 	
 
 }

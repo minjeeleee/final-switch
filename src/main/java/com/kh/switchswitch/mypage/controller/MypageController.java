@@ -1,6 +1,6 @@
 package com.kh.switchswitch.mypage.controller;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +23,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
@@ -41,15 +45,17 @@ public class MypageController {
 	private ModifyFormValidator modifyFormValidator;
 	private PasswordEncoder passwordEncoder;
 	private ExchangeService exchangeService;
+	private CardService cardService;
 
 
 	public MypageController(MemberService memberService, ModifyFormValidator modifyFormValidator,
-			PasswordEncoder passwordEncoder,ExchangeService exchangeService) {
+			PasswordEncoder passwordEncoder,ExchangeService exchangeService,CardService cardService) {
 		super();
 		this.memberService = memberService;
 		this.modifyFormValidator = modifyFormValidator;
 		this.passwordEncoder = passwordEncoder;
 		this.exchangeService = exchangeService;
+		this.cardService = cardService;
 	}
 
 
@@ -72,7 +78,9 @@ public class MypageController {
 									,"three",Math.round((double)Collections.frequency(totalMyRate, 3)/(double)myRateCnt*100)
 									,"four",Math.round((double)Collections.frequency(totalMyRate, 4)/(double)myRateCnt*100)
 									,"five",Math.round((double)Collections.frequency(totalMyRate, 5)/(double)myRateCnt*100)));
-		model.addAttribute("profileImage", memberService.selectFileInfoByFlIdx(member.getFlIdx()));
+		if(member.getFlIdx() != null) {
+			model.addAttribute("profileImage", memberService.selectFileInfoByFlIdx(member.getFlIdx()));
+		}
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
@@ -95,7 +103,9 @@ public class MypageController {
 		}
 
 		memberService.updateMemberWithFile(form.convertToMember(),profileImage);
+
 		memberService.updateMemberDelYN(form.convertToMember());
+
 		return "redirect:/mypage/profile";
 	}
 
@@ -154,7 +164,14 @@ public class MypageController {
 	public void chatting() {}
 	
 	@GetMapping("history")
-	public void history() {}
+	public void history(@AuthenticationPrincipal MemberAccount member,Model model) {
+		//내 별점 구하기
+		model.addAttribute("myRate", exchangeService.selectMyRate(member.getMemberIdx()));
+		//거래 완료된 카드들
+		model.addAttribute("doneCardList",cardService.selectDoneCardList(member.getMemberIdx()));
+		//교환내역 찾기
+		model.addAttribute("ehList", exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
+	}
 	
 	@GetMapping("mypage-inquiry")
 	public void mypageInquiry() {}

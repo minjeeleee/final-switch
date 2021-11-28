@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<title>카드 리스트</title>
-	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
-	<style type="text/css">
-	div,p,i,a{
-		color:#AEB7C2;
-	}
-	
-	</style>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<title>카드 리스트</title>
+<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
+<style type="text/css">
+div, p, i, a {
+	color: #AEB7C2;
+}
+</style>
 </head>
 
 <body>
@@ -28,55 +28,73 @@
 			<!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-						<div class="clearfix">
-							<!-- LEFT COLUMN -->
-							<div class="profile-left" style="margin-left: 30%;">
-								<!-- PROFILE HEADER -->
-								<div class="profile-header">
-									<div class="overlay"></div>
-									<div class="profile-main">
-										<img src="/resources/img/아이폰.jpg" class="img-circle" alt="Avatar" style="width: 55px; height: 55px;">
-										<h3 class="name" style="color: white;" th:text="${memberInfo.member.memberName}"></h3>
-									</div>
+					<div class="clearfix">
+						<!-- LEFT COLUMN -->
+						<div class="profile-left" style="margin-left: 30%;">
+							<!-- PROFILE HEADER -->
+							<div class="profile-header">
+								<div class="overlay"></div>
+								<div class="profile-main">
+									<img th:if="${memberInfo.member.flIdx}" th:src="${memberInfo.memberImg.getDownloadURL()}" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+										<img th:unless="${memberInfo.member.flIdx}" src="/resources/img/undraw_profile.svg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									<h3 class="name" style="color: white;"
+										th:text="${memberInfo.member.memberName}"></h3>
 								</div>
-								<!-- END PROFILE HEADER -->
-								<!-- PROFILE DETAIL -->
-								<div class="profile-detail">
-									<form action="/admin/member-profile-edit-success" th:object="${modifyForm}" method="post">
-										<div class="profile-info">
-											<h4 class="heading">사용자 정보</h4>
-											<ul class="list-unstyled list-justify">
-												<li>이메일 </li>
-												<li th:text="${memberInfo.member.memberEmail}"></li>
-												<li>비밀번호 <input type="password" name="newMemberPass" class="form-control" placeholder="비밀번호 입력">
-													<span th:if="${#fields.hasErrors('newMemberPass')}" th:errors="*{newMemberPass}" class="valid-msg"></span>
-												</li>
-												<li>비밀번호 확인 <input type="password" name="checkMemberPss" class="form-control" placeholder="비밀번호 확인">
-													<span th:if="${#fields.hasErrors('checkMemberPss')}" th:errors="*{checkMemberPss}" class="valid-msg"></span>
-												</li>
-												<li>닉네임 <input type="text" name="memberNick" id="memberNick" class="form-control" placeholder="닉네임 입력">
-												<button type="button" id="btnNickCheck">중복확인</button>
-													<span th:unless="${#fields.hasErrors('memberNick')}" id="nickNameCheck" class="valid-msg"></span>
-													<span th:if="${#fields.hasErrors('memberNick')}" th:errors="*{memberNick}" class="valid-msg"></span>
-												</li>
-												<li>연락처 <input type="text" name="memberTell" class="form-control" placeholder="연락처 입력"></li>
-												<li>주소	<div style="display: flex;"><input id="zipNo" name="zipNo" class="form-control" type="text" readonly="readonly" style="width: 100px"><button type="button" id="searchAddr" style="margin-left: 1%;">검색</button></div></li>
-												<li><input class="form-control" id="address" name="address" type="text" readonly="readonly"></li>
-												<li><br><a th:href="@{/admin/memberLeave(memberIdx=${memberInfo.member.memberIdx})}">회원탈퇴</a></li>
-											</ul>
-											<input type="hidden" name="memberIdx" th:value="${memberInfo.member.memberIdx}">
-										</div>
-										<div class="profile-info">
-										</div>
-										<div class="profile-info">
-										</div>
-										<div class="text-center"><button class="btn btn-primary">수정완료</button></div>
-									</form>
-								</div>
-								<!-- END PROFILE DETAIL -->
 							</div>
-							<!-- END LEFT COLUMN -->
+							<!-- END PROFILE HEADER -->
+							<!-- PROFILE DETAIL -->
+							<div class="profile-detail">
+								<form
+									th:action="|/admin/member-profile-edit-success?${_csrf.headerName}=${_csrf.token}|"
+									th:object="${memberUpdateForm}" id="frm_modify" method="post">
+									<div class="profile-info">
+										<h4 class="heading">사용자 정보</h4>
+										<ul class="list-unstyled list-justify">
+											<li>이메일</li>
+											<li th:text="${memberInfo.member.memberEmail}"></li>
+											<li>비밀번호 <input type="password" name="memberPass"
+												class="form-control" placeholder="비밀번호 입력" th:field="*{memberPass}">
+												<span th:if="${#fields.hasErrors('memberPass')}"
+												th:errors="*{memberPass}" class="valid-msg-e"></span>
+											</li>
+											<li>닉네임 <input type="text" name="memberNick"
+												id="memberNick" class="form-control" placeholder="닉네임 입력" th:field="*{memberNick}">
+												<button type="button" id="btnNickCheck">중복확인</button> <span
+												th:unless="${#fields.hasErrors('memberNick')}"
+												id="nickNameCheck" class="valid-msg"></span> <span
+												th:if="${#fields.hasErrors('memberNick')}"
+												th:errors="*{memberNick}" class="valid-msg"></span>
+											</li>
+											<li>연락처 <input type="text" name="memberTell"
+												class="form-control" placeholder="연락처 입력"></li>
+											<li>주소
+												<div style="display: flex;">
+													<input id="zipNo" name="zipNo" class="form-control"
+														type="text" readonly="readonly" style="width: 100px">
+													<button type="button" id="searchAddr"
+														style="margin-left: 1%;">검색</button>
+												</div>
+											</li>
+											<li><input class="form-control" id="address"
+												name="address" type="text" readonly="readonly"></li>
+											<li><br>
+											<a
+												th:href="@{/admin/memberLeave(memberIdx=${memberInfo.member.memberIdx})}">회원탈퇴</a></li>
+										</ul>
+										<input type="hidden" name="memberIdx"
+											th:value="${memberInfo.member.memberIdx}">
+									</div>
+									<div class="profile-info"></div>
+									<div class="profile-info"></div>
+									<div class="text-center">
+										<button class="btn btn-primary">수정완료</button>
+									</div>
+								</form>
+							</div>
+							<!-- END PROFILE DETAIL -->
 						</div>
+						<!-- END LEFT COLUMN -->
+					</div>
 				</div>
 			</div>
 			<!-- END MAIN CONTENT -->
@@ -85,15 +103,18 @@
 		<div class="clearfix"></div>
 		<footer>
 			<div class="container-fluid">
-				<p class="copyright">Shared by <i class="fa fa-love"></i><a href="https://bootstrapthemes.co">BootstrapThemes</a>
-</p>
+				<p class="copyright">
+					Shared by <i class="fa fa-love"></i><a
+						href="https://bootstrapthemes.co">BootstrapThemes</a>
+				</p>
 			</div>
 		</footer>
 	</div>
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
-	<script type="text/javascript" src="../resources/js/admin/adminModifyForm.js"></script>
+	<script type="text/javascript"
+		src="../resources/js/admin/adminModifyForm.js"></script>
 	<script type="text/javascript">
 	var pop;
 	

@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.common.util.FileDTO;
 
 @Mapper
@@ -62,5 +63,31 @@ public interface CardRepository {
 	@Delete("delete from card_request_list where req_idx=#{reqIdx}")
 	void deleteCardRequestListWithReqIdx(Integer reqIdx);
 
+	@Select("select * from card where req_idx=#{reqIdx}")
+	Card selectCardByReqIdx(Integer reqIdx);
+
+	@Select("select * from card where member_idx=#{memberIdx}")
+	List<Card> selectCardByMemberIdx(Integer memberIdx);
+
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='REQUEST'")
+	List<Card> selectCardByMemberIdxWithRequest(Integer memberIdx);
+
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='ONGOING'")
+	List<Card> selectCardByMemberIdxWithOngoing(Integer memberIdx);
+	
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='DONE'")
+	List<Card> selectCardByMemberIdxWithDONE(Integer memberIdx);
+	
+	@Select("select name from card where card_idx=#{cardIdx}")
+	String selectCardNameByCardIdx(Integer cardIdx);
+
+	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
+			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
+			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
+			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
+			+ "where e_idx =#{eIdx}")
+	CardRequestList selectCardRequestByEIdx(Integer eIdx);
+
+	List<Card> selectCardTrim(SearchCard searchCard);
 	
 }
