@@ -11,5 +11,5 @@ public class Board {
    private Date regDate;
    private String title;
    private String content;
-   private int isDel;
+   private Integer isDel;
 }

@@ -217,7 +217,7 @@
 
                
                     <!-- Content Row -->
-                    <div class="row">
+                    <div class="row">  
 
                         <!-- Content Column -->
                         <div class="col-lg-6 mb-4">
@@ -228,16 +228,20 @@
                                     <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
                                 </div>
                                 <div class="card-body" style="overflow: scroll;">
-                                    <form  th:object="${modifyForm}" th:action="@{/mypage/profile}" method="post" id="frm_modify">
+                                    <form  th:object="${modifyForm}" th:action="|/mypage/profile?${_csrf.parameterName}=${_csrf.token}|" method="post" id="frm_modify"   enctype="multipart/form-data">
 										<table class="mypage-form">
 											<tr>
 												<th>프로필 사진</th>
 												<td>
-												
-													<img class="team-img" ></img>
+													<th:block  th:if ="${profileImage == null}">
+														<img class="profile-img" src="../resources/img/no-img.jpg"></img>
+													</th:block>
+													<th:block  th:unless ="${profileImage == null}">
+														<img class="profile-img" th:src="${profileImage.getDownloadURL()}"></img>
+													</th:block>
 													<br/>
 													<span class="msg">JPG/GIF/PNG 파일만 업로드 가능</span>
-													<input type="file" name="teamFile" id="image" onchange="fileCheck(this.files)">
+													<input type="file" name="profileImage" id="profileImage" onchange="fileCheck(this.files)">
 													<div class="rejectMsg"></div>
 													<div class="preview">
 						                               <p>No files currently selected for upload</p>
@@ -347,9 +351,21 @@
                                  <div class="card-body">
 									<div class="mypage-con">
 										<div style=" width: 30%; margin-left: 33%">
-											<div style="text-align: center; font-size: 40px; font-weight: bolder;">4.2</div>
-											<div style="text-align: center; font-size: 25px;">★★★★★</div>
-											<div style="text-align: center; font-size: 18px; margin-top: 10px;">(5개의 평가)</div>
+											<div style="text-align: center; font-size: 40px; font-weight: bolder;" th:text="${myRate.score}"></div>
+											<div style="text-align: center; font-size: 25px;">
+												<th:block th:if="${myRate.score} >= 1">
+		                                    		<th:block th:each="num : ${#numbers.sequence(1,myRate.score)}">
+													<i class="fas fa-star full-star"></i>
+													</th:block>
+		                                    	</th:block>
+												<th:block th:if="${myRate.score%1!=0}">
+													<i class="fas fa-star-half-alt"></i>
+												</th:block>
+												<th:block th:each="num : ${#numbers.sequence(0,5-myRate.score)}">
+													<i th:unless="${num == 0}" class="far fa-star"></i>
+												</th:block>
+											</div>
+											<div style="text-align: center; font-size: 18px; margin-top: 10px;">([[${myRate.cnt}]]개의 평가)</div>
 										</div>
 									</div>
                                 </div>
@@ -362,35 +378,35 @@
                                 </div>
                                 <!-- Project Card Example -->
                                 <div class="card-body">
-                                    <h4 class="small font-weight-bold">★★★★★ <span
-                                            class="float-right">20%</span></h4>
+                                    <h4 class="small font-weight-bold">★ <span
+                                            class="float-right">[[${rateList.one}]]</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">★★★★ <span
-                                            class="float-right">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">★★★ <span
-                                            class="float-right">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" th:style="|width: ${rateList.one}%|"
+                                            aria-valuenow="${rateList.one}" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                     <h4 class="small font-weight-bold">★★ <span
-                                            class="float-right">80%</span></h4>
+                                            class="float-right">[[${rateList.two}]]</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" th:style="|width: ${rateList.two}%|"
+                                            aria-valuenow="${rateList.two}" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <h4 class="small font-weight-bold">★<span
-                                            class="float-right">80%</span></h4>
+                                    <h4 class="small font-weight-bold">★★★ <span
+                                            class="float-right">[[${rateList.three}]]</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar" role="progressbar" th:style="|width: ${rateList.three}%|"
+                                            aria-valuenow="${rateList.three}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">★★★★ <span
+                                            class="float-right">[[${rateList.four}]]</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-info" role="progressbar" th:style="|width: ${rateList.four}%|"
+                                            aria-valuenow="${rateList.four}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">★★★★★<span
+                                            class="float-right">[[${rateList.five}]]</span></h4>
                                     <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" th:style="|width: ${rateList.five}%|"
+                                            aria-valuenow="${rateList.five}" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -436,8 +452,9 @@
     <!-- Custom scripts for all pages-->
     <script src="../resources/js/sb-admin-2.min.js"></script>
     <script type="text/javascript" src="../resources/js/member/modifyForm.js"></script>
-    <script type="text/javascript">
-    var input = document.querySelector('#image');
+    <script type="text/javascript" th:inline="javascript" >
+   
+    var input = document.querySelector('#profileImage');
     var preview = document.querySelector('.preview');
 
     input.addEventListener('change', updateImageDisplay);
@@ -456,7 +473,7 @@
     	    for(const file of curFiles) {
     	      const para = document.createElement('p');
     	      if(validFileType(file)) {
-    	        const image = document.querySelector('.team-img');
+    	        const image = document.querySelector('.profile-img');
     	       
     	        image.src = URL.createObjectURL(file);
 
@@ -498,7 +515,7 @@
    			document.querySelector(".rejectMsg").innerHTML = '';
    		} else{
    			document.querySelector(".rejectMsg").innerHTML = '<i class="fas fa-times-circle"></i>JPG/GIF/PNG 파일만 업로드 가능합니다.';
-   			let files = document.getElementsByName('teamFile');
+   			let files = document.getElementsByName('profileImage');
    			files[0].value='';
    			return false;
    		}

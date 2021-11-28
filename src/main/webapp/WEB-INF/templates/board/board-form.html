@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>        
+
 		<meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -18,49 +19,13 @@
 </head>
     
     <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">Switch-Switch</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link" aria-current="page" href="#!">교환마켓</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">나눔마켓</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">게시판</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">내카드</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">마이페이지</a></li>
-                        <!--- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                        </li> -->
-                    </ul>
-                    <form class="d-flex navbar-dark">
-                        <div class="login-join">
-                            <a href="" class="login">로그인</a>
-                            <a href="">회원가입</a>
-                        </div>
-                        <!-- <button class="btn btn-outline-dark" type="submit">
-                            <i class=""></i>
-                            로그인
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button> -->
-                    </form>
-                </div>
-            </div>
-        </nav>
         
         
   <section>
     <div class="container">
     
 		<div class='section'>
-			<form class='frm_post' action="/board/upload" method="post" enctype="multipart/form-data">
+			<form class='frm_post' th:action="|/board/upload?${_csrf.parameterName}=${_csrf.token}|" method="post" enctype="multipart/form-data">
 				<div class='frm_header_area'>
 					<h2 class='sub_title'>정보공유 작성페이지</h2>
 					

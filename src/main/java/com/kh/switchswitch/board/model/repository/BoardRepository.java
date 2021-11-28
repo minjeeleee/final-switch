@@ -1,6 +1,7 @@
 package com.kh.switchswitch.board.model.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -24,19 +25,18 @@ public interface BoardRepository {
 	@Select("select * from community where bd_idx = #{bdIdx}")
 	Board selectBoardByIdx(String bdIdx);
 	
-	//게시글목록
-	@Select("select * from community") 
-	List<Board> selectBoardList(Paging paging);
+	 //게시글목록
+	 @Select("select * from community ORDER BY bd_idx DESC")
+	List<Board> selectBoardList(Paging pageUtil);
 
+	//총 게시글 갯수 출력
+	@Select("select count(*) from community")
+	int selectContentCnt();
 
-	
-	
 	//수정
-	@Update("")
-	void updateBoard(Board board);
+	void modifyBoard(Board board);
 	
-	@Delete("")
-	void deleteBoard(Board board);
+	void deleteBoard(String bdIdx);
 	
 	
 	//파일업로드
@@ -47,6 +47,9 @@ public interface BoardRepository {
 	//파일다운
 	@Select("select * from file_info where bd_idx = #{bdIdx}")
 	List<FileDTO> selectFilesByBdIdx(String bdIdx);
+
+
+
 
 
 	

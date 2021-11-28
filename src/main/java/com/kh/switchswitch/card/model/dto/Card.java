@@ -1,27 +1,27 @@
 package com.kh.switchswitch.card.model.dto;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 import lombok.Data;
 
 @Data
 public class Card {
 	
-	private int cardIdx;
-	private int memberIdx;
-	private int  eIdx;
+	private Integer cardIdx;
+	private Integer memberIdx;
 	private String category;
 	private String name;
-	private int condition;
+	private Integer condition;
 	private String deliveryCharge;
-	private LocalDate regDate;
+	private Date regDate;
 	private String isfree;
 	private String exchangeStatus;
 	private String content;
 	private String region;
-	private int views;
+	private Integer views;
 	private String regionDetail;
 	private String method;
-	private int isDel;
+	private Integer isDel;
 	private String hopeKind;
+	private String dateParse;
 }

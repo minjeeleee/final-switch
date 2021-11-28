@@ -7,6 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
@@ -19,12 +20,12 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardServiceImpl implements BoardService{
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BoardRepository boardRepository;
 	
-	@Override
 	public void insertBoard(List<MultipartFile> files, Board board) {
 		FileUtil  fileUtil = new FileUtil();
 		
@@ -36,9 +37,7 @@ public class BoardServiceImpl implements BoardService{
 			}
 		}
 	}
-	
-	//11/17
-	@Override
+
 	public Map<String, Object> selectBoardByIdx(String bdIdx) {
 		Board board = boardRepository.selectBoardByIdx(bdIdx);
 		List<FileDTO> files = boardRepository.selectFilesByBdIdx(bdIdx);
@@ -46,22 +45,34 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	//11/23 리스트받아오기
-	@Override
 	public Map<String, Object> selectBoardList(int page) {
-		Paging paging = Paging.builder()
-				.cuurentPage(page)
-				.blockCnt(5)
-				.cntPerPage(10)
-				.type("board")
-				.sort("bd_idx")
-				.direction("desc")
+		int cntPerPage = 5;
+		Paging pageUtil = Paging.builder()
+				.url("/board/board-list")
+				.total(10)
+				.curPage(page)
+				.blockCnt(10)
+				.cntPerPage(cntPerPage)
 				.build();
-		
+
 		Map<String,Object> commandMap = new HashMap<String,Object>();
-		commandMap.put("paging", paging);
-		commandMap.put("boardList", boardRepository.selectBoardList(paging));
+		commandMap.put("paging", pageUtil);
+		commandMap.put("boardList", boardRepository.selectBoardList(pageUtil));
 		return commandMap;
 	}
+	
+	@Transactional
+	public void modifyBoard(Board board, List<MultipartFile> files) {
+		FileUtil  fileUtil = new FileUtil();
+		boardRepository.modifyBoard(board);
+		for (MultipartFile multipartFile : files) {
+			if(!multipartFile.isEmpty()) {
+				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
+			}
+		}
+	}
+
+
 
 
 

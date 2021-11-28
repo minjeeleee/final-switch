@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class Menu {
 	
-	private int urlIdx;
+	private Integer urlIdx;
 	private String code;
 	private String url;
 	private String urlName;
 	private String position;
-	private String division;
+	private Integer depth;
 	private String parent;
 
 }

@@ -54,7 +54,7 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
   @Bean
   public ResourceBundleMessageSource messageSource() {
       ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-      messageSource.setBasename("Messages");
+      messageSource.setBasename("messages");
       return messageSource;
   }
 

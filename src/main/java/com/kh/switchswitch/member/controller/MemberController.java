@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -32,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.member.validator.JoinForm;
@@ -47,6 +49,8 @@ public class MemberController {
 	private JoinFormValidator joinFormValidator;
 	@Autowired
 	RestTemplate http;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	public MemberController(MemberService memberService, JoinFormValidator joinFormValidator) {
 		super();
@@ -64,7 +68,7 @@ public class MemberController {
 	@GetMapping("login")
 	public void login() {}
 	
-	@RequestMapping("kakaoLogin")
+	@GetMapping("kakaoLogin")
 	public String kakaoLogin(@RequestParam("code") String code, RedirectAttributes redirectAttr) {
 		String id = "";
 		String nickname = "";
@@ -73,7 +77,9 @@ public class MemberController {
 		try {
 			//access_token이 포함된 JSON String을 받아온다.
 	        String accessTokenJsonData = memberService.getAccessTokenJsonData(code);
-	        if(accessTokenJsonData.equals("error")) return "error";
+	        if(accessTokenJsonData.equals("error")) {
+	        	throw new HandlableException(ErrorCode.FAILED_TO_KAKAO_LOGIN);
+	        }
 
 	        //JSON String -> Object(Map)
 	        ObjectMapper accessTokenJsonObject= new ObjectMapper();
@@ -81,7 +87,9 @@ public class MemberController {
 			
 			//access_token 추출
 	        String accessToken = map.get("access_token").toString();
-	        if(accessToken.equals("error")) return "error";
+	        if(accessToken.equals("error")) {
+	        	throw new HandlableException(ErrorCode.FAILED_TO_KAKAO_LOGIN);
+	        }
 	        
 	        //유저 정보가 포함된 JSON String을 받아온다.
 	        String userInfo = memberService.getUserInfo(accessToken);
@@ -94,7 +102,12 @@ public class MemberController {
 	    	nickname = propertyKeys.get("nickname");
 	    	Map<String, String> kakaoAccount = (Map<String, String>) map.get("kakao_account");
 	    	email = kakaoAccount.get("email");
-	        if(map.get("error") != null) return "error";
+	        if(map.get("error") != null) {
+	        	throw new HandlableException(ErrorCode.FAILED_TO_KAKAO_LOGIN);
+	        }
+	        
+	        //카카오 로그아웃 처리
+	        memberService.logoutKakao(accessToken);
 	        
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
@@ -104,33 +117,33 @@ public class MemberController {
 			e.printStackTrace();
 		}
 		
-		Member member = new Member();
 		//email null일 경우
 		if(email.isEmpty()) {
 			throw new HandlableException(ErrorCode.FAILED_TO_JOIN_WITH_KAKAO);
 		}
-		if(memberService.selectKakaoLoginById(id) == null) {
-			
-			member.setMemberPass(id);
+		
+		KakaoLogin kakaoLogin = memberService.selectKakaoLoginById(id);
+		Member member = memberService.selectMemberByEmailAndDelN(email);
+		
+		//카카오 또는 회원 정보 존재 X
+		if(kakaoLogin == null || member == null) {
+			member = new Member();
 			member.setMemberEmail(email);
 			member.setMemberNick(nickname);
-			
 			memberService.insertMemberWithKakao(member,id);
-		}
-		if(memberService.selectKakaoLoginById(id) != null) {
+			//업데이트 or 새로 생성된 member 객체
 			member = memberService.selectMemberByEmailAndDelN(email);
-			if(member == null) {
-				member = new Member();
-				member.setMemberDelDate(null);
-				member.setMemberDelYn(0);
-				memberService.updateMemberDelYN(member);
-			};
+		}
+		//비밀번호가 임의로 변경된 경우
+		if(!passwordEncoder.matches(id, member.getMemberPass())) {
+			memberService.updateMemberPass(member.getMemberIdx(), id);
 		}
 		
+		redirectAttr.addFlashAttribute("kakao", "valid");
 		redirectAttr.addFlashAttribute("email", email);
 		redirectAttr.addFlashAttribute("password", id);
 		
-		return "redirect:/member/login?kakao=valid";
+		return "redirect:/member/login";
 		
 	}
 	
@@ -219,6 +232,9 @@ public class MemberController {
 		}
 		
 		memberService.insertMember(form);
+		
+		//SavePoint 생성
+		
 		redirectAttrs.addFlashAttribute("message", "회원가입을 환영합니다. 로그인 해주세요");
 		session.removeAttribute("persistToken");
 		session.removeAttribute("persistUser");
@@ -241,6 +257,37 @@ public class MemberController {
 	@GetMapping("findingId")
 	public void findingId() {}
 	
-	@GetMapping("findingPw")
-	public void findingPw() {}
+	@PostMapping("findingId")
+	public String findingId(String nickname, String tell, Model model) {
+		
+		String foundEmail = memberService.selectEmailByNicknameAndTell(nickname, tell);
+		
+		if(foundEmail == null) {
+			model.addAttribute("error","입력하신 정보와 일치하는 회원이 존재하지 않습니다.");
+			return "/member/findingId";
+		}
+		
+		model.addAttribute("email", foundEmail);
+		return "/member/findingId";
+		
+	}
+	
+	@GetMapping("reissuePw")
+	public void reissuePw() {}
+	
+	@PostMapping("reissuePw")
+	public String reissuePw(String email, Model model) {
+		
+		Member foundMember = memberService.selectMemberByEmailAndDelN(email);
+		
+		if(foundMember == null) {
+			model.addAttribute("error","존재하지 않는 Email입니다.");
+			return "/member/reissuePw";
+		}
+		
+		memberService.reissuePwAndSendToEmail(foundMember);
+		model.addAttribute("success","입력하신 Email로 새로운 비밀번호를 전송하였습니다.");
+		return "/member/reissuePw";
+		
+	}
 }

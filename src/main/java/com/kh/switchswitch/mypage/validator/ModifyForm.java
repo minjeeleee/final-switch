@@ -15,11 +15,12 @@ public class ModifyForm {
 	private String memberNick;
 	private String memberAddress;
 	private String address;
-	private String zipNo;
+	private String zipNo;	
 
 	public Member convertToMember() {
-		
-		String newPw = newMemberPass == "" ? memberPass : newMemberPass;
+
+		String newPw = newMemberPass.equals("") ? memberPass : newMemberPass;
+
 		
 		Member member = new Member();
 		member.setMemberEmail(memberEmail);
