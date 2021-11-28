@@ -1,14 +1,17 @@
 package com.kh.switchswitch.notice.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
@@ -32,11 +35,20 @@ public class NoticeController {
 	
 	@PostMapping("upload")
 	public String uploadBoard(Notice notice,  @AuthenticationPrincipal MemberAccount member ) {
-
+		notice.setUserId(member.getCode());
+		noticeService.insertNotice(notice);
 		return "redirect:/";
 	}
 	
-	
-	
+	  @GetMapping("notice-list") 
+	  public String noticeList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
+		  model.addAllAttributes(noticeService.selectNoticeList(page));
+			return "notice/notice-list";
+	}
+	  @GetMapping("notice-detail")
+	public void boardDetail(int noticeIdx, Model model) {
+		Map<String,Object> commandMap = noticeService.selectNoticeByIdx(noticeIdx);
+		model.addAttribute("datas", commandMap);
+	}
 	
 }
