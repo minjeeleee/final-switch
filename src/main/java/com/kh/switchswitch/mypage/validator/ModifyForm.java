@@ -21,7 +21,6 @@ public class ModifyForm {
 
 		String newPw = newMemberPass.equals("") ? memberPass : newMemberPass;
 
-
 		
 		Member member = new Member();
 		member.setMemberEmail(memberEmail);
