@@ -32,8 +32,7 @@ public class InquiryServiceImpl implements InquiryService{
 	}
 	
 	//11/17
-	@Override
-	public Map<String, Object> selectInquiryByIdx(String inquiryIdx) {
+	public Map<String, Object> selectInquiryByIdx(int inquiryIdx) {
 		Inquiry inquiry = inquiryRepository.selectInquiryByIdx(inquiryIdx);
 		return Map.of("inquiry",inquiry);
 	}
@@ -53,6 +52,18 @@ public class InquiryServiceImpl implements InquiryService{
 		commandMap.put("paging", pageUtil);
 		commandMap.put("inquiryList", inquiryRepository.selectInquiryList(pageUtil));
 		return commandMap;
+	}
+
+	@Override
+	public void modifyInquiry(Inquiry inquiry) {
+		inquiryRepository.modifyInquiry(inquiry);
+		
+	}
+
+	@Override
+	public void deleteInquiry(int inquiryIdx) {
+		inquiryRepository.deleteInquiry(inquiryIdx);
+		
 	}
 
 

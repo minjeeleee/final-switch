@@ -13,5 +13,9 @@ public interface NoticeService {
 
 	Map<String, Object> selectNoticeByIdx(int noticeIdx);
 
+	void modifyNotice(Notice notice);
+
+	void deleteNotice(int noticeIdx);
+
 
 }

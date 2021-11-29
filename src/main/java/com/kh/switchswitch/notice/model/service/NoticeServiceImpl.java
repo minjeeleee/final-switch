@@ -51,6 +51,18 @@ public class NoticeServiceImpl implements NoticeService{
 		return Map.of("notice",notice);
 	}
 
+	@Override
+	public void modifyNotice(Notice notice) {
+		noticeRepository.modifyNotice(notice);
+		
+	}
+
+	@Override
+	public void deleteNotice(int noticeIdx) {
+		noticeRepository.deleteNotice(noticeIdx);
+		
+	}
+
 
 
 
