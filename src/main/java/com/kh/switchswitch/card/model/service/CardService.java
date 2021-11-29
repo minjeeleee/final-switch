@@ -66,4 +66,6 @@ public interface CardService {
 	List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx);
 
 	List<Map<String, Object>> selectMyFreeCard(Integer memberIdx);
+
+	Map<String, Object> selectModifyCard(Integer cardIdx);
 }

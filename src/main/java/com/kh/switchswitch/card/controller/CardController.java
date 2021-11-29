@@ -59,8 +59,8 @@ public class CardController {
 	
 	@GetMapping("card-modify")
 	public void cardModify(@RequestParam(name = "cardIdx") Integer cardIdx, Model model) {
-		Card card = cardService.selectCardWithCardIdx(cardIdx);
-		model.addAttribute("card",card);
+		Map<String, Object> modifyCard = cardService.selectModifyCard(cardIdx); 
+		model.addAttribute("card",modifyCard);
 	}
 	
 	@PostMapping("card-modify")
