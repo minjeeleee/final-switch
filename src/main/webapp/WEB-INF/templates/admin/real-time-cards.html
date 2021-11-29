@@ -60,7 +60,7 @@
 							    <span class="input-group-text border-0" id="search-addon">
 							   	<i class="fa fa-info-circle" data-toggle="modal" th:data-target="*{'#myModal'+card.cardIdx}" style="font-size: 15px !important;width: 20%;margin-top: 75%; "></i>
 							  </span>
-							    <span class="lnr lnr-trash small" aria-hidden="true" style="font-size: 15px !important;width: 20%;margin-top: 6.5%;" id="banCard" th:value="*{card.cardIdx}" onclick="cardDelete(this)"></span>
+							    <span class="lnr lnr-trash small" aria-hidden="true" style="font-size: 15px !important;width: 20%;margin-top: 6.5%;" th:onclick="'deleteCard('+*{card.cardIdx}+')'" th:value="*{card.cardIdx}"></span>
 							  </div>
 							    <p class="card-text text-left" style="height:50%; overflow:hidden;" th:text="*{card.content}"></p>
 							  </div>
@@ -157,8 +157,8 @@
 				}, time);
 			}
 		}
-*/
-		function cardDelete(cardIdx) {
+		*/
+		function deleteCard(cardIdx) {
 			if(cardIdx){
 				fetch("/admin/card-delete?cardIdx="+cardIdx)
 				.then(response=>{
