@@ -223,4 +223,26 @@ public class CardServiceImpl implements CardService {
 		}
 	}
 
+	public List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx) {
+		
+		List<Map<String, Object>> exchangeCards = new ArrayList();
+		List<Card> cardList = cardRepository.selectCardByMemberIdxAndIsFreeExceptDone(memberIdx,"N");
+		for (Card card : cardList) {
+			exchangeCards.add(Map.of("myExchangeCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return exchangeCards;
+	}
+
+	public List<Map<String, Object>> selectMyFreeCard(Integer memberIdx) {
+		List<Map<String, Object>> freeCards = new ArrayList();
+		
+		List<Card> cardList = cardRepository.selectCardByMemberIdxAndIsFreeExceptDone(memberIdx,"Y");
+		for (Card card : cardList) {
+			freeCards.add(Map.of("freeCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return freeCards;
+	}
+
 }

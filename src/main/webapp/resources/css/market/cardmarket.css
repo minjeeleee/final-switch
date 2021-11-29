@@ -104,3 +104,15 @@ section {
 .card-container {
     z-index: 1;
 }
+
+/* JUNG 211129 */
+.sc-input,
+.sc-location {
+    background-color: #ff5403;
+    border-radius: 8px;
+    color: #fff;
+    padding: 1px 8px;
+    margin-left: 4px;
+    font-weight: 500;
+    font-size: 14px;
+} 
