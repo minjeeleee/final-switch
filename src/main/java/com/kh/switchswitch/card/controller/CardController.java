@@ -56,4 +56,21 @@ public class CardController {
 		
 	}
 	
+	@GetMapping("card-modify")
+	public void cardModify(@RequestParam(name = "cardIdx") Integer cardIdx, Model model) {
+		Card card = cardService.selectCardWithCardIdx(cardIdx);
+		model.addAttribute("card",card);
+	}
+	
+	@PostMapping("card-modify")
+	public String modifyCard(@RequestParam(required = false) List<MultipartFile> imgList
+			,@AuthenticationPrincipal MemberAccount member
+			, Card card, @RequestParam(name = "cardIdx") Integer cardIdx
+
+			) {
+		card.setCardIdx(cardIdx);
+		cardService.modifyCard(imgList, card); 
+
+		return "redirect:/";
+	}
 }

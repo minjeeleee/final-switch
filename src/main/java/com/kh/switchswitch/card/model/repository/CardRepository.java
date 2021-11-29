@@ -5,8 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -89,5 +91,15 @@ public interface CardRepository {
 	CardRequestList selectCardRequestByEIdx(Integer eIdx);
 
 	List<Card> selectCardTrim(SearchCard searchCard);
+
+	void modifyCard(Card card);
+
+	@Update("update file_info set is_del = 1 where card_idx=#{cardIdx}")
+	void deleteCard(Integer cardIdx);
+	
+	@Insert("insert into file_info(FL_IDX,ORIGIN_FILE_NAME,RENAME_FILE_NAME,SAVE_PATH,CARD_IDX) "
+			+ " values(sc_file_idx.nextval,#{fileUpload.originFileName},#{fileUpload.renameFileName},#{fileUpload.savePath}"
+			+ " ,#{cardIdx})")
+	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("cardIdx")Integer cardIdx);
 	
 }
