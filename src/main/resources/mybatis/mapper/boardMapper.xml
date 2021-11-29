@@ -4,24 +4,17 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.kh.switchswitch.board.model.repository.BoardRepository">
 
-  		
+
   		<update id="modifyBoard">
   		update community
   		<trim prefix="set" suffixOverrides=",">
   		<if test="title != null">title=#{title},</if>
   		<if test="content != null">content=#{content},</if>
+  		<if test="regDate != null">reg_date=#{regDate},</if>
+  		<if test="isDel != null">is_del=#{isDel},</if>
   		</trim>
   		where bd_idx = #{bdIdx}
   	</update>
-  	  <update id="deleteBoard">
-  		update community set is_del = 1
-  		<trim prefix="set" suffixOverrides=",">
-  		<if test="userId != null">user_id=#{userId, jdbcType=VARCHAR},</if>
-  		<if test="bdIdx != null">bd_idx=#{bdIdx, jdbcType=VARCHAR},</if>
-  		<if test="title != null">title=#{title, jdbcType=VARCHAR},</if>
-  		<if test="content != null">content=#{content, jdbcType=VARCHAR},</if>
-  		</trim>
-  		where bd_idx = #{bdIdx}
-  	</update>
+
 
   </mapper>
