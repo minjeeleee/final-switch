@@ -204,6 +204,23 @@ public class CardServiceImpl implements CardService {
 	public List<Card> selectCardTrim(SearchCard searchCard) {
 		return cardRepository.selectCardTrim(searchCard);
 	}
-	
+
+	public void modifyCard(List<MultipartFile> imgList, Card card) {
+		FileUtil fileUtil = new FileUtil();
+
+		// card instance 생성
+		cardRepository.modifyCard(card);
+
+		//삭제
+		cardRepository.deleteCard(card.getCardIdx());
+
+		
+		// card instance
+		for (MultipartFile multipartFile : imgList) {
+			if (!multipartFile.isEmpty()) {
+				cardRepository.modifyFileInfo(fileUtil.fileUpload(multipartFile),card.getCardIdx());
+			}
+		}
+	}
 
 }

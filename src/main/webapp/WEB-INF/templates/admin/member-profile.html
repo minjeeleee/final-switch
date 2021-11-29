@@ -45,13 +45,16 @@
 									<div class="profile-stat" style="background-color: white;">
 										<div class="row">
 											<div class="col-md-4 stat-item">
-												45 <span>카드</span>
+												[[${cardCnt}]] <span>카드</span>
 											</div>
 											<div class="col-md-4 stat-item">
 												1500 <span>포인트</span>
 											</div>
-											<div class="col-md-4 stat-item">
-												4.7 <span>평점</span>
+											<div class="col-md-4 stat-item" th:unless="${memberInfo.member.memberScore}">
+												0 <span>평점</span>
+											</div>
+											<div class="col-md-4 stat-item" th:if="${memberInfo.member.memberScore}">
+												[[${memberInfo.member.memberScore}]] <span>평점</span>
 											</div>
 										</div>
 									</div>

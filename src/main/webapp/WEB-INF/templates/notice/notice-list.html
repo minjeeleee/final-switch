@@ -167,6 +167,8 @@ td{
 						<form class="search_bar_wrap">
 							<input type="text" name="q" placeholder="검색어를 입력하세요." />
 							<button onclick="submit">검색</button>
+							<a class="btn" href="/notice/notice-form" style="float: right;">게시글 작성하기</a>
+							
 						</form>
 					</div>
 				
@@ -181,32 +183,16 @@ td{
 							</tr>
 						</thead>
 						<tbody>	
-							<tr style="height: 30px; line-height: 30px;">
-								<td align="center">중요공지</td>
-								<td><a href="Board_View.jsp">오류 수정 안내</a></td>
-								<td align="center">2021/11/23</td>
-							</tr>
-							<tr style="height: 30px; line-height: 30px;">
-								<td align="center">2</td>
-								<td><a href="Board_View.jsp">개인정보 처리방침 안내</a></td>
-								<td align="center">2021/11/23</td>
-							</tr>
-							<tr style="height: 30px; line-height: 30px;">
-								<td align="center">1</td>
-								<td><a href="Board_View.jsp">개인정보 처리방침 안내</a></td>
-								<td align="center">2021/11/23</td>
-							</tr>
-								
-							
-							
-							<tr style="height: 30px; line-height: 30px;">
-								<td rowspan="3" style="text-align: center">게시글이 없습니다.</td>
-
-							</tr>
-							
-							
+							<tr th:each="notice : ${noticeList}" style="height: 30px; line-height: 30px;">
+								<td th:text="${notice.type}"></td>
+								<td>
+								<a th:text="${notice.title}" th:href="@{/notice/notice-detail(noticeIdx=${notice.noticeIdx})}"></a>
+								</td>
+								<td th:text="${notice.regDate}"></td>
+							</tr>						
 						</tbody>
 					</table>
+					
 				</div>
 				
 					

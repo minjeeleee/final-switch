@@ -60,4 +60,6 @@ public interface CardService {
 	List<Map<String,Object>> selectDoneCardList(Integer memberIdx);
 
 	List<Card> selectCardTrim(SearchCard searchCard);
+
+	void modifyCard(List<MultipartFile> imgList, Card card);
 }

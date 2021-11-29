@@ -1,5 +1,6 @@
 package com.kh.switchswitch.admin.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,10 @@ import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
 import com.kh.switchswitch.admin.validator.MemberUpdateForm;
 import com.kh.switchswitch.admin.validator.MemberUpdateValidator;
+import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.common.code.ErrorCode;
+import com.kh.switchswitch.common.exception.HandlableException;
+import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
 
@@ -48,7 +53,15 @@ public class AdminController {
 	
 	@GetMapping("real-time-cards")
 	public void realTimeCards(Model model) {
-		Map<String,Object> cardList = adminService.selectRealTimeCards();
+		List<Map<String,Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardList();
+		if(cardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile,"fileDTOAll",imgFile));
+			}
+		}
 		model.addAttribute("cardList",cardList);
 	}
 	
@@ -56,10 +69,16 @@ public class AdminController {
 	public void allCards() {
 	}
 	
-	@RequestMapping("card-delete")
-	public String cardDelete(int cardIdx) {
-		adminService.deleteCard(cardIdx);
-		return "admin/real-time-cards";
+	@GetMapping("card-delete")
+	@ResponseBody
+	public String cardDelete(@RequestParam Integer cardIdx) {
+		System.out.println("비동기통신 성공");
+		if(cardIdx != null) {
+			adminService.deleteCard(cardIdx);
+			return "success";
+		}else {
+			throw new HandlableException(ErrorCode.DATABASE_ACCESS_ERROR);
+		}
 	}
 	
 	@GetMapping("all-members")
@@ -98,7 +117,9 @@ public class AdminController {
 	@GetMapping("member-profile")
 	public void memberProfile(@RequestParam int memberIdx, Model model) {
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
+		Integer cardCountFromMember = adminService.selectCardCountByMemberIdx(memberIdx);
 		model.addAttribute("memberInfo",memberInfo);
+		model.addAttribute("cardCnt",cardCountFromMember);
 	}
 	
 	@GetMapping("member-profile-edit")
@@ -141,9 +162,9 @@ public class AdminController {
 		System.out.println("비동기통신 성공");
 		if(flIdx != null) {
 			adminService.deleteMemberProfileImg(flIdx);
-			return "available";
+			return "success";
 		}else {
-			return "disable";
+			return "fail";
 		}
 	}
 	
