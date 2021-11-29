@@ -27,13 +27,22 @@ public class AdminService {
 	private final AdminRepository adminRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public Map<String, Object> selectRealTimeCards() {
-		List<Card> cardList = adminRepository.selectRealTimeCards();
-		List<FileDTO> cardImgList = adminRepository.selectCardImgList();
-		return Map.of("cardList", cardList, "cardImgList", cardImgList);
+	public FileDTO selectMainImgFileByCardIdx(Integer cardIdx) {
+		List<FileDTO> fileDTOList = adminRepository.selectFileInfoByCardIdx(cardIdx);
+		return fileDTOList.get(0);
+	}
+	
+	public List<Card> selectCardList() {
+		List<Card> cardList = adminRepository.selectCards();
+		return cardList;
+	}
+	
+	public List<FileDTO> selectImgFileListByCardIdx(Integer cardIdx) {
+		List<FileDTO> fileDTOList = adminRepository.selectFileInfoByCardIdx(cardIdx);
+		return fileDTOList;
 	}
 
-	public int deleteCard(int cardIdx) {
+	public Integer deleteCard(Integer cardIdx) {
 		return adminRepository.deleteCard(cardIdx);
 	}
 
@@ -98,6 +107,11 @@ public class AdminService {
 		}
 		return Map.of("member", memberInfo);
 	}
+	
+	public Integer selectCardCountByMemberIdx(Integer memberIdx) {
+		Integer cardCnt = adminRepository.selectCardCountByMemberIdx(memberIdx);
+		return cardCnt;
+	}
 
 	public void updateMemberInfo(Member convertToMember, Integer memberIdx) {
 		convertToCheckNull(convertToMember);
@@ -142,5 +156,11 @@ public class AdminService {
 	public void deleteMemberProfileImg(Integer flIdx) {
 		adminRepository.deleteMemberProfileImg(flIdx);
 	}
+
+	
+
+	
+
+	
 
 }
