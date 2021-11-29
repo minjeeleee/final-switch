@@ -12,8 +12,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-@Controller
-@RequestMapping("alarm")
+//@Controller
+//@RequestMapping("alarm")
 public class AlarmController extends TextWebSocketHandler {
 	
     private SimpMessagingTemplate simpMessagingTemplate;

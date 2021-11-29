@@ -101,5 +101,8 @@ public interface CardRepository {
 			+ " values(sc_file_idx.nextval,#{fileUpload.originFileName},#{fileUpload.renameFileName},#{fileUpload.savePath}"
 			+ " ,#{cardIdx})")
 	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("cardIdx")Integer cardIdx);
+
+	@Select("select * from card where member_idx = #{memberIdx} and isfree = #{isfree} and is_del = 0 and exchange_status <> 'done'")
+	List<Card> selectCardByMemberIdxAndIsFreeExceptDone(@Param("memberIdx") Integer memberIdx, @Param("isfree") String isfree);
 	
 }

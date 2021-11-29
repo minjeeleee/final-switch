@@ -1,6 +1,7 @@
 package com.kh.switchswitch.card.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -73,4 +74,17 @@ public class CardController {
 
 		return "redirect:/";
 	}
+	
+	@GetMapping("my-card")
+	public void myCard(@AuthenticationPrincipal MemberAccount memberAccount
+			,Model model) {
+		
+		List<Map<String, Object>> myExchangeCards = cardService.selectMyExchangeCard(memberAccount.getMemberIdx()); 
+		List<Map<String, Object>> myFreeCards = cardService.selectMyFreeCard(memberAccount.getMemberIdx());
+		
+		model.addAttribute("myExchangeCards",myExchangeCards);
+		model.addAttribute("myFreeCards",myFreeCards);
+		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
+	}
+	
 }

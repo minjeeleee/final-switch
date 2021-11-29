@@ -10,8 +10,8 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
-@Configuration
-@EnableWebSocketMessageBroker
+//@Configuration
+//@EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 	
 	
