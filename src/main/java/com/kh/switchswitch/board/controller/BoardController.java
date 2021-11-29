@@ -32,7 +32,6 @@ public class BoardController {
 	@GetMapping("board-form")
 	public void boardForm() {}
 
-	//11/23 403오류
 	@PostMapping("upload")
 	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member ) {
 		//,@SessionAttribute("authentication") Member member
@@ -55,13 +54,13 @@ public class BoardController {
 	  //detail 받아오기 성공
 	  //file다운기능 필요
 	  @GetMapping("board-detail")
-	public void boardDetail(String bdIdx, Model model) {
+	public void boardDetail(int bdIdx, Model model) {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 	}
 	
 	@GetMapping("board-modify")
-	public void boardModify(Model model, String bdIdx) {
+	public void boardModify(Model model, int bdIdx) {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 	}
@@ -77,6 +76,11 @@ public class BoardController {
 		return "redirect:/board/board-detail?bdIdx="+board.getBdIdx();
 	}
 
+	@PostMapping("delete")
+	public String deleteBoard(int bdIdx) {
+		boardService.deleteBoard(bdIdx);
+		return "redirect:/";
+	}
 
 	
 

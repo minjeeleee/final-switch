@@ -18,13 +18,17 @@ import com.kh.switchswitch.member.model.dto.Member;
 @Mapper
 public interface AdminRepository {
 	
-	@Select("select * from card")
-	List<Card> selectRealTimeCards();
+	@Select("select * from card where is_del = 0")
+	List<Card> selectCards();
 	
-	@Select("select * from file_info where card_idx is not null")
-	List<FileDTO> selectCardImgList();
+	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
+	List<FileDTO> selectCardImgListByCardIdx(Integer cardIdx);
 	
-	int deleteCard(int cardIdx);
+	@Select("select card_idx from card where is_del = 0")
+	List<Integer> selectCardIdx();
+	
+	@Update("update card set is_del = 1 where card_idx = #{cardIdx}")
+	Integer deleteCard(Integer cardIdx);
 	
 	@Select("select * from member where member_del_yn=0")
 	List<Member> selectMemberAllList();
@@ -78,6 +82,14 @@ public interface AdminRepository {
 	
 	@Update("update file_info set is_del=1 where fl_Idx = #{flIdx}")
 	void deleteMemberProfileImg(Integer flIdx);
+	
+	@Select("select count(*) from card where member_idx = #{memberIdx} and is_del = 0")
+	Integer selectCardCountByMemberIdx(Integer memberIdx);
+	
+	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
+	List<FileDTO> selectFileInfoByCardIdx(Integer cardIdx);
+
+	
 
 	
 	

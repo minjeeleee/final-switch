@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>        
 		<meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -112,10 +113,15 @@
     <div class="container">
     
 		<div class='section'>
-			<form class='frm_post' action="/board/upload" method="post" enctype="multipart/form-data">
+			<form class='frm_post'  th:action="|/notice/upload?${_csrf.parameterName}=${_csrf.token}|" method="post" enctype="multipart/form-data">
 				<div class='frm_header_area'>
 					<h2 class='sub_title'>공지사항 작성페이지</h2>
-					
+				</div>
+				<div class='frm_tag_area'>
+					<select class='select_subject' name='type'>
+							<option selected value='중요공지'>중요공지</option>
+							<option value='일반'>일반</option>
+					</select>
 				</div>
 				<div class='frm_title_area'>
 					<div>
@@ -126,7 +132,6 @@
 					<textarea id="editor1" name="content" placeholder="내용을 입력하세요" data-sample-short></textarea>
 
 				</div>
-				<div class="add_file_box">파일 : <input type="file" name="files" id="contract_file" multiple/></div>
 				<div class='btn_area'>
 						<button id="btnMove" class="btn">목록</button>
 						<button id="btnSubmit" class="btn">작성하기</button>

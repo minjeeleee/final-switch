@@ -7,7 +7,7 @@
 	profileImg.addEventListener('click',()=>{
 		const flIdx = document.querySelector('#fileNo').value;
 		if(flIdx){
-				fetch("/admin/profile-img-delete="+flIdx)
+				fetch("/admin/profile-img-delete?flIdx="+flIdx)
 				.then(response =>{
 				if(response.ok){
 					return response.text()
@@ -17,9 +17,9 @@
 			})
 			.then(text =>{
 				if(text == 'success'){
-					document.querySelector('#imgConfirm').innerHTML = '삭제 되었습니다.';
+					alert("삭제되었습니다.");
 				}else{
-					document.querySelector('#imgConfirm').innerHTML = '삭제할 이미지가 없습니다.';
+					alert("삭제할 이미지가 없습니다.");
 				}
 			})
 			.catch(error=>{
