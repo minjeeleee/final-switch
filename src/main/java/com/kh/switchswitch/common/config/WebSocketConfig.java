@@ -3,39 +3,30 @@ package com.kh.switchswitch.common.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
+import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
-import com.kh.switchswitch.alarm.handler.AlarmHandler;
-
 @Configuration
-@EnableWebSocket
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBrokerConfigurer {
-
-	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(new AlarmHandler(), "/alarm")
-				//to customize the initial HTTP WebSocket handshake request
-				//.addInterceptors(new HttpSessionHandshakeInterceptor())
-				//Allow only same-origin requests (default)
-				//Allow all origins - *
-				//Allow a specified list of origins - must start with http:// or https://
-				.setAllowedOrigins("http://localhost:9090")
-				//Enabling SockJS
-				.withSockJS();
-		
-	}
+public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
+	
+	
+	protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
+        messages
+        		.simpDestMatchers("/alarm/*").hasAnyAuthority("B")
+                .simpDestMatchers("/chatting/*").hasAnyAuthority("B","C")
+                .simpTypeMatchers().denyAll()
+                .anyMessage().denyAll(); ;
+    }
 	
 	@Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/connect")
+        registry.addEndpoint("/alarm")
+        .addInterceptors(new HttpSessionHandshakeInterceptor())
         .setAllowedOrigins("http://localhost:9090")
         .withSockJS();  
     }
@@ -43,9 +34,9 @@ public class WebSocketConfig implements WebSocketConfigurer, WebSocketMessageBro
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
     	//SimpAnnotationMethod (Controller->MessageMapping)
-    	config.setApplicationDestinationPrefixes("/send"); 
+    	config.setApplicationDestinationPrefixes("/app"); 
     	//StompBrokerRelay
-        config.enableSimpleBroker("/broker"); 
+        config.enableSimpleBroker("/subscribe","/send"); 
     }
 	
 	@Bean
