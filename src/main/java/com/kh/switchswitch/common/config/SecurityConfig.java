@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.csrf().ignoringAntMatchers("/mail");
 		http.csrf().ignoringAntMatchers("/member/addrPopup");
-		http.csrf().ignoringAntMatchers("/market/category/**");
+		http.csrf().ignoringAntMatchers("/market/**");
 		
 //		http.csrf().disable();
 	}
