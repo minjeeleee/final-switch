@@ -172,7 +172,6 @@ function createMemberStar(value) {
     return memberStar
 }
 
-
 $(() =>{
     $.ajax({
 
