@@ -28,7 +28,7 @@
 				<div class='section_wrap'>
 					<div class="section_top">
 						<h2>정보공유 상세페이지</h2>
-						<form class='frm_post' th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}|"  th:value="|/board/delete?bdIdx=${datas.board.bdIdx}|" method="post" enctype="multipart/form-data">
+						<form class='frm_post' th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|" method="post" enctype="multipart/form-data">
 
 						<div class='btn_area' >		
 						
@@ -96,7 +96,10 @@
 				</div>
 
 	</section>
-	<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
+	function transfer(e) {
+		let downloadFile;
+	
 		let downloadFile = (ofn,rfn,path) => {
 			let paramObj = {
 					originFileName : ofn,
@@ -104,7 +107,9 @@
 					savePath : path
 			}
 			location.href = '/download?' + urlEncoder(paramObj);
+			
 		}
+
 	</script>
 </body>
 </html>

@@ -67,11 +67,12 @@ public class BoardController {
 	
 
 	@PostMapping("modify")
-	public String modifyBoard(Board board,  List<MultipartFile> files) {
+	public String modifyBoard(Board board,  List<MultipartFile> files, int bdIdx) {
 		System.out.println(board);
 		for (MultipartFile multipartFile : files) {
 			System.out.println(multipartFile);
 		}
+		board.setBdIdx(bdIdx);
 		boardService.modifyBoard(board,files);
 		return "redirect:/board/board-detail?bdIdx="+board.getBdIdx();
 	}

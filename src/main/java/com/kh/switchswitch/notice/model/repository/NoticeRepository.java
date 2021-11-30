@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -27,21 +28,16 @@ public interface NoticeRepository {
 	@Select("select * from notice where notice_idx = #{noticeIdx}")
 	Notice selectNoticeByIdx(int noticeIdx);
 
-	
-	//게시글목록
-	@Select("select * from inquiry ORDER BY inquiry_idx DESC") 
-	List<Inquiry> selectInquiryList(Paging pageUtil);
 
 	//총 게시글 갯수 출력
-	@Select("select count(*) from inquiry")
+	@Select("select count(*) from notice")
 	int selectContentCnt();
 
-	//수정
-	@Update("")
-	void updateInquiry(Inquiry inquiry);
-	
-	@Delete("")
-	void deleteInquiry(String inquiryIdx);
+	@Update("update notice set title=#{title}, content=#{content}, reg_date=#{regDate}, type=#{type}")
+	void modifyNotice(Notice notice);
+
+	@Update("update notice set is_del = 1 where notice_idx = #{noticeIdx.noticeIdx}")	
+	void deleteNotice(@Param("noticeIdx")int noticeIdx);
 
 
 	
