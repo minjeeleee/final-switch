@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.dto.WishList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
@@ -254,6 +255,16 @@ public class CardServiceImpl implements CardService {
 		String[] wishCard = card.getHopeKind().split(",");
 		
 		return Map.of("card",card,"files",fileDTOs ,"wishCard",wishCard);
+	}
+
+	
+	public void insertExchangeStatusByFreeRequesetList(FreeRequestList freeRequest) {
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		exchangeStatus.setReqIdx(freeRequest.getFreqIdx());
+		exchangeStatus.setRequestedMemIdx(freeRequest.getRequestedMemIdx());
+		exchangeStatus.setRequestMemIdx(freeRequest.getRequestMemIdx());
+		exchangeRepository.insertExchangeStatus(exchangeStatus);
+		
 	}
 
 }

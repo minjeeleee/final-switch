@@ -233,4 +233,14 @@ public class ExchangeServiceImpl implements ExchangeService{
 		
 	}
 
+	
+	public void rejectFreeSharing(Integer freqIdx) {
+		freerequestListRepository.deleteFreeRequestList(freqIdx);
+	}
+
+	@Override
+	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
+		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
+	}
+
 }

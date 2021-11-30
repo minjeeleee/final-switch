@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
@@ -39,6 +40,10 @@ public interface ExchangeService {
 	List<Map<String,Object>> selectExchangeHistoryByMemIdx(Integer memberIdx);
 
 	void requestFreeSharing(Integer memberIdx, Integer cardIdx);
+
+	void rejectFreeSharing(Integer freqIdx);
+
+	FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx);
 
 
 	
