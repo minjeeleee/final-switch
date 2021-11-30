@@ -12,8 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
+import com.kh.switchswitch.card.model.dto.WishList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
+import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
@@ -204,6 +206,54 @@ public class CardServiceImpl implements CardService {
 	public List<Card> selectCardTrim(SearchCard searchCard) {
 		return cardRepository.selectCardTrim(searchCard);
 	}
-	
+
+	public void modifyCard(List<MultipartFile> imgList, Card card) {
+		FileUtil fileUtil = new FileUtil();
+
+		// card instance 생성
+		cardRepository.modifyCard(card);
+
+		//삭제
+		cardRepository.deleteCard(card.getCardIdx());
+
+		
+		// card instance
+		for (MultipartFile multipartFile : imgList) {
+			if (!multipartFile.isEmpty()) {
+				cardRepository.modifyFileInfo(fileUtil.fileUpload(multipartFile),card.getCardIdx());
+			}
+		}
+	}
+
+	public List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx) {
+		
+		List<Map<String, Object>> exchangeCards = new ArrayList();
+		List<Card> cardList = cardRepository.selectCardByMemberIdxAndIsFreeExceptDone(memberIdx,"N");
+		for (Card card : cardList) {
+			exchangeCards.add(Map.of("myExchangeCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return exchangeCards;
+	}
+
+	public List<Map<String, Object>> selectMyFreeCard(Integer memberIdx) {
+		List<Map<String, Object>> freeCards = new ArrayList();
+		
+		List<Card> cardList = cardRepository.selectCardByMemberIdxAndIsFreeExceptDone(memberIdx,"Y");
+		for (Card card : cardList) {
+			freeCards.add(Map.of("freeCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return freeCards;
+	}
+
+	public Map<String, Object> selectModifyCard(Integer cardIdx) {
+
+		Card card = cardRepository.selectCardByCardIdx(cardIdx);
+		List<FileDTO> fileDTOs = cardRepository.selectFileInfoByCardIdx(cardIdx);
+		String[] wishCard = card.getHopeKind().split(",");
+		
+		return Map.of("card",card,"files",fileDTOs ,"wishCard",wishCard);
+	}
 
 }

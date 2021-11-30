@@ -14,7 +14,9 @@ public enum ErrorCode {
 	FAILED_TO_JOIN_LIMIT_DATE("탈퇴 후 3개월 이후에 재가입 가능합니다.","/"),
 	FAILED_TO_KAKAO_LOGIN("카카오 로그인 중 오류가 발생하였습니다.","/member/login"),
 	FAILED_TO_LOAD_INFO("해당 회원이 탈퇴처리되었거나 카드가 삭제되어 요청이 자동 취소되었습니다."),
-	FAILED_TO_LEAVE_MEMBER("교환 중인 카드가 있어 탈퇴가 불가합니다.","/mypage/profile");
+	FAILED_TO_LEAVE_MEMBER("교환 중인 카드가 있어 탈퇴가 불가합니다.","/mypage/profile"),
+	FAILED_TO_UPDATE_INFO("변경할 정보가 없습니다.","/admin/all-members"),
+	FAILED_TO_DELETE_CARD("이미 삭제된 사진입니다.","/admin/real-time-cards");
 	
 	public final String MESSAGE;
 	public final String URL;

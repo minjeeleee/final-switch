@@ -23,21 +23,28 @@
 	<section>
 		<div class="container">
 
-			<div class='section'>
+			<div class='section'  th:object="${datas}">
+				
 				<div class='section_wrap'>
 					<div class="section_top">
 						<h2>정보공유 상세페이지</h2>
-						<div class='btn_area'>
+						<form class='frm_post' th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|" method="post" enctype="multipart/form-data">
+
+						<div class='btn_area' >		
+						
 							<a class="btn" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a> 
-							<a class="btn" th:href="@{/board/delete-board(bdIdx=${datas.board.bdIdx})}">글삭제</a> 
+							<!-- <a class="btn" th:href="/delete?bdIdx=${datas.board.bdIdx}">글삭제</a>  -->
+							<button id="btnDelete" class="btn" >삭제</button> 
 							<a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> 
 							<a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> 
 							<a class="btn" th:href="@{/board/board-list}">목록</a>
 						</div>
+						
+						</form>
 					</div>
 
 
-					<div class="section_content_box" th:object="${datas}">
+					<div class="section_content_box">
 						<div class="section_header">
 							<div class="section_title">
 								<span th:text="|제목 : *{board.title}|"></span>
@@ -78,14 +85,9 @@
 
 								<form class="frm_write_cmt" action="/reply/add-reply?bdIdx=${board.bdIdx }" method="POST">
 									<div class="cmt_write_box">
-
 										<div class="cmt_writer_id"></div>
 										<textarea name="content" placeholder="댓글을 입력하세요" required="required"></textarea>
 										<button class="cmt_write_btn">등록</button>
-
-
-
-
 									</div>
 								</form>
 							</div>
@@ -94,7 +96,10 @@
 				</div>
 
 	</section>
-	<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
+	function transfer(e) {
+		let downloadFile;
+	
 		let downloadFile = (ofn,rfn,path) => {
 			let paramObj = {
 					originFileName : ofn,
@@ -102,7 +107,9 @@
 					savePath : path
 			}
 			location.href = '/download?' + urlEncoder(paramObj);
+			
 		}
+
 	</script>
 </body>
 </html>

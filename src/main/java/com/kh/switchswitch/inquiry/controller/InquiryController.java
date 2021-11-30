@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 import com.kh.switchswitch.inquiry.model.service.InquiryService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.notice.model.dto.Notice;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,8 +46,28 @@ public class InquiryController {
 
 	
 	  @GetMapping("inquiry-detail")
-	public void boardDetail(String inquiryIdx, Model model) {
+	public void inquiryDetail(int inquiryIdx, Model model) {
 		Map<String,Object> commandMap = inquiryService.selectInquiryByIdx(inquiryIdx);
 		model.addAttribute("datas", commandMap);
 	}
+		@GetMapping("inquiry-modify")
+		public void inquiryModify(Inquiry inquiry,Model model, int inquiryIdx) {
+			Map<String,Object> commandMap = inquiryService.selectInquiryByIdx(inquiryIdx);
+			model.addAttribute("datas", commandMap);
+		}
+		
+
+		@PostMapping("modify")
+		public String modifyinquiry(Inquiry inquiry, int inquiryIdx) {
+			inquiry.setInquiryIdx(inquiryIdx);
+			inquiryService.modifyInquiry(inquiry);
+			return "redirect:/inquiry/inquiry-detail?inquiryIdx="+inquiry.getInquiryIdx();
+		}
+
+		@PostMapping("delete")
+		public String deleteInquiry(int inquiryIdx) {
+			inquiryService.deleteInquiry(inquiryIdx);
+			return "redirect:/";
+		}
+
 }

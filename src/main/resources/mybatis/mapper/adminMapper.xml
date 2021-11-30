@@ -4,12 +4,57 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.kh.switchswitch.admin.model.repository.AdminRepository">
   	<update id="updateMemberInfo">
-  		update member set 
-  		<if test="memberPass != null">member_pass=#{memberPass}</if>
-  		<if test="memberAddress != null">, member_address=#{memberAddress}</if>
-  		<if test="memberNick != null">, member_nick=#{memberNick}</if>
-  		<if test="memberTell != null">, member_tell=#{memberTell}</if>
-  		<if test="flIdx != 0">, fl_idx=#{flIdx}</if>
+  		update member
+  		<trim prefix="set" suffixOverrides=",">
+  		<if test="memberPass != null">member_pass=#{memberPass}, </if>
+  		<if test="memberEmail != null">member_email=#{memberEmail}, </if>
+  		<if test="memberDelYn != null">member_del_yn=#{memberDelYn}, </if>
+  		<if test="memberAddress != null">member_address=#{memberAddress}, </if>
+  		<if test="memberDelDate != null">member_del_date=#{memberDelDate}, </if>
+  		<if test="memberScore != null">member_score=#{memberScore}, </if>
+  		<if test="memberNick != null">member_nick=#{memberNick}, </if>
+  		<if test="memberTell != null">member_tell=#{memberTell}</if>
+  		</trim>
   		where member_idx = #{memberIdx}
   	</update>
+  	<!-- 
+  	<resultMap type="com.kh.switchswitch.member.model.dto.Member" id="memberMap">
+  		<result column="member_idx" property="memberIdx"/>
+  		<result column="code" property="code"/>
+  		<result column="member_reg_date" property="memberRegDate"/>
+  		<result column="member_pass" property="memberPass"/>
+  		<result column="member_email" property="memberEmail"/>
+  		<result column="member_del_yn" property="memberDelYn"/>
+  		<result column="member_tell" property="memberTell"/>
+  		<result column="member_nick" property="memberNick"/>
+  		<result column="member_address" property="memberAddress"/>
+  		<result column="member_del_date" property="memberDelDate"/>
+  		<result column="member_score" property="memberScore"/>
+  		<result column="member_name" property="memberName"/>
+  		<result column="fl_idx" property="flIdx"/>
+  	</resultMap>
+  	
+  	<resultMap type="com.kh.switchswitch.common.util.FileDTO" id="memberImg">
+  		<result column="fl_idx" property="flIdx"/>
+  		<result column="bd_idx" property="bdIdx"/>
+  		<result column="origin_file_name" property="originFileName"/>
+  		<result column="rename_file_name" property="renameFileName"/>
+  		<result column="save_path" property="savePath"/>
+  		<result column="reg_date" property="regDate"/>
+  		<result column="is_del" property="isDel"/>
+  		<result column="card_idx" property="cardIdx"/>
+  	</resultMap>
+  	<resultMap type="com.kh.switchswitch.admin.model.dto.MemberInfo" id="MemberInfoMap">
+  		<collection property="member" resultMap="memberMap"/>
+  		<collection property="fileDTO" resultMap="memberImg"/>
+  	</resultMap>
+  	<select id="selectMemberByIdx" resultMap="MemberInfoMap" parameterType="int">
+  		select * 
+  		from member
+  		<if test="flIdx != null">
+  		inner join file_info using(fl_idx) 
+  		</if>
+  		where member_idx = #{memberIdx}
+  	</select>
+  	 -->
   </mapper>

@@ -24,7 +24,7 @@ public interface InquiryRepository {
 
 	//상세글조회 
 	@Select("select * from inquiry where inquiry_idx = #{inquiryIdx}")
-	Inquiry selectInquiryByIdx(String inquiryIdx);
+	Inquiry selectInquiryByIdx(int inquiryIdx);
 	
 	//게시글목록
 	@Select("select * from inquiry ORDER BY inquiry_idx DESC") 
@@ -33,38 +33,12 @@ public interface InquiryRepository {
 	//총 게시글 갯수 출력
 	@Select("select count(*) from inquiry")
 	int selectContentCnt();
-
-	
 	
 	//수정
-	@Update("")
-	void updateInquiry(Inquiry inquiry);
+	@Update("update inquiry set title=#{title}, content=#{content}, reg_date=#{regDate}, type=#{type}")
+	void modifyInquiry(Inquiry inquiry);
 	
-	@Delete("")
-	void deleteInquiry(String inquiryIdx);
-	
-	
-	//파일업로드
-	@Insert("insert into file_info(fl_idx,bd_idx,origin_file_name, rename_file_name, save_path)"
-			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
-	void insertFileInfo(FileDTO fileDTO);
-	
-	//파일다운
-	@Select("select * from inquiry where inquiryIdx = #{inquiryIdx}")
-	List<FileDTO> selectFilesByInquiryIdx(String inquiryIdx);
-
-	//수정
-	@Update("")
-	Map<String, Object> inquiryModify(Inquiry inquiry);
-
-	
-
-	
-
-	
-
-
-
-
+	@Update("update inquiry set is_del = 1 where inquiry_idx = #{inquiryIdx}")	
+	void deleteInquiry(int inquiryIdx);
 	
 }

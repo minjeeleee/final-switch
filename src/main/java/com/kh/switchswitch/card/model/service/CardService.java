@@ -60,4 +60,12 @@ public interface CardService {
 	List<Map<String,Object>> selectDoneCardList(Integer memberIdx);
 
 	List<Card> selectCardTrim(SearchCard searchCard);
+
+	void modifyCard(List<MultipartFile> imgList, Card card);
+
+	List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx);
+
+	List<Map<String, Object>> selectMyFreeCard(Integer memberIdx);
+
+	Map<String, Object> selectModifyCard(Integer cardIdx);
 }

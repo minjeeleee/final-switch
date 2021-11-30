@@ -26,6 +26,9 @@ public interface MemberRepository {
 	void updateMember(Member member);
 	
 	void updateMemberForFile(Member member);
+	
+	@Insert("insert into kakao_login values(sc_kakao_idx.nextval,sc_member_idx.currval,#{id})")
+	void insertKakaoLoginWithId(String id);
 
 	@Select("select * from member where member_email = #{memberEmail} and member_del_yn = 1")
 	Member selectMemberByEmailAndDelY(String memberEmail);

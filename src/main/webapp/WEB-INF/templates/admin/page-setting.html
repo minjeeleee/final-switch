@@ -113,7 +113,7 @@
 										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 										        <h4 class="modal-title" id="exampleModalLabel">페이지 추가</h4>
 										      </div>
-										      <form action="/admin/add-menu" method="post">
+										      <form th:action="|/admin/add-menu?${_csrf.headerName}=${_csrf.token}|" method="post">
 										      <div class="modal-body">
 										          <div class="form-group">
 										            <label class="control-label">위치:</label>

@@ -36,19 +36,25 @@
 								<div class="profile-header">
 									<div class="overlay"></div>
 									<div class="profile-main">
-										<img src="/resources/img/아이폰.jpg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+										<img th:if="${memberInfo.member.flIdx}" th:src="${memberInfo.memberImg.getDownloadURL()}" class="img-circle" alt="Avatar" id="memberImg" style="width: 55px; height: 55px;">
+										<img th:unless="${memberInfo.member.flIdx}" src="/resources/img/undraw_profile.svg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
 										<h3 class="name" style="color: white;" th:text="${memberInfo.member.memberName}"></h3>
+										<input type="hidden" id="fileNo" th:value="${memberInfo.member.flIdx}">
+										<span id="imgConfirm" class="valid-msg"></span>
 									</div>
 									<div class="profile-stat" style="background-color: white;">
 										<div class="row">
 											<div class="col-md-4 stat-item">
-												45 <span>카드</span>
+												[[${cardCnt}]] <span>카드</span>
 											</div>
 											<div class="col-md-4 stat-item">
 												1500 <span>포인트</span>
 											</div>
-											<div class="col-md-4 stat-item">
-												4.7 <span>평점</span>
+											<div class="col-md-4 stat-item" th:unless="${memberInfo.member.memberScore}">
+												0 <span>평점</span>
+											</div>
+											<div class="col-md-4 stat-item" th:if="${memberInfo.member.memberScore}">
+												[[${memberInfo.member.memberScore}]] <span>평점</span>
 											</div>
 										</div>
 									</div>
@@ -244,6 +250,7 @@
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
+	<script src="/resources/js/admin/profile-img-delete.js"></script>
 </body>
 
 </html>
