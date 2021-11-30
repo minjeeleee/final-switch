@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	public void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
 			.mvcMatchers("/alarm/**","/mypage/**","/member/logout","/exchange/**").authenticated()
-			.mvcMatchers("/notice/notice-form").hasAuthority("C")
+			.mvcMatchers("/notice/notice-form","/notice/notice-modify","/top/top-form","/top/top-modify").hasAuthority("C")
 			.mvcMatchers("/admin/**").hasAuthority("C")
 			.anyRequest().permitAll();
 		

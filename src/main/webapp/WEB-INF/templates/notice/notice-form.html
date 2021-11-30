@@ -16,96 +16,6 @@
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 		<link href="../../../resources/css/board/notice.css" rel="stylesheet" />
-
-<style type="text/css">
-.section{
-	margin-top: 30px;
-	width: 1200px;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 60px;
-}
-.frm_post{
-	width: 80%;
-	height: 100%;
-}
-.frm_header_area{
-	width: 100%;
-	height: 46px;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	border-bottom: solid;
-	border-width: 1px;
-}
-.sub_title{
-	font-size: 22px;
-	font-weight: bolder;
-}
-.btn_area{
-	height: 36px;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-.btn_area>button{
-	width: 100px;
-	height: 30px;
-	font-size: 15px;
-	background-color: #eeeeee;
-	margin-left:10px;
-	
-	
-}
-/*  */
-.frm_title_area{
-	width: 100%;
-	height: 70px;
-	display: flex;
-	align-items: center;
-}
-.frm_title_area>div{
-	width: 100%;
-	height: 40px;
-	display: flex;
-	border: solid;
-	border-width: 1px;
-}
-.select_subject{
-	width: 20%;
-	height: 40px;
-	font-size: 15px;
-	border: none;
-	background-color: rgba(0,0,0,0.1);
-	text-align: center;
-}
-.post_title{
-	width: 80%;
-	height: 38px;
-	font-size: 15px;
-	border: none;
-	margin-left: 5px;
-}
-
-/*  */
-.frm_content_area{
-	width: 100%;
-	height:100%;
-	display: flex;
-	justify-content: center;
-}
-.frm_content_area>textarea{
-	width:1000px; 
-	height:400px; 
-    resize:none;
-}
-.btn{
-	border-color: transparent;
-}
-.add_file_box{
-	margin-top: 10px;
-}
-</style>
 </head>
 <body>
 
@@ -133,7 +43,7 @@
 
 				</div>
 				<div class='btn_area'>
-						<button id="btnMove" class="btn">목록</button>
+						<a id="btnMove" class="btn" th:href="@{/notice/notice-list}">목록</a>
 						<button id="btnSubmit" class="btn">작성하기</button>
 					</div>
 				

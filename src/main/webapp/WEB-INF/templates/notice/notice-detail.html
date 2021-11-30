@@ -25,22 +25,20 @@
 
 	<section>
 		<div class="container">
-
 			<div class='section' th:object="${datas}">
 				<div class='section_wrap'>
 					<div class="section_top">
 						<h2>공지사항 상세페이지</h2>
-						<form class='frm_post' th:action="|/notice/delete?${_csrf.parameterName}=${_csrf.token}&noticeIdx=${datas.notice.noticeIdx}|" method="post" enctype="multipart/form-data">
-						
+						<form class='frm_post'  th:action="|/notice/delete?${_csrf.parameterName}=${_csrf.token}&noticeIdx=${datas.notice.noticeIdx}|" method="post" enctype="multipart/form-data">						
 						<div class='btn_area'>
-							 <a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a>
 							 <a class="btn"  th:href="@{/notice/notice-list}">목록</a>
-							 <button id="btnDelete" class="btn" >삭제</button> 
-							 <a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a>
+							 <a class="btn" th:href="@{/notice/notice-modify(noticeIdx=${datas.notice.noticeIdx})}">수정</a> 
+							<button id="btnDelete" class="btn" onclick="alert(삭제되었습니다.');">삭제</button>
 						</div>
 						</form>
 					</div>
-
+					
+<input type="hidden" name="noticeIdx" th:value="*{notice.noticeIdx}"/>
 
 					<div class="section_content_box">
 						<div class="section_header">
@@ -55,15 +53,11 @@
 								<div class="writer_board_info">
 									<ul class="dep1">
 									</ul>
-
 								</div>
 							</div>
 						</div>
 						<div class="section_container">
 							<pre>[[*{notice.content}]]</pre>
-<!-- 버전 업데이트 공지 입니다. <br>
-							확인 후 이용 바랍니다. <br>
-							오늘도 즐거운 물물교환 되세요^^! -->
 						</div>
 					</div>
 				</div>

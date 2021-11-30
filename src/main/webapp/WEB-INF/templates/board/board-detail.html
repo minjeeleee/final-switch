@@ -57,10 +57,9 @@
 								</div>
 								<div class="info file_info">
 									<ol>
-										<li th:each="file : ${datas.files}" th:object="${file}">
-											<a th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
-												[[*{originFileName}]]
-											</a>
+										<li th:each="file : ${datas.files}" th:object="${file}"
+											 th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
+											<a>	[[*{originFileName}]]</a>
 										</li>		
 									</ol>
 								</div>
@@ -90,6 +89,10 @@
 										<button class="cmt_write_btn">등록</button>
 									</div>
 								</form>
+
+
+								
+								
 							</div>
 						</div>
 					</div>
@@ -97,7 +100,16 @@
 
 	</section>
 <script type="text/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
-	function transfer(e) {
+/* 
+ function downloadFile(ofname,rfname,savePath){
+	  let params = {'originFileName':ofname,
+			  		'renameFileName':rfname,
+			  		'savePath':savePath};
+	  
+    location.href = "[(@{/board/download?})]" + urlEncodeForm(params);
+ }
+	 */
+/* 	function transfer(e) {
 		let downloadFile;
 	
 		let downloadFile = (ofn,rfn,path) => {
@@ -108,8 +120,14 @@
 			}
 			location.href = '/download?' + urlEncoder(paramObj);
 			
+		} */
+		
+		 function downloadFile(ofname,rfname,savePath){
+			  let params = {'originFileName':ofname,
+					  		'renameFileName':rfname,
+					  		'savePath':savePath};
+			  location.href = '/download?' + urlEncoder(params);
 		}
-
 	</script>
 </body>
 </html>
