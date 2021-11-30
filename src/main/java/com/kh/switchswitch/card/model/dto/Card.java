@@ -24,4 +24,5 @@ public class Card {
 	private Integer isDel;
 	private String hopeKind;
 	private String dateParse;
+	private float memberRate;
 }

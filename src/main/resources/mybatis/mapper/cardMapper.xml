@@ -31,5 +31,6 @@
   			<if test="region != null and !region.equals('')">and region = #{region}</if>
   			<if test="content != null and !content.equals('')">and (name like '%'||#{content}||'%' or content like '%'||#{content}||'%')</if>
   		</trim>
+  		order by card_idx desc
   	</select>
   </mapper>

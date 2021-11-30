@@ -1,18 +1,14 @@
 package com.kh.switchswitch.notice.model.repository;
 
 import java.util.List;
-import java.util.Map;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
-import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 import com.kh.switchswitch.notice.model.dto.Notice;
 
 @Mapper
@@ -26,18 +22,18 @@ public interface NoticeRepository {
 	List<Notice>  selectNoticeList(Paging pageUtil);
 	
 	@Select("select * from notice where notice_idx = #{noticeIdx}")
-	Notice selectNoticeByIdx(int noticeIdx);
+	Notice selectNoticeByIdx(Integer noticeIdx);
 
 
 	//총 게시글 갯수 출력
 	@Select("select count(*) from notice")
 	int selectContentCnt();
 
-	@Update("update notice set title=#{title}, content=#{content}, reg_date=#{regDate}, type=#{type}")
 	void modifyNotice(Notice notice);
+	
+	@Update("update notice set is_del = 1 where notice_idx = #{noticeIdx}")	
+	void deleteNotice(Integer noticeIdx);
 
-	@Update("update notice set is_del = 1 where notice_idx = #{noticeIdx.noticeIdx}")	
-	void deleteNotice(@Param("noticeIdx")int noticeIdx);
 
 
 	

@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.exchange.model.service.ExchangeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MarketController {
 	
 	private final CardService cardService;
+	private final ExchangeService exchangeService;
 	
 	@GetMapping("cardmarket")
 	public void exchangeCard() {}
@@ -75,13 +77,38 @@ public class MarketController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@PostMapping("category")
     @ResponseBody
-    public String search(@RequestBody SearchCard searchCard, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
+    public String searchCardList(@RequestBody SearchCard searchCard, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
         
 		log.info("sting={}" ,searchCard);
 		
         List<Card> allCard = cardService.selectCardTrim(searchCard);
         
+        for (Card card : allCard) {
+			card.setMemberRate(exchangeService.selectMyRate(card.getCardIdx()));
+		}
+        
         String json = new Gson().toJson(allCard);
+        log.info("json={}" ,json);
+        
+        return json;
+    }
+	
+	@CrossOrigin("*")
+	@ResponseStatus(code = HttpStatus.OK)
+	@PostMapping("card")
+    @ResponseBody
+    public String searchCard(@RequestBody Card card, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
+        
+		log.info("sting={}" ,card);
+		
+        Card searchCard = cardService.selectCardWithCardIdx(card.getCardIdx());
+        
+        Date regDt = searchCard.getRegDate();
+        SimpleDateFormat dt = new SimpleDateFormat("MM.dd");
+        String dateFormat = dt.format(regDt);
+        searchCard.setDateParse(dateFormat);
+        
+        String json = new Gson().toJson(searchCard);
         log.info("json={}" ,json);
         
         return json;
