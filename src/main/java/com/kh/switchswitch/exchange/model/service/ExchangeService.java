@@ -38,6 +38,8 @@ public interface ExchangeService {
 
 	List<Map<String,Object>> selectExchangeHistoryByMemIdx(Integer memberIdx);
 
+	void requestFreeSharing(Integer memberIdx, Integer cardIdx);
+
 
 	
 	
