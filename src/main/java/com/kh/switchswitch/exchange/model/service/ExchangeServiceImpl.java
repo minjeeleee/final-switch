@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
+import com.kh.switchswitch.card.model.repository.FreeRequestListRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
@@ -35,6 +37,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	private final ExchangeRepository exchangeRepository;
 	private final MemberRepository memberRepository;
 	private final CardRequestListRepository cardRequestListRepository;
+	private final FreeRequestListRepository freerequestListRepository;
 
 	public List<Card> selecAvailableMyCardList(int certifiedMemberIdx) {
 		return cardRepository.selectCardListIsDelAndStatus(certifiedMemberIdx);
@@ -217,6 +220,25 @@ public class ExchangeServiceImpl implements ExchangeService{
 			requestCardNameList.add(cardNames);
 		}
 		return requestCardNameList;
+	}
+
+	public void requestFreeSharing(Integer memberIdx, Integer cardIdx) {
+		FreeRequestList freeRequest = new FreeRequestList();
+		freeRequest.setRequestedCard(cardIdx);
+		freeRequest.setRequestMemIdx(memberIdx);
+		freeRequest.setRequestedMemIdx(cardRepository.selectMemberIdxByCardIdx(cardIdx));
+		freerequestListRepository.insertFreeRequestList(freeRequest);
+		
+	}
+
+	
+	public void rejectFreeSharing(Integer freqIdx) {
+		freerequestListRepository.deleteFreeRequestList(freqIdx);
+	}
+
+	@Override
+	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
+		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
 	}
 
 }
