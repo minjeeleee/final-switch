@@ -84,15 +84,5 @@
 
 	<context:component-scan base-package="com.kh.switchswitch" />
 	
-	<!-- websocket handler -->
-	<beans:bean id="replyEchoHandler" class="com.kh.switchswitch.common.socket.handler.ReplyEchoHandler"/>
-	<websocket:handlers>
-		<websocket:mapping handler="replyEchoHandler" path="/replayEcho"/>
-		<websocket:handshake-interceptors>
-			<beans:bean
-				class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"></beans:bean>
-		</websocket:handshake-interceptors>
-	</websocket:handlers>
-	
 	
 </beans:beans>
