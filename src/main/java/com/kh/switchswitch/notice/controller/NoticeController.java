@@ -46,9 +46,31 @@ public class NoticeController {
 			return "notice/notice-list";
 	}
 	  @GetMapping("notice-detail")
-	public void boardDetail(int noticeIdx, Model model) {
+	public void noticeDetail(int noticeIdx, Model model) {
 		Map<String,Object> commandMap = noticeService.selectNoticeByIdx(noticeIdx);
 		model.addAttribute("datas", commandMap);
 	}
-	
+		@GetMapping("notice-modify")
+		public void noticeModify(Notice notice,Model model, int noticeIdx,@AuthenticationPrincipal MemberAccount member) {
+			Map<String,Object> commandMap = noticeService.selectNoticeByIdx(noticeIdx);
+			notice.setUserId(member.getCode());
+			model.addAttribute("datas", commandMap);
+		}
+		
+
+		@PostMapping("modify")
+		public String modifyNotice(Notice notice, int noticeIdx,@AuthenticationPrincipal MemberAccount member) {
+			notice.setUserId(member.getCode());
+			notice.setNoticeIdx(noticeIdx);
+			noticeService.modifyNotice(notice);
+			return "redirect:/notice/notice-detail?noticeIdx="+notice.getNoticeIdx();
+		}
+
+		@PostMapping("delete")
+		public String deleteNotice(int noticeIdx) {
+			noticeService.deleteNotice(noticeIdx);
+			return "redirect:/";
+		}
+
+		
 }

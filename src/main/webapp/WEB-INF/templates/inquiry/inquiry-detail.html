@@ -24,19 +24,26 @@
 
 
 	<section>
-		<div class="container">
+		<div class="container" >
 
-			<div class='section'>
+			<div class='section' th:object="${datas}">
 				<div class='section_wrap'>
 					<div class="section_top">
 						<h2>문의하기 상세페이지</h2>
 					</div>
-
-
+					<form class='frm_post'
+						th:action="|/inquiry/delete?${_csrf.parameterName}=${_csrf.token}&inquiryIdx=${datas.inquiry.inquiryIdx}|"
+						method="post" enctype="multipart/form-data">
+						<div class='btn_area'>
+							<a class="btn"
+								th:href="@{/inquiry/inquiry-modify(inquiryIdx=${datas.inquiry.inquiryIdx})}">수정</a>
+							<button id="btnDelete" class="btn">삭제</button>
+							<a class="btn" th:href="@{/inquiry/inquiry-list}">목록</a>
+						</div>
+					</form>
 					<div class="section_content_box"  th:object="${datas}">
 						<div class="section_header">
 							<div class="section_title">
-							<div>${inquiry.type}</div>
 								<span th:text="|제목 : *{inquiry.title}|"></span>
 							</div>
 							<div class="writer_profile">
@@ -44,7 +51,6 @@
 									<span th:text="|작성자 : *{inquiry.userId}|"></span>
 							</div>
 						</div>
-						
 						<div class="content_area" id=editor1>
 							<pre>[[*{inquiry.content}]]</pre>
 						</div>
@@ -68,14 +74,9 @@
 										<button class="cmt_write_btn">등록</button>
 									</div>
 								</form>
-
-						<div class='btn_area'>
-							<a class="btn" href="/inquiry/modify-inquiry?inquiry_idx=${datas.inquiry.inquiryIdx }">수정</a>
-							<a class="btn" href="/inquiry/delete-inquiry?inquiry_idx=${datas.inquiry.inquiryIdx }">삭제</a>
-						</div>
-						
 					</div>
 				</div>
+				
 			</div>
 		</div>
 	</section>
