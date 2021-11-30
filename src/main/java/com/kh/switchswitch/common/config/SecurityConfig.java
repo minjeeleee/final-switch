@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 
+import com.kh.switchswitch.common.security.CustomSuccessHandler;
 import com.kh.switchswitch.member.model.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private final DataSource dataSource;
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
+	private final CustomSuccessHandler customSuccessHandler;
 	
 	@Bean
 	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
@@ -61,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.loginProcessingUrl("/member/login")
 			.usernameParameter("memberEmail")
 			.loginPage("/member/login")
-			.defaultSuccessUrl("/");
+			.successHandler(customSuccessHandler);
 		
 		http.logout()
 		.logoutUrl("/member/logout")

@@ -7,7 +7,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 
 public interface AlarmService {
 	
-	List<Alarm> selectAlarmList(String receiverIdx);
+	List<Alarm> selectAlarmList(Integer receiverIdx);
 	
 	void insertAndUpdateAlarmList(List<Alarm> alarmList);
 

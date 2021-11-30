@@ -13,7 +13,7 @@ import com.kh.switchswitch.alarm.model.dto.Alarm;
 public interface AlarmRepository {
 
 	@Select("select * from alarm where receiver_idx=#{receiverIdx} order by is_read desc, alarm_idx desc")
-	List<Alarm> selectAlarmList(String receiverIdx);
+	List<Alarm> selectAlarmList(Integer receiverIdx);
 
 	@Insert("insert into alarm values(sc_alarm_idx.nextval, #{senderIdx}, #{receiverIdx}, #{alarmType}, 0, #{reqIdx})")
 	void insertAlarm(Alarm alarm);

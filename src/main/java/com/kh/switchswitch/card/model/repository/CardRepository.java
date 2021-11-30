@@ -50,8 +50,6 @@ public interface CardRepository {
 	
 	@Select("select * from card where category=#{category}")
 	List<Card> searchCategoryCard(String category);
-
-	void updateCard(Card card);
 	
 	@Select("select * from card_request_list where REQUESTED_MEM_IDX=#{memberIdx} or REQUEST_MEM_IDX=#{memberIdx}")
 	List<CardRequestList> selectCardRequestListByMemIdx(Integer memberIdx);

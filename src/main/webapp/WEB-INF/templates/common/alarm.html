@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header">
+<body>
+여긴 된다!!
+	<script type="text/javascript" th:inline="javascript">
+		
+		let alarmType = '[(${alarmType})]';
+		let requestedMemIdx = '[(${cardRequestList.requestedMemIdx})]';
+		let reqIdx = '[(${cardRequestList.reqIdx})]';
+		let url = '[(${url})]';
+		
+		sock.onopen = function(){
+			if(alarmType) {
+				let message = alarmType+ ','
+							+ '' + ',' 
+							+ requestedMemIdx + ',' 
+							+ reqIdx;
+				//알람타입orisRead, alarmIDX, 수신자IDX, 요청IDX
+				sock.send(message);
+				location.href = url;
+			}
+		};
+		
+		
+	</script>
+</body>
+</html>

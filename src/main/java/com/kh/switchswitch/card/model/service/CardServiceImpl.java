@@ -71,7 +71,7 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public void updateCardWithCardIdx(Card card) {
-		cardRepository.updateCard(card);
+		cardRepository.modifyCard(card);
 	}
 	
 	public void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status) {
@@ -79,7 +79,7 @@ public class CardServiceImpl implements CardService {
 			Card card = new Card();
 			card.setCardIdx(cardIdx);
 			card.setExchangeStatus(status);
-			cardRepository.updateCard(card);
+			cardRepository.modifyCard(card);
 		}
 	}
 
@@ -140,7 +140,7 @@ public class CardServiceImpl implements CardService {
 		Card card = new Card();
 		card.setCardIdx(previousCardIdx);
 		card.setExchangeStatus(status);
-		cardRepository.updateCard(card);
+		cardRepository.modifyCard(card);
 	}
 
 	public List<Card> searchCategoryCard(String category) {

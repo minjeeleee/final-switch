@@ -331,6 +331,12 @@
 		    <version>1.1</version>
 		    <scope>provided</scope>
 		</dependency>
+		<!-- stomp -->
+		<dependency>
+		    <groupId>org.springframework.integration</groupId>
+		    <artifactId>spring-integration-stomp</artifactId>
+		    <version>5.3.2.RELEASE</version>
+		</dependency> 
 		  
 	</dependencies>
     <build>

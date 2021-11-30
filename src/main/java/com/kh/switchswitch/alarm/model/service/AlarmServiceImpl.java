@@ -16,7 +16,7 @@ public class AlarmServiceImpl implements AlarmService {
 	
 	private final AlarmRepository alarmRepository;
 	
-	public List<Alarm> selectAlarmList(String receiverIdx) {
+	public List<Alarm> selectAlarmList(Integer receiverIdx) {
 		return alarmRepository.selectAlarmList(receiverIdx);
 	}
 
