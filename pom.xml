@@ -19,6 +19,10 @@
 			<id>ojdbc6-repo</id>
 			<url>http://www.datanucleus.org/downloads/maven2/</url>
 		</repository>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 	
 	<dependencies>
@@ -337,8 +341,15 @@
 		    <artifactId>spring-integration-stomp</artifactId>
 		    <version>5.3.2.RELEASE</version>
 		</dependency> 
-		  
+		<!-- iamport -->
+		<dependency>
+		    <groupId>com.github.iamport</groupId>
+		    <artifactId>iamport-rest-client-java</artifactId>
+		    <version>0.2.17</version>
+		</dependency>  
 	</dependencies>
+	
+	
     <build>
         <plugins>
             <plugin>
