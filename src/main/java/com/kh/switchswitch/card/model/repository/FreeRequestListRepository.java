@@ -10,7 +10,7 @@ import com.kh.switchswitch.card.model.dto.FreeRequestList;
 @Mapper
 public interface FreeRequestListRepository {
 
-	@Insert("insert into free_request_list values(sc_req_idx.nextval,#{requestedCard},#{requestedMemIdx},#{requestMemIdx})")
+	@Insert("insert into free_request_list values(sc_freq_idx.nextval,#{requestedCard},#{requestedMemIdx},#{requestMemIdx})")
 	void insertFreeRequestList(FreeRequestList freeRequest);
 
 	@Delete("delete from free_request_list where freq_idx=#{freqIdx}")
