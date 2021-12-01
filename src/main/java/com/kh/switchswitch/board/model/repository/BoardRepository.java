@@ -55,6 +55,10 @@ public interface BoardRepository {
 	@Insert("insert into file_info(fl_idx,origin_file_name, rename_file_name, save_path,bd_idx)"
 			+ " values(sc_file_idx.nextval, #{fileUpload.originFileName},#{fileUpload.renameFileName},#{fileUpload.savePath}, #{bdIdx})")
 	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("bdIdx")Integer bdIdx);
+	
+	@Select("select * from (select rownum rnum, BD_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL from community) community"
+			+ " where rnum between #{startBoard} and #{lastBoard}")
+	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
 
 

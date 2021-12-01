@@ -3,7 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header :: header">
 <body>
-여긴 된다!!
+알림 거쳐가는 페이지~~~~~
 	<script type="text/javascript" th:inline="javascript">
 		
 		let alarmType = '[(${alarmType})]';
@@ -19,7 +19,12 @@
 							+ reqIdx;
 				//알람타입orisRead, alarmIDX, 수신자IDX, 요청IDX
 				sock.send(message);
-				location.href = url;
+				if(url){
+					location.href = url;
+				} else {
+					history.back();
+				}
+				
 			}
 		};
 		
