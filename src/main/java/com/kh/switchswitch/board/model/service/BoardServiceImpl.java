@@ -46,10 +46,10 @@ public class BoardServiceImpl implements BoardService{
 
 	//11/23 리스트받아오기
 	public Map<String, Object> selectBoardList(int page) {
-		int cntPerPage = 5;
+		int cntPerPage = 10;
 		Paging pageUtil = Paging.builder()
 				.url("/board/board-list")
-				.total(10)
+				.total(boardRepository.selectContentCnt())
 				.curPage(page)
 				.blockCnt(10)
 				.cntPerPage(cntPerPage)
@@ -57,7 +57,7 @@ public class BoardServiceImpl implements BoardService{
 
 		Map<String,Object> commandMap = new HashMap<String,Object>();
 		commandMap.put("paging", pageUtil);
-		commandMap.put("boardList", boardRepository.selectBoardList(pageUtil));
+		commandMap.put("boardList", boardRepository.selectBoardListWithPageNo(Map.of("startBoard",(page-1)*cntPerPage+1,"lastBoard",(page-1)*cntPerPage+cntPerPage)));
 		return commandMap;
 	}
 	

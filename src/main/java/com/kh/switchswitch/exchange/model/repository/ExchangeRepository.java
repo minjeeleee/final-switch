@@ -17,7 +17,7 @@ import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 @Mapper
 public interface ExchangeRepository {
 
-	@Insert("insert into exchange_status values(sc_e_idx.nextval, #{requestMemIdx}, #{requestedMemIdx}, 'ONGOING', #{propBalance}, #{reqIdx})" )
+	@Insert("insert into exchange_status values(sc_e_idx.nextval, #{requestMemIdx}, #{requestedMemIdx}, 'ONGOING', #{propBalance}, #{reqIdx}, #{freqIdx})" )
 	void insertExchangeStatus(ExchangeStatus exchangeStatus);
 
 
@@ -30,14 +30,29 @@ public interface ExchangeRepository {
 	@Select("select * from exchange_status where (request_mem_idx=#{memberIdx} or requested_mem_idx =#{memberIdx}) and type='ONGOING'")
 	List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx);
 
+	//교환요청 삭제용
 	@Delete("delete from exchange_status where req_idx=#{reqIdx}")
 	void deleteExchangeStatusWithReqIdx(Integer reqIdx);
+	
+	//나눔요청 삭제용
+	@Delete("delete from exchange_status where freq_idx=#{freqIdx}")
+	void deleteExchangeStatusWithFreqIdx(Integer freqIdx);
 
+	//교환요청 업데이트용
 	@Update("update exchange_status set type=#{type} where req_idx=#{reqIdx} ")
 	void updateExchangeStatus(ExchangeStatus exchangeStatus);
 
+	//나눔요청 상태 업데이트용
+	@Update("update exchange_status set type=#{type} where freq_idx=#{freqIdx} ")
+	void updateExchangeStatusWithFreqIDx(ExchangeStatus exchangeStatus);
+
+	//교환요청 리스트 검색
 	@Select("select * from exchange_satus where req_idx=#{reqIdx}")
 	ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx);
+	
+	//나눔요청 리스트 검색
+	@Select("select * from exchange_satus where freq_idx=#{freqIdx}")
+	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 	
 	@Insert("insert into exchange_history values(sc_eh_idx.nextval, #{eIdx}, sysdate, #{requestedMemIdx}, #{requestMemIdx})")
 	void insertExchangeHistory(ExchangeHistory exchangeHistory);

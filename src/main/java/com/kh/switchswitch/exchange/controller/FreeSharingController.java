@@ -62,7 +62,7 @@ public class FreeSharingController {
 		//freeRequestList에서 삭제
 		exchangeService.rejectFreeSharing(freqIdx);
 		//exchangeStatus에서 삭제
-		cardService.deleteExchangeStatus(freqIdx);
+		cardService.deleteExchangeStatusWithFreqIdx(freqIdx);
 		
 		return "redirect:/";
 	}
@@ -75,9 +75,9 @@ public class FreeSharingController {
 		//카드 상태 Done으로 업데이트
 		cardService.updateCardWithStatus(freeRequest.getRequestedCard(), "DONE");
 		//exchangeStatus type Done
-		cardService.updateExchangeStatus(freeRequest.getFreqIdx(), "DONE");
+		cardService.updateExchangeStatusWithFreqIDx(freeRequest.getFreqIdx(), "DONE");
 		//exchangeHistory에 추가
-		exchangeService.insertExchangeHistory(cardService.selectExchangeStatusWithReqIdx(freqIdx));
+		exchangeService.insertExchangeHistory(cardService.selectExchangeStatusWithFreqIdx(freqIdx));
 		//완료 알림
 		
 	

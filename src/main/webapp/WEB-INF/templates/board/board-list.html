@@ -157,19 +157,6 @@
 	    </li>
 	  </ul>
 	</nav>
-
-	<div class="paging" th:object=${paging} >
-		<a th:href="*{url}"> <i class="fas fa-angle-double-left"></i> </a>
-		<a th:href="|*{url}?page=*{prev}|"> <i class="fas fa-angle-left"></i></a> 
-		
-		<a th:each = "p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}"
-		   th:href="|*{url}?page=${p}|">
-			<span th:text="${p}"></span>
-		</a>
-		
-		<a th:href="|*{url}?page=*{next}|"> <i class="fas fa-angle-right"></i> </a>
-		<a th:href="|*{url}?page=*{lastPage}|"> <i class="fas fa-angle-double-right"></i> </a>
-	</div> 
 					
 				</div>
 					
