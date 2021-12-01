@@ -22,6 +22,7 @@
 		background-image: url("../resources/img/상단탑배경.png");
 		color: white;
 	}
+	.inipay_modal.fade:not(.show) { opacity: 1 !important; }
 	
 	</style>
 	
@@ -324,7 +325,7 @@
     <script src="../resources/js/sb-admin-2.min.js"></script>
 
 	<script type="text/javascript" th:inline="javascript">
-    IMP.init("TC0ONETIME");
+    IMP.init("imp08222808");
 	
     function requestPay() {
     	console.dir("여기는 함수 실행!!!!!!!!!!!!! 추워!!!!!!!!!!!!");
@@ -335,9 +336,9 @@
             merchant_uid: 'merchant_' + new Date().getTime() + "_" + (1 + Math.random()) * 10000,
             name: "포인트 충전",
             amount: $("#point").val(),
-            buyer_email: "${#authentication.name}",
-            buyer_name: "${#authentication.principal.memberName}",
-            buyer_tel: "${#authentication.principal.memberTell}"
+            buyer_email: [[${#authentication.name}]],
+            buyer_name: [[${#authentication.principal.memberName}]],
+            buyer_tel: [[${#authentication.principal.memberTell}]]
         }, function (rsp) { // callback
         	console.dir("여기는 callback");
         	console.dir(rsp);
