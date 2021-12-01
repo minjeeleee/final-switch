@@ -1,6 +1,7 @@
 package com.kh.switchswitch.exchange.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -29,8 +30,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.SearchCard;
+import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.member.model.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +47,8 @@ public class MarketController {
 	
 	private final CardService cardService;
 	private final ExchangeService exchangeService;
+	private final MemberService memberService;
+	private final CardRepository cardRepository;
 	
 	@GetMapping("cardmarket")
 	public void exchangeCard() {}
@@ -58,12 +64,15 @@ public class MarketController {
 		response.addHeader("Access-Control-Allow-Origin","*");
 		
 		List<Card> allCard = cardService.selectAllCard();
+		List imgUrl = new ArrayList();
 		
 		for (Card content : allCard) {
-            Date regDt = content.getRegDate();
-            SimpleDateFormat dt = new SimpleDateFormat("MM.dd");
-            String dateFormat = dt.format(regDt);
-            content.setDateParse(dateFormat);
+			content.setMemberRate(exchangeService.selectMyRate(content.getCardIdx()));
+			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(content.getCardIdx());
+		    for (FileDTO img : cardImgs) {
+		    	imgUrl.add(img.getDownloadURL());
+			}
+		    content.setImgUrl(imgUrl);
         }
 		
 		String json = new Gson().toJson(allCard);
@@ -82,9 +91,15 @@ public class MarketController {
 		log.info("sting={}" ,searchCard);
 		
         List<Card> allCard = cardService.selectCardTrim(searchCard);
+        List imgUrl = new ArrayList();
         
         for (Card card : allCard) {
 			card.setMemberRate(exchangeService.selectMyRate(card.getCardIdx()));
+			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(card.getCardIdx());
+		    for (FileDTO img : cardImgs) {
+		    	imgUrl.add(img.getDownloadURL());
+			}
+		    card.setImgUrl(imgUrl);
 		}
         
         String json = new Gson().toJson(allCard);
@@ -102,6 +117,16 @@ public class MarketController {
 		log.info("sting={}" ,card);
 		
         Card searchCard = cardService.selectCardWithCardIdx(card.getCardIdx());
+        
+        List imgUrl = new ArrayList();
+        List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(searchCard.getCardIdx());
+	    for (FileDTO img : cardImgs) {
+	    	imgUrl.add(img.getDownloadURL());
+		}
+	    searchCard.setImgUrl(imgUrl);
+        
+        String memberNick = memberService.selectMemberNickWithMemberIdx(searchCard.getMemberIdx());
+        searchCard.setMemberNick(memberNick);
         
         Date regDt = searchCard.getRegDate();
         SimpleDateFormat dt = new SimpleDateFormat("MM.dd");

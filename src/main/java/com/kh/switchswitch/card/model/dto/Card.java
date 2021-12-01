@@ -1,6 +1,9 @@
 package com.kh.switchswitch.card.model.dto;
 
 import java.sql.Date;
+import java.util.List;
+
+import com.kh.switchswitch.common.util.FileDTO;
 
 import lombok.Data;
 
@@ -25,4 +28,6 @@ public class Card {
 	private String hopeKind;
 	private String dateParse;
 	private float memberRate;
+	private String memberNick;
+	private List imgUrl;
 }
