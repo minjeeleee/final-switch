@@ -228,7 +228,6 @@ public class ExchangeServiceImpl implements ExchangeService{
 		freeRequest.setRequestMemIdx(memberIdx);
 		freeRequest.setRequestedMemIdx(cardRepository.selectMemberIdxByCardIdx(cardIdx));
 		freerequestListRepository.insertFreeRequestList(freeRequest);
-		
 	}
 
 	
@@ -236,7 +235,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 		freerequestListRepository.deleteFreeRequestList(freqIdx);
 	}
 
-	@Override
+	
 	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
 		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
 	}

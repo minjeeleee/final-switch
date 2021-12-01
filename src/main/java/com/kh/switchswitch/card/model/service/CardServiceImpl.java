@@ -117,6 +117,11 @@ public class CardServiceImpl implements CardService {
 	public void deleteExchangeStatus(Integer reqIdx) {
 		exchangeRepository.deleteExchangeStatusWithReqIdx(reqIdx);
 	}
+	
+	public void deleteExchangeStatusWithFreqIdx(Integer freqIdx) {
+		exchangeRepository.deleteExchangeStatusWithFreqIdx(freqIdx);
+	}
+
 
 	public void updateExchangeStatus(Integer reqIdx, String type) {
 		ExchangeStatus exchangeStatus = new ExchangeStatus();
@@ -124,9 +129,21 @@ public class CardServiceImpl implements CardService {
 		exchangeStatus.setType(type);
 		exchangeRepository.updateExchangeStatus(exchangeStatus);
 	}
+	
+	public void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type) {
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		exchangeStatus.setFreqIdx(freqIdx);
+		exchangeStatus.setType(type);
+		exchangeRepository.updateExchangeStatus(exchangeStatus);
+	}
+
 
 	public ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx) {
 		return exchangeRepository.selectExchangeStatusWithReqIdx(reqIdx);
+	}
+	
+	public ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx) {
+		return exchangeRepository.selectExchangeStatusWithFreqIdx(freqIdx);
 	}
 
 	public List<Card> selectCardList(Set<Integer> cardIdxSet) {
@@ -260,7 +277,7 @@ public class CardServiceImpl implements CardService {
 	
 	public void insertExchangeStatusByFreeRequesetList(FreeRequestList freeRequest) {
 		ExchangeStatus exchangeStatus = new ExchangeStatus();
-		exchangeStatus.setReqIdx(freeRequest.getFreqIdx());
+		exchangeStatus.setFreqIdx(freeRequest.getFreqIdx());
 		exchangeStatus.setRequestedMemIdx(freeRequest.getRequestedMemIdx());
 		exchangeStatus.setRequestMemIdx(freeRequest.getRequestMemIdx());
 		exchangeRepository.insertExchangeStatus(exchangeStatus);

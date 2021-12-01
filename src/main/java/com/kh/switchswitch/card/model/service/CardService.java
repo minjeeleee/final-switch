@@ -71,4 +71,10 @@ public interface CardService {
 	Map<String, Object> selectModifyCard(Integer cardIdx);
 
 	void insertExchangeStatusByFreeRequesetList(FreeRequestList freeRequest);
+	
+	void deleteExchangeStatusWithFreqIdx(Integer freqIdx);
+	
+	void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type);
+	
+	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 }
