@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.lang.Nullable;
 
 import com.kh.switchswitch.admin.model.dto.Code;
 import com.kh.switchswitch.admin.model.dto.Menu;
@@ -20,6 +21,9 @@ public interface AdminRepository {
 	
 	@Select("select * from card where is_del = 0")
 	List<Card> selectCards();
+	
+	//@Select("select * from card where is_del = 0")
+	List<Card> selectCardsDetail(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Nullable@Param("searchKeyword")String searchKeyword);
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectCardImgListByCardIdx(Integer cardIdx);

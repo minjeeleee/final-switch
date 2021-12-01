@@ -67,9 +67,11 @@ public class AdminController {
 	}
 	
 	@GetMapping("all-cards")
-	public void allCards(Model model) {
+	public void allCards(Model model, @Nullable@RequestParam(name = "searchPeriod") String searchPeriod,
+									  @Nullable@RequestParam(name = "searchType") String searchType,
+									  @Nullable@RequestParam(name = "searchKeyword") String searchKeyword) {
 		List<Map<String,Object>> cardList = new ArrayList<>();
-		List<Card> memberCardList = adminService.selectCardList();
+		List<Card> memberCardList = adminService.selectCardListDetail(searchPeriod,searchType,searchKeyword);
 		if(cardList != null) {
 			for (Card card : memberCardList) {
 				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());

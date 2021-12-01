@@ -37,6 +37,11 @@ public class AdminService {
 		return cardList;
 	}
 	
+	public List<Card> selectCardListDetail(String searchPeriod, String searchType, String searchKeyword) {
+		List<Card> cardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword);
+		return cardList;
+	}
+	
 	public List<FileDTO> selectImgFileListByCardIdx(Integer cardIdx) {
 		List<FileDTO> fileDTOList = adminRepository.selectFileInfoByCardIdx(cardIdx);
 		return fileDTOList;
