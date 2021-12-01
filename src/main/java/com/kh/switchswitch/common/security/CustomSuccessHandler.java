@@ -19,7 +19,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 		
 		System.out.println("로그인 성공!!!");
 		
-		System.out.println(request.getSession().getAttributeNames().toString());
+		response.sendRedirect("/");
 	}
-
+	
 }

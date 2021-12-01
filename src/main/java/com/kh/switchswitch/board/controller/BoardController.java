@@ -1,10 +1,15 @@
 package com.kh.switchswitch.board.controller;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.service.BoardService;
+import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
@@ -82,7 +88,23 @@ public class BoardController {
 		boardService.deleteBoard(bdIdx);
 		return "redirect:/";
 	}
-
+	
+	@GetMapping("download")
+	public ResponseEntity<FileSystemResource> downloadFile(FileDTO file) {
+		 HttpHeaders headers  = new HttpHeaders();
+		 headers.setContentDisposition(ContentDisposition
+				 .builder("attachment")
+				 .filename(file.getOriginFileName(), Charset.forName("utf-8"))
+				 .build());
+		
+		 FileSystemResource resource 
+			= new FileSystemResource(file.getSavePath() + file.getRenameFileName());
+		  
+		 return  ResponseEntity				
+				 .ok()
+				 .headers(headers)
+				 .body(resource);
+	}
 	
 
 

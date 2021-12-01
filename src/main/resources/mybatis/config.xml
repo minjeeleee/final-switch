@@ -18,5 +18,6 @@
 	  	<mapper resource="mybatis/mapper/cardRequestListRepositoryMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/boardMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/adminMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/noticeMapper.xml"/>
 	</mappers>
   </configuration>

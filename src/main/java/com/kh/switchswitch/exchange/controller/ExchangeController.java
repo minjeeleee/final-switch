@@ -1,11 +1,9 @@
 package com.kh.switchswitch.exchange.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,12 +107,16 @@ public class ExchangeController {
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
 		Integer offerPointInt = Integer.parseInt(offerPoint);
 		cardRequestList.setPropBalance(offerPointInt);
-		exchangeService.requestExchange(cardRequestList, cardIdxList.length);
+		CardRequestList crl = exchangeService.requestExchange(cardRequestList, cardIdxList.length);
 		
 		//포인트 holding ?? 후 가용 포인트
 		pointService.updateSavePointWithAvailableBal(availableBal - offerPointInt, certifiedMember.getMemberIdx());
 		
-		return "redirect:/";
+		model.addAttribute("alarmType", "교환요청");
+		model.addAttribute("cardRequestList",crl);
+		model.addAttribute("url","/");
+		
+		return "/common/alarm";
 	}
 	
 	@GetMapping("detail")

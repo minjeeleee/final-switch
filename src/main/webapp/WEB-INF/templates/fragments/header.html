@@ -22,4 +22,14 @@
     <link rel="icon" type="../resources/img/x-icon" href="../resources/img/favicon.ico">
 
     <title>SwitchSwitch</title>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+		let sock = new SockJS('http://localhost:9090/alarm');
+		sock.onmessage = function(msg){
+			var data = msg.data;
+			console.dir(data);
+		};
+	</script>
 </head>

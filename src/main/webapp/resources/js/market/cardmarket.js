@@ -1,324 +1,429 @@
-	/* 비동기 통신시 header는 headerObj를 가져와서 사용하고 추가로 header를 지정해야할 때도 여기에 추가해서 사용 */
-    let getCsrfHeader = () =>{
-        let headerObj = new Headers();
-        let csrfHeader = "[(${_csrf.headerName})]";
-        let csrfToken = "[(${_csrf.token})]";
-        headerObj.append(csrfHeader,csrfToken);
-        return headerObj;
+var token = "bd5667d9-4a6f-41c9-b7ba-67ad50ff8479"
+var header = "X-CSRF-TOKEN"
+
+function slickControll() {
+    $('.detail-img').slick({
+        autoplay: true,
+        infinite: true,
+        dots: false,
+        arrows: false,
+    });
+}
+
+function createCard(value,productStar,cardShape ,icon ,createMemberStar) {
+    var result = '';
+
+    result += '<div class="card-container" id='+value.cardIdx+'>'
+    result += '<input type="hidden" id="cardIdx" name="cardIdx" value="' +
+        value.cardIdx + '">'
+    result += '<div class="card-name" id='+value.cardIdx+'>'
+    result += '<p id='+value.cardIdx+'>' + value.name + '</p>'
+    result += '</div>'
+    result += '<div class="grade-container" id='+value.cardIdx+'>'
+    result += '<div class="icon" id='+value.cardIdx+'>'
+    result += '<i class="'+icon+'" id='+value.cardIdx+'></i>'
+    result += '</div>'
+    result += '<div class="user-grade" id='+value.cardIdx+'>'
+    result += '<p id='+value.cardIdx+'>사용자 평점</p>'
+    result += '<div class="star" id='+value.cardIdx+'>'
+    result += createMemberStar
+    result += '</div>'
+    result += '</div>'
+    result += '<div class="item-grade" id='+value.cardIdx+'>'
+    result += '<p id='+value.cardIdx+'>물건 평점</p>'
+    result += '<div class="star" id='+value.cardIdx+'>'
+    result += productStar
+    result += '</div>'
+    result += '</div>'
+    result += '</div>'
+    result += '<div class="address" id='+value.cardIdx+'>'
+    result += '<p id='+value.cardIdx+'>지역 <span id='+value.cardIdx+'>' + value.region + '</span><span id='+value.cardIdx+'> ' + value
+        .regionDetail + '</span></p>'
+    result += '</div>'
+    result += '<div class="card" id='+value.cardIdx+'>'
+    result += '<img src="'+cardShape+'" alt="" id='+value.cardIdx+'>'
+    result += '<div class="card-img" id='+value.cardIdx+'>'
+    result += '<img src="../resources/img/iphone.png" alt="" id='+value.cardIdx+'>'
+    result += '</div>'
+    result += '</div>'
+    result += '</div>'
+
+    return result
+}
+
+function createPopup(value,productStar,memberStar) {
+    let result = ''
+
+    result += '<div class="detail-img">'
+    result += '<div class="imgs"><img src="../resources/img/iphone.png" alt=""></div>'
+    result += '<div class="imgs"><img src="../resources/img/iphone.png" alt=""></div>'
+    result += '<div class="imgs"><img src="../resources/img/iphone.png" alt=""></div>'
+    result += '</div>'
+    result += '<div class="detail-info">'
+    result += '<div class="profile">'
+    result += '<div class="profile-img">'
+    result += '<div class="inner-img">'
+    result += '<img src="/image/default-user.png" alt="">'
+    result += '</div>'
+    result += '</div>'
+    result += '<div class="profile-name">'
+    result += '<p>' + value.name + '</p>'
+    result += '</div>'
+    result += '</div>'
+    result += '<div class="detail-content">'
+    result += '<div class="detail-title">'
+    result += '<h1>' + value.name + '</h1>'
+    result += '</div>'
+    result += '<div class="detail-time">'
+    result += '<p>' + value.dateParse + '</p>'
+    result += '</div>'
+    result += '<div class="post">'
+    result += '<p>' + value.content + '</p>'
+    result += '</div>'
+    result += '<div class="detail-list">'
+    result += '<ul>'
+    result += '<li><span class="list-title">지역:</span> <strong>' + value.region + '</strong> <strong>' + value.regionDetail + '</strong></li>'
+    result += '<li><span class="list-title">배송:</span> ' + value.method + '</li>'
+    result += '<li><span class="list-title">거래방식:</span> ' + value.method + '</li>'
+    result += '<li><span class="list-title">희망물품카테고리:</span> ' + value.hopeKind + '</li>'
+    result += '<li><span class="list-title">물건별점:</span> ' + productStar + '</li>'
+    result += '<li><span class="list-title">사용자별점:</span> ' + memberStar + '</li>'
+    result += '</ul>'
+    result += '</div>'
+    result += '<div class="deail-buttons">'
+    result += '<button class="exchange-button">교환신청</button>'
+    result += '<button class="close-button">닫기</button>'
+    result += '</div>'
+    result += '</div>'
+    result += '</div>'
+
+    return result
+}
+
+function createStar(value) {
+
+    let productStar = '';
+    for (let index = 0; index < value.condition; index++) {
+        productStar += '<i class="fas fa-star" id='+value.cardIdx+'></i>'
     }
-   	
-        $('.detail-img').slick({
-            autoplay:true,
-            infinite:true,
-            dots:false,
-            arrows: false,
-        });
 
-        window.onload = ()=> {
-            $.ajax({
+    return productStar
+}
 
-                type:'get',
-                url:"http://192.168.219.103:8090/market/getcard",
-                dataType: "json",
-                async:false,
+function createShape(value) {
+    
+    let cardShape = '';
+    switch(value.condition) {
+        case 1: cardShape += '../resources/img/ddongCard.png'
+        break;
+        case 2: cardShape += '../resources/img/BrownCard.png'
+        break;
+        case 3: cardShape += '../resources/img/silverCard.png'
+        break;
+        case 4: cardShape += '../resources/img/goldCard.png'
+        break;
+        case 5: cardShape += '../resources/img/diaCard.png'
+        break;
+    }
 
-                success:(data) => {
+    return cardShape
+}
 
-                    var result = '';
-                    var lastindex = '';
+function createIcon(value) {
+    let icon = ''
+    switch(value.category) {
+        case '전자기기/생활가전': icon += 'fas fa-bolt'
+        break;
+        case '가구/인테리어': icon += 'fas fa-couch'
+        break;
+        case '유아동': icon += 'fal fa-baby'
+        break;
+        case '생활/가공식품': icon += 'fas fa-utensils'
+        break;
+        case '스포츠/레저': icon += 'fas fa-basketball-ball'
+        break;
+        case '패션/잡화': icon += 'fas fa-tshirt'
+        break;
+        case '게임/만화': icon += 'fas fa-gamepad'
+        break;
+        case '뷰티/미용': icon += 'fas fa-air-freshener'
+        break;
+        case '반려 동물 용품': icon += 'fas fa-paw'
+        break;
+        case '도서/티켓/음반': icon += 'fas fa-compact-disc'
+        break;
+        case '기타': icon += 'fas fa-cogs'
+        break;
+    }
 
-                    $.each(data, (index,value) => {
+    return icon
+} 
 
-                    result += '<div class="card-container">'
-                    result += '<input type="hidden" id="cardIdx" name="cardIdx" value="'+value.cardIdx+'">'
-                    result += '<div class="card-name">'
-                    result += '<p>'+value.name+'</p>'
-                    result += '</div>'
-                    result += '<div class="grade-container">'
-                    result += '<div class="icon">'
-                    result += '<i class="fas fa-bolt"></i>'
-                    result += '</div>'
-                    result += '<div class="user-grade">'
-                    result += '<p>사용자 평점</p>'
-                    result += '<div class="star">'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '</div>'
-                    result += '</div>'
-                    result += '<div class="item-grade">'
-                    result += '<p>물건 평점</p>'
-                    result += '<div class="star">'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '<i class="fas fa-star"></i>'
-                    result += '</div>'
-                    result += '</div>'
-                    result += '</div>'
-                    result += '<div class="address">'
-                    result += '<p>지역 <span>'+value.region+'</span><span>'+value.regionDetail+'</span></p>'
-                    result += '</div>'
-                    result += '<div class="card">'
-                    result += '<img src="../resources/img/ddongCard.png" alt="">'
-                    result += '<div class="card-img">'
-                    result += '<img src="../resources/img/iphone.png" alt="">'
-                    result += '</div>'
-                    result += '</div>'
-                    result += '</div>'
-                   
+function createMemberStar(value) {
 
-                    lastindex = index+1;
-                    
-                })
-
-                $('.card-list').append(result);
-                $('.last-card').text(lastindex);
-
-                },
-
-                error:(err) => {
-                    console.log(err)
-                }
-
-                })
-
-                $('.card-container').click(() => {
-                    $('.popup-detail').removeClass('hide')
-                })
-
-                $('.close-button').click(() => {
-                    $('.popup-detail').addClass('hide')
-                })
-
+    let memberStar = '';
+    if(value.memberRate >= 1){
+        for (let index = 0; index < value.memberRate; index++) {
+            memberStar += '<i class="fas fa-star full-star" id='+value.cardIdx+'></i>'
         }
-        
-        $('.searchbox').change(() => {
-        	let category={"category" : $('select[name="category"]').val()
-                      ,"region" : $('select[name="location"]').val()
-                      ,"content" : $('input[name="content"]').val()}
-            console.log(category);
-        	
-        	 if($('select[name="category"]').val() != '') {
-                 $('.sc-category').text($('select[name="category"]').val())
-             } else {
-                 $('.sc-category').text('전체검색')
-             }
+    } else if (value.memberRate%1 != 0) {
+            memberStar += '<i class="fas fa-star-half-alt" id='+value.cardIdx+'></i>'
+    }
+    return memberStar
+}
 
-			 if($('select[name="location"]').val() != '') {
-			     $('.sc-location').removeClass('hide')
-			     $('.sc-location').text($('select[name="location"]').val())
-			 } else {
-			     $('.sc-location').addClass('hide')
-			 }
+$(() =>{
+    $.ajax({
 
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-            console.log(token);
-            console.log(header);
-            
-            $.ajax({
+        type: 'get',
+        url: "/market/getcard",
+        dataType: "json",
+        async: false,
 
-                type: 'post',
-                url: "http://192.168.219.103:8090/market/category",
-                dataType: "json",
-                async: false,
-                data:  JSON.stringify(category),
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header,token);
-                },
-                contentType: 'application/json',
+        success: (data) => {
 
-                success: (data) => {
-                	$(".card-list").empty();
-                	
-                    var result = '';
-                    var lastindex = '';
+            var result = '';
+            var lastindex = '';
 
-                    $.each(data, (index, value) => {
+            $.each(data, (index, value) => {
+                
+                let productStar = createStar(value);
 
-                        result += '<div class="card-container">'
-                        result +=
-                            '<input type="hidden" id="cardIdx" name="cardIdx" value="' +
-                            value.cardIdx + '">'
-                        result += '<div class="card-name">'
-                        result += '<p>' + value.name + '</p>'
-                        result += '</div>'
-                        result += '<div class="grade-container">'
-                        result += '<div class="icon">'
-                        result += '<i class="fas fa-bolt"></i>'
-                        result += '</div>'
-                        result += '<div class="user-grade">'
-                        result += '<p>사용자 평점</p>'
-                        result += '<div class="star">'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '<div class="item-grade">'
-                        result += '<p>물건 평점</p>'
-                        result += '<div class="star">'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '<div class="address">'
-                        result += '<p>지역 <span>' + value.region + '</span><span>' + value
-                            .regionDetail + '</span></p>'
-                        result += '</div>'
-                        result += '<div class="card">'
-                        result += '<img src="../resources/img/ddongCard.png" alt="">'
-                        result += '<div class="card-img">'
-                        result += '<img src="../resources/img/iphone.png" alt="">'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '</div>'
+                let cardShape = createShape(value);
 
-                        lastindex = index + 1;
+                let icon = createIcon(value);
 
-                    })
+                let memberStar = createMemberStar(value);
 
-                    $('.card-list').append(result);
-                    console.log(data.length)
-                    if(data.length == 0) {
-                        $('.last-card').text('0');
-                    } else {
-                        $('.last-card').text(lastindex);
-                    }
+                result += createCard(value,productStar,cardShape,icon,memberStar)
 
-                },
+                lastindex = index + 1;
 
-                error: (err) => {
-                    console.log(err)
+            })
+
+            $('.card-list').append(result);
+            $('.last-card').text(lastindex);
+
+        },
+
+        error: (err) => {
+            console.log(err)
+        }
+
+    })
+
+    cardClick()
+    cardClose()
+
+})
+
+$('.searchbox').change(function search() {
+    let category={"category" : $('select[name="category"]').val()
+                ,"region" : $('select[name="location"]').val()
+                ,"content" : $('input[name="content"]').val()}
+    console.log(category);
+
+    if($('select[name="category"]').val() != '') {
+                    $('.sc-category').text($('select[name="category"]').val())
+                } else {
+                    $('.sc-category').text('전체검색')
                 }
 
+    if($('select[name="location"]').val() != '') {
+        $('.sc-location').removeClass('hide')
+        $('.sc-location').text($('select[name="location"]').val())
+    } else {
+        $('.sc-location').addClass('hide')
+    }
+
+    if($('input[name="content"]').val() != '') {
+        $('.sc-input').removeClass('hide')
+        $('.sc-input').text($('input[name="content"]').val())
+        $('input[name="content"]').val('')
+    } else {
+        $('.sc-input').addClass('hide')
+    }
+
+    $.ajax({
+
+        type: 'post',
+        url: "/market/category",
+        dataType: "json",
+        async: false,
+        data: JSON.stringify(category),
+        contentType: 'application/json',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+
+        success: (data) => {
+            $(".card-list").empty();
+
+            var result = '';
+            var lastindex = '';
+
+            $.each(data, (index, value) => {
+
+                let productStar = createStar(value);
+
+                let cardShape = createShape(value);
+
+                let icon = createIcon(value);
+
+                let memberStar = createMemberStar(value);
+
+                result += createCard(value,productStar,cardShape,icon,memberStar)
+
+                lastindex = index + 1
+
             })
 
-            $('.card-container').click(() => {
-                $('.popup-detail').removeClass('hide')
-            })
-
-            $('.close-button').click(() => {
-                $('.popup-detail').addClass('hide')
-            })
-
-        })
-        
-          function search() {
-            let category={"category" : $('select[name="category"]').val()
-                        ,"region" : $('select[name="location"]').val()
-                        ,"content" : $('input[name="content"]').val()}
-            console.log(category);
-            
-            if($('input[name="content"]').val() != '') {
-                $('.sc-input').removeClass('hide')
-                $('.sc-input').text($('input[name="content"]').val())
+            $('.card-list').append(result);
+            console.log(data.length)
+            if(data.length == 0) {
+                $('.last-card').text('0');
             } else {
-                $('.sc-input').addClass('hide')
+                $('.last-card').text(lastindex);
             }
 
-            var token = "bd5667d9-4a6f-41c9-b7ba-67ad50ff8479"
-            var header = "X-CSRF-TOKEN"
+        },
 
+        error: (err) => {
+            console.log(err)
+        }
+
+    })
+
+    cardClick()
+    cardClose()
+
+})
+
+
+function search() {
+    let category={"category" : $('select[name="category"]').val()
+                ,"region" : $('select[name="location"]').val()
+                ,"content" : $('input[name="content"]').val()}
+    console.log(category);
+
+    if($('input[name="content"]').val() != '') {
+                    $('.sc-input').removeClass('hide')
+                    $('.sc-input').text($('input[name="content"]').val())
+                    $('input[name="content"]').val('')
+                } else {
+                    $('.sc-input').addClass('hide')
+                }
+
+    $.ajax({
+
+        type: 'post',
+        url: "/market/category",
+        dataType: "json",
+        async: false,
+        data: JSON.stringify(category),
+        contentType: 'application/json',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+
+        success: (data) => {
+            $(".card-list").empty();
+
+            var result = '';
+            var lastindex = '';
+
+            $.each(data, (index, value) => {
+
+                let productStar = createStar(value);
+
+                let cardShape = createShape(value);
+
+                let icon = createIcon(value);
+
+                let memberStar = createMemberStar(value);
+
+                result += createCard(value,productStar,cardShape,icon,memberStar)
+
+                lastindex = index + 1;
+
+            })
+
+            $('.card-list').append(result);
+            console.log(data.length)
+            if(data.length == 0) {
+                $('.last-card').text('0');
+            } else {
+                $('.last-card').text(lastindex);
+            }
+           
+
+        },
+
+        error: (err) => {
+            console.log(err)
+        }
+
+    })
+
+    cardClick()
+    cardClose() 
+    
+}
+
+function cardClose() {
+    $('.close-button').click(() => {
+        $('.popup-detail').addClass('hide')
+    })
+}
+
+// popupAjax
+function cardClick() {
+        $('.card-container').on("click",(e) => {
+            $('.popup-detail').removeClass('hide')
+            let cardIdx = e.target.id
+            console.log(cardIdx);
+
+            let card={"cardIdx" : cardIdx}
+            
             $.ajax({
 
                 type: 'post',
-                url: "http://192.168.219.103:8090/market/category",
+                url: "/market/card",
                 dataType: "json",
                 async: false,
-                data: JSON.stringify(category),
+                data: JSON.stringify(card),
                 contentType: 'application/json',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader(header,token);
                 },
-
+        
                 success: (data) => {
-                    $(".card-list").empty();
-                    
+                    $(".popup-detail").empty();
+
                     var result = '';
                     var lastindex = '';
+        
+                        let productStar = createStar(data);
 
-                    $.each(data, (index, value) => {
-
-                        result += '<div class="card-container">'
-                        result +=
-                            '<input type="hidden" id="cardIdx" name="cardIdx" value="' +
-                            value.cardIdx + '">'
-                        result += '<div class="card-name">'
-                        result += '<p>' + value.name + '</p>'
-                        result += '</div>'
-                        result += '<div class="grade-container">'
-                        result += '<div class="icon">'
-                        result += '<i class="fas fa-bolt"></i>'
-                        result += '</div>'
-                        result += '<div class="user-grade">'
-                        result += '<p>사용자 평점</p>'
-                        result += '<div class="star">'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '<div class="item-grade">'
-                        result += '<p>물건 평점</p>'
-                        result += '<div class="star">'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '<i class="fas fa-star"></i>'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '<div class="address">'
-                        result += '<p>지역 <span>' + value.region + '</span><span>' + value
-                            .regionDetail + '</span></p>'
-                        result += '</div>'
-                        result += '<div class="card">'
-                        result += '<img src="../resources/img/ddongCard.png" alt="">'
-                        result += '<div class="card-img">'
-                        result += '<img src="../resources/img/iphone.png" alt="">'
-                        result += '</div>'
-                        result += '</div>'
-                        result += '</div>'
-
-                        lastindex = index + 1;
-
-                    })
-
-                    $('.card-list').append(result);
-                    console.log(data.length)
-                    if(data.length == 0) {
-                        $('.last-card').text('0');
-                    } else {
-                        $('.last-card').text(lastindex);
-                    }
-
+                        let memberStar = createMemberStar(data);
+                        
+                        result = createPopup(data,productStar,memberStar)
+                        console.log(data)
+        
+                    $('.popup-detail').append(result);  
+        
                 },
-
+        
                 error: (err) => {
                     console.log(err)
                 }
-
+        
             })
 
-            $('.card-container').click(() => {
-                $('.popup-detail').removeClass('hide')
-            })
+            cardClose() 
 
-            $('.close-button').click(() => {
-                $('.popup-detail').addClass('hide')
-            })
-        }
+            slickControll()
+        })
+}
+
+

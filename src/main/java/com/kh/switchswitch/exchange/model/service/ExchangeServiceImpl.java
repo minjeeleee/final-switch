@@ -1,23 +1,19 @@
 package com.kh.switchswitch.exchange.model.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.ibatis.reflection.ArrayUtil;
-import org.apache.ibatis.reflection.SystemMetaObject;
-import org.attoparser.config.ParseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
+import com.kh.switchswitch.card.model.repository.FreeRequestListRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
@@ -41,6 +37,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	private final ExchangeRepository exchangeRepository;
 	private final MemberRepository memberRepository;
 	private final CardRequestListRepository cardRequestListRepository;
+	private final FreeRequestListRepository freerequestListRepository;
 
 	public List<Card> selecAvailableMyCardList(int certifiedMemberIdx) {
 		return cardRepository.selectCardListIsDelAndStatus(certifiedMemberIdx);
@@ -81,34 +78,38 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return cardRepository.selectMemberIdxByCardIdx(wishCardIdx);
 	}
 
-	public void requestExchange(CardRequestList cardRequestList,int length) {
+	public CardRequestList requestExchange(CardRequestList cardRequestList,int length) {
 		//card_request_list 테이블에 추가
 		cardRequestListRepository.insertCardRequestList(cardRequestList);
+		Integer reqIdx = cardRequestListRepository.selectNewReqIdx();
+		CardRequestList crl = cardRequestListRepository.selectCardRequestListWithReqIdx(reqIdx);
 			Card card;
 			switch(5-length) {
 			case 1 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard4());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card);
+				cardRepository.modifyCard(card);
 			case 2 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard3());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card); 
+				cardRepository.modifyCard(card);
 			case 3 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard2());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card);
+				cardRepository.modifyCard(card);
 			case 4 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard1());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card);
+				cardRepository.modifyCard(card);
 				break;
 			default : logger.debug("왜 0이 들어오지??");
-			}
+		}
+			
+		return crl;
 	}
 	
 	public List<Integer> selectMyRateCnt(int memberIdx) {
@@ -133,22 +134,22 @@ public class ExchangeServiceImpl implements ExchangeService{
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard4());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card);
+				cardRepository.modifyCard(card);
 			case 2 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard3());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card); 
+				cardRepository.modifyCard(card); 
 			case 3 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard2());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card);
+				cardRepository.modifyCard(card);
 			case 4 : 
 				card = new Card();
 				card.setCardIdx(cardRequestList.getRequestCard1());
 				card.setExchangeStatus("REQUEST");
-				cardRepository.updateCard(card);
+				cardRepository.modifyCard(card);
 				break;
 			default : logger.debug("왜 0이 들어오지??");
 			}
@@ -219,6 +220,25 @@ public class ExchangeServiceImpl implements ExchangeService{
 			requestCardNameList.add(cardNames);
 		}
 		return requestCardNameList;
+	}
+
+	public void requestFreeSharing(Integer memberIdx, Integer cardIdx) {
+		FreeRequestList freeRequest = new FreeRequestList();
+		freeRequest.setRequestedCard(cardIdx);
+		freeRequest.setRequestMemIdx(memberIdx);
+		freeRequest.setRequestedMemIdx(cardRepository.selectMemberIdxByCardIdx(cardIdx));
+		freerequestListRepository.insertFreeRequestList(freeRequest);
+		
+	}
+
+	
+	public void rejectFreeSharing(Integer freqIdx) {
+		freerequestListRepository.deleteFreeRequestList(freqIdx);
+	}
+
+	@Override
+	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
+		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
 	}
 
 }
