@@ -43,7 +43,7 @@ function createCard(value,productStar,cardShape ,icon ,createMemberStar) {
     result += '<div class="card" id='+value.cardIdx+'>'
     result += '<img src="'+cardShape+'" alt="" id='+value.cardIdx+'>'
     result += '<div class="card-img" id='+value.cardIdx+'>'
-    result += '<img src="../resources/img/iphone.png" alt="" id='+value.cardIdx+'>'
+    result += '<img src="'+value.imgUrl[0]+'" alt="" id='+value.cardIdx+'>'
     result += '</div>'
     result += '</div>'
     result += '</div>'
@@ -52,22 +52,26 @@ function createCard(value,productStar,cardShape ,icon ,createMemberStar) {
 }
 
 function createPopup(value,productStar,memberStar) {
+	 let imgUrls = ''
+    
+    for (let index = 0; index < value.imgUrl.length; index++) {
+       imgUrls += '<div class="imgs"><img src="'+value.imgUrl[index]+'" alt=""></div>'
+    } 
+	
     let result = ''
 
     result += '<div class="detail-img">'
-    result += '<div class="imgs"><img src="../resources/img/iphone.png" alt=""></div>'
-    result += '<div class="imgs"><img src="../resources/img/iphone.png" alt=""></div>'
-    result += '<div class="imgs"><img src="../resources/img/iphone.png" alt=""></div>'
+    result += imgUrls
     result += '</div>'
     result += '<div class="detail-info">'
     result += '<div class="profile">'
     result += '<div class="profile-img">'
     result += '<div class="inner-img">'
-    result += '<img src="/image/default-user.png" alt="">'
+    result += '<img src="../resources/img/default-user.png" alt="">'
     result += '</div>'
     result += '</div>'
     result += '<div class="profile-name">'
-    result += '<p>' + value.name + '</p>'
+    result += '<p>' + value.memberNick + '</p>'
     result += '</div>'
     result += '</div>'
     result += '<div class="detail-content">'
