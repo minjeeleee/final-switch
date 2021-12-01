@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html  xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -29,7 +30,7 @@
 	<!-- jQuery -->
   	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
   	<!-- iamport.payment.js -->
-  	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+  	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 </head>
 <body id="page-top">
 
@@ -274,14 +275,12 @@
                                 <div class="card-body">
 									<div class="mypage-con" style="font-size: 40px; font-weight: bolder;">
 										<div >신청 금액</div>
-										<form action="">
-											<input id="point" type="number" step="100">p
-											<div>
-												<button href="login.html" onclick="requestPay()" class="btn btn-primary btn-user btn-block" style="width: 300px;" >
-	                                   			충전하기
-	                                			</button>
-											</div>
-										</form>
+										<input id="point" type="number" step="100">p
+										<div>
+											<button onclick="requestPay()" class="btn btn-primary btn-user btn-block paymentButton" style="width: 300px;" >
+                                   			충전하기
+                                			</button>
+										</div>
 									</div>
                                 </div>
                             </div>
@@ -325,14 +324,14 @@
     <script src="../resources/js/sb-admin-2.min.js"></script>
 
 	<script type="text/javascript" th:inline="javascript">
-    IMP.init("imp08222808");
+    IMP.init("imp40776009");
 	
     function requestPay() {
     	console.dir("여기는 함수 실행!!!!!!!!!!!!! 추워!!!!!!!!!!!!");
         // IMP.request_pay(param, callback) 결제창 호출
         IMP.request_pay({ // param
-            pg: "kakaopay",
-            pay_method: "kakaopay",
+            pg: "html5_inicis",
+            pay_method: "card",
             merchant_uid: 'merchant_' + new Date().getTime() + "_" + (1 + Math.random()) * 10000,
             name: "포인트 충전",
             amount: $("#point").val(),
