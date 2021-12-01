@@ -1,12 +1,15 @@
 package com.kh.switchswitch.mypage.controller;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,23 +23,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.dto.Card;
-import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
-import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
-import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("mypage")
 public class MypageController {
@@ -170,7 +177,32 @@ public class MypageController {
 		//거래 완료된 카드들
 		model.addAttribute("doneCardList",cardService.selectDoneCardList(member.getMemberIdx()));
 		//교환내역 찾기
-		model.addAttribute("ehList", exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("exchange-history")
+	public String exchangeHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
+		
+		log.info("json={}" ,json);
+		return json;
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("free-history")
+	public String freeHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(exchangeService.selectFreeRequestHistoryByMemIdx(member.getMemberIdx()));
+		
+		log.info("json={}" ,json);
+		return json;
 	}
 	
 	@GetMapping("mypage-inquiry")

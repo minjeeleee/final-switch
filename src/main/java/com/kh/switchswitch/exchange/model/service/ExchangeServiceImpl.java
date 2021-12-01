@@ -171,7 +171,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 
 	
 	public List<Map<String,Object>> selectExchangeHistoryByMemIdx(Integer memberIdx) {
-		List<ExchangeHistory> ehList = exchangeRepository.selectExchangeHistoryByMemIdx(memberIdx);
+		List<ExchangeHistory> ehList = exchangeRepository.selectExchangeHistoryByMemIdxAndReqNotNull(memberIdx);
 		//필요한 정보 거래날짜(exchange_history) 교환포인트(prop_balance) 교환카드 기존카드 별점 등록여부 상대방 닉네임
 		//필요한 정보 가져오기
 		List<CardRequestList> crlList = new ArrayList<>();
@@ -179,7 +179,9 @@ public class ExchangeServiceImpl implements ExchangeService{
 
 		List<Integer> isRateList = new ArrayList<>();
 		for (ExchangeHistory exchangeHistory : ehList) {
+			
 			crlList.add(cardRepository.selectCardRequestByEIdx(exchangeHistory.getEIdx()));
+			
 			isRateList.add(ratingRepository.selectRatingByMemIdxAndEhIdx(memberIdx,exchangeHistory.getEhIdx()));
 			if(memberIdx.equals(exchangeHistory.getRequestMemIdx())) {
 				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestedMemIdx()));
@@ -187,8 +189,9 @@ public class ExchangeServiceImpl implements ExchangeService{
 				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestMemIdx()));
 			}
 		}
-		List<String> requestedCardNameList = getRequestCardNameList(crlList);
-		List<String> requestCardNameList = getRequestedCardNameList(crlList);
+		List<String> requestedCardNameList = getRequestedCardNameList(crlList);
+		
+		List<String> requestCardNameList = getRequestCardNameList(crlList);
 		
 		List<Map<String, Object>> exchangeHistoryList = new ArrayList();
 		for (int i = 0; i < ehList.size(); i++) {
@@ -201,7 +204,36 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return exchangeHistoryList;
 	}
 	
-	public List<String> getRequestCardNameList(List<CardRequestList> crlList){
+	public List<Map<String,Object>> selectFreeRequestHistoryByMemIdx(Integer memberIdx) {
+		List<ExchangeHistory> ehList = exchangeRepository.selectExchangeHistoryByMemIdxAndFreqNotNull(memberIdx);
+		//필요한 정보 거래날짜(exchange_history) 교환포인트(prop_balance) 교환카드 기존카드 별점 등록여부 상대방 닉네임
+		//필요한 정보 가져오기
+		List<FreeRequestList> frlList = new ArrayList<>();
+		List<String> opponentNickList = new ArrayList<>();
+
+		List<Integer> isRateList = new ArrayList<>();
+		for (ExchangeHistory exchangeHistory : ehList) {
+			frlList.add(cardRepository.selectFreeRequestByEIdx(exchangeHistory.getEIdx()));
+			isRateList.add(ratingRepository.selectRatingByMemIdxAndEhIdx(memberIdx,exchangeHistory.getEhIdx()));
+			if(memberIdx.equals(exchangeHistory.getRequestMemIdx())) {
+				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestedMemIdx()));
+			} else {
+				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestMemIdx()));
+			}
+		}
+		List<String> requestedCardNameList = getFreeRequestedCardNameList(frlList);
+		
+		List<Map<String, Object>> exchangeHistoryList = new ArrayList();
+		for (int i = 0; i < ehList.size(); i++) {
+			exchangeHistoryList.add(Map.of("eh",ehList.get(i),"frl",frlList.get(i)
+					,"isRate",isRateList.get(i),"requestedCardName",requestedCardNameList.get(i)
+					,"opponentNickList",opponentNickList.get(i)));
+		}
+		
+		return exchangeHistoryList;
+	}
+	
+	public List<String> getRequestedCardNameList(List<CardRequestList> crlList){
 		List<String> requestedCardNameList = new ArrayList();
 		for (CardRequestList cardRequestList : crlList) {
 			requestedCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()).getName());
@@ -209,7 +241,15 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return requestedCardNameList;
 	}
 	
-	public List<String> getRequestedCardNameList(List<CardRequestList> crlList){
+	public List<String> getFreeRequestedCardNameList(List<FreeRequestList> frlList){
+		List<String> requestedCardNameList = new ArrayList();
+		for (FreeRequestList freeRequestList : frlList) {
+			requestedCardNameList.add(cardRepository.selectCardByCardIdx(freeRequestList.getRequestedCard()).getName());
+		}
+		return requestedCardNameList;
+	}
+	
+	public List<String> getRequestCardNameList(List<CardRequestList> crlList){
 		List<String> requestCardNameList = new ArrayList();
 		for (CardRequestList cardRequestList : crlList) {
 			String cardNames = "";

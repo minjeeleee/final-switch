@@ -44,7 +44,7 @@ public interface ExchangeService {
 
 	FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx);
 
-
+	List<Map<String,Object>> selectFreeRequestHistoryByMemIdx(Integer memberIdx);
 	
 	
 
