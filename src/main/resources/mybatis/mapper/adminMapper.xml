@@ -57,4 +57,68 @@
   		where member_idx = #{memberIdx}
   	</select>
   	 -->
+  	 
+  	 <resultMap type="com.kh.switchswitch.member.model.dto.Member" id="memberData">
+  		<result column="member_idx" property="memberIdx"/>
+  		<result column="code" property="code"/>
+  		<result column="member_reg_date" property="memberRegDate"/>
+  		<result column="member_pass" property="memberPass"/>
+  		<result column="member_email" property="memberEmail"/>
+  		<result column="member_del_yn" property="memberDelYn"/>
+  		<result column="member_tell" property="memberTell"/>
+  		<result column="member_nick" property="memberNick"/>
+  		<result column="member_address" property="memberAddress"/>
+  		<result column="member_del_date" property="memberDelDate"/>
+  		<result column="member_score" property="memberScore"/>
+  		<result column="member_name" property="memberName"/>
+  		<result column="fl_idx" property="flIdx"/>
+  	</resultMap>
+  	 
+  	 <select id="selectMemberAllList" resultType="com.kh.switchswitch.member.model.dto.Member">
+  	 	select * 
+  	 	from member 
+  	 	where member_del_yn=0
+  	 	<if test="searchType != null">
+	  	 	<if test="searchType == 'member_idx'">
+	  	 	and member_idx like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_email'">
+	  	 	and member_email like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_name'">
+	  	 	and member_name like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_nick'">
+	  	 	and member_nick like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_tell'">
+	  	 	and member_tell like '%'||#{keyword}||'%'
+	  	 	</if>
+  	 	</if>
+  	 </select>
+  	 <select id="selectMemberBlackList" resultType="com.kh.switchswitch.member.model.dto.Member">
+  	 	select * 
+  	 	from member 
+  	 	where member_del_yn=0 
+  	 	and code = 'D' 
+  	 	<if test="searchType != null">
+	  	 	<if test="searchType == 'member_idx'">
+	  	 	and member_idx like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_email'">
+	  	 	and member_email like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_name'">
+	  	 	and member_name like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_nick'">
+	  	 	and member_nick like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_tell'">
+	  	 	and member_tell like '%'||#{keyword}||'%'
+	  	 	</if>
+  	 	</if>
+  	 </select>
+  	 
+  	 
   </mapper>

@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -66,13 +67,22 @@ public class AdminController {
 	}
 	
 	@GetMapping("all-cards")
-	public void allCards() {
+	public void allCards(Model model) {
+		List<Map<String,Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardList();
+		if(cardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile,"fileDTOAll",imgFile));
+			}
+		}
+		model.addAttribute("cardList",cardList);
 	}
 	
 	@GetMapping("card-delete")
 	@ResponseBody
 	public String cardDelete(@RequestParam Integer cardIdx) {
-		System.out.println("비동기통신 성공");
 		if(cardIdx != null) {
 			adminService.deleteCard(cardIdx);
 			return "success";
@@ -82,8 +92,9 @@ public class AdminController {
 	}
 	
 	@GetMapping("all-members")
-	public void allMembers(Model model) {
-		List<Member> memberList = adminService.selectMemberAllList();
+	public void allMembers(Model model, @Nullable@RequestParam(name = "searchDetail") String searchType,
+										@Nullable@RequestParam(name = "searchKeyword") String keyword) {
+		List<Member> memberList = adminService.selectMemberAllList(searchType,keyword);
 		model.addAttribute("memberList",memberList);
 	}
 	
@@ -94,8 +105,9 @@ public class AdminController {
 	}
 	
 	@GetMapping("black-list-members")
-	public void blackListMembers(Model model) {
-		List<Member> memberList = adminService.selectMemberBlackList();
+	public void blackListMembers(Model model, @Nullable@RequestParam(name = "searchDetail") String searchType,
+											  @Nullable@RequestParam(name = "searchKeyword") String keyword) {
+		List<Member> memberList = adminService.selectMemberBlackList(searchType,keyword);
 		model.addAttribute("memberList",memberList);
 	}
 	

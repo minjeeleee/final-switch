@@ -30,8 +30,11 @@ public interface AdminRepository {
 	@Update("update card set is_del = 1 where card_idx = #{cardIdx}")
 	Integer deleteCard(Integer cardIdx);
 	
-	@Select("select * from member where member_del_yn=0")
-	List<Member> selectMemberAllList();
+	//@Select("select * from member where member_del_yn=0 and #{searchType}=#{keyword}")
+	List<Member> selectMemberAllList(@Param("searchType") String searchType, @Param("keyword") String keyword);
+	
+	//@Select("select * from member where code = 'D' and member_del_yn=0")
+	List<Member> selectMemberBlackList(@Param("searchType") String searchType, @Param("keyword") String keyword);
 	
 	@Insert("insert into menu(url_idx,code,url,url_name,position,depth,parent) values(sc_url_idx.nextval, #{code},#{url},#{urlName},#{position},#{depth},#{parent})")
 	void insertMenu(Menu Menu);
@@ -63,8 +66,7 @@ public interface AdminRepository {
 	@Update("update member set code=#{code} where member_idx=#{memberIdx}")
 	void updateMemberCode(@Param("code")String code,@Param("memberIdx") int memberIdx);
 	
-	@Select("select * from member where code = 'D' and member_del_yn=0")
-	List<Member> selectMemberBlackList();
+	
 	
 	@Select("select * from member where member_idx = #{memberIdx} and member_del_yn=0")
 	Member selectMemberByIdx(int memberIdx);

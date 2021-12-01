@@ -33,20 +33,20 @@
 						<!-- TABLE HOVER -->
 						<div class="panel" style="background-color: white;">
 							<div class="panel-heading" style="height: 70px">
-								<form>
+								<form action="/admin/black-list-members" method="get">
 									<div style="display: flex; float: right;">
-									<select class="form-control" style="width: 120px;">
-									  <option>회원번호</option>
-									  <option>회원아이디</option>
-									  <option>회원이름</option>
-									  <option>회원닉네임</option>
-									  <option>연락처</option>
+									<select class="form-control" name="searchDetail" style="width: 120px;">
+									  <option value="member_idx">회원번호</option>
+									  <option value="member_email">회원아이디</option>
+									  <option value="member_name">회원이름</option>
+									  <option value="member_nick">회원닉네임</option>
+									  <option value="member_tell">연락처</option>
 									</select>
 									<div class="" style="display: flex; width: 250px;">
-									  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+									  <input type="search" name="searchKeyword" class="form-control rounded" placeholder="Search" aria-label="Search"
 									  aria-describedby="search-addon" />
 									  <span class="input-group-text border-0" id="search-addon">
-									    <i class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></i>
+									    <button class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></button>
 									  </span>
 									</div>
 									</div>
@@ -74,16 +74,6 @@
 											<td th:text="${memberList.memberTell}"></td>
 											<td th:text="${memberList.memberRegDate}"></td>
 											<td><button type="button" class="btn btn-secondary btn-sm" th:text="해제하기" th:onclick="'location.href=\''+ @{/admin/removeMemberBlack(code=${memberList.code},memberIdx=${memberList.memberIdx})}+'\''"></button></td>
-										</tr>
-										<tr class="">
-											<td><a>000002</a></td>
-											<td>test02</td>
-											<td>김길순</td>
-											<td>홍231</td>
-											<td>01033331212</td>
-											<td>21-10-24</td>
-											<td><button type="button"
-													class="btn btn-secondary btn-sm">해제하기</button></td>
 										</tr>
 									</tbody>
 								</table>

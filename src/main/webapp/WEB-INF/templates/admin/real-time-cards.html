@@ -10,7 +10,11 @@
 	div,p,i,a{
 		color:#AEB7C2;
 	}
-	
+	.test{
+		margin-top:100px;
+		-ms-touch-action:pan-y;
+		touch-action:pan-y;
+	}
 	</style>
 </head>
 
@@ -29,35 +33,26 @@
 			<div class="main-content">
 				<div class="container-fluid">
 				<div style="display: flex; justify-content: space-between;">
-					<h3 class="page-title">전체 카드 조회</h3>
+					<h3 class="page-title">실시간 카드 조회</h3>
+					<div>
 					<div class="dropdown pull-right" style="margin-top:1.3%">
-						    <form>
-								<div style="display: flex; float: right;">
-								<select class="form-control" style="width: 120px;">
-								  <option>최근등록순</option>
-								  <option>1주전</option>
-								  <option>1개월전</option>
-								  <option>1년전</option>
-								</select>
-								<select class="form-control" style="width: 120px;">
-								  <option>카드번호</option>
-								  <option>카드제목</option>
-								  <option>회원아이디</option>
-								  <option>회원이름</option>
-								</select>
-								<div class="" style="display: flex; width: 250px;">
-								  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-								  aria-describedby="search-addon" />
-								  <span class="input-group-text border-0" id="search-addon">
-								    <button class="fa fa-search" aria-hidden="true" style="height: 35px;width: 35px; border: 0;"></button>
-								  </span>
-								</div>
-								</div>
-							</form>
-					  </div>
+					    <button class="btn btn-secondary dropdown-toggle w-100 h-100" id="selectElement" type="button" data-toggle="dropdown" style="color: #676a6d;">선택하기　　　
+						    <span class="caret"></span></button>
+						    <ul class="dropdown-menu">
+						   	  <li style="margin-bottom: 0px !important;"><a href="#">전체카드</a></li>
+						      <li style="margin-bottom: 0px !important;"><a href="#exchange">교환카드</a></li>
+						      <li style="margin-bottom: 0px !important;"><a href="#free">무료나눔</a></li>
+						    </ul>
+					</div>	    
+						    <select class="form-control" style="width: 120px; float: right; margin-top: 2%;" onchange="changeReloadTime(this.value)">
+								  <option value="7000">7초</option>
+								  <option selected="selected" value="5000">5초</option>
+								  <option value="3000">3초</option>
+							</select>
+						</div>
  					 </div>
 					<div class="panel panel-headline demo-icons" style="background-color: white;">
-						<div class="content" th:if="${cardList}">
+						<div class="test" th:if="${cardList}">
 							<ul class="list-unstyled row" style="padding-left: 6%;">
 							<li class="card col-md-2 col-sm-4 col-xs-6" style="width: 18rem; height: 24rem;" th:each="card:${cardList}" th:object="${card}">
 							  <img class="card-img-top" th:src="*{fileDTO.getDownloadURL()}" alt="Card image cap" style="width: 100%; height: 60%;">
@@ -65,7 +60,7 @@
 							  <div class="card-title" style="height: 30%; width: 100%;display: flex;justify-content: space-between;">
 							    <h5 class="text-left" style="width: 80%;height: 50%;overflow: hidden;" th:text="*{card.name}"></h5>
 							    <span class="input-group-text border-0" id="search-addon">
-							   	<i class="fa fa-info-circle" data-toggle="modal" th:data-target="*{'#myModal'+card.cardIdx}" style="font-size: 15px !important;width: 20%;margin-top: 75%;"></i>
+							   	<i class="fa fa-info-circle" data-toggle="modal" th:data-target="*{'#myModal'+card.cardIdx}" style="font-size: 15px !important;width: 20%;margin-top: 75%; "></i>
 							  </span>
 							    <span class="lnr lnr-trash small" aria-hidden="true" style="font-size: 15px !important;width: 20%;margin-top: 6.5%;" th:onclick="'deleteCard('+*{card.cardIdx}+')'" th:value="*{card.cardIdx}"></span>
 							  </div>
@@ -84,8 +79,8 @@
 								      <div class="modal-body" style="display: flex; flex-direction: column;">
 								      <div class="img-wrap" style="display: flex;justify-content: center;">
 								      <img th:each="imgList : *{fileDTOAll}" class="card-img-top" th:src="${imgList.getDownloadURL()}" alt="Card image cap" style="width: 260px; height: 260px;">
-								        </div>
-								        <br>
+								       </div>
+								       <br>
 								        <div th:text="*{card.content}"></div>
 								        <div style="text-align: left;">게시자 번호 : [[*{card.cardIdx}]]</div>
 								      </div>
@@ -101,26 +96,6 @@
 						</ul>
 
 						</div>
-						
-					</div>
-					<div style="display: flex; justify-content: center;">
-							<ul class="pagination">
-						    <li>
-						      <a href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						      </a>
-						    </li>
-						    <li><a href="#">1</a></li>
-						    <li><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li><a href="#">5</a></li>
-						    <li>
-						      <a href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						      </a>
-						    </li>
-						  </ul>
 					</div>
 			</div>
 			<!-- END MAIN CONTENT -->
@@ -138,26 +113,75 @@
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
 	<script type="text/javascript">
-	function deleteCard(cardIdx) {
-		if(cardIdx){
-			fetch("/admin/card-delete?cardIdx="+cardIdx)
-			.then(response=>{
-				if(response.ok){
-					return response.text()
-				}else{
-					throw new Error(response.status);
-				}
-			})
-			.then(text=>{
-				if(text == 'success'){
+		$(function boxscroll(){
+			if($('.test').height() >= 1000){
+			$('.test').slimScroll({
+		    	height: '1000px',
+		    	railVisible: true,
+		    	railColor: '#222',
+		    	railOpacity: 0.3,
+		    	wheelStep: 10,
+		    	allowPageScroll: false,
+		    	disableFadeOut: false
+				})
+			}
+		})
+		//window.addEventListener.("mousewheel",boxscroll, {passive:false})
+		
+		let cnt = 0;
+		
+		
+		//function changeReloadTime(time) {
+			//if (cnt < 2) {
+				//cnt++;
+				setInterval(function() {
 					location.reload();
-				}
-			})
-			.catch(error=>{
-				alert('응답에 실패했습니다 상태코드 : '+error)
-			})
+					//$('.test').load(location.href + '.test');
+					console.dir('새로고침');
+					 if ($('div').hasClass('modal-backdrop')) {
+						$("div").remove(".modal-backdrop");
+						$('#myModal').removeClass("in");
+						$('#myModal').css("display","none");
+					 	console.dir('태그삭제');
+					}
+				}, 5000);
+				/*
+			} else {
+				cnt--;
+				clearInterval(timer);
+				setInterval(function() {
+					$('.panel-body').load(location.href + ' .panel-body');
+					console.dir('새로고침');
+					if ($('div').hasClass('modal-backdrop')) {
+						$("div").remove(".modal-backdrop");
+						//$('#myModal').removeClass("in");
+						//$('#myModal').css("display","none");
+						console.dir('태그삭제');
+					}
+				}, time);
+			}
 		}
-	}
+		*/
+		function deleteCard(cardIdx) {
+			if(cardIdx){
+				fetch("/admin/card-delete?cardIdx="+cardIdx)
+				.then(response=>{
+					if(response.ok){
+						return response.text()
+					}else{
+						throw new Error(response.status);
+					}
+				})
+				.then(text=>{
+					if(text == 'success'){
+						location.reload();
+					}
+				})
+				.catch(error=>{
+					alert('응답에 실패했습니다 상태코드 : '+error)
+				})
+			}
+		}
 	</script>
 </body>
 </html>

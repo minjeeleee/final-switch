@@ -85,8 +85,10 @@ public class AdminService {
 		return adminRepository.selectMenuAllList();
 	}
 
-	public List<Member> selectMemberAllList() {
-		return adminRepository.selectMemberAllList();
+	public List<Member> selectMemberAllList(String searchType, String keyword) {
+		System.out.println(searchType);
+		System.out.println(keyword);
+		return adminRepository.selectMemberAllList(searchType, keyword);
 	}
 
 	public void updateMemberCode(String code, int memberIdx) {
@@ -95,8 +97,8 @@ public class AdminService {
 		adminRepository.updateMemberCode(code, memberIdx);
 	}
 
-	public List<Member> selectMemberBlackList() {
-		return adminRepository.selectMemberBlackList();
+	public List<Member> selectMemberBlackList(String searchType, String keyword) {
+		return adminRepository.selectMemberBlackList(searchType, keyword);
 	}
 
 	public Map<String, Object> selectMemberByIdx(int memberIdx) {

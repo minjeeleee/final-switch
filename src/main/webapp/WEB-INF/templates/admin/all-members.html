@@ -36,17 +36,17 @@
 								<form action="/admin/all-members" method="get">
 									<div style="display: flex; float: right;">
 									<select class="form-control" name="searchDetail" style="width: 120px;">
-									  <option>회원번호</option>
-									  <option>회원이메일</option>
-									  <option>회원이름</option>
-									  <option>회원닉네임</option>
-									  <option>연락처</option>
+									  <option value="member_idx">회원번호</option>
+									  <option value="member_email">회원이메일</option>
+									  <option value="member_name">회원이름</option>
+									  <option value="member_nick">회원닉네임</option>
+									  <option value="member_tell">연락처</option>
 									</select>
 									<div class="" style="display: flex; width: 250px;">
-									  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+									  <input type="search" name="searchKeyword" class="form-control rounded" placeholder="Search" aria-label="Search"
 									  aria-describedby="search-addon" />
 									  <span class="input-group-text border-0" id="search-addon">
-									    <i class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></i>
+									    <button class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></button>
 									  </span>
 									</div>
 									</div>
