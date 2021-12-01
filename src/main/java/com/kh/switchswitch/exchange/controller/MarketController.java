@@ -64,9 +64,9 @@ public class MarketController {
 		response.addHeader("Access-Control-Allow-Origin","*");
 		
 		List<Card> allCard = cardService.selectAllCard();
-		List imgUrl = new ArrayList();
 		
 		for (Card content : allCard) {
+			List imgUrl = new ArrayList();
 			content.setMemberRate(exchangeService.selectMyRate(content.getCardIdx()));
 			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(content.getCardIdx());
 		    for (FileDTO img : cardImgs) {
@@ -91,9 +91,9 @@ public class MarketController {
 		log.info("sting={}" ,searchCard);
 		
         List<Card> allCard = cardService.selectCardTrim(searchCard);
-        List imgUrl = new ArrayList();
         
         for (Card card : allCard) {
+        	List imgUrl = new ArrayList();
 			card.setMemberRate(exchangeService.selectMyRate(card.getCardIdx()));
 			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(card.getCardIdx());
 		    for (FileDTO img : cardImgs) {
