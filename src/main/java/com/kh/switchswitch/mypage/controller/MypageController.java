@@ -133,7 +133,7 @@ public class MypageController {
 			return "mypage/leave-member"; 
 		}
 		
-		System.out.println(exchangeService.checkExchangeOngoing(member.getMemberIdx()));
+		//교환,나눔중인게 있으면 탈퇴 불가
 		if(exchangeService.checkExchangeOngoing(member.getMemberIdx())) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LEAVE_MEMBER);
  		}
