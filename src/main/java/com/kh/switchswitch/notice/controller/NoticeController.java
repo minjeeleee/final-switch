@@ -63,11 +63,11 @@ public class NoticeController {
 			return "redirect:/notice/notice-detail?noticeIdx="+notice.getNoticeIdx();
 		}
 
-		@PostMapping("delete")
+		@GetMapping("delete")
 		public String deleteNotice(Notice notice, @RequestParam Integer noticeIdx,@AuthenticationPrincipal MemberAccount member) {
 			notice.setUserId(member.getCode());
 			noticeService.deleteNotice(noticeIdx);
-			return "notice/notice-list";
+			return "notice/notice-list"; //12/02리다이렉트로 수정필요
 		}
 
 		
