@@ -76,7 +76,7 @@ public class CardController {
 	}
 	
 	@GetMapping("my-card")
-	public void myCard(@AuthenticationPrincipal MemberAccount memberAccount
+	public String myCard(@AuthenticationPrincipal MemberAccount memberAccount
 			,Model model) {
 		
 		List<Map<String, Object>> myExchangeCards = cardService.selectMyExchangeCard(memberAccount.getMemberIdx()); 
@@ -85,6 +85,8 @@ public class CardController {
 		model.addAttribute("myExchangeCards",myExchangeCards);
 		model.addAttribute("myFreeCards",myFreeCards);
 		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
+		
+		return "card/my-card";
 	}
 	
 }
