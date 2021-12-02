@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.notice.model.dto.Notice;
@@ -31,10 +32,10 @@ public class NoticeController {
 	public void noticeForm() {}
 	
 	@PostMapping("upload")
-	public String uploadBoard(Notice notice,  @AuthenticationPrincipal MemberAccount member ) {
+	public String uploadNotice(Notice notice,  @AuthenticationPrincipal MemberAccount member ) {
 		notice.setUserId(member.getCode());
 		noticeService.insertNotice(notice);
-		return "redirect:/notice/notice-detail?noticeIdx="+notice.getNoticeIdx();
+		return "redirect:/notice/notice-list";
 	}
 	
 	  @GetMapping("notice-list") 
@@ -63,11 +64,13 @@ public class NoticeController {
 			return "redirect:/notice/notice-detail?noticeIdx="+notice.getNoticeIdx();
 		}
 
-		@PostMapping("delete")
-		public String deleteNotice(Notice notice, @RequestParam Integer noticeIdx,@AuthenticationPrincipal MemberAccount member) {
-			notice.setUserId(member.getCode());
-			noticeService.deleteNotice(noticeIdx);
-			return "notice/notice-list";
+		@GetMapping("delete")
+		public String deleteNotice(Notice notice, @RequestParam Integer noticeIdx,@AuthenticationPrincipal MemberAccount member, RedirectAttributes redirectAttrs) {
+
+				notice.setUserId(member.getCode());
+				noticeService.deleteNotice(noticeIdx);
+				redirectAttrs.addFlashAttribute("message", "게시글 삭제가 완료되었습니다."); //수정필요
+			return "redirect:/notice/notice-list"; 
 		}
 
 		
