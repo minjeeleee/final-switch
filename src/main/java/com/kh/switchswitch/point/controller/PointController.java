@@ -29,7 +29,7 @@ public class PointController {
 	public PointController(PointService pointService) {
 		this.pointService = pointService;
 		// REST API 키와 REST API secret 를 아래처럼 순서대로 입력한다.
-		this.api = new IamportClient("1908372205894058","fbb4edd1ddae96984025282fa5d9f9ca99264a2ead59b5415802131258d75b0231b8a11635d1549c");
+		this.api = new IamportClient("7002192506815642","52530b66901a86e01810d0a822adfc6f641449e0e1614b7c7e87d43dd8aaab73e87dfee87c55bab2");
 	}
 
 	@GetMapping("point-charge")

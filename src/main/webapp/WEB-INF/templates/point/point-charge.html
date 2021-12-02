@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html  xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -7,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Admin 2 - Dashboard</title>
+    <title>포인트 충전</title>
     <!-- Custom fonts for this template-->
     <link href="../resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -17,14 +18,18 @@
     <link href="../resources/css/mypage/sb-admin-2.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="../resources/css/mypage/mypage-form.css" />
 	<link href="../resources/css/mypage/styles.css" rel="stylesheet" />
-	<link rel="stylesheet" href="../resources/css/card/card2.css">
 	<style type="text/css">
 	.card-header{
 		background-image: url("../resources/img/상단탑배경.png");
 		color: white;
 	}
+	.inipay_modal.fade:not(.show) { opacity: 1 !important; }
 	
 	</style>
+	
+	<!-- jQuery -->
+  	<!-- iamport.payment.js -->
+  	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 </head>
 <body id="page-top">
 
@@ -33,7 +38,7 @@
 
        <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"
-        style="background-image: url('../resources/img/상단탑배경.png');">
+        	style="background-image: url('../resources/img/상단탑배경.png');">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -48,7 +53,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="/mypage/profile">
+                <a class="nav-link" href="index.html">
                     <i class="fas fa-user-alt"></i>
                     <span>내 프로필</span></a>
             </li>
@@ -58,7 +63,7 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
            <li class="nav-item">
-                <a class="nav-link" href="/mypage/history">
+                <a class="nav-link" href="index.html">
                    <i class="fas fa-history"></i>
                     <span>카드 거래 내역 관리</span></a>
             </li>            
@@ -75,9 +80,8 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">포인트</h6>
-                        <a class="collapse-item" href="/point/point-history">포인트 사용 및 충전 내역</a>
-                        <a class="collapse-item" href="/point/point-charge">포인트 충전</a>
-                        <a class="collapse-item" href="/point/point-return">포인트 환급</a>
+                        <a class="collapse-item" href="buttons.html">포인트 사용 및 충전 내역</a>
+                        <a class="collapse-item" href="cards.html">포인트 충전 및 환급</a>
                     </div>
                 </div>
             </li>
@@ -86,7 +90,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="/mypage/mypage-inquiry">
+                <a class="nav-link" href="index.html">
                    <i class="fas fa-question-circle"></i>
                     <span>문의 내역</span></a>
             </li>
@@ -95,7 +99,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="/mypage/chatting">
+                <a class="nav-link" href="index.html">
                    <i class="fas fa-comment-dots"></i>
                     <span>채팅 목록</span></a>
             </li>
@@ -116,8 +120,32 @@
                     </button>
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-					
-					<!-- Nav Item - Alerts -->
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-search fa-fw"></i>
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                            placeholder="Search for..." aria-label="Search"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <i class="fas fa-search fa-sm"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -170,7 +198,7 @@
 
                         <!-- Nav Item - Messages -->
                         <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="/mypage/chatting" id="messagesDropdown" role="button"
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
@@ -220,102 +248,39 @@
                     <!-- Content Row -->
                     <div class="row">
                         <!-- Content Column 거래내역 -->
-                        <div class="col-lg-9 mb-4" style="">
+                         <div class="col-lg-6 mb-4">
+
+                            <!-- Illustrations -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold ">나의 잔여 포인트</h6>
+                                </div>
+                                 <div class="card-body">
+									<div class="mypage-con">
+										<div style=" width: 30%; margin-left: 33%">
+											<div style="text-align: center; font-size: 40px; font-weight: bolder;">5000p</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-12 mb-4" style="">
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4" >
-                                <div class="card-header" >
-                                    <h6 class="m-0 font-weight-bold ">거래내역</h6>
-                                    <div style="margin-top: 5px">
-                                    	<input type="radio" id="type" name="type" value="exchange" checked="checked"><span>교환 기록</span>
-			                        	<input type="radio" id="type" name="type" value="freeSharing"><span>나눔 기록</span>
-			                        </div>
-                                </div>
-                                <input type="hidden" id="memberIdx" th:value="${#authentication.principal.memberIdx}"> 
-                                <div class="card-body" style="height: 93vh; padding: 0;overflow-y:scroll; ">
-                                	<div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 12%;">거래 일자</th>
-                                            <th style="width: 28%">기존 카드</th>
-                                            <th style="width: 28%">교환 카드</th>
-                                            <th  style="width: 13%">포인트</th>
-                                            <th>상대방 닉네임</th>
-                                            <th>별점</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="historyList">
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                                </div>
-                            </div>
-                        </div>
-						
-					   <!-- Content Column 완료된 카드 리스트 -->
-                       <div class="col-lg-3 mb-4">
-                            <div class="card shadow mb-4" style="width: auto;">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold " >완료된 카드 리스트</h6>
-                                </div> 
-                                <div class="card-body" style="height: 93vh; overflow-y:scroll; ">
-                                <div class="card-container" style="width:180px;" 
-                                	 th:each="doneCard : ${doneCardList}" th:object="${doneCard}">
-                                	<input type="hidden" th:value="*{doneCard.cardIdx}">
-                                	<!-- card -->
-		                            <div class="card-name">
-		                                <p>[[*{doneCard.name}]]</p>
-		                            </div>
-		                            <div class="grade-container">
-		                                <div class="icon">
-		                                    <!-- 아이콘 변경 -->
-		                                    <input type="hidden" th:value="*{doneCard.category}">
-		                                    <i id="icon-val"></i>
-		                                </div>
-		                                <div class="user-grade">
-		                                    <p>사용자 평점</p>
-		                                    <!-- 사용자 별점 -->
-		                                    <div class="star">
-		                                    	<th:block th:if="${myRate} >= 1">
-		                                    		<th:block th:each="num : ${#numbers.sequence(1,myRate)}">
-													<i class="fas fa-star full-star"></i>
-													</th:block>
-		                                    	</th:block>
-												<th:block th:if="${myRate%1!=0}">
-													<i class="fas fa-star-half-alt"></i>
-												</th:block>
-												<th:block th:each="num : ${#numbers.sequence(0,5-myRate)}">
-													<i th:unless="${num == 0}" class="far fa-star"></i>
-												</th:block>
-		                                    </div>
-		                                </div>
-		                                <div class="item-grade">
-		                                    <p>물건 평점</p>
-		                                    <!-- 물건 별점 -->
-		                                    <div class="star">
-		                                    	<th:block th:each="num : *{#numbers.sequence(1,doneCard.condition)}">
-													<i class="fas fa-star full-star"></i>
-												</th:block>
-												<th:block th:each="num : *{#numbers.sequence(0,5-doneCard.condition)}">
-													<i th:unless="${num == 0}" class="far fa-star"></i>
-												</th:block>
-		                                    </div>
-		                                </div>
-		                            </div>
-		                           <div class="address">
-		                               <!-- 주소 -->
-		                               <p>지역 <span th:text="*{doneCard.region}"></span> <span th:text="*{doneCard.regionDetail}"></span></p>
-		                           </div>
-		                           <div class="card">
-		                           	<input type="hidden" th:value="*{doneCard.condition}">
-		                               <img class="card-box" alt="">
-		                               <div class="card-img">
-		                                   <!-- 카드 물건 이미지 -->
-		                                   <img th:src="*{fileDTO.getDownloadURL()}" alt="">
-		                               </div>
-		                           </div>
-		                           </div>	
+                                    <h6 class="m-0 font-weight-bold ">포인트 충전하기</h6>
+                                </div>
+                                <div class="card-body">
+									<div class="mypage-con" style="font-size: 40px; font-weight: bolder;">
+										<div >신청 금액</div>
+										<input id="point" type="number" step="100">p
+										<div>
+											<button onclick="requestPay()" class="btn btn-primary btn-user btn-block paymentButton" style="width: 300px;" >
+                                   			충전하기
+                                			</button>
+										</div>
+									</div>
                                 </div>
                             </div>
                         </div>
@@ -347,49 +312,58 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    
     <!-- Bootstrap core JavaScript-->
     <script src="../resources/vendor/jquery/jquery.min.js"></script>
     <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../resources/js/sb-admin-2.min.js"></script>
+
+	<script type="text/javascript" th:inline="javascript">
+
+    IMP.init("imp40776009");
 	
-	<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/member/history.js}"></script>
-	<script type="text/javascript" th:inline="javascript" >
-    document.querySelectorAll(".card-box").forEach(function(e){
-    	switch(e.previousElementSibling.value){
-    	case '1' : e.setAttribute("src","../resources/img/ddongCard.png"); break;
-    	case '2' : e.setAttribute("src","../resources/img/BrownCard.png"); break;
-    	case '3' : e.setAttribute("src","../resources/img/silverCard.png"); break;
-    	case '4' : e.setAttribute("src","../resources/img/goldCard.png"); break;
-    	case '5' : e.setAttribute("src","../resources/img/diaCard.png"); break;
-    	default : console.dir("error!!!");
-    	};
-    })
+    function requestPay() {
+    	console.dir("여기는 함수 실행!!!!!!!!!!!!! 추워!!!!!!!!!!!!");
+        // IMP.request_pay(param, callback) 결제창 호출
+        IMP.request_pay({ // param
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: 'merchant_' + new Date().getTime() + "_" + (1 + Math.random()) * 10000,
+            name: "포인트 충전",
+            amount: $("#point").val(),
+            buyer_email: [[${#authentication.name}]],
+            buyer_name: [[${#authentication.principal.memberName}]],
+            buyer_tel: [[${#authentication.principal.memberTell}]]
+        }, function (rsp) { // callback
+        	console.dir("여기는 callback");
+        	console.dir(rsp);
+            if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
+            	console.dir("여기는 success");
+            	// jQuery로 HTTP 요청
+                $.ajax({
+                    url: "/point/verifyIamport/" + rsp.imp_uid, // 예: https://www.myservice.com/payments/complete
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    data: {
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid
+                    }
+                }).done(function (data) {
+                  // 가맹점 서버 결제 API 성공시 로직
+                })
+            } else {
+            	 alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
+            }
+        });
+      }
+	</script>
+	
+	
 
-    document.querySelectorAll("#icon-val").forEach(function(e){
-    	switch(e.previousElementSibling.value){
-    	case '전자기기/생활가전' : e.setAttribute("class","fas fa-bolt"); break;
-    	case '가구/인테리어' : e.setAttribute("class","fas fa-couch"); break;
-    	case '유아동' : e.setAttribute("class","fal fa-baby"); break;
-    	case '생활/가공식품' : e.setAttribute("class","fas fa-utensils"); break;
-    	case '스포츠/레저' : e.setAttribute("class","fas fa-basketball-ball"); break;
-    	case '패션/잡화' : e.setAttribute("class","fas fa-tshirt"); break;
-    	case '게임/만화' : e.setAttribute("class","fas fa-gamepad"); break;
-    	case '뷰티/미용' : e.setAttribute("class","fas fa-air-freshener"); break;
-    	case '반려 동물 용품' : e.setAttribute("class","fas fa-paw"); break;
-    	case '도서/티켓/음반' : e.setAttribute("class","fas fa-compact-disc"); break;
-    	case '기타' : e.setAttribute("class","fas fa-cogs"); break;
-    	default : console.dir("error!!!");
-    	};
-    })
-    
-    
-    </script>
-    
-
-    
 </body>
 
 </html>

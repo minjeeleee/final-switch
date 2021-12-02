@@ -60,10 +60,15 @@ public interface ExchangeRepository {
 	@Select("select req_idx from exchange_status where requested_mem_idx=#{memberIdx}")
 	List<Integer> selectCardIdxWithMemberIdx(Integer memberIdx);
 
-	@Select("select * from exchange_history where requested_mem_idx=#{memberIdx} or request_mem_idx=#{memberIdx}")
-	List<ExchangeHistory> selectExchangeHistoryByMemIdx(Integer memberIdx);
+	@Select("select h.EH_IDX,h.E_IDX,h.EXCHANGE_DATE,h.REQUESTED_MEM_IDX,h.REQUEST_MEM_IDX,s.req_idx "
+			+ "from exchange_history h join exchange_status s on h.e_idx = s.e_idx "
+			+ "where (s.request_mem_idx = #{memberIdx} or s.requested_mem_idx =#{memberIdx})and  not s.req_idx is null")
+	List<ExchangeHistory> selectExchangeHistoryByMemIdxAndReqNotNull(Integer memberIdx);
 
 	
-	
+	@Select("select h.EH_IDX,h.E_IDX,h.EXCHANGE_DATE,h.REQUESTED_MEM_IDX,h.REQUEST_MEM_IDX,s.req_idx "
+			+ "from exchange_history h join exchange_status s on h.e_idx = s.e_idx "
+			+ "where (s.request_mem_idx = #{memberIdx} or s.requested_mem_idx =#{memberIdx})and  not s.freq_idx is null")
+	List<ExchangeHistory> selectExchangeHistoryByMemIdxAndFreqNotNull(Integer memberIdx);
 	
 }

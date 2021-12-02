@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.common.util.FileDTO;
 
@@ -81,13 +82,6 @@ public interface CardRepository {
 	@Select("select name from card where card_idx=#{cardIdx}")
 	String selectCardNameByCardIdx(Integer cardIdx);
 
-	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
-			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
-			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
-			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
-			+ "where e_idx =#{eIdx}")
-	CardRequestList selectCardRequestByEIdx(Integer eIdx);
-
 	List<Card> selectCardTrim(SearchCard searchCard);
 
 	void modifyCard(Card card);
@@ -102,5 +96,18 @@ public interface CardRepository {
 
 	@Select("select * from card where member_idx = #{memberIdx} and isfree = #{isfree} and is_del = 0 and exchange_status <> 'done'")
 	List<Card> selectCardByMemberIdxAndIsFreeExceptDone(@Param("memberIdx") Integer memberIdx, @Param("isfree") String isfree);
+
+	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
+			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
+			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
+			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
+			+ "where e_idx =#{eIdx}")
+	CardRequestList selectCardRequestByEIdx(Integer eIdx);
+	
+	@Select("select f.REQUESTED_CARD,"
+			+ " f.REQUESTED_MEM_IDX,f.REQUEST_MEM_IDX"
+			+ " from free_request_list f JOIN exchange_status e USING (freq_idx) "
+			+ "where e_idx =#{eIdx}")
+	FreeRequestList selectFreeRequestByEIdx(Integer eIdx);
 	
 }

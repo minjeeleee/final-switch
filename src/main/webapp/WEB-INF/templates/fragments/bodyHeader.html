@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
  <header th:fragment="bodyHeader">
 
         <div class="header-container">
 
             <div class="login-join-container ">
-                <div class="login-join inner-size">
+                <div sec:authorize="isAnonymous()" class="login-join inner-size">
                     <a href="member/login">로그인</a>
                     <div class="divid"></div>
                     <a href="">회원가입</a>
+                </div>
+                <div sec:authorize="isAuthenticated()" class="login-join inner-size">
+                    <a href="mypage/profile">[[${#authentication.principal.memberNick}]]</a>
+                    <div class="divid"></div>
+                    <form th:action="@{member/logout}" method="post"><button>로그아웃</button></form>
                 </div>
             </div>
 
@@ -19,10 +25,10 @@
                     </div>
                 </div>
                 <div class="inner-menu">
-                    <div class="trade-market hover"><a href="market/cardmarket" class="color-wt">교환마켓</a></div>
+                    <div class="trade-market hover"><a th:href="@{/market/cardmarket}" class="color-wt">교환마켓</a></div>
                     <div class="share-market hover"><a href="" class="color-wt">나눔마켓</a></div>
                     <div class="board hover"><a href="" class="color-wt">게시판</a></div>
-                    <div class="myCard hover"><a href="" class="color-wt">내카드</a></div>
+                    <div class="myCard hover"><a href="card/my-card" class="color-wt">내카드</a></div>
                     <div class="myPage hover"><a href="" class="color-wt">마이페이지</a></div>
                 </div>
             </div>
