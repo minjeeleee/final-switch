@@ -12,6 +12,12 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.switchswitch.alarm.model.dto.Alarm;
+import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
+import com.kh.switchswitch.chat.model.dto.ChatMessages;
+import com.kh.switchswitch.chat.model.repository.ChatRepository;
+import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,45 +25,45 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChattingHandler extends TextWebSocketHandler {
 	
-private List<Map<String, Object>> sessionList = new ArrayList<Map<String, Object>>();
-	
+	private List<Map<String, Object>> sessionList = new ArrayList<Map<String, Object>>();
+	private final MemberRepository memberRepository;
+	private final ChatRepository chatRepository;
+	private static Map<Integer, List<ChatMessages>> chatList = new HashMap<>();
+
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		
+		Member loginMember = memberRepository.selectMemberByEmailAndDelN(session.getPrincipal().getName());
+		
+		System.out.println("#AlarmController, afterConnectionEstablished");
+		
+		chatList.put(1, new ArrayList<ChatMessages>());
+		List<ChatMessages> memberChatMessagesList = chatRepository.selectChatMessagesList(1);
+		if(memberChatMessagesList != null) {
+			for (ChatMessages chatMessages : memberChatMessagesList) {
+				chatList.get(1).add(chatMessages);
+			}
+		}
+	}
 	// 클라이언트가 서버로 메세지 전송 처리
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
+		
 		super.handleTextMessage(session, message);
-		System.out.println(sessionList);
-        
+		Member loginMember = memberRepository.selectMemberByEmailAndDelN(session.getPrincipal().getName());
 		// JSON --> Map으로 변환
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, String> mapReceive = objectMapper.readValue(message.getPayload(), Map.class);
-
-		switch (mapReceive.get("cmd")) {
 		
+		switch (mapReceive.get("cmd")) {
 		// CLIENT 입장
 		case "CMD_ENTER":
 			// 세션 리스트에 저장
 			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("memberIdx", loginMember.getMemberIdx());
 			map.put("bang_id", mapReceive.get("bang_id"));
 			map.put("session", session);
 			sessionList.add(map);
-			
-			// 같은 채팅방에 입장 메세지 전송
-			for (int i = 0; i < sessionList.size(); i++) {
-				Map<String, Object> mapSessionList = sessionList.get(i);
-				String bang_id = (String) mapSessionList.get("bang_id");
-				WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
-				
-				if(bang_id.equals(mapReceive.get("bang_id"))) {
-					Map<String, String> mapToSend = new HashMap<String, String>();
-					mapToSend.put("bang_id", bang_id);
-					mapToSend.put("cmd", "CMD_ENTER");
-					mapToSend.put("msg", session.getId() +  "님이 입장 했습니다.");
-					
-					String jsonStr = objectMapper.writeValueAsString(mapToSend);
-					sess.sendMessage(new TextMessage(jsonStr));
-				}
-			}
 			break;
 			
 		// CLIENT 메세지
@@ -67,7 +73,7 @@ private List<Map<String, Object>> sessionList = new ArrayList<Map<String, Object
 				Map<String, Object> mapSessionList = sessionList.get(i);
 				String bang_id = (String) mapSessionList.get("bang_id");
 				WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
-
+				
 				if (bang_id.equals(mapReceive.get("bang_id"))) {
 					Map<String, String> mapToSend = new HashMap<String, String>();
 					mapToSend.put("bang_id", bang_id);
@@ -104,21 +110,6 @@ private List<Map<String, Object>> sessionList = new ArrayList<Map<String, Object
 			}	
 		}
 		
-		// 같은 채팅방에 퇴장 메세지 전송 
-		for (int i = 0; i < sessionList.size(); i++) {
-			Map<String, Object> mapSessionList = sessionList.get(i);
-			String bang_id = (String) mapSessionList.get("bang_id");
-			WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
-
-			if (bang_id.equals(now_bang_id)) {
-				Map<String, String> mapToSend = new HashMap<String, String>();
-				mapToSend.put("bang_id", bang_id);
-				mapToSend.put("cmd", "CMD_EXIT");
-				mapToSend.put("msg", session.getId() + "님이 퇴장 했습니다.");
-
-				String jsonStr = objectMapper.writeValueAsString(mapToSend);
-				sess.sendMessage(new TextMessage(jsonStr));
-			}
-		}
+		
 	}
 }

@@ -1,8 +1,6 @@
 package com.kh.switchswitch.mypage.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
@@ -166,9 +162,6 @@ public class MypageController {
 		}
 	}
 
-	@GetMapping("chat")
-	public void chat() {}
-	
 	@GetMapping("history")
 	public void history(@AuthenticationPrincipal MemberAccount member,Model model) {
 		//내 별점 구하기
