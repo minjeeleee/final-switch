@@ -165,10 +165,9 @@ public class MypageController {
 			return "disable";
 		}
 	}
-	
 
-	@GetMapping("chatting")
-	public void chatting() {}
+	@GetMapping("chat")
+	public void chat() {}
 	
 	@GetMapping("history")
 	public void history(@AuthenticationPrincipal MemberAccount member,Model model) {
