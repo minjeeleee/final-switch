@@ -48,4 +48,7 @@ public interface MemberRepository {
 	
 	@Select("select member_nick from member where member_idx = #{requestMemIdx}")
 	String selectMemberNickWithMemberIdx(Integer requestMemIdx);
+
+	@Select("select member_score from member where member_idx = #{memberIdx}")
+	Float selectMemberScoreByMemberIdx(Integer memberIdx);
 }

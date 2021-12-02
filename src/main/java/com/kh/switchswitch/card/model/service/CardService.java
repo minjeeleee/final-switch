@@ -77,4 +77,6 @@ public interface CardService {
 	void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type);
 	
 	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
+	
+	List<Map<String,Object>> selectCardsTop5();
 }

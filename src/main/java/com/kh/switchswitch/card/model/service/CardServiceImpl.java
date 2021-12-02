@@ -20,6 +20,7 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
+import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class CardServiceImpl implements CardService {
 	private final CardRepository cardRepository;
 	private final CardRequestListRepository cardRequestListRepository;
 	private final ExchangeRepository exchangeRepository;
+	private final MemberRepository memberRepository;
 	
 	@Override
 	public void insertCard(List<MultipartFile> imgList, Card card) {
@@ -282,6 +284,19 @@ public class CardServiceImpl implements CardService {
 		exchangeStatus.setRequestMemIdx(freeRequest.getRequestMemIdx());
 		exchangeRepository.insertExchangeStatus(exchangeStatus);
 		
+	}
+
+	public List<Map<String, Object>> selectCardsTop5() {
+		List<Map<String, Object>> cardsTop5 = new ArrayList<>();
+		
+		List<Card> cards = cardRepository.selectCardsTop5();
+		if(cards != null) {
+			for (Card card : cards) {
+				System.out.println(card);
+				cardsTop5.add(Map.of("card", card, "fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0), "cardOwnerRate", memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx()))) ;
+			}
+		}
+		return cardsTop5;
 	}
 
 }
