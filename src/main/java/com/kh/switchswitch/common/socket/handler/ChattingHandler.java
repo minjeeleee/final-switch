@@ -28,7 +28,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 	private List<Map<String, Object>> sessionList = new ArrayList<Map<String, Object>>();
 	private final MemberRepository memberRepository;
 	private final ChatRepository chatRepository;
-	private static Map<Integer, List<ChatMessages>> chatList = new HashMap<>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -37,13 +36,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 		
 		System.out.println("#AlarmController, afterConnectionEstablished");
 		
-		chatList.put(1, new ArrayList<ChatMessages>());
-		List<ChatMessages> memberChatMessagesList = chatRepository.selectChatMessagesList(1);
-		if(memberChatMessagesList != null) {
-			for (ChatMessages chatMessages : memberChatMessagesList) {
-				chatList.get(1).add(chatMessages);
-			}
-		}
 	}
 	// 클라이언트가 서버로 메세지 전송 처리
 	@Override
@@ -53,6 +45,25 @@ public class ChattingHandler extends TextWebSocketHandler {
 		Member loginMember = memberRepository.selectMemberByEmailAndDelN(session.getPrincipal().getName());
 		// JSON --> Map으로 변환
 		ObjectMapper objectMapper = new ObjectMapper();
+		
+		//채팅 이력 불러오기
+		List<ChatMessages> memberChatMessagesList = chatRepository.selectChatMessagesList(1);
+		System.out.println("memberChatMessagesList : "+memberChatMessagesList);
+		if(memberChatMessagesList != null) {
+			for (ChatMessages chatMessages : memberChatMessagesList) {
+				//회원 아이디도 담아서 전송 => 수정 해야함
+				String cmd = "";
+				System.out.println(chatMessages.getSenderId());
+				System.out.println(loginMember.getMemberIdx());
+				if(chatMessages.getSenderId() == loginMember.getMemberIdx()) cmd = "CMD_MSG_SEND";
+				else cmd = "CMD_ENTER";
+				String jsonStr = objectMapper.writeValueAsString(Map.of("bang_id", chatMessages.getChattingIdx()
+						,"cmd",cmd,"msg",memberRepository.selectMemberNickWithMemberIdx(chatMessages.getSenderId())
+						+ " : " +chatMessages.getMessage()));
+				session.sendMessage(new TextMessage(jsonStr));
+			}
+		}
+		//새로운 채팅
 		Map<String, String> mapReceive = objectMapper.readValue(message.getPayload(), Map.class);
 		System.out.println(mapReceive);
 		switch (mapReceive.get("cmd")) {
@@ -76,10 +87,13 @@ public class ChattingHandler extends TextWebSocketHandler {
 				WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
 				
 				if (bang_id.equals(mapReceive.get("bang_id"))) {
+					//여기서도 보낼떄 회원 아이디 추가
 					Map<String, String> mapToSend = new HashMap<String, String>();
 					mapToSend.put("bang_id", bang_id);
 					mapToSend.put("cmd", "CMD_MSG_SEND");
-					mapToSend.put("msg", session.getId() + " : " + mapReceive.get("msg"));
+					mapToSend.put("msg"
+									, memberRepository.selectMemberNickWithMemberIdx((Integer)mapSessionList.get("memberIdx")) 
+									+ " : " + mapReceive.get("msg"));
 					
 					if(loginMember.getMemberIdx().equals(mapSessionList.get("memberIdx"))) {
 						ChatMessages chatMessages = new ChatMessages();
@@ -91,7 +105,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 					
 					String jsonStr = objectMapper.writeValueAsString(mapToSend);
 					sess.sendMessage(new TextMessage(jsonStr));
-					
 				}
 			}
 			
