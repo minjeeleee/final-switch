@@ -1,6 +1,7 @@
 package com.kh.switchswitch.point.model.service;
 
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.point.model.dto.InquiryRealName;
 
 public interface PointService {
 
@@ -8,6 +9,6 @@ public interface PointService {
 
 	void updateSavePoint(CardRequestList cardRequestList);
 
-	String checkAccount(String account);
+	String checkAccount(InquiryRealName inquiryRealName);
 
 }

@@ -1,6 +1,7 @@
 package com.kh.switchswitch.point.model.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.point.model.dto.InquiryRealName;
 import com.kh.switchswitch.point.model.dto.SavePoint;
+import com.kh.switchswitch.point.model.repository.InquiryRealNameRepository;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ public class PointServiceImpl implements PointService{
 	
 	private final SavePointRepository savePointRepository;
 	private final RestTemplate http;
+	private final InquiryRealNameRepository inquiryRealNameRepository;
 
 	public void updateSavePointWithAvailableBal(int availableBal, int memberIdx) {
 		SavePoint savePoint = new SavePoint();
@@ -41,12 +45,9 @@ public class PointServiceImpl implements PointService{
 		savePointRepository.updateSavePoint(savePoint);
 	}
 
-	public String checkAccount(String account) {
+	public String checkAccount(InquiryRealName inquiryRealName) {
 		
 		String accessToken = "";
-		String accountNum = "";
-		String accountHolderName = "";
-		String savingsBankName = "";
 		
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("client_id", "4bd8e1e3-6c00-4aa1-bb89-46613a436a04");
@@ -76,14 +77,21 @@ public class PointServiceImpl implements PointService{
 		
 		//은행연결하려면? 처음에 사용자등록 필요
 		ObjectMapper obj = new ObjectMapper();
+		LocalDateTime now = LocalDateTime.now();
+		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		String bankTranId = inquiryRealNameRepository.selectLastBankTranId() == null ? 
+											"M202113699U111111420" : inquiryRealNameRepository.selectLastBankTranId() ;
+		int backNum = Integer.valueOf(bankTranId.substring(11), 10) + 1;
+		String newBankTranId = bankTranId.substring(0, 11) + Integer.toString(backNum);
+		System.out.println(newBankTranId);
 		
 		Map<String, String> bodyForRealName = new HashMap<>();
-		bodyForRealName.put("bank_tran_id", "M202113699U123456797");
-		bodyForRealName.put("bank_code_std", "020");
-		bodyForRealName.put("account_num","1002850748177");
+		bodyForRealName.put("bank_tran_id", newBankTranId);
+		bodyForRealName.put("bank_code_std", inquiryRealName.getBankCodeStd());
+		bodyForRealName.put("account_num", inquiryRealName.getAccountNum());
 		bodyForRealName.put("account_holder_info_type", " ");
-		bodyForRealName.put("account_holder_info", "951220");
-		bodyForRealName.put("tran_dtime", "20190910101921");
+		bodyForRealName.put("account_holder_info", inquiryRealName.getAccountHolderInfo());
+		bodyForRealName.put("tran_dtime", formatedNow);
 		
 		try {
 			String jsonRealName = obj.writerWithDefaultPrettyPrinter().writeValueAsString(bodyForRealName);
@@ -98,6 +106,15 @@ public class PointServiceImpl implements PointService{
 			
 			ResponseEntity<String> responseEntityRealName = http.exchange(requestRealName, String.class);
 			
+			InquiryRealName irn = new InquiryRealName();
+			irn.setBankTranId(newBankTranId);
+			irn.setBankCodeStd(inquiryRealName.getBankCodeStd());
+			irn.setAccountNum(inquiryRealName.getAccountNum());
+			irn.setAccountHolderInfo(inquiryRealName.getAccountHolderInfo());
+			irn.setTranDtime(formatedNow);
+			irn.setBankTranId(newBankTranId);
+			inquiryRealNameRepository.insertInquiryRealName(irn);
+			
 			if (responseEntityRealName.getStatusCode() == HttpStatus.OK) {
 				try {
 					ObjectMapper objMapper = new ObjectMapper();
@@ -107,11 +124,11 @@ public class PointServiceImpl implements PointService{
 						System.out.println(string + ":" + objMap.get(string));
 					} 
 					
-					accountNum = objMap.get("account_num");
-					accountHolderName = objMap.get("account_holder_name");
-					savingsBankName = objMap.get("savings_bank_name");
+					String accountNum = objMap.get("account_num");
+					String accountHolderName = objMap.get("account_holder_name");
+					String bankName = objMap.get("bank_name");
 					
-					return accountNum + "," + accountHolderName + "," + savingsBankName;
+					return accountNum + "," + accountHolderName + "," + bankName;
 					
 				} catch (JsonProcessingException e) {
 					e.printStackTrace();
@@ -122,14 +139,8 @@ public class PointServiceImpl implements PointService{
 			e1.printStackTrace();
 		}
 		
-		
-		
-		
-		
-		
 		return null;
 	}
-	
 	
 	
 }
