@@ -82,6 +82,9 @@ public class ExchangeController {
 		
 	}
 	
+	@GetMapping("exchangeForm2")
+	public void exchagneForm2(){}
+	
 	@PostMapping("exchangeForm")
 	public String exchangeForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
