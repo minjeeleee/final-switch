@@ -12,4 +12,5 @@ public class ChatMessages {
 	private Integer senderId;
 	private String message;
 	private Date createdAt;
+	private Integer IsRead;
 }
