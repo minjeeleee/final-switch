@@ -145,6 +145,13 @@
        <div th:replace="fragments/footer :: footer"></div>
     </footer>
 	<script type="text/javascript">
+		let sockForTop5Card = new SockJS('http://localhost:9090/batch');
+		sockForTop5Card.onmessage = function(msg){
+			var data = msg.data;
+			console.dir(data);
+		};
+		
+	
 		document.querySelectorAll(".card-box").forEach(function(e){
 			switch(e.previousElementSibling.value){
 			case '1' : e.setAttribute("src","../resources/img/ddongCard.png"); break;

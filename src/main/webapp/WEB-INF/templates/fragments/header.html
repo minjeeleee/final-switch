@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header">
   	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,11 +29,14 @@
     
     
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script type="text/javascript" th:inline="javascript">
+    <th:block sec:authorize="isAuthenticated()">
+   	 <script type="text/javascript" th:inline="javascript">
 		let sock = new SockJS('http://localhost:9090/alarm');
 		sock.onmessage = function(msg){
 			var data = msg.data;
 			console.dir(data);
 		};
-	</script>
+	</script> 	
+    </th:block>
+   
 </head>
