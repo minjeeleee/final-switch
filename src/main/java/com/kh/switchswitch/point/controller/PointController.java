@@ -43,6 +43,9 @@ public class PointController {
 	@GetMapping("point-history")
 	public void pointHistory() {}
 	
+	@GetMapping("point-history2")
+	public void pointHistory2() {}
+	
 	@GetMapping("point-return")
 	public void pointReturn() {}
 	
