@@ -35,6 +35,14 @@
 		sock.onmessage = function(msg){
 			var data = msg.data;
 			console.dir(data);
+			let alarmIdx = data.split(",")[0]; //알림idx
+			let msg = data.split(",")[1]; //받은 알림 메시지
+			//알림 생성 (3초)
+			let alarmBox = document.createElement("div");
+			alarm.style.width = "150px";
+			alarm.style.height = "60px";
+			alarm.style.backgroundColor = "lightyellow";
+			alarmBox.innerHtml = data;
 		};
 	</script> 	
     </th:block>
