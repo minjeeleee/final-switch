@@ -30,203 +30,255 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.Member;
 
-
 @Controller
 @RequestMapping("admin")
 public class AdminController {
-	
+
 	private AdminService adminService;
 	private MemberUpdateValidator memberUpdateValidator;
-	
-	public AdminController(AdminService adminService,MemberUpdateValidator memberUpdateValidator) {
+
+	public AdminController(AdminService adminService, MemberUpdateValidator memberUpdateValidator) {
 		super();
 		this.adminService = adminService;
 		this.memberUpdateValidator = memberUpdateValidator;
 	}
-	
-	@InitBinder(value="memberUpdateForm")
+
+	@InitBinder(value = "memberUpdateForm")
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(memberUpdateValidator);
 	}
-	
+
 	@GetMapping("main")
-	public void main() {}
-	
+	public void main() {
+	}
+
 	@GetMapping("real-time-cards")
-	public void realTimeCards(Model model) {
-		List<Map<String,Object>> cardList = new ArrayList<>();
+	public void realTimeCards(Model model, @RequestParam(required = false) String type) {
+		if (type != null) {
+			switch (type) {
+			case "allCard":
+				allCardList(model);
+				break;
+			case "tradeCard":
+				tradeCardList(model);
+				break;
+			case "freeCard":
+				freeCardList(model);
+				break;
+			case "onlyImg":
+				onlyImgList(model);
+				break;
+			}
+		} else {
+			allCardList(model);
+		}
+
+	}
+
+	private void onlyImgList(Model model) {
+		List<FileDTO> cardList = adminService.selectCardImgList();
+		model.addAttribute("cardList", cardList);
+	}
+
+	private void freeCardList(Model model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void tradeCardList(Model model) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void allCardList(Model model) {
+		List<Map<String, Object>> cardList = new ArrayList<>();
 		List<Card> memberCardList = adminService.selectCardList();
-		if(cardList != null) {
+		if (memberCardList != null) {
 			for (Card card : memberCardList) {
 				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
 				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
-				cardList.add(Map.of("card", card, "fileDTO", mainImgFile,"fileDTOAll",imgFile));
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
 			}
 		}
-		model.addAttribute("cardList",cardList);
+		model.addAttribute("cardList", cardList);
 	}
-	
+
 	@GetMapping("all-cards")
-	public void allCards(Model model, @Nullable@RequestParam(name = "searchPeriod") String searchPeriod,
-									  @Nullable@RequestParam(name = "searchType") String searchType,
-									  @Nullable@RequestParam(name = "searchKeyword") String searchKeyword) {
-		List<Map<String,Object>> cardList = new ArrayList<>();
-		List<Card> memberCardList = adminService.selectCardListDetail(searchPeriod,searchType,searchKeyword);
-		if(cardList != null) {
+	public void allCards(Model model, @Nullable @RequestParam(name = "searchPeriod") String searchPeriod,
+			@Nullable @RequestParam(name = "searchType") String searchType,
+			@Nullable @RequestParam(name = "searchKeyword") String searchKeyword) {
+		List<Map<String, Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardListDetail(searchPeriod, searchType, searchKeyword);
+		if (cardList != null) {
 			for (Card card : memberCardList) {
 				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
 				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
-				cardList.add(Map.of("card", card, "fileDTO", mainImgFile,"fileDTOAll",imgFile));
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
 			}
 		}
-		model.addAttribute("cardList",cardList);
+		model.addAttribute("cardList", cardList);
 	}
-	
+
 	@GetMapping("card-delete")
 	@ResponseBody
 	public String cardDelete(@RequestParam Integer cardIdx) {
-		if(cardIdx != null) {
+		if (cardIdx != null) {
 			adminService.deleteCard(cardIdx);
 			return "success";
-		}else {
+		} else {
 			throw new HandlableException(ErrorCode.DATABASE_ACCESS_ERROR);
 		}
 	}
-	
+
 	@GetMapping("all-members")
-	public void allMembers(Model model, @Nullable@RequestParam(name = "searchDetail") String searchType,
-										@Nullable@RequestParam(name = "searchKeyword") String keyword) {
-		List<Member> memberList = adminService.selectMemberAllList(searchType,keyword);
-		model.addAttribute("memberList",memberList);
+	public void allMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
+			@Nullable @RequestParam(name = "searchKeyword") String keyword) {
+		List<Member> memberList = adminService.selectMemberAllList(searchType, keyword);
+		model.addAttribute("memberList", memberList);
 	}
-	
+
 	@GetMapping("changeMemberStatus")
 	public String changeMemberStatus(@RequestParam String code, @RequestParam int memberIdx) {
-		adminService.updateMemberCode(code,memberIdx);
+		adminService.updateMemberCode(code, memberIdx);
 		return "redirect:/admin/all-members";
 	}
-	
+
 	@GetMapping("black-list-members")
-	public void blackListMembers(Model model, @Nullable@RequestParam(name = "searchDetail") String searchType,
-											  @Nullable@RequestParam(name = "searchKeyword") String keyword) {
-		List<Member> memberList = adminService.selectMemberBlackList(searchType,keyword);
-		model.addAttribute("memberList",memberList);
+	public void blackListMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
+			@Nullable @RequestParam(name = "searchKeyword") String keyword) {
+		List<Member> memberList = adminService.selectMemberBlackList(searchType, keyword);
+		model.addAttribute("memberList", memberList);
 	}
-	
+
 	@GetMapping("removeMemberBlack")
 	public String removeMemberBlack(@RequestParam String code, @RequestParam int memberIdx) {
-		adminService.updateMemberCode(code,memberIdx);
+		adminService.updateMemberCode(code, memberIdx);
 		return "redirect:/admin/black-list-members";
 	}
-	
+
 	@GetMapping("memberLeave")
 	public String memberLeave(@RequestParam Integer memberIdx) {
 		adminService.deleteMember(memberIdx);
 		return "redirect:/admin/all-members";
 	}
-	
+
 	@GetMapping("refunds-history")
-	public void refundsHistory() {}
-	
+	public void refundsHistory() {
+	}
+
 	@GetMapping("member-profile")
 	public void memberProfile(@RequestParam int memberIdx, Model model) {
+		// 회원정보
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
+		// 회원이 등록한 카드 수량
 		Integer cardCountFromMember = adminService.selectCardCountByMemberIdx(memberIdx);
-		model.addAttribute("memberInfo",memberInfo);
-		model.addAttribute("cardCnt",cardCountFromMember);
+
+		// 회원이 등록한 카드
+		List<Map<String, Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardListByMemberIdx(memberIdx);
+		if (memberCardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
+			}
+			model.addAttribute("cardList", cardList);
+		}
+		model.addAttribute("memberCardList", memberCardList);
+		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("cardCnt", cardCountFromMember);
 	}
-	
+
 	@GetMapping("member-profile-edit")
 	public void memberProfileEdit(@RequestParam int memberIdx, Model model) {
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
-		model.addAttribute("memberInfo",memberInfo);
+		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute(new MemberUpdateForm()).addAttribute("error", new ValidatorResult().getError());
 	}
-	
+
 	@PostMapping("member-profile-edit-success")
-	public String memberProfileEditSuccess(@Validated MemberUpdateForm form,
-										Model model,
-										@RequestParam Integer memberIdx,
-										Errors errors,
-										RedirectAttributes redirectAttr
-										) {
+	public String memberProfileEditSuccess(@Validated MemberUpdateForm form, Model model,
+			@RequestParam Integer memberIdx, Errors errors, RedirectAttributes redirectAttr) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
-		if(errors.hasErrors()) {
+		if (errors.hasErrors()) {
 			vr.addErrors(errors);
-			return "redirect:/admin/member-profile-edit?memberIdx="+memberIdx;
+			return "redirect:/admin/member-profile-edit?memberIdx=" + memberIdx;
 		}
-		adminService.updateMemberInfo(form.convertToMember(),memberIdx);
-		return "redirect:/admin/member-profile?memberIdx="+memberIdx;
+		adminService.updateMemberInfo(form.convertToMember(), memberIdx);
+		return "redirect:/admin/member-profile?memberIdx=" + memberIdx;
 	}
-	
+
 	@GetMapping("nick-check")
 	@ResponseBody
 	public String nickCheck(String nickName) {
-		if(nickName.equals(adminService.checkNickName(nickName))) {
+		if (nickName.equals(adminService.checkNickName(nickName))) {
 			return "available";
-		}else {
+		} else {
 			return "disable";
 		}
 	}
-	
+
 	@GetMapping("profile-img-delete")
 	@ResponseBody
 	public String profileImgDelete(Integer flIdx) {
 		System.out.println("비동기통신 성공");
-		if(flIdx != null) {
+		if (flIdx != null) {
 			adminService.deleteMemberProfileImg(flIdx);
 			return "success";
-		}else {
+		} else {
 			return "fail";
 		}
 	}
-	
+
 	@GetMapping("page-setting")
 	public void pageSetting(Model model) {
-		//주메뉴
-		Map<String,List<Menu>> childMenuList = new LinkedHashMap<String, List<Menu>>();
+		// 주메뉴
+		Map<String, List<Menu>> childMenuList = new LinkedHashMap<String, List<Menu>>();
 		List<Menu> parentMenu = adminService.selectMenuList();
-		model.addAttribute("menuList",adminService.selectMenuList());
+		model.addAttribute("menuList", adminService.selectMenuList());
 		for (Menu menu : parentMenu) {
 			String parent = menu.getUrlName();
 			childMenuList.put(parent, adminService.selectChildMenu(parent));
 		}
-		model.addAttribute("childMenuList",childMenuList);
-		
-		//사이드메뉴
-		Map<String,List<Menu>> childSideMenuList = new LinkedHashMap<String, List<Menu>>();
+		model.addAttribute("childMenuList", childMenuList);
+
+		// 사이드메뉴
+		Map<String, List<Menu>> childSideMenuList = new LinkedHashMap<String, List<Menu>>();
 		List<Menu> sideParentMenu = adminService.selectSideMenu();
-		model.addAttribute("sideMenuList",sideParentMenu);
+		model.addAttribute("sideMenuList", sideParentMenu);
 		for (Menu menu : sideParentMenu) {
 			String parent = menu.getUrlName();
-			childSideMenuList.put(parent,adminService.selectChildMenu(parent));
+			childSideMenuList.put(parent, adminService.selectChildMenu(parent));
 		}
-		model.addAttribute("childSideMenuList",childSideMenuList);
-		
-		//목록 및 페이지 추가 팝업 view
+		model.addAttribute("childSideMenuList", childSideMenuList);
+
+		// 목록 및 페이지 추가 팝업 view
 		model.addAttribute("menuAllList", adminService.selectMenuAllList());
-		model.addAttribute("parentsMenuList",adminService.selectParentsMenuListByMenu());
-		model.addAttribute("parentsSideMenuList",adminService.selectParentsMenuListBySideMenu());
-		model.addAttribute("codeList",adminService.selectCodeList());
+		model.addAttribute("parentsMenuList", adminService.selectParentsMenuListByMenu());
+		model.addAttribute("parentsSideMenuList", adminService.selectParentsMenuListBySideMenu());
+		model.addAttribute("codeList", adminService.selectCodeList());
 	}
-	
+
 	@PostMapping("add-menu")
 	public String addPage(Menu menu) {
-			if(menu.getParent().equals("없음")) {
+		try {
+			if (menu.getParent().equals("없음")) {
 				menu.setDepth(1);
 				adminService.insertMenu(menu);
-			}else {
+			} else {
 				menu.setDepth(2);
 				adminService.insertMenu(menu);
 			}
+		} catch (Exception e) {
+			throw new HandlableException(ErrorCode.DATABASE_ACCESS_ERROR);
+		}
 		return "redirect:/admin/page-setting";
 	}
-	
+
 	@GetMapping("delete-menu")
 	public String deleteMenu(int urlIdx) {
 		adminService.deleteMenu(urlIdx);
 		return "redirect:/admin/page-setting";
 	}
-	
 }

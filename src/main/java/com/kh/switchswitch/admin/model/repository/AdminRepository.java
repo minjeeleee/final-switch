@@ -70,8 +70,6 @@ public interface AdminRepository {
 	@Update("update member set code=#{code} where member_idx=#{memberIdx}")
 	void updateMemberCode(@Param("code")String code,@Param("memberIdx") int memberIdx);
 	
-	
-	
 	@Select("select * from member where member_idx = #{memberIdx} and member_del_yn=0")
 	Member selectMemberByIdx(int memberIdx);
 	
@@ -94,6 +92,12 @@ public interface AdminRepository {
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectFileInfoByCardIdx(Integer cardIdx);
+	
+	@Select("select * from card where member_idx = #{memberIdx} and rownum < 6 and is_del = 0")
+	List<Card> selectCardListByMemberIdx(int memberIdx);
+	
+	@Select("select * from file_info where card_idx is not null and is_del = 0 ")
+	List<FileDTO> selectCardImgList();
 
 	
 

@@ -164,6 +164,16 @@ public class AdminService {
 		adminRepository.deleteMemberProfileImg(flIdx);
 	}
 
+	public List<Card> selectCardListByMemberIdx(int memberIdx) {
+		List<Card> cardList = adminRepository.selectCardListByMemberIdx(memberIdx);
+		return cardList;
+	}
+
+	public List<FileDTO> selectCardImgList() {
+		List<FileDTO> cardImg = adminRepository.selectCardImgList();
+		return cardImg;
+	}
+
 	
 
 	
