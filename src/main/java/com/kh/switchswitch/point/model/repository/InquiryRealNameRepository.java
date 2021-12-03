@@ -12,7 +12,7 @@ public interface InquiryRealNameRepository {
 	@Insert("insert into inquiry_real_name values(#{bankTranId}, #{bankCodeStd}, #{accountNum}, #{accountHolderInfo}, #{tranDtime} )")
 	void insertInquiryRealName(InquiryRealName inquiryRealName);
 	
-	@Select("select bank_tran_id from inquiry_real_name where rownum = 1")
+	@Select("select bank_tran_id from (select bank_tran_id from inquiry_real_name order by bank_tran_id desc) where rownum = 1")
 	String selectLastBankTranId();
 	
 }
