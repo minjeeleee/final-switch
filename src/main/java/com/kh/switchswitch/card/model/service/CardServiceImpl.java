@@ -292,7 +292,6 @@ public class CardServiceImpl implements CardService {
 		if(schedule.getCardsTop5().isEmpty()) {
 			schedule.setCardsTop5();
 		}
-		
 		return schedule.getCardsTop5();
 	}
 
