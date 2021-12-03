@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html  xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="utf-8">
@@ -271,7 +272,7 @@
 										<form action="">
 											<input type="number" step="100">p
 											<div style="font-size: 20px; margin-top: 30px;">환급 계좌 번호</div>
-											<input type="number" style="font-size: 20px;">
+											<input type="number" style="font-size: 20px;"  id="account">
 											<select name="bank"  style="font-size: 20px;">
 												<option value="하나은행">하나은행</option>
 												<option value="신한은행">신한은행</option>
@@ -289,7 +290,8 @@
                     </div>
                 </div>
                 <!-- /.container-fluid -->
-
+                <button onclick="checkAccount()">계좌조회</button>
+				
             </div>
             <!-- End of Main Content -->
 
@@ -323,6 +325,30 @@
 
     <!-- Custom scripts for all pages-->
     <script src="../resources/js/sb-admin-2.min.js"></script>
+    
+    <script type="text/javascript">
+    function checkAccount(){
+    	let account = document.querySelector("#account").value;
+    	fetch("/point/checkAccount?account="+ account)
+    	.then(response =>{
+    		if(response.ok){
+    			return response.text()
+    		}else{
+    			throw new Error(response.status);
+    		}
+    	})
+    	.then(text => {
+			if(text == '실패'){
+				console.dir(text);
+			}else{
+				console.dir(text);
+			}
+		})
+		.catch(error => {
+			console.dir(error);
+		});
+    }
+    </script>
 
 </body>
 

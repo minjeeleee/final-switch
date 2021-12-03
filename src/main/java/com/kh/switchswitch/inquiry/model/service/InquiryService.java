@@ -1,9 +1,6 @@
 package com.kh.switchswitch.inquiry.model.service;
 
-import java.util.List;
 import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 

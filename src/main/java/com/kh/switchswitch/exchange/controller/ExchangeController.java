@@ -48,12 +48,11 @@ public class ExchangeController {
 	@GetMapping("exchangeForm")
 	public void exchangeForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
-			//, int wishCardIdx
+			, int wishCardIdx
 			, Model model) {
 		//내카드 리스트
 		List<Map<String,Object>> cardlist = new ArrayList<>();
 		List<Card> myCardList = exchangeService.selecAvailableMyCardList(certifiedMember.getMemberIdx());
-		int wishCardIdx = 393;
 		
 		if(myCardList != null) {
 			for (Card card : myCardList) {
