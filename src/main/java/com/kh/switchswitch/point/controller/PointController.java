@@ -1,7 +1,9 @@
 package com.kh.switchswitch.point.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.switchswitch.point.model.service.PointService;
@@ -51,6 +54,19 @@ public class PointController {
 	{	
 			return api.paymentByImpUid(imp_uid);
 	}
+	
+	@ResponseBody
+	@GetMapping("checkAccount")
+	public String checkAccount(@RequestParam String account){
+		String userInfo = pointService.checkAccount(account);
+ 		if(userInfo != null) {
+			return userInfo;
+		}
+		
+		return "실패";
+	}
+
+    
 		
 
 }
