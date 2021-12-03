@@ -62,7 +62,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 			
 		// CLIENT 메세지
 		case "CMD_MSG_SEND":
-			System.out.println("sessionList : "+sessionList);
 			// 같은 채팅방에 메세지 전송
 			Integer senderId = 0;
 			for (int i = 0; i < sessionList.size(); i++) {
