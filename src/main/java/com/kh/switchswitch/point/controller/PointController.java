@@ -43,6 +43,9 @@ public class PointController {
 	
 	@GetMapping("point-return")
 	public void pointReturn() {}
+	
+	@GetMapping("point-return2")
+	public void pointReturn2() {}
 		
 	@ResponseBody
 	@RequestMapping(value="/verifyIamport/{imp_uid}")

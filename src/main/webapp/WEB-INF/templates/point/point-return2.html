@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<body>
+
+   	<header th:replace="fragments/subBodyHeader :: header">
+    </header>
+	
+	<div class="sub-menu hide">
+		<div th:replace="fragments/subMenu" :: subNav>
+	    </div>
+	</div>>
+   
+    <section>
+
+        <div class="ref-title-container">
+            <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>포인트</h1>
+                    <p>잔여포인트</p><span>2000P</span>
+                    <p>가용포인트</p><span>2000P</span>
+                </div>
+
+                <div class="ref-img">
+                    <img src="../resources/img/pointCoin.png" alt="">
+                </div>
+
+            </div>
+
+            <div class="single-title inner-size">
+
+                <p>환급</p>
+                
+            </div>
+
+            <div class="refund-container inner-size">
+
+                <div class="refund-input">
+                    <form class="refund-form" action="">
+                        <div class="req_point">
+                            <p>신청금액</p>
+                            <input type="text" name="point" id="">
+                        </div>
+                        <div class="account">
+                            <p>환급계좌번호</p>
+                            <input type="text" name="account" id="">
+                            <select name="" id="">
+                                <option value="">은행</option>
+                                <option value="">신한은행</option>
+                                <option value="">우리은행</option>
+                                <option value="">농협은행</option>
+                            </select>
+                        </div>
+                        <button class="ref-submit-button" type="submit">신청하기</button>
+                    </form>
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <footer>
+       <div th:replace="fragments/footer :: footer" ></div>
+   	</footer>
+    
+</body>
+</html>
