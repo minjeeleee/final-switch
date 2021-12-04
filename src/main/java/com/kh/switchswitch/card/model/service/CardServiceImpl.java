@@ -21,6 +21,7 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -293,6 +294,21 @@ public class CardServiceImpl implements CardService {
 			schedule.setCardsTop5();
 		}
 		return schedule.getCardsTop5();
+	}
+
+	public List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember) {
+		List<Map<String, Object>> cardlist = new ArrayList<>();
+		List<Card> myCardList = cardRepository.selectCardListIsDelAndStatus(certifiedMember.getMemberIdx());
+		if (myCardList != null) {
+			for (Card card : myCardList) {
+				cardlist.add(selectCard(card.getCardIdx()));
+			}
+		}
+		return cardlist;
+	}
+
+	public Map<String, Object> selectCard(int cardIdx) {
+		return Map.of("cardInfo", cardRepository.selectCardByCardIdx(cardIdx), "fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0));
 	}
 
 }

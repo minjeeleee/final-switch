@@ -78,17 +78,17 @@
 				<div class="exc-card-table">
 					<th:block th:if="${cardlist}">
 						<div class="card-container" th:each="card : ${cardlist}"
-							th:object="${card}" th:id="*{card.cardIdx}"
+							th:object="${card}" th:id="*{cardInfo.cardIdx}"
 							onclick="transfer(this)">
 							<div class="card">
-								<input type="hidden" th:value="*{card.cardIdx}">
+								<input type="hidden" th:value="*{cardInfo.cardIdx}">
 								<div class="card-name">
-									<p>[[*{card.name}]]</p>
+									<p>[[*{cardInfo.name}]]</p>
 								</div>
 								<div class="grade-container">
 									<div class="icon">
 										<!-- 아이콘 변경 -->
-										<input type="hidden" th:value="*{card.category}"> 
+										<input type="hidden" th:value="*{cardInfo.category}"> 
 										<i id="icon-val"></i>
 									</div>
 									<div class="user-grade">
@@ -113,11 +113,11 @@
 										<!-- 물건 별점 -->
 										<div class="star">
 											<th:block
-												th:each="num : *{#numbers.sequence(1,card.condition)}">
+												th:each="num : *{#numbers.sequence(1,cardInfo.condition)}">
 												<i class="fas fa-star full-star"></i>
 											</th:block>
 											<th:block
-												th:each="num : *{#numbers.sequence(0,5-card.condition)}">
+												th:each="num : *{#numbers.sequence(0,5-cardInfo.condition)}">
 												<i th:unless="${num == 0}" class="far fa-star"></i>
 											</th:block>
 										</div>
@@ -126,12 +126,12 @@
 								<div class="address">
 									<!-- 주소 -->
 									<p>
-										지역 <span th:text="*{card.region}"></span> 
-										<span th:text="*{card.regionDetail}"></span>
+										지역 <span th:text="*{cardInfo.region}"></span> 
+										<span th:text="*{cardInfo.regionDetail}"></span>
 									</p>
 								</div>
 								<div class="card">
-									<input type="hidden" th:value="*{card.condition}"> 
+									<input type="hidden" th:value="*{cardInfo.condition}"> 
 									<img class="card-box" alt="">
 									<div class="card-img">
 										<!-- 카드 물건 이미지 -->

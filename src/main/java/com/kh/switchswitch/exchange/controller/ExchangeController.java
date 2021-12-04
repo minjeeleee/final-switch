@@ -46,32 +46,18 @@ public class ExchangeController {
 	private final MemberService memberService;
 	
 	@GetMapping("exchangeForm")
-	public String exchagneForm(
+	public void exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
 			, int wishCardIdx
 			, Model model){
 		//내카드 리스트
-		List<Map<String, Object>> cardlist = new ArrayList<>();
-		List<Card> myCardList = exchangeService.selecAvailableMyCardList(certifiedMember.getMemberIdx());
-
-		if (myCardList != null) {
-			for (Card card : myCardList) {
-				FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
-				cardlist.add(Map.of("card", card, "fileDTO", fileDTO));
-			}
-		}
-		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
-
-		model.addAttribute("cardlist", cardlist);
-		model.addAttribute("myRate", myRate);
+		model.addAttribute("cardlist", cardService.selectMyCardList(certifiedMember));
+		model.addAttribute("myRate", exchangeService.selectMyRate(certifiedMember.getMemberIdx()));
 		
 		//교환 희망 카드
-		Card cardInfo = exchangeService.selectCardByCardIdx(wishCardIdx);
-		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(wishCardIdx);
-		float userRate = exchangeService.selectMyRate(cardInfo.getMemberIdx());
-		
-		model.addAttribute("userRate", userRate);
-		model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
+		Map<String, Object> card = cardService.selectCard(wishCardIdx);
+		model.addAttribute("userRate", exchangeService.selectMyRate(((Card)card.get("cardInfo")).getMemberIdx()));
+		model.addAttribute("wishCard", cardService.selectCard(wishCardIdx));
 		
 		//포인트 잔액
 		SavePoint savePoint = exchangeService.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
@@ -79,7 +65,6 @@ public class ExchangeController {
 			model.addAttribute("availableBal", savePoint.getAvailableBal());
 			model.addAttribute("balance", savePoint.getBalance());
 		}
-		return "exchange/exchangeForm2";
 	}
 	
 	@PostMapping("exchangeForm")

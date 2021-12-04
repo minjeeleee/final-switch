@@ -11,6 +11,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 public interface CardService {
 
@@ -79,4 +80,8 @@ public interface CardService {
 	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 	
 	List<Map<String,Object>> selectCardsTop5();
+
+	List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember);
+
+	Map<String, Object> selectCard(int cardIdx);
 }
