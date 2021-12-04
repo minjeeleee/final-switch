@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,9 +14,9 @@ import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
-import com.kh.switchswitch.card.model.dto.WishList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
+import com.kh.switchswitch.common.schedule.Schedule;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
@@ -32,6 +33,9 @@ public class CardServiceImpl implements CardService {
 	private final CardRepository cardRepository;
 	private final CardRequestListRepository cardRequestListRepository;
 	private final ExchangeRepository exchangeRepository;
+	
+	@Autowired
+	private Schedule schedule;
 	
 	@Override
 	public void insertCard(List<MultipartFile> imgList, Card card) {
@@ -282,6 +286,13 @@ public class CardServiceImpl implements CardService {
 		exchangeStatus.setRequestMemIdx(freeRequest.getRequestMemIdx());
 		exchangeRepository.insertExchangeStatus(exchangeStatus);
 		
+	}
+
+	public List<Map<String, Object>> selectCardsTop5() {
+		if(schedule.getCardsTop5().isEmpty()) {
+			schedule.setCardsTop5();
+		}
+		return schedule.getCardsTop5();
 	}
 
 }

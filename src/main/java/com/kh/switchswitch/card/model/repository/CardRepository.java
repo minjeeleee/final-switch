@@ -109,5 +109,10 @@ public interface CardRepository {
 			+ " from free_request_list f JOIN exchange_status e USING (freq_idx) "
 			+ "where e_idx =#{eIdx}")
 	FreeRequestList selectFreeRequestByEIdx(Integer eIdx);
+
+	@Select("select * from (select c.* from card c order by views desc) where rownum < 6")
+	List<Card> selectCardsTop5();
+
+	
 	
 }

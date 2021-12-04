@@ -1,5 +1,7 @@
 package com.kh.switchswitch.card.model.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,6 +20,10 @@ public interface FreeRequestListRepository {
 
 	@Select("select * from free_request_list where freq_idx=#{freqIdx}")
 	FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx);
+
+	@Select("select * from free_request_list where REQUESTED_MEM_IDX=#{memberIdx} or REQUEST_MEM_IDX=#{memberIdx}")
+	List<FreeRequestList> selectFreeRequestListByMemIdx(Integer memberIdx);
+
 
 	
 }

@@ -19,5 +19,7 @@
 	  	<mapper resource="mybatis/mapper/boardMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/adminMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/noticeMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/inquiryMapper.xml"/>
+	  	<mapper resource="mybatis/mapper/inquiryRealNameMapper.xml"/>
 	</mappers>
   </configuration>

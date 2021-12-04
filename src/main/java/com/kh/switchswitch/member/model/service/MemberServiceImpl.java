@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -27,11 +29,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
+import com.kh.switchswitch.card.model.repository.FreeRequestListRepository;
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
+import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
@@ -53,6 +59,8 @@ public class MemberServiceImpl implements MemberService {
 	private final PasswordEncoder passwordEncoder;
 	private final CardRepository cardRepository;
 	private final MailSender mailSender;
+	private final ExchangeRepository exchangeRepository;
+	private final FreeRequestListRepository freeRequestListRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -156,12 +164,23 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	public void updateMemberDelYNForLeave(Member member) {
-		if(cardRepository.selectCardRequestListByMemIdx(member.getMemberIdx()) != null) {
-			cardRepository.deleteAllCardRequestByMemIdx(member.getMemberIdx());
-			cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
-		}else {
-			cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
+		//교환
+		List<CardRequestList> cardRequestList = cardRepository.selectCardRequestListByMemIdx(member.getMemberIdx());
+		//exchangeStatus에 값이 없으면 삭제
+		for (CardRequestList cardRequest: cardRequestList) {
+			if(exchangeRepository.selectExchangeStatusWithReqIdx(cardRequest.getReqIdx()) == null) {
+				cardRepository.deleteCardRequestListWithReqIdx(cardRequest.getReqIdx());
+			}
 		}
+		
+		//나눔
+		List<FreeRequestList> freeRequestList = freeRequestListRepository.selectFreeRequestListByMemIdx(member.getMemberIdx());
+		for (FreeRequestList freeRequest: freeRequestList) {
+			if(exchangeRepository.selectExchangeStatusWithFreqIdx(freeRequest.getFreqIdx()) == null) {
+				freeRequestListRepository.deleteFreeRequestList(freeRequest.getFreqIdx());
+			}
+		}
+		cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
 		memberRepository.updateMember(member);
 	}
 	
@@ -308,6 +327,20 @@ public class MemberServiceImpl implements MemberService {
 
 	public String selectMemberNickWithMemberIdx(Integer requestMemIdx) {
 		return memberRepository.selectMemberNickWithMemberIdx(requestMemIdx);
+	}
+
+	public List<Map<String, Object>> selectMembersTop5() {
+		List<Map<String, Object>> usersTop5 = new ArrayList<Map<String,Object>>();
+		List<Member> users = memberRepository.selectMembersTop5();
+		for (Member user : users) {
+			if(user.getFlIdx() == null) {
+				usersTop5.add(Map.of("user",user,"fileDTO",new FileDTO()));
+			} else {
+				usersTop5.add(Map.of("user",user,"fileDTO",memberRepository.selectFileInfoByFlIdx(user.getFlIdx())));
+			}
+			
+		}
+		return usersTop5;
 	}
 	
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<body>
+
+   	<header th:replace="fragments/subBodyHeader :: header">
+    </header>
+	
+	<div class="sub-menu hide">
+		<div th:replace="fragments/subMenu" :: subNav>
+	    </div>
+	</div>
+   
+    <section>
+
+        <div class="ref-title-container">
+            <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>포인트</h1>
+                    <p>잔여포인트</p><span>2000P</span>
+                    <p>가용포인트</p><span>2000P</span>
+                </div>
+
+                <div class="ref-img">
+                    <img src="../resources/img/pointCoin.png" alt="">
+                </div>
+
+            </div>
+
+              <div class="single-title inner-size">
+
+                <p>거래내역</p>
+                <a href="" class="title-button">포인트사용내역</a>
+                <a href="" class="title-button">포인트충전내역</a>
+                <a href="" class="title-button">환급내역</a>
+                
+            </div>
+
+            <div class="refund-container inner-size">
+
+                <div class="histroy-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>일시</th>
+                                <th>사용내역</th>
+                                <th>금액</th>
+                                <th>잔액</th>
+                            </tr>  
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2011/04/25</td>
+                                <td>포인트 사용</td>
+                                <td>800</td>
+                                <td>300</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2011/04/25</td>
+                                <td>포인트 사용</td>
+                                <td>800</td>
+                                <td>300</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <footer>
+       <div th:replace="fragments/footer :: footer" ></div>
+   	</footer>
+    
+</body>
+</html>

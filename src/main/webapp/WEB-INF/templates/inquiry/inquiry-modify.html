@@ -6,8 +6,6 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Switch-Switch</title>
-        <!-- Favicon-->
-        <link rel="icon" type="resources/img/x-icon" href="../../../resources/assets/favicon.ico" />
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
@@ -130,8 +128,8 @@
 					<input type='text' class="post_title" name="title" required="required" th:value="*{inquiry.title}" placeholder='제목을 입력하세요'>
 					</div>
 				</div>
-				<div class='frm_content_area' th:object="${datas}">
-					<textarea id="editor1" name="content" th:value="*{inquiry.content}" placeholder="내용을 입력하세요" data-sample-short></textarea>
+				<div class='frm_content_area' >
+					<textarea id="editor1" name="content" required="required" th:text="*{inquiry.content}" data-sample-short></textarea>
 				</div>
 
 				<div class='btn_area'>
