@@ -54,6 +54,13 @@ section {
     width: 350px; 
 }
 
+.single-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 50px;
+}
+
 .single-title p{
     margin-top: 40px;
     font-size: 23px;
@@ -106,7 +113,6 @@ section {
 }
 
 .search input {
-    margin-top: 50px;
     width: 200px;
     background: none;
     padding: 5px 25px;
@@ -139,6 +145,14 @@ section {
 
 .paging ul li {
     padding: 10px;
+}
+
+.board-write {
+	padding: 6px 40px;
+	border-radius: 8px;
+	background: #2b53a9;
+	color:white;
+	margin-left: 10px
 }
 
 @keyframes bring {

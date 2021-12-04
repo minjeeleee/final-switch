@@ -36,6 +36,7 @@
                 <div class="search">
                     <input type="text" placeholder="검색어를 입력해주세요." maxlength="15">
                 </div>
+                <a class="board-write" href="">글쓰기</a>
                 
             </div>
 
@@ -51,16 +52,13 @@
                             </tr>  
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>안녕하세요 보드입니다.</td>
-                                <td>2011/04/25</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>안녕하세요 보드입니다.</td>
-                                <td>2011/04/25</td>
-                            </tr>
+                            <tr th:each="board : ${boardList}"
+									style="height: 30px; line-height: 30px;">
+									<td th:text="${board.bdIdx}"></td>
+									<td><a th:text="${board.title}"
+										th:href="@{/board/board-detail(bdIdx=${board.bdIdx})}"></a></td>
+									<td th:text="${board.regDate}"></td>
+								</tr>
                         </tbody>
                     </table>
                 </div>
