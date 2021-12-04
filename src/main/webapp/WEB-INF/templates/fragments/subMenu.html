@@ -28,22 +28,21 @@
             <div class="sub-menu-inner inner-size">
         
                 <div class="first-line-sub">
-                    <div class="my-profile"><a href="">정보공유</a></div>
-                    <div class="exchange-history"><a href="">공지사항</a></div>
-                    <div class="inqury-detail"><a href="">자주묻는질문</a></div>
-                    <div class="inqury-detail"><a href="">문의사항</a></div>
+                    <div class="my-profile"><a th:href="@{/board/board-list}">정보공유</a></div>
+		            <div class="exchange-history"><a th:href="@{/notice/notice-list}">공지사항</a></div>
+                    <div class="inqury-detail"><a th:href="@{/inquiry/inquiry-list}">문의사항</a></div>
+                    <div class="inqury-detail"><a th:href="@{/top/top-list}"></a></div>
                 </div>
             </div>
         </div>
 
         <div class="sub-menu hide" id="myCard-sub">
             <div class="sub-menu-inner inner-size">
-        
                 <div class="first-line-sub">
-                    <div class="my-profile"><a href="">내카드리스트</a></div>
-                    <div class="exchange-history"><a href="">카드교환현황</a></div>
-                    <div class="inqury-detail"><a href="">찜목록</a></div>
-                    <div class="inqury-detail"><a href=""></a></div>
+                    <div class="my-profile"><a th:href="@{/card/my-card}">내카드리스트</a> </div>
+                    <div class="exchange-history"><a th:href="@{/card/my-card}">카드교환현황</a></div>
+                    <div class="inqury-detail"><a th:href="@{/card/my-card}">찜목록</a></div>
+                    <div class="inqury-detail"><a th:href="@{/card/my-card}"></a></div>
                 </div>
             </div>
         </div>
