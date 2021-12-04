@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header">   
+<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -15,7 +15,7 @@
         <link href="../../../resources/css/board/styles.css" rel="stylesheet" />
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/board.css" rel="stylesheet" />
+		<link href="../resources/css/board/board.css" rel="stylesheet" />
 		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -70,7 +70,7 @@
 
 						</div>
 
-						<!-- 								<div>
+						<!-- 	<div>
 									<div class="cmt_wrap">
 										<div class="cmt_info">
 											<div>
@@ -93,6 +93,19 @@
 
 
 					</div>
+					<div>
+						<div class="cmt_wrap" th:each="comment : ${commentList}">
+							<div class="cmt_info">
+								<div>
+									<a th:text="|작성자 : ${comment.userId}|"
+										style="margin-left: 10px;"><i class="fas fa-times"></i></a>
+								</div>
+
+							</div>
+							<pre>[[${comment.content}]]</pre>
+						</div>
+					</div>
+
 					<!-- 댓글 입력란 -->
 					<div class="form-group shadow-textarea">
 						<th:if test="${principal == null}">
