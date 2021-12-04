@@ -42,6 +42,12 @@ public class BoardController {
 	
 	@GetMapping("board-form")
 	public void boardForm() {}
+	
+	@GetMapping("board-list2")
+	public String boardList2(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
+		model.addAllAttributes(boardService.selectBoardList(page));
+		return "board/board-list2";
+	}
 
 	@PostMapping("upload")
 	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member ) {

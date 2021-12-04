@@ -15,7 +15,7 @@ public interface AlarmRepository {
 	@Select("select * from alarm where receiver_idx=#{receiverIdx} and sysdate < send_date + 7 order by is_read desc, alarm_idx desc")
 	List<Alarm> selectAlarmList(Integer receiverIdx);
 
-	@Insert("insert into alarm values(sc_alarm_idx.nextval, #{senderIdx}, #{receiverIdx}, #{alarmType}, 0, #{reqIdx})")
+	@Insert("insert into alarm values(sc_alarm_idx.nextval, #{senderIdx}, #{receiverIdx}, #{alarmType}, 0, #{reqIdx}, sysdate)")
 	void insertAlarm(Alarm alarm);
 
 	@Update("update alarm set is_read=#{isRead} where alarm_idx=#{alarmIdx}")
