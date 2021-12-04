@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>        
+<head th:replace="fragments/header :: header">   
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -23,23 +23,24 @@
 	<section>
 		<div class="container">
 
-			<div class='section'  th:object="${datas}">
-				
+			<div class='section' th:object="${datas}">
+
 				<div class='section_wrap'>
 					<div class="section_top">
 						<h2>정보공유 상세페이지</h2>
-						<form class='frm_post' th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|" method="post" enctype="multipart/form-data">
+						<form class='frm_post'
+							th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|"
+							method="post" enctype="multipart/form-data">
 
-						<div class='btn_area' >		
-						
-							<a class="btn" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a> 
-							<!-- <a class="btn" th:href="/delete?bdIdx=${datas.board.bdIdx}">글삭제</a>  -->
-							<button id="btnDelete" class="btn" >삭제</button> 
-							<a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> 
-							<a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> 
-							<a class="btn" th:href="@{/board/board-list}">목록</a>
-						</div>
-						
+							<div class='btn_area'>
+
+								<a class="btn"
+									th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a>
+								<!-- <a class="btn" th:href="/delete?bdIdx=${datas.board.bdIdx}">글삭제</a>  -->
+								<button id="btnDelete" class="btn">삭제</button>
+								<a class="btn" th:href="@{/board/board-list}">목록</a>
+							</div>
+
 						</form>
 					</div>
 
@@ -51,16 +52,15 @@
 							</div>
 							<div class="writer_info">
 
-								<div class="writer_profile" >
-									<span th:text="|등록일 : *{board.regDate}|"></span>
-									<span th:text="|작성자 : *{board.userId}|"></span>
+								<div class="writer_profile">
+									<span th:text="|등록일 : *{board.regDate}|"></span> <span th:text="|작성자 : *{board.userId}|"></span>
 								</div>
 								<div class="info file_info">
 									<ol>
 										<li th:each="file : ${datas.files}" th:object="${file}"
-											 th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
-											<a>	[[*{originFileName}]]</a>
-										</li>		
+											th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
+											<a> [[*{originFileName}]]</a>
+										</li>
 									</ol>
 								</div>
 							</div>
@@ -69,8 +69,8 @@
 							<pre>[[*{board.content}]]</pre>
 
 						</div>
-								
-<!-- 								<div>
+
+						<!-- 								<div>
 									<div class="cmt_wrap">
 										<div class="cmt_info">
 											<div>
@@ -91,41 +91,35 @@
 								</form> -->
 
 
-<!-- 댓글 입력란 -->
-			<div class="form-group shadow-textarea">
-					<th:if test="${principal == null}">
-						<span>로그인을 하시면 댓글을 등록할 수 있습니다. <a href="/member/login">[로그인]</a></span>
-					</th:if>
-					<!-- isAuthenticated( ) 로그인한 사용자에게만 보임  isAnonymous( ) : 로그인하지 않은 사용자에게만 보임 -->
-					<sec:authorize access="isAuthenticated()"> 
-						<label>댓글</label>
-						<div style="position: relative; height: 100%">
-							<div>
-							<form method="post" action="/reply" onsubmit="return replyCreate();">
-								<textarea id="replyContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000" placeholder="댓글을 입력해주세요."></textarea>
-								<input type="submit" class="btn btn-default" style="width:100%;" value="작성">
-							</form>
-							</div>
-						</div>
-					</sec:authorize>
-					
-			</div>
-<!-- 새로고침(댓글) -->			
-			<hr>
-				<input type="button" class="btn btn-default" value="새로고침" onclick="listConfirm(${responseDto.id});">
-<!-- 댓글 리스트 -->
-			<div>
-				<ul class="list-group" id="replyList">
-					
-				</ul>
-			</div>
 
-								
-								
+					</div>
+					<!-- 댓글 입력란 -->
+					<div class="form-group shadow-textarea">
+						<th:if test="${principal == null}">
+							<span>로그인을 하시면 댓글을 등록할 수 있습니다. <a href="/member/login">[로그인]</a></span>
+						</th:if>
+						<sec:authorize access="isAuthenticated()">
+							<label>댓글</label>
+							<div style="position: relative; height: 100%">
+								<div>
+									<form method="post" action="/comment" onsubmit="return commentCreate();">
+										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
+										<input type="submit" class="btn btn-default" style="width: 100%;" value="작성">
+									</form>
+								</div>
 							</div>
-						</div>
+						</sec:authorize>
+
+					</div>
+					<!-- 댓글 리스트 -->
+					<div>
+						<ul class="list-group" id="commentList">
+
+						</ul>
 					</div>
 				</div>
+			</div>
+		</div>
 
 	</section>
 <script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/board/board-detail.js}"></script>
