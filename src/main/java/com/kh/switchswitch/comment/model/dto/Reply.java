@@ -13,8 +13,8 @@ public class Reply {
 	private int isDel; //삭제여부
 	private String content; //댓글내용
 	private Date regDate; //작성일자
-	private int cmParent; //부모댓글   = 게시물에 대하여 댓글을 달은 경우는 부모가 없는 경우로 깊이(cmParent)가 0이된다. 대댓글=>1
+	private int cmParent; //부모댓글
 	private Integer cmDepth; //깊이(cmDepth)는 트리 구조로 보여주기 위해 필요한 필드 = 현재 댓글이 게시물을 기준으로 어느 정도 떨어져 있는지,
 	private Integer cmOrder; //게시물을 기준으로 몇 번째 글인지를 나타내는 순서 =  댓글들의 순서를 의미
-	
+
 }
