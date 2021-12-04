@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.board.model.dto.Board;
+import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 
@@ -55,6 +56,9 @@ public interface BoardRepository {
 	@Select("select * from (select rownum rnum, BD_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL from community) community"
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
+
+	@Select("SELECT * FROM reply WHERE BD_IDX = #{bdIdx}")
+	List<Reply> getCommentList(Integer bdIdx);
 
 
 
