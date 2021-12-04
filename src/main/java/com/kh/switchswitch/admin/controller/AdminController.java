@@ -48,10 +48,6 @@ public class AdminController {
 		webDataBinder.addValidators(memberUpdateValidator);
 	}
 
-	@GetMapping("main")
-	public void main() {
-	}
-
 	@GetMapping("real-time-cards")
 	public void realTimeCards(Model model, @RequestParam(required = false) String type) {
 		if (type != null) {
@@ -65,42 +61,16 @@ public class AdminController {
 			case "freeCard":
 				freeCardList(model);
 				break;
-			case "onlyImg":
-				onlyImgList(model);
-				break;
 			}
 		} else {
 			allCardList(model);
 		}
-
 	}
 
-	private void onlyImgList(Model model) {
-		List<FileDTO> cardList = adminService.selectCardImgList();
-		model.addAttribute("cardList", cardList);
-	}
-
-	private void freeCardList(Model model) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void tradeCardList(Model model) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void allCardList(Model model) {
-		List<Map<String, Object>> cardList = new ArrayList<>();
-		List<Card> memberCardList = adminService.selectCardList();
-		if (memberCardList != null) {
-			for (Card card : memberCardList) {
-				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
-				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
-				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
-			}
-		}
-		model.addAttribute("cardList", cardList);
+	@GetMapping("real-time-card-img")
+	public void realTimeCardImg(Model model) {
+		List<FileDTO> cardImgList = adminService.selectCardImgList();
+		model.addAttribute("cardImg", cardImgList);
 	}
 
 	@GetMapping("all-cards")
@@ -126,7 +96,19 @@ public class AdminController {
 			adminService.deleteCard(cardIdx);
 			return "success";
 		} else {
-			throw new HandlableException(ErrorCode.DATABASE_ACCESS_ERROR);
+			throw new HandlableException(ErrorCode.FAILED_TO_DELETE_CARD);
+		}
+	}
+	
+	@GetMapping("card-delete-by-Img")
+	@ResponseBody
+	public String cardDeleteByImg(@RequestParam Integer flIdx) {
+		if(flIdx != null) {
+			Integer cardIdx = adminService.selectCardIdxByflIdx(flIdx);
+			adminService.deleteCard(cardIdx);
+		return "success";
+		}else {
+			throw new HandlableException(ErrorCode.FAILED_TO_DELETE_IMG);
 		}
 	}
 
@@ -280,5 +262,44 @@ public class AdminController {
 	public String deleteMenu(int urlIdx) {
 		adminService.deleteMenu(urlIdx);
 		return "redirect:/admin/page-setting";
+	}
+	
+	private void freeCardList(Model model) {
+		List<Map<String, Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardListByFree();
+		if (memberCardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
+			}
+		}
+		model.addAttribute("cardList", cardList);
+	}
+
+	private void tradeCardList(Model model) {
+		List<Map<String, Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardListByTrade();
+		if (memberCardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
+			}
+		}
+		model.addAttribute("cardList", cardList);
+	}
+
+	private void allCardList(Model model) {
+		List<Map<String, Object>> cardList = new ArrayList<>();
+		List<Card> memberCardList = adminService.selectCardList();
+		if (memberCardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
+			}
+		}
+		model.addAttribute("cardList", cardList);
 	}
 }

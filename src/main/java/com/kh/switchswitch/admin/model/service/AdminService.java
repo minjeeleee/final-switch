@@ -33,7 +33,17 @@ public class AdminService {
 	}
 	
 	public List<Card> selectCardList() {
-		List<Card> cardList = adminRepository.selectCards();
+		List<Card> cardList = adminRepository.selectCardList();
+		return cardList;
+	}
+	
+	public List<Card> selectCardListByTrade() {
+		List<Card> cardList = adminRepository.selectCardListByTrade();
+		return cardList;
+	}
+	
+	public List<Card> selectCardListByFree() {
+		List<Card> cardList = adminRepository.selectCardListByFree();
 		return cardList;
 	}
 	
@@ -47,10 +57,11 @@ public class AdminService {
 		return fileDTOList;
 	}
 
-	public Integer deleteCard(Integer cardIdx) {
-		return adminRepository.deleteCard(cardIdx);
+	public void deleteCard(Integer cardIdx) {
+		adminRepository.deleteImg(cardIdx);
+		adminRepository.deleteCard(cardIdx);
 	}
-
+	
 	public void insertMenu(Menu menu) {
 		adminRepository.insertMenu(menu);
 	}
@@ -173,6 +184,17 @@ public class AdminService {
 		List<FileDTO> cardImg = adminRepository.selectCardImgList();
 		return cardImg;
 	}
+
+	public Integer selectCardIdxByflIdx(Integer flIdx) {
+		return adminRepository.selectCardIdxByflIdx(flIdx);
+	}
+
+	
+
+
+	
+
+	
 
 	
 
