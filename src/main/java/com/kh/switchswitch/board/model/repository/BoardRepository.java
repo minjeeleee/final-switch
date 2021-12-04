@@ -60,6 +60,13 @@ public interface BoardRepository {
 	@Select("SELECT * FROM reply WHERE BD_IDX = #{bdIdx}")
 	List<Reply> getCommentList(Integer bdIdx);
 
+	@Insert("insert into reply(CM_IDX, CM_PARENT_IDX,BD_IDX,USER_ID,CONTENT)"
+			+ " values (SC_CM_IDX.nextval, SC_CM_PARENT_IDX.nextval, #{bdIdx},#{userId},#{content})")
+	void insertReplyDepth1(Reply reply);
+	
+	@Select("select nvl (max(cm_order),0) from reply WHERE bd_idx=#{bdIdx}")
+	int selectLastOrderOfBoard(int bdIdx);
+
 
 
 

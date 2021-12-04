@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
+
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -70,28 +71,7 @@
 
 						</div>
 
-						<!-- 	<div>
-									<div class="cmt_wrap">
-										<div class="cmt_info">
-											<div>
-												작성자 <a href="/reply/delete-reply?rp_idx=${reply.rpIdx }&bdIdx=${board.bdIdx }" style="margin-left: 10px;"><i class="fas fa-times"></i></a>
-											</div>
-
-										</div>
-										<div>좋은 정보 감사합니다.</div>
-									</div>
-								</div>
-
-								<form class="frm_write_cmt" action="/reply/add-reply?bdIdx=${board.bdIdx }" method="POST">
-									<div class="cmt_write_box">
-										<div class="cmt_writer_id"></div>
-										<textarea name="content" placeholder="댓글을 입력하세요" required="required"></textarea>
-										<button class="cmt_write_btn">등록</button>
-									</div>
-								</form> -->
-
-
-
+<!-- 댓글 -->
 					</div>
 					<div>
 						<div class="cmt_wrap" th:each="comment : ${commentList}">
@@ -115,26 +95,24 @@
 							<label>댓글</label>
 							<div style="position: relative; height: 100%">
 								<div>
-									<form method="post" action="/comment" onsubmit="return commentCreate();">
 										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
-										<input type="submit" class="btn btn-default" style="width: 100%;" value="작성">
-									</form>
+										<input type="button" class="btn btn-default" onclick="commentCreate()" style="width: 100%;" value="작성">
+										
 								</div>
 							</div>
 						</sec:authorize>
 
-					</div>
-					<!-- 댓글 리스트 -->
-					<div>
-						<ul class="list-group" id="commentList">
-
-						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
 
 	</section>
-<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/board/board-detail.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+	let header = "[(${_csrf.headerName})]";
+    let token = "[(${_csrf.token})]";
+	</script>
+<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/board/board-detail.js}">
+</script>
 </body>
 </html>
