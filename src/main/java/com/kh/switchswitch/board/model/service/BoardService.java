@@ -23,6 +23,8 @@ public interface BoardService {
 	void deleteBoard(int bdIdx);
 	
 	List<Reply> getCommetList(Map<String, Object> commandMap);
+	
+	void boardReplyInsert(Reply reply);
 
 
 

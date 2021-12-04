@@ -89,7 +89,17 @@ public class BoardServiceImpl implements BoardService{
 
 
 	    }
-	 
+
+	@Override
+	public void boardReplyInsert(Reply reply) {
+		
+		int lastOrder = boardRepository.selectLastOrderOfBoard(reply.getBdIdx());		
+		reply.setCmOrder(lastOrder+1);	
+		boardRepository.insertReplyDepth1(reply);
+		
+		
+	}
+
 
 
 

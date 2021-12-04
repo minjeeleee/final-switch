@@ -14,11 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
@@ -94,6 +97,26 @@ public class BoardController {
 	public String deleteBoard(int bdIdx) {
 		boardService.deleteBoard(bdIdx);
 		return "redirect:/board/board-list";
+	}
+	   //AJAX 호출 (댓글 등록)
+	@CrossOrigin("*")
+	@ResponseBody
+	@PostMapping("upload-reply")
+    public String boardReplyUpload(@RequestBody Reply reply, @AuthenticationPrincipal MemberAccount member) {
+
+		reply.setUserId(member.getMemberNick());
+        boardService.boardReplyInsert(reply);
+
+        return "success";
+ 
+    }
+	
+	
+	@PostMapping("modify-reply")
+	public String modifyReply(Reply reply,  int bdIdx) {
+		reply.setBdIdx(bdIdx);
+	//	boardService.modifyReply(bdIdx);
+		return "redirect:/board/board-detail?bdIdx="+reply.getBdIdx();
 	}
 //	
 //	@PostMapping("comment")

@@ -66,29 +66,13 @@
 		</div>
 	</section>
 
-<!-- <th:block>
+<th:block>
 <script th:inline="javascript">
-	/*<![CDATA[*/
 
-	function deleteNotice(idx) {
 
-		if (confirm(idx + "번 게시글을 삭제할까요?")) {
-			var uri = [[@{/notice/delete}]];
-			var html = "";
 
-			html += '<form name="dataForm" action="'+uri+'" method="post">';
-				html += '<input type="hidden" name="idx" value="'+idx+'" />';
-			html += '</form>';
-
-			$("body").append(html);
-			document.dataForm.submit();
-		}
-	}
-	/*[- end of function -]*/
-
-	/*]]>*/
 </script>
-</th:block> -->
+</th:block>
 
 </body>
 </html>
