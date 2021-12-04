@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -33,4 +34,7 @@ public interface ChatRepository {
 
 	@Select("select message from chat_messages  where chatting_idx = #{chattingIdx} and ROWNUM <=1 ORDER BY cm_idx desc")
 	String selectLastChatMessages(Integer chattingIdx);
+
+	@Select("SELECT COUNT(*) from chat_messages where chatting_idx=#{chattingIdx} and is_read=1 and sender_id=#{senderId}")
+	int selectCountOfIsReadByChattingIdx(@Param("chattingIdx") Integer chattingIdx,@Param("senderId")Integer senderId);
 }

@@ -54,6 +54,7 @@ public class ChatServiceImpl implements ChatService{
 		List<Member> attendeeList = new ArrayList<Member>();
 		List<String> lastMessageList = new ArrayList<String>();
 		List<FileDTO> attendeeFileList = new ArrayList<FileDTO>();
+		List<Integer> isReadList = new ArrayList<Integer>();
 		for (Chatting chatting : chattingList) {
 			Integer attendeeIdx = 0;
 			lastMessageList.add(chatRepository.selectLastChatMessages(chatting.getChattingIdx()));
@@ -69,12 +70,14 @@ public class ChatServiceImpl implements ChatService{
 			if(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx() != null) {
 				attendeeFileList.add(memberRepository.selectFileInfoByFlIdx(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx()));
 			}
+			isReadList.add(chatRepository.selectCountOfIsReadByChattingIdx(chatting.getChattingIdx(),memberIdx));
 		}
 		for (int i = 0; i < chattingList.size(); i++) {
 			chattingInfoList.add(Map.of("chatting",chattingList.get(i)
 					,"lastMessage",lastMessageList.get(i)
 					,"attendee",attendeeList.get(i)
-					,"FileInfo",attendeeFileList.get(i)));
+					,"FileInfo",attendeeFileList.get(i)
+					,"isRead",isReadList.get(i)));
 		}
 		
 		return chattingInfoList;

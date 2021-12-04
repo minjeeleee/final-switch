@@ -293,7 +293,7 @@
 		                                        <div class="status-indicator bg-success"></div>
 		                                    </div>
 		                                    <div>
-		                                        <div class="text-truncate" style="width: 30vw;">[[*{lastMessage}]]</div>
+		                                        <div class="text-truncate" style="width: 30vw;">[[*{lastMessage}]] &nbsp; &nbsp;<th:block th:if="*{isRead} != 0"><i style="color: red" class="fas fa-plus-circle"></i></th:block></div>
 		                                        <div class="small text-gray-500" style="width: 10vw;">[[*{attendee.memberNick}]] &nbsp; <i class="fas fa-trash"></i></div>
 		                                    </div>
 		                                </a>
