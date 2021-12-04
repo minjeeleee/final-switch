@@ -43,22 +43,16 @@ public class BoardController {
 		//,@SessionAttribute("authentication") Member member
 		board.setUserId(member.getMemberNick());
 		boardService.insertBoard(files, board);
-		return "redirect:/";
+		return "redirect:/board/board-list";
 	}
 	
-	//11/23
-	//list받아오기 성공
-	//paging처리필요	
 	  @GetMapping("board-list") 
 	  public String boardList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		  model.addAllAttributes(boardService.selectBoardList(page));
 			return "board/board-list";
 	}
-
 	
-	//11/25
-	  //detail 받아오기 성공
-	  //file다운기능 필요
+//이미지
 	  @GetMapping("board-detail")
 	public void boardDetail(int bdIdx, Model model) {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
@@ -70,7 +64,6 @@ public class BoardController {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 	}
-	
 
 	@PostMapping("modify")
 	public String modifyBoard(Board board,  List<MultipartFile> files, int bdIdx) {
@@ -86,27 +79,7 @@ public class BoardController {
 	@PostMapping("delete")
 	public String deleteBoard(int bdIdx) {
 		boardService.deleteBoard(bdIdx);
-		return "redirect:/";
+		return "redirect:/board/board-list";
 	}
-	
-	@GetMapping("download")
-	public ResponseEntity<FileSystemResource> downloadFile(FileDTO file) {
-		 HttpHeaders headers  = new HttpHeaders();
-		 headers.setContentDisposition(ContentDisposition
-				 .builder("attachment")
-				 .filename(file.getOriginFileName(), Charset.forName("utf-8"))
-				 .build());
-		
-		 FileSystemResource resource 
-			= new FileSystemResource(file.getSavePath() + file.getRenameFileName());
-		  
-		 return  ResponseEntity				
-				 .ok()
-				 .headers(headers)
-				 .body(resource);
-	}
-	
-
-
 }
 

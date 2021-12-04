@@ -47,9 +47,6 @@ public interface BoardRepository {
 
 	@Update("update community set is_del = 1 where bd_idx = #{bdIdx}")	
 	void deleteBoard(int bdIdx);
-
-	
-
 	//파일업로드
 	@Insert("insert into file_info(fl_idx,origin_file_name, rename_file_name, save_path,bd_idx)"
 			+ " values(sc_file_idx.nextval, #{fileUpload.originFileName},#{fileUpload.renameFileName},#{fileUpload.savePath}, #{bdIdx})")
