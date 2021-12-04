@@ -80,24 +80,6 @@
                             <img src="../resources/img/defaultCard.png" alt="">
                         </div>
                 </div>
-                
-                <div class="card-container" id="default-card">
-                        <div class="card">
-                            <img src="../resources/img/defaultCard.png" alt="">
-                        </div>
-                </div>
-                
-                <div class="card-container" id="default-card">
-                        <div class="card">
-                            <img src="../resources/img/defaultCard.png" alt="">
-                        </div>
-                </div>
-                
-                <div class="card-container" id="default-card">
-                        <div class="card">
-                            <img src="../resources/img/defaultCard.png" alt="">
-                        </div>
-                </div>
 				
 			</div>
 
@@ -120,7 +102,19 @@
 	<footer>
 		<div th:replace="fragments/footer :: footer"></div>
 	</footer>
-	<script type="text/javascript"> 
+	<script type="text/javascript" th:inline="javascript"> 
+		<!--
+		let cardContainer = document.createElement("div");
+		let card = document.createElement("div");
+		let img = document.createElement("img");
+		img.setAttribute("src", "../resources/img/defaultCard.png");
+		cardContainer.setAttribute("class", "card-contatiner");
+		cardContainer.setAttribute("id", "default-card")
+		card.setAttribute("class", "card");
+		cardContainer.appendChild(card);
+		card.appendChild(img);
+		document.querySelector("#appendArea").appendChild(cardContainer);
+		-->
  	
 	   	document.querySelectorAll(".card-box").forEach(function(e){
 			switch(e.previousElementSibling.value){

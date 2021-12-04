@@ -2,6 +2,7 @@ package com.kh.switchswitch.exchange.model.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -48,6 +49,8 @@ public interface ExchangeService {
 	List<Map<String,Object>> selectFreeRequestHistoryByMemIdx(Integer memberIdx);
 
 	CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint);
+
+	void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList);
 	
 	
 

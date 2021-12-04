@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="subHeader">
 
@@ -57,7 +58,23 @@
     <!-- slick -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 	
-    
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <th:block sec:authorize="isAuthenticated()">
+   	 <script type="text/javascript" th:inline="javascript">
+		let sock = new SockJS('http://localhost:9090/alarm');
+		sock.onmessage = function(msg){
+			var data = msg.data;
+			console.dir(data);
+			let alarmIdx = data.split(",")[0]; //알림idx
+			let msg = data.split(",")[1]; //받은 알림 메시지
+			//알림 생성 (3초)
+			let alarmBox = document.createElement("div");
+			alarm.style.width = "150px";
+			alarm.style.height = "60px";
+			alarm.style.backgroundColor = "lightyellow";
+			alarmBox.innerHtml = data;
+		};
+	</script>
     
     <title>SwitchSwitch</title>
     

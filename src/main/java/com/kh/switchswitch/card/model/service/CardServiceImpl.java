@@ -319,4 +319,45 @@ public class CardServiceImpl implements CardService {
 		return cardList;
 	}
 
+	public void rejectRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList, status);
+		deleteCardRequestList(cardRequestList.getReqIdx());
+		
+	}
+
+	public void acceptRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList,status);
+		insertExchangeStatus(cardRequestList);
+	}
+
+	public void requestCancelRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList,status);
+		deleteCardRequestList(cardRequestList.getReqIdx());
+		
+	}
+
+	public void exchangeCancelRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList,status);
+		deleteCardRequestList(cardRequestList.getReqIdx());
+		deleteExchangeStatus(cardRequestList.getReqIdx());
+		
+	}
+
+	public void completeExchange(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList, status);
+		updateExchangeStatus(cardRequestList.getReqIdx(), status);
+		
+	}
+
+	public List<Map<String, Object>> selectCardListForRevise(Set<Integer> cardIdxSet) {
+		List<Map<String, Object>> cardlist = new ArrayList<>();
+		List<Card> cardList = selectCardList(cardIdxSet);
+		if(cardList != null) {
+			for (Card card : cardList) {
+				cardlist.add(selectCard(card.getCardIdx()));
+			}
+		}
+		return cardlist;
+	}
+
 }

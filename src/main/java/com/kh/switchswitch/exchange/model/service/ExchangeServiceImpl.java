@@ -3,6 +3,7 @@ package com.kh.switchswitch.exchange.model.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,10 +296,41 @@ public class ExchangeServiceImpl implements ExchangeService{
 		}
 		cardRequestList.setRequestedMemIdx(cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx));
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
-		Integer offerPointInt = Integer.parseInt(offerPoint);
-		cardRequestList.setPropBalance(offerPointInt);
+		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
 				
 		return requestExchange(cardRequestList, cardIdxList.length);
+	}
+
+	public void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList) {
+		updateRequestExchange(cardRequestList, length);
+		String[] previousCardIdxArr = (String[]) previousCardIdxSet.toArray();
+		for(int i = 0;i < previousCardIdxArr.length; i++) {
+			for(int j = 0; j < cardIdxList.length; j++) {
+				if(previousCardIdxArr[i] == cardIdxList[j]) {
+					previousCardIdxArr[i] = null;
+					cardIdxList[j] = null;
+				}
+			}
+		}
+		// previousCardIdxArr -> request -> none 으로 변경해야되는 값
+		for (String previousCardIdx : previousCardIdxArr) {
+			if(previousCardIdx != null) {
+				updateCardWithStatus(Integer.parseInt(previousCardIdx), "NONE");
+			}
+		}
+		// cardIdxList -> none -> request 로 변경해야되는 값
+		for (String cardIdx : cardIdxList) {
+			if(cardIdx != null) {
+				updateCardWithStatus(Integer.parseInt(cardIdx), "REQUEST");
+			}
+		}
+	}
+	
+	private void updateCardWithStatus(int previousCardIdx, String status) {
+		Card card = new Card();
+		card.setCardIdx(previousCardIdx);
+		card.setExchangeStatus(status);
+		cardRepository.modifyCard(card);
 	}
 
 }
