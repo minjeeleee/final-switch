@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.member.model.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class IndexController {
 	
 	private final CardService cardService;
+	private final MemberService memberService;
 	
 	@GetMapping("/")
 	public String index(Model model) {
@@ -23,6 +25,8 @@ public class IndexController {
 		//ModelAndView : Model 객체 + view(jsp 위치)
 		
 		model.addAttribute("cardsTop5",cardService.selectCardsTop5());
+		model.addAttribute("usersTop5",memberService.selectMembersTop5());
+		
 		
 		return "index";
 	}

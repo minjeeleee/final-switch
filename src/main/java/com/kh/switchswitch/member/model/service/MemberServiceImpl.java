@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -326,6 +327,20 @@ public class MemberServiceImpl implements MemberService {
 
 	public String selectMemberNickWithMemberIdx(Integer requestMemIdx) {
 		return memberRepository.selectMemberNickWithMemberIdx(requestMemIdx);
+	}
+
+	public List<Map<String, Object>> selectMembersTop5() {
+		List<Map<String, Object>> usersTop5 = new ArrayList<Map<String,Object>>();
+		List<Member> users = memberRepository.selectMembersTop5();
+		for (Member user : users) {
+			if(user.getFlIdx() == null) {
+				usersTop5.add(Map.of("user",user,"fileDTO",new FileDTO()));
+			} else {
+				usersTop5.add(Map.of("user",user,"fileDTO",memberRepository.selectFileInfoByFlIdx(user.getFlIdx())));
+			}
+			
+		}
+		return usersTop5;
 	}
 	
 }

@@ -107,8 +107,17 @@ function createPopup(value,productStar,memberStar) {
 function createStar(value) {
 
     let productStar = '';
-    for (let index = 0; index < value.condition; index++) {
-        productStar += '<i class="fas fa-star" id='+value.cardIdx+'></i>'
+
+    if(value.condition >= 1 ){
+        for (let index = 0; index < value.condition; index++) {
+            productStar += '<i class="fas fa-star full-star" id='+value.cardIdx+'></i>'
+        }
+    }
+    
+    if (5-value.condition > 0) {
+        for (let index = 0; index < (5-value.condition); index++) {
+            productStar += '<i class="far fa-star" id='+value.cardIdx+'></i>'
+        }
     }
 
     return productStar
@@ -165,13 +174,21 @@ function createIcon(value) {
 
 function createMemberStar(value) {
 
-    let memberStar = '';
+      let memberStar = '';
     if(value.memberRate >= 1){
         for (let index = 0; index < value.memberRate; index++) {
             memberStar += '<i class="fas fa-star full-star" id='+value.cardIdx+'></i>'
         }
-    } else if (value.memberRate%1 != 0) {
+    } 
+    
+    if (value.memberRate%1 != 0) {
             memberStar += '<i class="fas fa-star-half-alt" id='+value.cardIdx+'></i>'
+    } 
+    
+    if (5-value.memberRate > 0) {
+        for (let index = 0; index < (5-value.memberRate); index++) {
+            memberStar += '<i class="far fa-star" id='+value.cardIdx+'></i>'
+        }
     }
     return memberStar
 }

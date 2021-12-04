@@ -119,6 +119,64 @@
 	  	 	</if>
   	 	</if>
   	 </select>
-  	 
-  	 
+  	 <select id="selectCardsDetail" resultType="com.kh.switchswitch.card.model.dto.Card">
+  	 	select * 
+  	 	from card
+  	 	where is_del = 0 
+  	 	<if test="searchPeriod != null and searchType != null and searchKeyword != null">
+  	 		<if test="searchPeriod == 'recent'">
+				<if test="searchType == 'card_idx'">
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'user_idx'">
+  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 		<if test="searchPeriod == 'week'">
+  	 			<if test="searchType == 'card_idx'">
+  	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'user_idx'">
+  	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
+  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 		<if test="searchPeriod == 'month'">
+				<if test="searchType == 'card_idx'">
+  	 				and (reg_date > to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and (reg_date > to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'user_idx'">
+  	 				and (reg_date > to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 		<if test="searchPeriod == 'year'">
+				<if test="searchType == 'card_idx'">
+  	 				and (reg_date > to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and (reg_date > to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'user_idx'">
+  	 				and (reg_date > to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 	</if>
+  	 </select>
   </mapper>

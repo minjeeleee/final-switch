@@ -14,7 +14,7 @@
                 <div sec:authorize="isAuthenticated()" class="login-join inner-size">
                     <a href="mypage/profile">[[${#authentication.principal.memberNick}]]</a>
                     <div class="divid"></div>
-                    <form th:action="@{member/logout}" method="post"><button>로그아웃</button></form>
+                    <form th:action="@{member/logout}" method="post"><button style="border:none; background: none; color:white; font-size:12px; font-weight: 100;">로그아웃</button></form>
                 </div>
             </div>
 

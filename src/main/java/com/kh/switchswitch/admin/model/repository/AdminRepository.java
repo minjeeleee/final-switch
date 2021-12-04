@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.lang.Nullable;
 
 import com.kh.switchswitch.admin.model.dto.Code;
 import com.kh.switchswitch.admin.model.dto.Menu;
@@ -19,7 +20,16 @@ import com.kh.switchswitch.member.model.dto.Member;
 public interface AdminRepository {
 	
 	@Select("select * from card where is_del = 0")
-	List<Card> selectCards();
+	List<Card> selectCardList();
+	
+	@Select("select * from card where is_del = 0 and isfree = 'N'")
+	List<Card> selectCardListByTrade();
+	
+	@Select("select * from card where is_del = 0 and isfree = 'Y'")
+	List<Card> selectCardListByFree();
+	
+	//@Select("select * from card where is_del = 0")
+	List<Card> selectCardsDetail(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Nullable@Param("searchKeyword")String searchKeyword);
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectCardImgListByCardIdx(Integer cardIdx);
@@ -29,6 +39,9 @@ public interface AdminRepository {
 	
 	@Update("update card set is_del = 1 where card_idx = #{cardIdx}")
 	Integer deleteCard(Integer cardIdx);
+	
+	@Update("update file_info set is_del = 1 where card_idx = #{cardIdx}")
+	void deleteImg(Integer cardIdx);
 	
 	//@Select("select * from member where member_del_yn=0 and #{searchType}=#{keyword}")
 	List<Member> selectMemberAllList(@Param("searchType") String searchType, @Param("keyword") String keyword);
@@ -66,8 +79,6 @@ public interface AdminRepository {
 	@Update("update member set code=#{code} where member_idx=#{memberIdx}")
 	void updateMemberCode(@Param("code")String code,@Param("memberIdx") int memberIdx);
 	
-	
-	
 	@Select("select * from member where member_idx = #{memberIdx} and member_del_yn=0")
 	Member selectMemberByIdx(int memberIdx);
 	
@@ -90,6 +101,21 @@ public interface AdminRepository {
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectFileInfoByCardIdx(Integer cardIdx);
+	
+	@Select("select * from card where member_idx = #{memberIdx} and rownum < 6 and is_del = 0")
+	List<Card> selectCardListByMemberIdx(int memberIdx);
+	
+	@Select("select * from file_info where card_idx is not null and is_del = 0 ")
+	List<FileDTO> selectCardImgList();
+	
+	@Select("select card_idx from file_info where fl_idx = #{flIdx}")
+	Integer selectCardIdxByflIdx(Integer flIdx);
+	
+	
+	
+
+
+	
 
 	
 
