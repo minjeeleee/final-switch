@@ -28,10 +28,10 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	public Map<String, Object> selectNoticeList(int page) {
-		int cntPerPage = 5;
+		int cntPerPage = 10;
 		Paging pageUtil = Paging.builder()
-				.url("/board/board-list")
-				.total(10)
+				.url("/notice/notice-list")
+				.total(noticeRepository.selectContentCnt())
 				.curPage(page)
 				.blockCnt(10)
 				.cntPerPage(cntPerPage)
@@ -39,7 +39,7 @@ public class NoticeServiceImpl implements NoticeService{
 
 		Map<String,Object> commandMap = new HashMap<String,Object>();
 		commandMap.put("paging", pageUtil);
-		commandMap.put("noticeList", noticeRepository.selectNoticeList(pageUtil));
+		commandMap.put("noticeList", noticeRepository.selectNoticeListWithPageNo(Map.of("startBoard",(page-1)*cntPerPage+1,"lastBoard",(page-1)*cntPerPage+cntPerPage)));
 		return commandMap;
 	}
 

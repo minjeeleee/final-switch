@@ -1,10 +1,10 @@
 package com.kh.switchswitch.notice.model.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -33,6 +33,10 @@ public interface NoticeRepository {
 	
 	@Update("update notice set is_del = 1 where notice_idx = #{noticeIdx}")	
 	void deleteNotice(Integer noticeIdx);
+
+	@Select("select * from (select rownum rnum, NOTICE_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,TYPE from NOTICE) NOTICE"
+			+ " where rnum between #{startBoard} and #{lastBoard}")
+	List<Notice> selectNoticeListWithPageNo(Map<String, Integer> map);
 
 
 
