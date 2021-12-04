@@ -45,6 +45,7 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 
+	//추후 코드 수정 필요
 	//회원 번호로 채팅방 받기
 	public List<Map<String, Object>> selectAllChattingList(Integer memberIdx) {
 		 List<Map<String, Object>> chattingInfoList = new ArrayList<Map<String,Object>>();
