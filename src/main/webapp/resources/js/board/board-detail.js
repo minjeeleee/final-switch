@@ -1,8 +1,3 @@
-$(document).ready(function(){
-	commentList("${responseDto.id}");
-});
-
-
 
 //댓글 입력 폼 요청
 function commentForm(id){
@@ -71,35 +66,26 @@ function commentCreate(){
 		return false;
 	}
 	
-	var requestcommentCreateDto = {
-			userId : "${responseDto.id}",
-			accountId : "${principal.id}",
-			commentGroup : 0,
-			content : $("#commentContent").val()
+	var reply = {
+			"bdIdx" : "${reply.bdIdx}",
+			"userId" : "${reply.userId}",
+			"content" : $("#commentContent").val()
 	}
 	
 	$.ajax({
-		url:"/comment",
+		url:"/board/upload-reply",
 		type:"post",
-		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(requestcommentCreateDto),
-		success:function(data){
-			commentList("${responseDto.id}");
+		 dataType: "json",
+		contentType : "application/json",
+		data: JSON.stringify(reply),
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
+			console.dir(data);
 		},
-		error:function(request,status,error){
-			jsonValue = jQuery.parseJSON(request.responseText);
-			code = jsonValue.code;
-			if(code == 'C003'){
-				console.log(code +" : "+jsonValue.message);
-				alert("댓글을 입력해주세요.");
-				$("#commentContent").val("");
-				$("#commentContent").focus();
-			}
-			if(code == 'B001'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				history.back();
-			}
+		error:(error) => {
+			 console.log(error)
 		}
 	});
 	return false;
@@ -116,20 +102,20 @@ function commentTocomment(id,commentGroup){
 		return false;
 	}
 	
-	var requestcommentCreateDto = {
-			articleId : "${responseDto.id}",
-			accountId : "${principal.id}",
-			commentGroup : commentGroup,
-			content : content
+	var reply = {
+			"bdIdx" : "${reply.bdIdx}",
+			"userId" : "${reply.userId}",
+			"cmParent" : cmParent,
+			"content" : content
 	}
 	
 	$.ajax({
-		url:"/comment",
+		url:"/board/upload-reply",
 		type:"post",
 		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(requestcommentCreateDto), 
+		data: JSON.stringify(reply), 
 		success:function(data){
-			commentList("${responseArticleDto.id}");
+			commentList("${reply.cmIdx}");
 		},
 		error:function(request,status,error){
 			jsonValue = jQuery.parseJSON(request.responseText);
