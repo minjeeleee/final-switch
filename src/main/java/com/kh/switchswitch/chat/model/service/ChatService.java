@@ -7,4 +7,8 @@ public interface ChatService {
 
 	List<Map<String, Object>> selectChatMessageByChattingIdx(Integer chattingIdx, Integer memberIdx);
 
+	void makeChatRoom(Integer requestedMemIdx, Integer requestMemIdx);
+
+	List<Map<String, Object>> selectAllChattingList(Integer memberIdx);
+
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.chat.model.service.ChatService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
@@ -39,6 +40,7 @@ public class ExchangeController {
 	private final PointService pointService;
 	private final CardService cardService;
 	private final MemberService memberService;
+	private final ChatService chatService;
 	
 	@GetMapping("exchangeForm")
 	public void exchagneForm(
@@ -152,7 +154,8 @@ public class ExchangeController {
 		}
 		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 생성
 		cardService.acceptRequest(cardRequestList,"ONGOING");
-		
+		//요청 수락시 채팅방 생성
+		chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
 		//수락 알림 보내기
 		model.addAttribute("alarmType", "요청수락");
 		model.addAttribute("cardRequestList",cardRequestList);
