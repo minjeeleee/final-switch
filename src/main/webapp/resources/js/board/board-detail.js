@@ -67,13 +67,13 @@ function commentCreate(){
 	}
 	
 	var reply = {
-			"bdIdx" : "${reply.bdIdx}",
-			"userId" : "${reply.userId}",
+			"bdIdx" :$(".bdIdx").val(),
+			"userId" :userId,
 			"content" : $("#commentContent").val()
 	}
-	
+	console.log($(".bdIdx").val())
 	$.ajax({
-		url:"/board/upload-reply",
+		url:"http://localhost:9191/board/upload-reply",
 		type:"post",
 		 dataType: "json",
 		contentType : "application/json",
