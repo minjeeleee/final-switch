@@ -19,6 +19,7 @@ import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
@@ -278,6 +279,26 @@ public class ExchangeServiceImpl implements ExchangeService{
 	
 	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
 		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
+	}
+
+	public CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint) {
+		CardRequestList cardRequestList = new CardRequestList();
+		cardRequestList.setRequestedCard(wishCardIdx);
+		if(cardIdxList != null) {
+			switch(5-cardIdxList.length) {
+			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
+			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
+			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
+			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
+			default : logger.debug("왜 0이 들어오지??");
+			}
+		}
+		cardRequestList.setRequestedMemIdx(cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx));
+		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
+		Integer offerPointInt = Integer.parseInt(offerPoint);
+		cardRequestList.setPropBalance(offerPointInt);
+				
+		return requestExchange(cardRequestList, cardIdxList.length);
 	}
 
 }

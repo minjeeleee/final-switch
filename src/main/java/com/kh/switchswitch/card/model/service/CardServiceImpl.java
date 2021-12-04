@@ -311,4 +311,12 @@ public class CardServiceImpl implements CardService {
 		return Map.of("cardInfo", cardRepository.selectCardByCardIdx(cardIdx), "fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0));
 	}
 
+	public List<Map<String, Object>> selectRequestCardListByReqIdx(CardRequestList cardRequestList) {
+		List<Map<String,Object>> cardList = new ArrayList<Map<String,Object>>();
+		for (Integer cardIdx : getCardIdxSet(cardRequestList)) {
+			cardList.add(selectCard(cardIdx));
+		}
+		return cardList;
+	}
+
 }

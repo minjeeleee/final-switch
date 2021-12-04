@@ -84,4 +84,6 @@ public interface CardService {
 	List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember);
 
 	Map<String, Object> selectCard(int cardIdx);
+
+	List<Map<String, Object>> selectRequestCardListByReqIdx(CardRequestList cardRequestList);
 }

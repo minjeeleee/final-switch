@@ -8,6 +8,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 
 public interface ExchangeService {
@@ -45,6 +46,8 @@ public interface ExchangeService {
 	FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx);
 
 	List<Map<String,Object>> selectFreeRequestHistoryByMemIdx(Integer memberIdx);
+
+	CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint);
 	
 	
 

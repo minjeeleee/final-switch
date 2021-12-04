@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kh.switchswitch.alarm.model.dto.Alarm;
 import com.kh.switchswitch.alarm.model.service.AlarmService;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -76,25 +75,10 @@ public class ExchangeController {
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
 		//교환요청리스트
-		CardRequestList cardRequestList = new CardRequestList();
-		cardRequestList.setRequestedCard(wishCardIdx);
-		if(cardIdxList != null) {
-			switch(5-cardIdxList.length) {
-			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
-			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
-			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
-			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
-			default : logger.debug("왜 0이 들어오지??");
-			}
-		}
-		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
-		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
-		Integer offerPointInt = Integer.parseInt(offerPoint);
-		cardRequestList.setPropBalance(offerPointInt);
-		CardRequestList crl = exchangeService.requestExchange(cardRequestList, cardIdxList.length);
+		CardRequestList crl = exchangeService.requestExchange(certifiedMember, wishCardIdx, cardIdxList, offerPoint);
 		
 		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(availableBal - offerPointInt, certifiedMember.getMemberIdx());
+		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
 		model.addAttribute("alarmType", "교환요청");
 		model.addAttribute("cardRequestList",crl);
@@ -106,45 +90,35 @@ public class ExchangeController {
 	@GetMapping("detail")
 	public void detail(
 			@AuthenticationPrincipal MemberAccount certifiedMember,
-			//Alarm alarm, 
+			int reqIdx,
 			Model model) {
-		Alarm alarm = new Alarm();
-		alarm.setAlarmIdx(1);
-		alarm.setReqIdx(450);
 		
-		//알림 테이블 is_read 업데이트
-		alarmService.updateAlarm(alarm);
-		
-		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(alarm.getReqIdx());
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
 		
-		Card card = cardService.selectCardWithCardIdx(cardRequestList.getRequestedCard());
-		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
+		//희망 카드
+		Map<String, Object>  requestedCard = cardService.selectCard(cardRequestList.getRequestedCard());
+		model.addAttribute("userRate", exchangeService.selectMyRate(((Card)requestedCard.get("cardInfo")).getMemberIdx()));
+		model.addAttribute("wishCard", requestedCard);
 		
-		//요청 유저 카드 리스트
-		List<Map<String,Object>> cardList = new ArrayList<Map<String,Object>>();
-		for (Integer cardIdx : cardService.getCardIdxSet(cardRequestList)) {
-			Card reqCard = cardService.selectCardWithCardIdx(cardIdx);
-			FileDTO reqfileDTO = exchangeService.selectImgFileByCardIdx(reqCard.getCardIdx());
-			cardList.add(Map.of("card",reqCard,"fileDTO",reqfileDTO));
-		}
-		
-		//요청받은 유저 카드
-		model.addAttribute("requestedCard", Map.of("card",card, "fileDTO", fileDTO));
 		//요청받은 유저 평점
 		model.addAttribute("requestedMemRate",exchangeService.selectMyRate(cardRequestList.getRequestedMemIdx()));
 		
-		//상대방 닉네임
+		//교환희망카드
+		List<Map<String,Object>> requestCardlist = cardService.selectRequestCardListByReqIdx(cardRequestList);
+		model.addAttribute("requestCardlist",requestCardlist);
+		
+		//요청 유저 평점
+		model.addAttribute("reqMemRate", exchangeService.selectMyRate(cardRequestList.getRequestMemIdx()));
+		
+		//상대방 닉네임**
 		if(certifiedMember.getMemberIdx().equals(cardRequestList.getRequestMemIdx())) {
 			model.addAttribute("counterpartNick",memberService.selectMemberNickWithMemberIdx(cardRequestList.getRequestedMemIdx()));
 		} else {
 			model.addAttribute("counterpartNick",memberService.selectMemberNickWithMemberIdx(cardRequestList.getRequestMemIdx()));
 		}
-		
-		//요청 유저 평점
-		model.addAttribute("reqMemRate", exchangeService.selectMyRate(cardRequestList.getRequestMemIdx()));
 		
 		//cardRequestList
 		model.addAttribute("cardRequestList",cardRequestList);
