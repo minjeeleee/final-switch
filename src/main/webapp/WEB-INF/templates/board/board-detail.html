@@ -74,15 +74,17 @@
 <!-- 댓글 -->
 					</div>
 					<div>
+					
 						<div class="cmt_wrap" th:each="comment : ${commentList}">
-							<div class="cmt_info">
-								<div>
-									<a th:text="|작성자 : ${comment.userId}|"
-										style="margin-left: 10px;"><i class="fas fa-times"></i></a>
-								</div>
-
+							<div>
+									<div class="cmt_info">
+										<div>
+											<a th:text="|작성자 : ${comment.userId}|"
+												style="margin-left: 10px;"><i class="fas fa-times"></i></a>
+										</div>
+									</div>						
+								<pre>[[${comment.content}]]</pre>
 							</div>
-							<pre>[[${comment.content}]]</pre>
 						</div>
 					</div>
 
@@ -91,13 +93,13 @@
 						<th:if test="${principal == null}">
 							<span>로그인을 하시면 댓글을 등록할 수 있습니다. <a href="/member/login">[로그인]</a></span>
 						</th:if>
-						<sec:authorize access="isAuthenticated()">
+						<sec:authorize access="isAuthenticated()" >
 							<label>댓글</label>
 							<div style="position: relative; height: 100%">
 								<div>
 										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
 										<input type="button" class="btn btn-default" onclick="commentCreate()" style="width: 100%;" value="작성">
-										
+										<input type="hidden"  th:value="${datas.board.bdIdx}" class="bdIdx">
 								</div>
 							</div>
 						</sec:authorize>
@@ -111,6 +113,8 @@
 	<script type="text/javascript" th:inline="javascript">
 	let header = "[(${_csrf.headerName})]";
     let token = "[(${_csrf.token})]";
+    let bdIdx = [[${param.bdIdx}]];
+    let userId = [[${#authentication.principal.memberNick}]];
 	</script>
 <script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/board/board-detail.js}">
 </script>

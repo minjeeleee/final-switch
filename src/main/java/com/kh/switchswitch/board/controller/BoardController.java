@@ -32,7 +32,10 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("board")
@@ -102,9 +105,10 @@ public class BoardController {
 	@CrossOrigin("*")
 	@ResponseBody
 	@PostMapping("upload-reply")
-    public String boardReplyUpload(@RequestBody Reply reply, @AuthenticationPrincipal MemberAccount member) {
+    public String boardReplyUpload(@RequestBody Reply reply) {
+		
+		log.info("json={}" , reply);
 
-		reply.setUserId(member.getMemberNick());
         boardService.boardReplyInsert(reply);
 
         return "success";

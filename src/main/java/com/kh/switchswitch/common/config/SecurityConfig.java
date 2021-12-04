@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.csrf().ignoringAntMatchers("/point/**");
 		http.csrf().ignoringAntMatchers("/board/**");
 		
-		http.csrf().disable();
+//		http.csrf().disable();
 	}
 	
 	 @Override
