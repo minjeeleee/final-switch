@@ -91,50 +91,16 @@
             </div>
 
             <div class="reco-user-inner-list inner-size">
-                <div class="user-container">
+                <div class="user-container" th:each="user : ${usersTop5}" th:object="${user}">
                     <div class="user-image">
-                        <img src="../resources/img/default-user.png" alt="">
+                        <img th:unless="*{fileDTO.flIdx}" th:src="@{../resources/img/default-user.png}" alt="">
+                        <img th:if="*{fileDTO.flIdx}" th:src="*{fileDTO.getDownloadURL()}" alt="">
                     </div>
                     <div class="user-name">
-                        <p>디바디리바</p>
+                        <p>[[*{user.memberNick}]]</p>
                     </div>
                 </div>
 
-                <div class="user-container">
-                    <div class="user-image">
-                        <img src="../resources/img/default-user.png" alt="">
-                    </div>
-                    <div class="user-name">
-                        <p>디바디리바</p>
-                    </div>
-                </div>
-
-                <div class="user-container">
-                    <div class="user-image">
-                        <img src="../resources/img/default-user.png" alt="">
-                    </div>
-                    <div class="user-name">
-                        <p>디바디리바</p>
-                    </div>
-                </div>
-
-                <div class="user-container">
-                    <div class="user-image">
-                        <img src="../resources/img/default-user.png" alt="">
-                    </div>
-                    <div class="user-name">
-                        <p>디바디리바</p>
-                    </div>
-                </div>
-
-                <div class="user-container">
-                    <div class="user-image">
-                        <img src="../resources/img/default-user.png" alt="">
-                    </div>
-                    <div class="user-name">
-                        <p>디바디리바</p>
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -145,6 +111,13 @@
        <div th:replace="fragments/footer :: footer"></div>
     </footer>
 	<script type="text/javascript">
+		let sockForTop5Card = new SockJS('http://localhost:9090/batch');
+		sockForTop5Card.onmessage = function(msg){
+			var data = msg.data;
+			console.dir(data);
+		};
+		
+	
 		document.querySelectorAll(".card-box").forEach(function(e){
 			switch(e.previousElementSibling.value){
 			case '1' : e.setAttribute("src","../resources/img/ddongCard.png"); break;

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header">
   	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,18 +22,36 @@
     <!-- favicon -->
     <link rel="icon" type="../resources/img/x-icon" href="../resources/img/favicon.ico">
     
-    <!-- downMenu -->
-    <script defer src="/js/downMenu.js"></script>
+    <!-- submenu -->
+    <link rel="stylesheet" href="../resources/css/subMenu.css">
+    
+    <!-- submenujquery -->
+    <script defer src="../resources/js/subMenu.js"></script>
+    
+    <!-- jQuery 스크립트 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
     <title>SwitchSwitch</title>
     
     
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script type="text/javascript" th:inline="javascript">
+    <th:block sec:authorize="isAuthenticated()">
+   	 <script type="text/javascript" th:inline="javascript">
 		let sock = new SockJS('http://localhost:9090/alarm');
 		sock.onmessage = function(msg){
 			var data = msg.data;
 			console.dir(data);
+			let alarmIdx = data.split(",")[0]; //알림idx
+			let msg = data.split(",")[1]; //받은 알림 메시지
+			//알림 생성 (3초)
+			let alarmBox = document.createElement("div");
+			alarm.style.width = "150px";
+			alarm.style.height = "60px";
+			alarm.style.backgroundColor = "lightyellow";
+			alarmBox.innerHtml = data;
 		};
-	</script>
+	</script> 	
+    </th:block>
+   
 </head>

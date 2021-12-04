@@ -270,11 +270,11 @@
 									<div class="mypage-con" style="font-size: 40px; font-weight: bolder;">
 										<div >신청 금액</div>
 										<form th:action="@{/point/refund}" id="refundInfo">
-											<input type="number" step="100">p
+											<input type="number" step="100" name="points">p
 											<div style="font-size: 20px; margin-top: 30px;">생년월일</div>
 											<input type="number" style="font-size: 20px;"  id="birth" placeholder="YYMMDD">
 											<div style="font-size: 20px; margin-top: 30px;">환급 계좌 번호</div>
-											<input type="number" style="font-size: 20px;"  id="account">
+											<input type="number" style="font-size: 20px;" id="account">
 											<select name="bank" style="font-size: 20px;">
 												<option value="004">국민은행</option>
 												<option value="020">우리은행</option>
@@ -283,8 +283,8 @@
 												<option value="090">카카오뱅크</option>
 											</select>
 											<div>
-												<button onclick="checkAccount()">계좌조회</button>
-												<button onclick="doExchange()" class="btn btn-primary btn-user btn-block" style="width: 300px;" >
+												<button type="button" onclick="checkAccount()">계좌조회</button>
+												<button type="button" onclick="doExchange()" class="btn btn-primary btn-user btn-block" style="width: 300px;" >
 	                                   			환전하기
 	                                			</button>
 											</div>
@@ -351,31 +351,37 @@
     let validUserName = ""; //이름
     let account = ""; // 계좌
     let bankName = ""; // 은행이름
+    let bankCode = ""; //은행코드
     function checkAccount(){
-    	let account = $("#account").val();
-    	let bankCode = $("select[name=bank]").val();
+    	let inputAccount = $("#account").val();
+    	let inputBankCode = $("select[name=bank]").val();
     	let birth = $("#birth").val();
     	
-    	fetch("/point/checkAccount?accountNum="+ account + "&bankCodeStd=" + bankCode + "&accountHolderInfo=" + birth)
+    	fetch("/point/checkAccount?accountNum="+ inputAccount + "&bankCodeStd=" + inputBankCode + "&accountHolderInfo=" + birth)
     	.then(response =>{
+    		console.dir(response);
     		if(response.ok){
-    			return response.text()
+    			return response.text();
     		}else{
     			throw new Error(response.status);
     		}
     	})
     	.then(text => {
-    		cosole.dir(text);
+    		console.dir(text);
 			if(text == '실패'){
 				console.dir(text);
 			}else{
 				let texts = text.split(",");
 				console.dir(texts[1]);
-				if(texts[1] == "${#authentication.principal.memberName}" ){
+				console.dir([[${#authentication.principal.memberName}]]);
+				if(texts[1] == [[${#authentication.principal.memberName}]] ){
 					alert("계좌실명인증이 완료되었습니다.");
 					validUserName = texts[1];
 					account = texts[0];
 					bankName = texts[2];
+					bankCode = texts[3];
+				} else {
+					alert("회원가입 시 입력한 이름과 계좌 소유주 이름이 다른 경우 어떻게 할까요?????");
 				}
 				
 			}
@@ -386,17 +392,21 @@
     }
     
    function doExchange(){
-	   if(validUserName != "${#authentication.principal.memberName}"){
-		   alert("제출된 정보와 일치하지 않습니다.");
-		   e.preventDefault();
+	   if(validUserName != [[${#authentication.principal.memberName}]]){
+		   alert("제출된 정보와 일치하지 않습니다./1");
+		   return;
 	   }
 	   if(account != $("#account").val()){
-		   alert("제출된 정보와 일치하지 않습니다.");
-		   e.preventDefault();
+		   console.dir(account);
+		   console.dir($("#account").val());
+		   alert("제출된 정보와 일치하지 않습니다./2");
+		   return;
 	   }
-	   if(bankName != $("select[name=bank]").val()){
-		   alert("제출된 정보와 일치하지 않습니다.");
-		   e.preventDefault();
+	   if(bankCode != $("select[name=bank]").val()){
+		   console.dir(bankCode);
+		   console.dir($("select[name=bank]").val());
+		   alert("제출된 정보와 일치하지 않습니다./3");
+		   return;
 	   }
 	   $("#refundInfo").submit();
    }

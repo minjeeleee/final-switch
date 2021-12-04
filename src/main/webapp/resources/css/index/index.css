@@ -212,6 +212,8 @@ section {
     bottom: 0;
     left: 17%;
     object-fit: cover;
+    width: 70 px;
+    height: 70px;
 }
 
 .user-name {

@@ -1,5 +1,8 @@
 package com.kh.switchswitch.member.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,4 +51,6 @@ public interface MemberService extends UserDetailsService {
 	void updateMemberPass(int memberIdx, String id);
 
 	String selectMemberNickWithMemberIdx(Integer requestMemIdx);
+
+	List<Map<String, Object>> selectMembersTop5();
 }

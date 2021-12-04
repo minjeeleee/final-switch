@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.board.model.dto.Board;
+import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 
@@ -47,9 +48,6 @@ public interface BoardRepository {
 
 	@Update("update community set is_del = 1 where bd_idx = #{bdIdx}")	
 	void deleteBoard(int bdIdx);
-
-	
-
 	//파일업로드
 	@Insert("insert into file_info(fl_idx,origin_file_name, rename_file_name, save_path,bd_idx)"
 			+ " values(sc_file_idx.nextval, #{fileUpload.originFileName},#{fileUpload.renameFileName},#{fileUpload.savePath}, #{bdIdx})")
@@ -58,6 +56,9 @@ public interface BoardRepository {
 	@Select("select * from (select rownum rnum, BD_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL from community) community"
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
+
+	@Select("SELECT * FROM reply WHERE BD_IDX = #{bdIdx}")
+	List<Reply> getCommentList(Integer bdIdx);
 
 
 

@@ -1,6 +1,7 @@
 package com.kh.switchswitch.board.controller;
 
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.service.BoardService;
+import com.kh.switchswitch.comment.model.dto.Reply;
+import com.kh.switchswitch.comment.model.service.ReplyService;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
@@ -34,35 +38,39 @@ public class BoardController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private final BoardService boardService;
+	private final ReplyService commentService;
 	
 	@GetMapping("board-form")
 	public void boardForm() {}
+	
+	@GetMapping("board-list2")
+	public String boardList2(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
+		model.addAllAttributes(boardService.selectBoardList(page));
+		return "board/board-list2";
+	}
 
 	@PostMapping("upload")
 	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member ) {
 		//,@SessionAttribute("authentication") Member member
 		board.setUserId(member.getMemberNick());
 		boardService.insertBoard(files, board);
-		return "redirect:/";
+		return "redirect:/board/board-list";
 	}
 	
-	//11/23
-	//list받아오기 성공
-	//paging처리필요	
 	  @GetMapping("board-list") 
 	  public String boardList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
-		  model.addAllAttributes(boardService.selectBoardList(page));
+		  model.addAllAttributes(boardService.selectBoardList(page));	  
 			return "board/board-list";
 	}
-
 	
-	//11/25
-	  //detail 받아오기 성공
-	  //file다운기능 필요
+//이미지
 	  @GetMapping("board-detail")
-	public void boardDetail(int bdIdx, Model model) {
+	public String boardDetail(int bdIdx, Model model) {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
+		model.addAttribute("commentList", boardService.getCommetList(commandMap));
+		
+		return "board/board-detail";
 	}
 	
 	@GetMapping("board-modify")
@@ -70,7 +78,6 @@ public class BoardController {
 		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 	}
-	
 
 	@PostMapping("modify")
 	public String modifyBoard(Board board,  List<MultipartFile> files, int bdIdx) {
@@ -86,27 +93,27 @@ public class BoardController {
 	@PostMapping("delete")
 	public String deleteBoard(int bdIdx) {
 		boardService.deleteBoard(bdIdx);
-		return "redirect:/";
+		return "redirect:/board/board-list";
 	}
-	
-	@GetMapping("download")
-	public ResponseEntity<FileSystemResource> downloadFile(FileDTO file) {
-		 HttpHeaders headers  = new HttpHeaders();
-		 headers.setContentDisposition(ContentDisposition
-				 .builder("attachment")
-				 .filename(file.getOriginFileName(), Charset.forName("utf-8"))
-				 .build());
-		
-		 FileSystemResource resource 
-			= new FileSystemResource(file.getSavePath() + file.getRenameFileName());
-		  
-		 return  ResponseEntity				
-				 .ok()
-				 .headers(headers)
-				 .body(resource);
-	}
-	
-
-
+//	
+//	@PostMapping("comment")
+//    public String viewPostMethod(Model model, @RequestParam Map<String, Object> paramMap) {
+//        Comment commet = new Comment();
+//        commet.setUserId(paramMap.get("userId").toString());
+//        commet.setContent(paramMap.get("content").toString());
+//
+//        // DB 댓글 추가
+//        commentService.saveComment(commet);
+//
+//        // 댓글 리스트 추가
+//        model.addAttribute("commentList", commentService.selectCommentList(commet));
+//
+//        // 수정&삭제 버튼 게시를 위한 유저 정보 전달
+//        Map<String, Object> userInform = new HashMap<String, Object>();
+//        userInform.put("userId", paramMap.get("userId"));
+//        model.addAttribute("userInform", userInform);
+//
+//        return null;
+//    }
 }
 

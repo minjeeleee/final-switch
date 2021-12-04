@@ -1,17 +1,41 @@
 /* sub-menu css */
 .sub-menu {
     display: flex;
-    height: 170px;
     justify-content: center;
+    padding: 50px 0;
+    background-color: #fff;
+    z-index: 3;
 }
 
-.sub-menu-inner{
+.sub-menu-inner {
     max-width: 900px;
+}
+
+.first-line-sub {
+    
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.first-line-sub > div {
+    width: 20%;
+    margin-left: 40px;
+}
+.second-line-sub > div {
+    width: 20%;
+    margin-left: 70px;
+}
+
+.second-line-sub {
+
     margin-top: 30px;
     display: flex;
     justify-content: space-between;
     font-size: 14px;
     font-weight: 400;
+
 }
 
 .point {
@@ -28,6 +52,7 @@
 
 .point-sub a {
     margin-top: 10px;
+    font-size: 12px;
 }
 
 .hide {

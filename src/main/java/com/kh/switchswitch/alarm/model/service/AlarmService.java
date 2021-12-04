@@ -12,6 +12,4 @@ public interface AlarmService {
 	void insertAndUpdateAlarmList(List<Alarm> alarmList);
 
 	void updateAlarm(Alarm alarm);
-
-	void sendAlarmWithStatus(CardRequestList cardRequestList, String type);
 }

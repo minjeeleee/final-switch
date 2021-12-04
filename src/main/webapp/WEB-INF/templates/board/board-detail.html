@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>        
+<head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -15,31 +15,32 @@
         <link href="../../../resources/css/board/styles.css" rel="stylesheet" />
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/board.css" rel="stylesheet" />
-
+		<link href="../resources/css/board/board.css" rel="stylesheet" />
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
 <body>
 
 	<section>
 		<div class="container">
 
-			<div class='section'  th:object="${datas}">
-				
+			<div class='section' th:object="${datas}">
+
 				<div class='section_wrap'>
 					<div class="section_top">
 						<h2>정보공유 상세페이지</h2>
-						<form class='frm_post' th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|" method="post" enctype="multipart/form-data">
+						<form class='frm_post'
+							th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|"
+							method="post" enctype="multipart/form-data">
 
-						<div class='btn_area' >		
-						
-							<a class="btn" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a> 
-							<!-- <a class="btn" th:href="/delete?bdIdx=${datas.board.bdIdx}">글삭제</a>  -->
-							<button id="btnDelete" class="btn" >삭제</button> 
-							<a class="btn"><span class="btn" onclick="alert('이전글이 없습니다.');">이전글</span></a> 
-							<a class="btn"><span onclick="alert('다음글이 없습니다.');">다음글</span></a> 
-							<a class="btn" th:href="@{/board/board-list}">목록</a>
-						</div>
-						
+							<div class='btn_area'>
+
+								<a class="btn"
+									th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a>
+								<!-- <a class="btn" th:href="/delete?bdIdx=${datas.board.bdIdx}">글삭제</a>  -->
+								<button id="btnDelete" class="btn">삭제</button>
+								<a class="btn" th:href="@{/board/board-list}">목록</a>
+							</div>
+
 						</form>
 					</div>
 
@@ -51,16 +52,15 @@
 							</div>
 							<div class="writer_info">
 
-								<div class="writer_profile" >
-									<span th:text="|등록일 : *{board.regDate}|"></span>
-									<span th:text="|작성자 : *{board.userId}|"></span>
+								<div class="writer_profile">
+									<span th:text="|등록일 : *{board.regDate}|"></span> <span th:text="|작성자 : *{board.userId}|"></span>
 								</div>
 								<div class="info file_info">
 									<ol>
 										<li th:each="file : ${datas.files}" th:object="${file}"
-											 th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
-											<a>	[[*{originFileName}]]</a>
-										</li>		
+											th:onclick="downloadFile([[*{originFileName}]],[[*{renameFileName}]],[[*{savePath}]])">
+											<a> [[*{originFileName}]]</a>
+										</li>
 									</ol>
 								</div>
 							</div>
@@ -69,8 +69,8 @@
 							<pre>[[*{board.content}]]</pre>
 
 						</div>
-								
-								<div>
+
+						<!-- 	<div>
 									<div class="cmt_wrap">
 										<div class="cmt_info">
 											<div>
@@ -88,46 +88,53 @@
 										<textarea name="content" placeholder="댓글을 입력하세요" required="required"></textarea>
 										<button class="cmt_write_btn">등록</button>
 									</div>
-								</form>
+								</form> -->
 
 
-								
-								
+
+					</div>
+					<div>
+						<div class="cmt_wrap" th:each="comment : ${commentList}">
+							<div class="cmt_info">
+								<div>
+									<a th:text="|작성자 : ${comment.userId}|"
+										style="margin-left: 10px;"><i class="fas fa-times"></i></a>
+								</div>
+
 							</div>
+							<pre>[[${comment.content}]]</pre>
 						</div>
 					</div>
+
+					<!-- 댓글 입력란 -->
+					<div class="form-group shadow-textarea">
+						<th:if test="${principal == null}">
+							<span>로그인을 하시면 댓글을 등록할 수 있습니다. <a href="/member/login">[로그인]</a></span>
+						</th:if>
+						<sec:authorize access="isAuthenticated()">
+							<label>댓글</label>
+							<div style="position: relative; height: 100%">
+								<div>
+									<form method="post" action="/comment" onsubmit="return commentCreate();">
+										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
+										<input type="submit" class="btn btn-default" style="width: 100%;" value="작성">
+									</form>
+								</div>
+							</div>
+						</sec:authorize>
+
+					</div>
+					<!-- 댓글 리스트 -->
+					<div>
+						<ul class="list-group" id="commentList">
+
+						</ul>
+					</div>
 				</div>
+			</div>
+		</div>
 
 	</section>
-<script type="text/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
-/* 
- function downloadFile(ofname,rfname,savePath){
-	  let params = {'originFileName':ofname,
-			  		'renameFileName':rfname,
-			  		'savePath':savePath};
-	  
-    location.href = "[(@{/board/download?})]" + urlEncodeForm(params);
- }
-	 */
-/* 	function transfer(e) {
-		let downloadFile;
-	
-		let downloadFile = (ofn,rfn,path) => {
-			let paramObj = {
-					originFileName : ofn,
-					renameFileName : rfn,
-					savePath : path
-			}
-			location.href = '/download?' + urlEncoder(paramObj);
-			
-		} */
-		
-		 function downloadFile(ofname,rfname,savePath){
-			  let params = {'originFileName':ofname,
-					  		'renameFileName':rfname,
-					  		'savePath':savePath};
-			  location.href = '/download?' + urlEncoder(params);
-		}
-	</script>
+<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/board/board-detail.js}"></script>
 </body>
 </html>

@@ -112,7 +112,6 @@ public class PointServiceImpl implements PointService{
 			irn.setAccountNum(inquiryRealName.getAccountNum());
 			irn.setAccountHolderInfo(inquiryRealName.getAccountHolderInfo());
 			irn.setTranDtime(formatedNow);
-			irn.setBankTranId(newBankTranId);
 			inquiryRealNameRepository.insertInquiryRealName(irn);
 			
 			if (responseEntityRealName.getStatusCode() == HttpStatus.OK) {
@@ -127,8 +126,9 @@ public class PointServiceImpl implements PointService{
 					String accountNum = objMap.get("account_num");
 					String accountHolderName = objMap.get("account_holder_name");
 					String bankName = objMap.get("bank_name");
+					String bankCode = objMap.get("bank_code_std");
 					
-					return accountNum + "," + accountHolderName + "," + bankName;
+					return accountNum + "," + accountHolderName + "," + bankName + "," + bankCode;
 					
 				} catch (JsonProcessingException e) {
 					e.printStackTrace();

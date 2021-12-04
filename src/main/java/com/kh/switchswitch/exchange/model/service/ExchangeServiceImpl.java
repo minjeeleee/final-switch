@@ -3,6 +3,7 @@ package com.kh.switchswitch.exchange.model.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
@@ -278,6 +280,57 @@ public class ExchangeServiceImpl implements ExchangeService{
 	
 	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
 		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
+	}
+
+	public CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint) {
+		CardRequestList cardRequestList = new CardRequestList();
+		cardRequestList.setRequestedCard(wishCardIdx);
+		if(cardIdxList != null) {
+			switch(5-cardIdxList.length) {
+			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
+			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
+			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
+			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
+			default : logger.debug("왜 0이 들어오지??");
+			}
+		}
+		cardRequestList.setRequestedMemIdx(cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx));
+		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
+		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
+				
+		return requestExchange(cardRequestList, cardIdxList.length);
+	}
+
+	public void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList) {
+		updateRequestExchange(cardRequestList, length);
+		String[] previousCardIdxArr = (String[]) previousCardIdxSet.toArray();
+		for(int i = 0;i < previousCardIdxArr.length; i++) {
+			for(int j = 0; j < cardIdxList.length; j++) {
+				if(previousCardIdxArr[i] == cardIdxList[j]) {
+					previousCardIdxArr[i] = null;
+					cardIdxList[j] = null;
+				}
+			}
+		}
+		// previousCardIdxArr -> request -> none 으로 변경해야되는 값
+		for (String previousCardIdx : previousCardIdxArr) {
+			if(previousCardIdx != null) {
+				updateCardWithStatus(Integer.parseInt(previousCardIdx), "NONE");
+			}
+		}
+		// cardIdxList -> none -> request 로 변경해야되는 값
+		for (String cardIdx : cardIdxList) {
+			if(cardIdx != null) {
+				updateCardWithStatus(Integer.parseInt(cardIdx), "REQUEST");
+			}
+		}
+	}
+	
+	private void updateCardWithStatus(int previousCardIdx, String status) {
+		Card card = new Card();
+		card.setCardIdx(previousCardIdx);
+		card.setExchangeStatus(status);
+		cardRepository.modifyCard(card);
 	}
 
 }

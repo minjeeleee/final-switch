@@ -39,14 +39,4 @@ public class AlarmServiceImpl implements AlarmService {
 		alarmRepository.updateAlarmIsRead(alarm);
 	}
 
-	public void sendAlarmWithStatus(CardRequestList cardRequestList, String type) {
-		Alarm alarm = new Alarm();
-		alarm.setAlarmType(type);
-		alarm.setReceiverIdx(cardRequestList.getRequestMemIdx());
-		alarm.setSenderIdx(cardRequestList.getRequestedMemIdx());
-		alarm.setReqIdx(cardRequestList.getReqIdx());
-		alarmRepository.insertAlarm(alarm);
-		
-	}
-
 }

@@ -7,6 +7,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
 
 import com.kh.switchswitch.common.socket.handler.AlarmHandler;
+import com.kh.switchswitch.common.socket.handler.BatchHandler;
 import com.kh.switchswitch.common.socket.handler.ChattingHandler;
 
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,13 @@ public class WebSocketConfig implements WebSocketConfigurer  {
 	
 	private final ChattingHandler chattingHandler;
 	private final AlarmHandler alarmHandler;
+	private final BatchHandler batchHandler;
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		 registry.addHandler(chattingHandler, "/chat")
 		 	.addHandler(alarmHandler, "/alarm")
+		 	.addHandler(batchHandler, "/batch")
 		 	.addInterceptors(new HttpSessionHandshakeInterceptor())
 		 	.setAllowedOrigins("http://localhost:9090")
 		 	.setAllowedOrigins("http://localhost:9898")

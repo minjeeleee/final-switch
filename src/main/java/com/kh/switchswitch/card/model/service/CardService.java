@@ -11,6 +11,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 public interface CardService {
 
@@ -27,10 +28,6 @@ public interface CardService {
 	List<Card> CardListWithMemberIdx(Integer requestMemIdx);
 
 	void updateCardWithCardIdx(Card card);
-
-	void deleteCardRequestList(Integer reqIdx);
-
-	void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status);
 
 	void insertExchangeStatus(CardRequestList cardRequestList);
 	
@@ -79,4 +76,26 @@ public interface CardService {
 	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 	
 	List<Map<String,Object>> selectCardsTop5();
+
+	List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember);
+
+	Map<String, Object> selectCard(int cardIdx);
+
+	List<Map<String, Object>> selectRequestCardListByReqIdx(CardRequestList cardRequestList);
+
+	void rejectRequest(CardRequestList cardRequestList, String status);
+
+	void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String string);
+
+	void deleteCardRequestList(Integer reqIdx);
+
+	void acceptRequest(CardRequestList cardRequestList, String status);
+
+	void requestCancelRequest(CardRequestList cardRequestList, String status);
+
+	void exchangeCancelRequest(CardRequestList cardRequestList, String status);
+
+	void completeExchange(CardRequestList cardRequestList, String status);
+
+	List<Map<String, Object>> selectCardListForRevise(Set<Integer> cardIdxSet);
 }

@@ -24,7 +24,7 @@ public interface ExchangeRepository {
 	@Select("select * from exchange_status where (user_idx1=#{memberIdx} or user_idx2 =#{memberIdx}) and type='ONGOING'")
 	List<ExchangeStatus> selectEhByMemberIdxAndTypeOngoing(Integer memberIdx);
 
-	@Select("select type from exchange_satus where req_idx=#{reqIdx}")
+	@Select("select type from exchange_status where req_idx=#{reqIdx}")
 	String selectExchangeStatusType(Integer reqIdx);
 
 	@Select("select * from exchange_status where (request_mem_idx=#{memberIdx} or requested_mem_idx =#{memberIdx}) and type='ONGOING'")
@@ -47,7 +47,7 @@ public interface ExchangeRepository {
 	void updateExchangeStatusWithFreqIDx(ExchangeStatus exchangeStatus);
 
 	//교환요청 리스트 검색
-	@Select("select * from exchange_satus where req_idx=#{reqIdx}")
+	@Select("select * from exchange_status where req_idx=#{reqIdx}")
 	ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx);
 	
 	//나눔요청 리스트 검색

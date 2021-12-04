@@ -1,9 +1,7 @@
 package com.kh.switchswitch.point.controller;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
@@ -42,6 +39,9 @@ public class PointController {
 	
 	@GetMapping("point-history")
 	public void pointHistory() {}
+	
+	@GetMapping("point-history2")
+	public void pointHistory2() {}
 	
 	@GetMapping("point-return")
 	public void pointReturn() {}
