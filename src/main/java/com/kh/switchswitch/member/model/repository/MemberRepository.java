@@ -20,6 +20,9 @@ public interface MemberRepository {
 	
 	@Select("select * from member where member_email = #{memberEmail} and member_del_yn = 0")
 	Member selectMemberByEmailAndDelN(String memberEmail);
+	
+	@Select("select * from member where member_idx = #{memberIdx}")
+	Member selectMemberByMemberIdx(Integer memberIdx);
 
 	@Select("select * from member where member_nick = #{memberNick} and member_del_yn = 0")
 	Member selectMemberByNicknameAndDelN(String memberNick);

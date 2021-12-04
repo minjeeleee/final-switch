@@ -94,9 +94,7 @@ public class ChattingHandler extends TextWebSocketHandler {
 					String jsonStr = objectMapper.writeValueAsString(mapToSend);
 					sess.sendMessage(new TextMessage(jsonStr));
 				}
-				
 			}
-			
 			break;
 		}
 	}

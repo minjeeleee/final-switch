@@ -1,6 +1,7 @@
 package com.kh.switchswitch.chat.model.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.chat.model.dto.ChatMessages;
+import com.kh.switchswitch.chat.model.dto.Chatting;
 
 @Mapper
 public interface ChatRepository {
@@ -22,4 +24,13 @@ public interface ChatRepository {
 	
 	@Update("update chat_messages set is_read=0 where chatting_idx=#{chattingIdx}")
 	void updateAllChatIsRead(Integer chattingIdx);
+
+	@Insert("insert into chatting values(sc_chatting_idx.nextval,#{requestedMemIdx},#{requestedMemIdx2},sysdate)")
+	Object insertChatting(Integer requestedMemIdx, Integer requestedMemIdx2);
+
+	@Select("select * from chatting where ATTENDEE1 =#{memberIdx} or ATTENDEE2 = #{memberIdx}")
+	List<Chatting> selectAllChattingByMemberIdx(Integer memberIdx);
+
+	@Select("select message from chat_messages  where chatting_idx = #{chattingIdx} and ROWNUM <=1 ORDER BY cm_idx desc")
+	String selectLastChatMessages(Integer chattingIdx);
 }

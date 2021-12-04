@@ -24,7 +24,7 @@ public class ChatController {
 	private final ChatService chatService;
 	
 	@GetMapping("chat")
-	public void chat(@RequestParam(name = "chattingIdx")Integer chattingIdx,Model model,@AuthenticationPrincipal MemberAccount member) {
+	public void chat(Integer chattingIdx,Model model,@AuthenticationPrincipal MemberAccount member) {
 		System.out.println(chattingIdx);
 		List<Map<String,Object>> chatMessageList = chatService.selectChatMessageByChattingIdx(chattingIdx,member.getMemberIdx());
 		System.out.println(chatMessageList);
@@ -32,6 +32,9 @@ public class ChatController {
 	}
 	
 	@GetMapping("chatting-list")
-	public void chattingList() {}
+	public void chattingList(@AuthenticationPrincipal MemberAccount member,Model model) {
+		//채팅방 목록 불러오기
+		model.addAttribute("chattingList", chatService.selectAllChattingList(member.getMemberIdx()));
+	}
 	
 }
