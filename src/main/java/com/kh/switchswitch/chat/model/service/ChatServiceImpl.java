@@ -28,7 +28,8 @@ public class ChatServiceImpl implements ChatService{
 		for (ChatMessages chatMessage : chatMessages) {
 			chatMessageList.add(
 					Map.of("chatMessage",chatMessage
-							,"senderName",memberRepository.selectMemberNickWithMemberIdx(chatMessage.getSenderId())));
+							,"senderName",memberRepository.selectMemberNickWithMemberIdx(chatMessage.getSenderId())
+							,"sendTime",chatRepository.selectSendTimeByCmId(chatMessage.getCmIdx())));
 			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
 			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
 				chatRepository.updateChatIsRead(chatMessage.getCmIdx());
@@ -66,7 +67,6 @@ public class ChatServiceImpl implements ChatService{
 				attendeeIdx=chatting.getAttendee2();
 				attendeeList.add(memberRepository.selectMemberByMemberIdx(chatting.getAttendee2()));
 			}
-			
 			if(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx() != null) {
 				attendeeFileList.add(memberRepository.selectFileInfoByFlIdx(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx()));
 			}

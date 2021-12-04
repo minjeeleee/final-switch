@@ -37,4 +37,7 @@ public interface ChatRepository {
 
 	@Select("SELECT COUNT(*) from chat_messages where chatting_idx=#{chattingIdx} and is_read=1 and sender_id !=#{senderId}")
 	int selectCountOfIsReadByChattingIdx(@Param("chattingIdx") Integer chattingIdx,@Param("senderId")Integer senderId);
+	
+	@Select("SELECT TO_CHAR(CREATED_AT,'hh:mm') FROM chat_messages where cm_idx=#{cmIdx}")
+	String selectSendTimeByCmId(Integer cmIdx);
 }
