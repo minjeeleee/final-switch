@@ -46,24 +46,24 @@ public class ExchangeController {
 	private final MemberService memberService;
 	
 	@GetMapping("exchangeForm")
-	public void exchangeForm(
+	public String exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
 			, int wishCardIdx
-			, Model model) {
+			, Model model){
 		//내카드 리스트
-		List<Map<String,Object>> cardlist = new ArrayList<>();
+		List<Map<String, Object>> cardlist = new ArrayList<>();
 		List<Card> myCardList = exchangeService.selecAvailableMyCardList(certifiedMember.getMemberIdx());
-		
-		if(myCardList != null) {
+
+		if (myCardList != null) {
 			for (Card card : myCardList) {
 				FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
 				cardlist.add(Map.of("card", card, "fileDTO", fileDTO));
 			}
 		}
 		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
-		
+
 		model.addAttribute("cardlist", cardlist);
-		model.addAttribute("myRate",myRate);
+		model.addAttribute("myRate", myRate);
 		
 		//교환 희망 카드
 		Card cardInfo = exchangeService.selectCardByCardIdx(wishCardIdx);
@@ -79,11 +79,8 @@ public class ExchangeController {
 			model.addAttribute("availableBal", savePoint.getAvailableBal());
 			model.addAttribute("balance", savePoint.getBalance());
 		}
-		
+		return "exchange/exchangeForm2";
 	}
-	
-	@GetMapping("exchangeForm2")
-	public void exchagneForm2(){}
 	
 	@PostMapping("exchangeForm")
 	public String exchangeForm(
