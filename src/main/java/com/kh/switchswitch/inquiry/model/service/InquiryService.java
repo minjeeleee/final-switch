@@ -13,7 +13,8 @@ public interface InquiryService {
 	Map<String,Object> selectInquiryList(int page);
 	void modifyInquiry(Inquiry inquiry);
 	void deleteInquiry(int inquiryIdx);
-
+	//mypage inquiryList
+	Map<String, Object> selectMyInquiryList(int page,String memberNick);
 
 	
 

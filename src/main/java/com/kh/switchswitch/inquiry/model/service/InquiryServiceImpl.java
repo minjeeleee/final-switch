@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 import com.kh.switchswitch.inquiry.model.repository.InquiryRepository;
+import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,6 +49,23 @@ public class InquiryServiceImpl implements InquiryService{
 		return commandMap;
 	}
 	
+	
+	public Map<String, Object> selectMyInquiryList(int page,String memberNick) {
+		int cntPerPage = 10;
+		Paging pageUtil = Paging.builder()
+				.url("/mypage/personal-inquiry")
+				.total(inquiryRepository.selectContentCnt())
+				.curPage(page)
+				.blockCnt(10)
+				.cntPerPage(cntPerPage)
+				.build();
+
+		Map<String,Object> commandMap = new HashMap<String,Object>();
+		commandMap.put("paging", pageUtil);
+		System.out.println("startBoard"+(page-1)*cntPerPage+1);
+		commandMap.put("inquiryList", inquiryRepository.selectInquiryListWitchUserId(Map.of("startBoard",(page-1)*cntPerPage+1,"lastBoard",(page-1)*cntPerPage+cntPerPage,"userId",memberNick)));
+		return commandMap;
+	}
 	@Transactional
 	public void modifyInquiry(Inquiry inquiry) {
 		inquiryRepository.modifyInquiry(inquiry);

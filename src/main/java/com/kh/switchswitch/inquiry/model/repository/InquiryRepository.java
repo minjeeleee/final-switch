@@ -41,5 +41,7 @@ public interface InquiryRepository {
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Inquiry> selectInquiryListWithPageNo(Map<String, Integer> map);
 	
-
+	@Select("select * from (select rownum rnum, inquiry_idx,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,type from inquiry where user_id=#{userId}) inquiry"
+			+ " where rnum between #{startBoard} and #{lastBoard}")
+	List<Inquiry> selectInquiryListWitchUserId(Map<String, Object> map);
 }
