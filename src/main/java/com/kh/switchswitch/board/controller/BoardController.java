@@ -42,13 +42,14 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	private final BoardService boardService;
 	private final ReplyService commentService;
-	
+
 	@GetMapping("board-form")
-	public void boardForm() {}
-	
+	public void boardForm() {
+	}
+
 	@GetMapping("board-list2")
 	public String boardList2(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		model.addAllAttributes(boardService.selectBoardList(page));
@@ -56,44 +57,44 @@ public class BoardController {
 	}
 
 	@PostMapping("upload")
-	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member ) {
-		//,@SessionAttribute("authentication") Member member
+	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member) {
+		// ,@SessionAttribute("authentication") Member member
 		board.setUserId(member.getMemberNick());
 		boardService.insertBoard(files, board);
 		return "redirect:/board/board-list";
 	}
-	
-	  @GetMapping("board-list") 
-	  public String boardList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
-		  model.addAllAttributes(boardService.selectBoardList(page));	  
-			return "board/board-list";
+
+	@GetMapping("board-list")
+	public String boardList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
+		model.addAllAttributes(boardService.selectBoardList(page));
+		return "board/board-list";
 	}
-	
-//이미지
-	  @GetMapping("board-detail")
+
+	// 이미지
+	@GetMapping("board-detail")
 	public String boardDetail(int bdIdx, Model model) {
-		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
+		Map<String, Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 		model.addAttribute("commentList", boardService.getCommetList(commandMap));
-		
+
 		return "board/board-detail";
 	}
-	
+
 	@GetMapping("board-modify")
 	public void boardModify(Model model, int bdIdx) {
-		Map<String,Object> commandMap = boardService.selectBoardByIdx(bdIdx);
+		Map<String, Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 	}
 
 	@PostMapping("modify")
-	public String modifyBoard(Board board,  List<MultipartFile> files, int bdIdx) {
+	public String modifyBoard(Board board, List<MultipartFile> files, int bdIdx) {
 		System.out.println(board);
 		for (MultipartFile multipartFile : files) {
 			System.out.println(multipartFile);
 		}
 		board.setBdIdx(bdIdx);
-		boardService.modifyBoard(board,files);
-		return "redirect:/board/board-detail?bdIdx="+board.getBdIdx();
+		boardService.modifyBoard(board, files);
+		return "redirect:/board/board-detail?bdIdx=" + board.getBdIdx();
 	}
 
 	@PostMapping("delete")
@@ -101,27 +102,32 @@ public class BoardController {
 		boardService.deleteBoard(bdIdx);
 		return "redirect:/board/board-list";
 	}
-	   //AJAX 호출 (댓글 등록)
+
+	// AJAX 호출 (댓글 등록)
 	@CrossOrigin("*")
 	@ResponseBody
 	@PostMapping("upload-reply")
-    public String boardReplyUpload(@RequestBody Reply reply) {
-		
-		log.info("json={}" , reply);
-
-        boardService.boardReplyInsert(reply);
-
-        return "success";
- 
-    }
-	
-	
-	@PostMapping("modify-reply")
-	public String modifyReply(Reply reply,  int bdIdx) {
-		reply.setBdIdx(bdIdx);
-	//	boardService.modifyReply(bdIdx);
-		return "redirect:/board/board-detail?bdIdx="+reply.getBdIdx();
+	public String boardReplyUpload(@RequestBody Reply reply) {
+		log.info("json={}", reply);
+		boardService.boardReplyInsert(reply);
+		return "success";
 	}
+	@CrossOrigin("*")
+	@ResponseBody
+	@PostMapping("modify-reply")
+	public String modifyReply(@RequestBody Reply reply) {
+		boardService.modifyReply(reply);
+		return "success";
+	}
+	
+	@CrossOrigin("*")
+	@ResponseBody
+	@PostMapping("delete-reply")
+	public String deleteReply(@RequestBody int cmIdx) {
+		boardService.deleteReply(cmIdx);
+		return "success";
+	}
+	
 //	
 //	@PostMapping("comment")
 //    public String viewPostMethod(Model model, @RequestParam Map<String, Object> paramMap) {
@@ -143,4 +149,3 @@ public class BoardController {
 //        return null;
 //    }
 }
-

@@ -36,22 +36,25 @@
             <div class="refund-container inner-size">
 
                 <div class="refund-input">
-                    <form class="refund-form" action="">
+                    <form class="refund-form" th:action="@{/point/refund}" id="refundInfo">
                         <div class="req_point">
                             <p>신청금액</p>
-                            <input type="text" name="point" id="">
+                            <input type="number" id="" name="refundPoint">
                         </div>
+                        <!-- 생년월일 입력창 필요 -->
                         <div class="account">
                             <p>환급계좌번호</p>
-                            <input type="text" name="account" id="">
-                            <select name="" id="">
-                                <option value="">은행</option>
-                                <option value="">신한은행</option>
-                                <option value="">우리은행</option>
-                                <option value="">농협은행</option>
-                            </select>
+                            <input type="number" id="account" name="account">
+                            <select name="bankName" style="font-size: 20px;">
+								<option value="004">국민은행</option>
+								<option value="020">우리은행</option>
+								<option value="081">하나은행</option>
+								<option value="088">신한은행</option>
+								<option value="090">카카오뱅크</option>
+							</select>
                         </div>
-                        <button class="ref-submit-button" type="submit">신청하기</button>
+						<!-- 계좌조회 버튼 필요  -->
+                        <button class="ref-submit-button" onclick="doExchange()" type="submit">신청하기</button>
                     </form>
                 </div>
 
@@ -68,5 +71,69 @@
        <div th:replace="fragments/footer :: footer" ></div>
    	</footer>
     
+     <script type="text/javascript" th:inline="javascript">
+    let validUserName = ""; //이름
+    let account = ""; // 계좌
+    let bankName = ""; // 은행이름
+    let bankCode = ""; //은행코드
+    function checkAccount(){
+    	let inputAccount = $("#account").val();
+    	let inputBankCode = $("select[name=bankName]").val();
+    	let birth = $("#birth").val();
+    	
+    	fetch("/point/checkAccount?accountNum="+ inputAccount + "&bankCodeStd=" + inputBankCode + "&accountHolderInfo=" + birth)
+    	.then(response =>{
+    		console.dir(response);
+    		if(response.ok){
+    			return response.text();
+    		}else{
+    			throw new Error(response.status);
+    		}
+    	})
+    	.then(text => {
+    		console.dir(text);
+			if(text == '실패'){
+				console.dir(text);
+			}else{
+				let texts = text.split(",");
+				console.dir(texts[1]);
+				console.dir([[${#authentication.principal.memberName}]]);
+				if(texts[1] == [[${#authentication.principal.memberName}]] ){
+					alert("계좌실명인증이 완료되었습니다.");
+					validUserName = texts[1];
+					account = texts[0];
+					bankName = texts[2];
+					bankCode = texts[3];
+				} else {
+					alert("회원가입 시 입력한 이름과 계좌 소유주 이름이 다른 경우 어떻게 할까요?????");
+				}
+				
+			}
+		})
+		.catch(error => {
+			console.dir(error);
+		});
+    }
+    
+   function doExchange(){
+	   if(validUserName != [[${#authentication.principal.memberName}]]){
+		   alert("제출된 정보와 일치하지 않습니다./1");
+		   return;
+	   }
+	   if(account != $("#account").val()){
+		   console.dir(account);
+		   console.dir($("#account").val());
+		   alert("제출된 정보와 일치하지 않습니다./2");
+		   return;
+	   }
+	   if(bankCode != $("select[name=bankName]").val()){
+		   console.dir(bankCode);
+		   console.dir($("select[name=bankName]").val());
+		   alert("제출된 정보와 일치하지 않습니다./3");
+		   return;
+	   }
+	   $("#refundInfo").submit();
+   }
+    </script>
 </body>
 </html>

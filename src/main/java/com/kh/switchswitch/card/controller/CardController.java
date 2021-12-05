@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
@@ -86,6 +87,12 @@ public class CardController {
 		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
 		
 		return "card/my-card";
+	}
+	
+	@GetMapping("view")
+	@ResponseBody
+	public void updateView(Card card) {
+		cardService.updateCardViews(card);
 	}
 	
 }

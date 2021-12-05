@@ -3,11 +3,45 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/subHeader :: subHeader"></head>
 <body>
-<nav th:replace="fragments/subMenu :: subNav"></nav>
+<!-- <header th:replace="fragments/bodyHeader :: bodyHeader"></header> -->  
+<!-- <nav th:replace="fragments/subMenu :: subNav"></nav> -->
+<div>
+	<p>알림</p>
+	<table th:styleappend ="|padding:10px 0 10px 0|">
+		<thead><tr><td>알림리스트</td></tr></thead>
+		<tbody>
+			<th:block th:each="alarm : ${alarms}" th:object="${alarm.alarm}">
+				<tr th:if="*{isRead} == 0" th:styleappend ="|background-color:rgba(152, 151, 165, 0.68)|" 
+					 th:onclick="|updateIsRead(this,*{alarmIdx})|">
+					<td th:text="${alarm.message}"></td><td th:text="*{sendDate}"></td>
+				</tr>
+				<tr th:if="*{isRead} == 1">
+					<td th:text="${alarm.message}"></td><td th:text="*{sendDate}"></td>
+				</tr>
+			</th:block>
+			
+		</tbody>
+	</table>
+	
+</div>
+
 
 <footer>
 	<div th:replace="fragments/footer :: footer"></div>
 </footer>
+<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
+<script type="text/javascript" th:inline="javascript">
+	function updateIsRead(e,alarmIdx){
+		fetch("http://localhost:9090/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
+		.then(response => {
+			if(response.ok){
+				e.style.backgroundColor = "white";
+			} else {
+				throw new Error(response.status);
+			}
+		})
+	}
+</script>
 </body>
 
 </html>

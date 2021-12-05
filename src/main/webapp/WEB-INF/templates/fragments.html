@@ -1,5 +1,6 @@
-                                                        <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<th:block th:fragment="flg_head">
 		<meta charset="UTF-8">
@@ -36,6 +37,7 @@
    }
 </script>
 
+/* 카드 컨테이너 및 카테고리 아이콘 */
 <script type="text/javascript" th:inline="javascript" th:fragment="card">
 	document.querySelectorAll(".card-box").forEach(function(e){
 		switch(e.previousElementSibling.value){
@@ -66,6 +68,7 @@
 	})
 </script>
 
+/* 알림 생성 */
 <script type="text/javascript" th:inline="javascript" th:fragment="alarm">
 	let sock = new SockJS('http://localhost:9090/alarm');
 	sock.onmessage = function(msg){
@@ -98,6 +101,26 @@
 			alarmBox.style.display = "none";
 		}, 5000);
 	};
+</script>
+
+/* 카드 조회수 */
+<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
+<script type="text/javascript" th:inline="javascript" th:fragment="view">
+function updateView(e,cardIdx,ownerIdx,views){
+	console.log("views"+views)
+	let currMemberIdx = $('.id-Check').val()
+	if(ownerIdx == currMemberIdx){
+		return;
+	}
+	fetch("/card/view?cardIdx=" + cardIdx + "&views=" + views, { headers : getCsrfHeader()})
+	.then(response => {
+		if(response.ok){
+			console.dir("card 조회수 +1");
+		} else {
+			throw new Error(response.status);
+		}
+	})
+}
 </script>
 
 </body>

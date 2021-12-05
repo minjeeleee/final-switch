@@ -395,4 +395,9 @@ public class CardServiceImpl implements CardService {
 		updateExchangeStatus(reqIdx, status);
 	}
 
+	public void updateCardViews(Card card) {
+		card.setViews(card.getViews() + 1);
+		updateCardWithCardIdx(card);
+	}
+
 }

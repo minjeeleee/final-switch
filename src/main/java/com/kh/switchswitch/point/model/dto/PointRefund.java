@@ -8,7 +8,7 @@ import lombok.Data;
 public class PointRefund {
 	
 	private Integer prIdx;
-	private String memberName;
+	private Integer memberIdx;
 	private Integer refundPoint;
 	private String statusCode;
 	private String adminName;

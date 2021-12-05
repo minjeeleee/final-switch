@@ -32,34 +32,27 @@ import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.inquiry.model.service.InquiryService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("mypage")
 public class MypageController {
 	
-	private MemberService memberService;
-	private ModifyFormValidator modifyFormValidator;
-	private PasswordEncoder passwordEncoder;
-	private ExchangeService exchangeService;
-	private CardService cardService;
-
-
-	public MypageController(MemberService memberService, ModifyFormValidator modifyFormValidator,
-			PasswordEncoder passwordEncoder,ExchangeService exchangeService,CardService cardService) {
-		super();
-		this.memberService = memberService;
-		this.modifyFormValidator = modifyFormValidator;
-		this.passwordEncoder = passwordEncoder;
-		this.exchangeService = exchangeService;
-		this.cardService = cardService;
-	}
+	private final MemberService memberService;
+	private final ModifyFormValidator modifyFormValidator;
+	private final PasswordEncoder passwordEncoder;
+	private final ExchangeService exchangeService;
+	private final CardService cardService;
+	private final InquiryService inquiryService;
 
 
 	@InitBinder(value = "modifyForm")
@@ -109,7 +102,7 @@ public class MypageController {
 
 		memberService.updateMemberDelYN(form.convertToMember());
 
-		return "redirect:/mypage/profile";
+		return "/mypage/profile";
 	}
 
 	@GetMapping("leave-member")
@@ -197,6 +190,10 @@ public class MypageController {
 		return json;
 	}
 	
-	@GetMapping("mypage-inquiry")
-	public void mypageInquiry() {}
+	 @GetMapping("personal-inquiry") 
+	  public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
+		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
+		System.out.println(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
+		return "inquiry/inquiry-list";
+	}
 }

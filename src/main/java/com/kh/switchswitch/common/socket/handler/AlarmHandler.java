@@ -50,30 +50,22 @@ public class AlarmHandler extends TextWebSocketHandler {
         String msg = message.getPayload();
         if(!StringUtils.isEmpty(msg)) {
         	String[] strs = msg.split(",");
-        	String alarmTypeOrisRead = strs[0];
+        	String alarmType = strs[0];
         	Integer alarmIdx = strs[1].equals("") ? null : Integer.parseInt(strs[1]);
         	Integer receiverIdx = Integer.parseInt(strs[2]);
-        	Integer reqIdx = Integer.parseInt(strs[3]);
         	
-    		if(alarmTypeOrisRead.equals("read")) {
-    			Alarm updateAlarm = new Alarm();
-    			updateAlarm.setAlarmIdx(alarmIdx);
-    			updateAlarm.setIsRead(1);
-    			alarmRepository.updateAlarmIsRead(updateAlarm);
-    		} else {
-            	newAlarm.setAlarmType(alarmTypeOrisRead);
-            	newAlarm.setSenderIdx(loginMember.getMemberIdx());
-            	newAlarm.setReceiverIdx(receiverIdx);
-        		newAlarm.setReqIdx(reqIdx);
-    			alarmRepository.insertAlarm(newAlarm);
-    			
-    			newAlarm.setAlarmIdx(alarmRepository.selectCurrScAlarmIdx());
-    		}
-        	
+        	newAlarm.setAlarmType(alarmType);
+        	newAlarm.setSenderIdx(loginMember.getMemberIdx());
+        	newAlarm.setReceiverIdx(receiverIdx);
+    		newAlarm.setReqIdx(Integer.parseInt(strs[3]));
+			alarmRepository.insertAlarm(newAlarm);
+			
+			newAlarm.setAlarmIdx(alarmRepository.selectCurrScAlarmIdx());
+			
         	WebSocketSession receiverSession =  userSessions.get(receiverIdx);
         	
         	if( receiverSession != null) {
-				switch (alarmTypeOrisRead) {
+				switch (alarmType) {
 				case "교환요청":
 					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님으로부터 교환 요청이 왔습니다."));
 					break;

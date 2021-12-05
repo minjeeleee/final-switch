@@ -67,6 +67,7 @@ section {
 }
 
 .whish-img-container img {
+	width: 100%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -193,6 +194,11 @@ section {
 	width: 220px;
 }
 
+/* jung 2021 modi */
+.whish-card-container {
+	display: flex;
+	justify-content: center;
+}
 
 
 @keyframes bring {
