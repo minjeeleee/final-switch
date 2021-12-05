@@ -59,9 +59,6 @@ public class MarketController {
 //    @GetMapping(value = "getcard", produces = "application/json; charset=utf8")
     @GetMapping("getcard")
 	public String responseBodyJason(HttpServletResponse response) {
-		ObjectMapper mapper = new ObjectMapper();
-		
-		response.addHeader("Access-Control-Allow-Origin","*");
 		
 		List<Card> allCard = cardService.selectAllCard();
 		

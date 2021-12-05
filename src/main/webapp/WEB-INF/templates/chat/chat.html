@@ -81,7 +81,7 @@
 	</script>
 </head>
 <body>
-	<div style="width: 800px; height: 700px; padding: 10px; border: solid 1px #e1e3e9;">
+	<div style="width: 800px; height: 700px; padding: 10px; border: solid 1px #e1e3e9; overflow: scroll;" id="chatBox">
 		<div id="divChatData">
 			<th:block th:if="${chatMessageList} != null" th:each ="chatMessage : ${chatMessageList}" th:object="${chatMessage}">
 				<div>[[*{senderName}]] : [[*{chatMessage.message}]] ([[*{chatMessage.isRead}]]) &nbsp;[[*{chatMessage.createdAt}]]&nbsp;[[*{sendTime}]]</div>
@@ -94,9 +94,24 @@
 		<div  id="message">상대방이 탈퇴하여 채팅할 수 없습니다.</div>
 	</th:block>
 	<th:block th:if="${senderNick} != '(알수없음)'">
-		<input type="text" id="message" size="110"/>
+		<input type="text" id="message" size="110" style=""/>
 		<input type="button" id="btnSend" value="채팅 전송" onclick="webSocket.sendChat()" />
 	</th:block>
 	</div>
+	<script type="text/javascript">
+	$("#message").keydown(function (key) {
+		 
+        if(key.keyCode == 13){
+        	webSocket.sendChat();
+        }
+ 
+    });
+	$(document).ready(function() {
+		  $('#message').focus();
+		  $('#chatBox').scrollTop($('#chatBox').height());
+		});
+	
+	
+	</script>
 </body>
 </html>
