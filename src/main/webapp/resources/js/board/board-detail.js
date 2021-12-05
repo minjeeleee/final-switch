@@ -91,20 +91,7 @@ function commentCreate(){
 	return false;
 }
 
-// 댓글 수정창
 
-			var html = "";
-			$.each(data, function(index, value) {
-				if(value.replyDepth == 0){
-					if(value.userId ==  "${#authentication.principal.memberNick}"){ 
-						html += "<div id='updateForm-"+value.id+"' style='display: none;'>"+
-						"<form method='post' action='/reply/"+value.id+"' onsubmit='return replyUpdate("+value.id+");'>"+
-							"<input type='hidden' name='_method' value='PUT'>"+
-							"<textarea id='replyContent-"+value.id+"' name='content' class='form-control z-depth-1' rows='3' maxlength='1000' placeholder='댓글을 입력해주세요.'>"+value.content+"</textarea>"+
-							"<input type='submit' style='width:50%' class='btn btn-success' value='수정'>"+
-							"<input type='button' style='width:50%' class='btn btn-primary' value='취소' onclick='replyForm("+value.id+")'>"+
-							"</form>"+
-					"</div>"
 
 //댓글 수정
 function updateComment(){
@@ -221,26 +208,6 @@ function commentDelete(){
 	});
 	return false;
 }
-
-function uxin_timestamp(time){
-	var date = new Date(time);
-	var year = date.getFullYear();
-	var month = "0" + (date.getMonth()+1);
-	var day = "0" + date.getDate();
-	var hour = "0" + date.getHours();
-	var minute = "0" + date.getMinutes();
-	//var second = "0" + date.getSeconds();
-	return year + "-" + month.substr(-2) + "-" + day.substr(-2) + " " + hour.substr(-2) + ":" + minute.substr(-2);
-}
-
-function listConfirm(id){
-	if(confirm("새로고침 하시겠습니까?")){
-		commentList(id);
-	}else{
-		return;
-	}
-}
-
 
 function login(){
 	if(confirm("로그인 하시겠습니까?")){
