@@ -50,8 +50,8 @@ public interface MemberRepository {
 	@Select("select member_email from member where member_nick = #{nickname} and member_tell = #{tell} and member_del_yn = 0")
 	String selectEmailByNicknameAndTell(Map<String, String> map);
 	
-	@Select("select member_nick from member where member_idx = #{requestMemIdx}")
-	String selectMemberNickWithMemberIdx(Integer requestMemIdx);
+	@Select("select * from member where member_idx = #{requestMemIdx}")
+	Member selectMemberWithMemberIdx(Integer requestMemIdx);
 
 	@Select("select member_score from member where member_idx = #{memberIdx}")
 	Float selectMemberScoreByMemberIdx(Integer memberIdx);

@@ -26,9 +26,12 @@ public class ChatServiceImpl implements ChatService{
 		List<Map<String, Object>> chatMessageList = new ArrayList<Map<String,Object>>();
 		List<ChatMessages> chatMessages = chatRepository.selectChatMessagesList(chattingIdx);
 		for (ChatMessages chatMessage : chatMessages) {
+			String senderNick = "";
+			if(chatMessage.getSenderId() == null) senderNick = "(알수없음)";
+			else senderNick = getNick(chatMessage.getSenderId());
 			chatMessageList.add(
 					Map.of("chatMessage",chatMessage
-							,"senderName",memberRepository.selectMemberNickWithMemberIdx(chatMessage.getSenderId())
+							,"senderName",senderNick
 							,"sendTime",chatRepository.selectSendTimeByCmId(chatMessage.getCmIdx())));
 			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
 			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
@@ -37,11 +40,37 @@ public class ChatServiceImpl implements ChatService{
 		}
 		return chatMessageList;
 	}
+	
+	public String getSenderNick(Integer chattingIdx,Integer memberIdx) {
+		Chatting chatting = chatRepository.selectChattingByChattingIdx(chattingIdx);
+		Integer senderIdx = 0;
+		if(chatting.getAttendee1() != memberIdx) senderIdx = chatting.getAttendee1();
+		if(chatting.getAttendee2() != memberIdx) senderIdx = chatting.getAttendee2();
+		Member member = memberRepository.selectMemberWithMemberIdx(senderIdx);
+		if(member.getMemberDelYn() == 1) {
+			return "(알수없음)";
+		}
+		return member.getMemberNick();
+	}
+	
+	public String getNick(Integer memberIdx) {
+		Member member = memberRepository.selectMemberWithMemberIdx(memberIdx);
+		if(member.getMemberDelYn() == 1) {
+			return "(알수없음)";
+		}
+		return member.getMemberNick();
+	}
 
 
 	//채팅방 생성
 	public void makeChatRoom(Integer requestedMemIdx, Integer requestMemIdx) {
-		 chatRepository.insertChatting(requestedMemIdx,requestedMemIdx);		
+		Chatting chatting = new Chatting();
+		//해당 회원들이 있는 채팅방이 존재하지 않다면 채팅방 생성
+		if(chatRepository.selectChattingByAttendeeMemIdxs(requestedMemIdx, requestedMemIdx) == null) {
+			 chatRepository.insertChatting(requestedMemIdx,requestedMemIdx);
+			 chatting = chatRepository.selectChattingByAttendeeMemIdxs(requestedMemIdx, requestedMemIdx);
+			 chatRepository.insertChattingHistory(chatting);
+		}
 	}
 
 
@@ -83,6 +112,13 @@ public class ChatServiceImpl implements ChatService{
 		
 		return chattingInfoList;
 	}
+
 	
-	
+	public void leaveChatting(Integer chattingIdx, Integer memberIdx) {
+		Chatting chatting = chatRepository.selectChattingByChattingIdx(chattingIdx);
+		if(chatting.getAttendee1() == memberIdx) chatRepository.updateChattingAttendee1(chattingIdx);
+		if(chatting.getAttendee2() == memberIdx) chatRepository.updateChattingAttendee2(chattingIdx);
+	}
+
+
 }
