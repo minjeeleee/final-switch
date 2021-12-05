@@ -103,7 +103,7 @@
 						
 					</div>
 					<div style="display: flex; justify-content: center;">
-							<ul class="pagination" th:object=${paging}>
+							<ul class="pagination" th:object="${paging}">
 								<th:block th:if="${param.searchKeyword}">
 							    <li>
 							      <a th:if="${param.searchType}" th:href="|*{url}?page=*{prev}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" aria-label="Previous">

@@ -18,6 +18,8 @@ import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.point.model.dto.PointRefund;
 
 import lombok.RequiredArgsConstructor;
 
@@ -132,8 +134,6 @@ public class AdminService {
 		int cntPerPage = 3;
 		
 		List<Member> memberList = adminRepository.selectMemberAllList(searchType, keyword,1+(page-1)*cntPerPage,page*cntPerPage);
-		System.out.println(searchType);
-		System.out.println(keyword);
 		
 		Paging pageUtil = Paging.builder()
 				.url("/admin/all-members")
@@ -240,9 +240,54 @@ public class AdminService {
 		return adminRepository.selectCardIdxByflIdx(flIdx);
 	}
 
-	public List<Map<String, Object>> selectRefundHistoryList() {
-		//List<PointRefund> pointRefundList = adminRepository.selectRefundHistoryList();
-		return null;
+	public List<Map<String, Object>> selectRefundHistoryList(String statusCode, String searchType, String searchKeyword, int page) {
+		List<Map<String, Object>> refundList = new ArrayList<>();
+		Integer cntPerPage = 10;
+		List<PointRefund> pointRefundList = adminRepository.selectRefundHistoryList(statusCode,1+(page-1)*cntPerPage,page*cntPerPage);
+		
+		if(pointRefundList != null) {
+			for (PointRefund pointRefund : pointRefundList) {
+				Member member = adminRepository.selectMemberByIdxWithDetail(pointRefund.getMemberIdx(),searchType,searchKeyword);
+				if(member != null) {
+					refundList.add(Map.of("point",pointRefund,"member",member));
+				}
+			}
+		}
+		
+		return refundList;
+	}
+
+	public void updateStatusCode(MemberAccount member, String statusCode, Integer prIdx) {
+		Member adminInfo = adminRepository.selectMemberByEmail(member.getMemberEmail());
+		String adminName = adminInfo.getMemberName();
+		adminRepository.updateStatusCode(statusCode,adminName,prIdx);
+	}
+
+	public Paging selectRefundByPaging(String statusCode, String searchType, String searchKeyword, int page) {
+		
+		Integer cntPerPage = 10;
+		List<Object> obj = new ArrayList<Object>();
+		List<PointRefund> pointRefundList = adminRepository.selectRefundHistoryListForCount(statusCode);
+		Integer totalCnt = pointRefundList.size();
+			if(pointRefundList != null) {
+				if(searchKeyword != null) {
+					for (PointRefund pointRefund : pointRefundList) {
+						Member member = adminRepository.selectMemberByIdxWithDetail(pointRefund.getMemberIdx(),searchType,searchKeyword);
+						obj.add(member);
+						totalCnt = obj.size();
+					}
+				}
+			}
+		
+		Paging pageUtil = Paging.builder()
+				.url("/admin/refunds-history")
+				.total(totalCnt)
+				.cntPerPage(cntPerPage)
+				.blockCnt(5)
+				.curPage(page)
+				.build();
+		
+		return pageUtil;
 	}
 
 	

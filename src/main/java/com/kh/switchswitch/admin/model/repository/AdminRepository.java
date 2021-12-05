@@ -15,6 +15,7 @@ import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.point.model.dto.PointRefund;
 
 @Mapper
 public interface AdminRepository {
@@ -120,9 +121,20 @@ public interface AdminRepository {
 	Integer memberBlackListCount(@Param("searchType")String searchType, @Param("keyword")String keyword);
 
 	Integer cardCount(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
+
+	List<PointRefund> selectRefundHistoryList(@Param("statusCode")String statusCode, @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
+	
+	@Select("select * from member where member_email = #{memberEmail}")
+	Member selectMemberByEmail(String memberEmail);
+	
+	@Update("update point_refund set admin_name=#{adminName},status_code=#{statusCode} where pr_idx = #{prIdx}")
+	void updateStatusCode(@Param("statusCode") String statusCode, @Param("adminName")String adminName, @Param("prIdx") Integer prIdx);
+
+	Member selectMemberByIdxWithDetail(@Param("memberIdx")Integer memberIdx, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
+	
+	List<PointRefund> selectRefundHistoryListForCount(String statusCode);
 	
 	
-	//List<PointRefund> selectRefundHistoryList();
 	
 	
 	

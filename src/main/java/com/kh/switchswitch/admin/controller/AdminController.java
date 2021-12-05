@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -29,6 +30,7 @@ import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 @Controller
 @RequestMapping("admin")
@@ -157,8 +159,18 @@ public class AdminController {
 	}
 
 	@GetMapping("refunds-history")
-	public void refundsHistory(Model model) {
-		List<Map<String, Object>> res = adminService.selectRefundHistoryList();
+	public void refundsHistory(Model model, @Nullable @RequestParam String statusCode,
+			@Nullable @RequestParam String searchType, @Nullable @RequestParam String searchKeyword, @RequestParam(required = false, defaultValue = "1") int page) {
+		List<Map<String, Object>> pointRefund = adminService.selectRefundHistoryList(statusCode, searchType, searchKeyword,page);
+		Paging pageUtil = adminService.selectRefundByPaging(statusCode, searchType, searchKeyword,page);
+		model.addAttribute("pointRefund",pointRefund);
+		model.addAttribute("paging",pageUtil);
+	}
+	
+	@GetMapping("change-refund-status")
+	public String changeRefundStatus(@AuthenticationPrincipal MemberAccount member,@RequestParam String statusCode, @RequestParam Integer prIdx ) {
+			adminService.updateStatusCode(member,statusCode, prIdx);
+			return "redirect:/admin/refunds-history";
 	}
 
 	@GetMapping("member-profile")
