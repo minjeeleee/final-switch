@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
+import com.kh.switchswitch.comment.model.dto.Reply;
 
 public interface BoardService {
 	//게시글등록
@@ -20,6 +21,10 @@ public interface BoardService {
 	void modifyBoard(Board board, List<MultipartFile> files);
 
 	void deleteBoard(int bdIdx);
+	
+	List<Reply> getCommetList(Map<String, Object> commandMap);
+	
+	void boardReplyInsert(Reply reply);
 
 
 

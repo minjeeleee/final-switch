@@ -1,5 +1,6 @@
 package com.kh.switchswitch.board.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.repository.BoardRepository;
+import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.common.util.pagination.Paging;
@@ -79,6 +81,25 @@ public class BoardServiceImpl implements BoardService{
 		boardRepository.deleteBoard(bdIdx);
 		
 	}
+
+	@Override
+	public List<Reply> getCommetList(Map<String, Object> commandMap) {
+		 List<Reply> commentList = boardRepository.getCommentList(((Board)commandMap.get("board")).getBdIdx());
+		return commentList;
+
+
+	    }
+
+	@Override
+	public void boardReplyInsert(Reply reply) {
+		
+		int lastOrder = boardRepository.selectLastOrderOfBoard(reply.getBdIdx());		
+		reply.setCmOrder(lastOrder+1);	
+		boardRepository.insertReplyDepth1(reply);
+		
+		
+	}
+
 
 
 
