@@ -122,6 +122,9 @@ public interface AdminRepository {
 	Integer cardCount(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
 	
 	
+	//List<PointRefund> selectRefundHistoryList();
+	
+	
 	
 
 

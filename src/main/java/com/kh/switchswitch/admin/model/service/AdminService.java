@@ -241,6 +241,7 @@ public class AdminService {
 	}
 
 	public List<Map<String, Object>> selectRefundHistoryList() {
+		//List<PointRefund> pointRefundList = adminRepository.selectRefundHistoryList();
 		return null;
 	}
 
