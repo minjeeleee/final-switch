@@ -148,7 +148,9 @@
 			</div>
 
 		</div>
-
+	<div class="whish-card-container">
+	<div class="whish-card-inner">
+	
 		<div class="exc-single-title inner-size">
 
 			<p>교환희망카드</p>
@@ -199,6 +201,8 @@
 				</div>
 			</div>
 		</form>
+	</div>
+	</div>
 	
 	</section>
 
@@ -222,6 +226,7 @@
 	 				input.setAttribute("type","hidden");
 	 				input.setAttribute("name","cardIdxList");
 	 				input.setAttribute("value",cardIdx);
+	 				$('.card-container').css('width','230px')
 	 				e.appendChild(input);
 	 				appendArea.lastElementChild.remove();
 	 				appendArea.prepend(e);
@@ -238,6 +243,7 @@
 	 			let img = document.createElement("img");
 	 			img.setAttribute("src", "../resources/img/defaultCard.png");
 	 			cardContainer.setAttribute("class", "card-contatiner");
+	 			cardContainer.setAttribute("style", "width:230px;");
 	 			cardContainer.setAttribute("id", "default-card")
 	 			card.setAttribute("class", "card");
 	 			cardContainer.appendChild(card);

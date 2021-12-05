@@ -30,7 +30,7 @@
     top: 0;
     z-index: -1;
     border-radius: 30px;
-    width: 98%;
+    width: 99%;
     height: 200px;
     background: #ff5403;
     overflow: hidden;
@@ -39,6 +39,7 @@
 .card img {
     width: inherit;
     object-fit: cover;
+    height: 100%;
 }
 
 /* 평점 컨테이너 -----------------------*/
