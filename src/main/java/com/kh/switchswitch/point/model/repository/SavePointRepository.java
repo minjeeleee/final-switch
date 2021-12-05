@@ -1,5 +1,6 @@
 package com.kh.switchswitch.point.model.repository;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -12,5 +13,8 @@ public interface SavePointRepository {
 	SavePoint selectSavePointByMemberIdx(int memberIdx);
 
 	void updateSavePoint(SavePoint savePoint);
+	
+	@Insert("insert into save_point(POINT_IDX,MEMBER_IDX) values(sc_point_idx.nextval,sc_member_idx.currval")
+	void insertSavePoint();
 	
 }

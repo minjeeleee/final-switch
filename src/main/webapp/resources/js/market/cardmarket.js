@@ -95,8 +95,11 @@ function createPopup(value,productStar,memberStar) {
     result += '</ul>'
     result += '</div>'
     result += '<div class="deail-buttons">'
+    result += '<form action="/exchange/exchangeForm">'
+    result += '<input type="hidden" name="wishCardIdx" value='+value.cardIdx+'>'
     result += '<button class="exchange-button">교환신청</button>'
-    result += '<button class="close-button">닫기</button>'
+    result += '<button type="button" class="close-button">닫기</button>'
+    result += '</form>'
     result += '</div>'
     result += '</div>'
     result += '</div>'
@@ -446,5 +449,3 @@ function cardClick() {
             slickControll()
         })
 }
-
-

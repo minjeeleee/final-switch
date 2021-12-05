@@ -44,6 +44,7 @@ import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.KakaoRepository;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 import com.kh.switchswitch.member.validator.JoinForm;
+import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -61,6 +62,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MailSender mailSender;
 	private final ExchangeRepository exchangeRepository;
 	private final FreeRequestListRepository freeRequestListRepository;
+	private final SavePointRepository savePointRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -75,6 +77,7 @@ public class MemberServiceImpl implements MemberService {
        Member member = form.convertToMember();
        member.setMemberPass(passwordEncoder.encode(form.getMemberPass()));
        memberRepository.insertMember(member);
+       savePointRepository.insertSavePoint();
     }
 
 	public void authenticateByEmail(JoinForm form, String token) {
