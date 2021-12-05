@@ -205,9 +205,9 @@ public class ExchangeServiceImpl implements ExchangeService{
 			
 			isRateList.add(ratingRepository.selectRatingByMemIdxAndEhIdx(memberIdx,exchangeHistory.getEhIdx()));
 			if(memberIdx.equals(exchangeHistory.getRequestMemIdx())) {
-				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestedMemIdx()));
+				opponentNickList.add(memberRepository.selectMemberWithMemberIdx(exchangeHistory.getRequestedMemIdx()).getMemberNick());
 			} else {
-				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestMemIdx()));
+				opponentNickList.add(memberRepository.selectMemberWithMemberIdx(exchangeHistory.getRequestMemIdx()).getMemberNick());
 			}
 		}
 		List<String> requestedCardNameList = getRequestedCardNameList(crlList);
@@ -237,9 +237,9 @@ public class ExchangeServiceImpl implements ExchangeService{
 			frlList.add(cardRepository.selectFreeRequestByEIdx(exchangeHistory.getEIdx()));
 			isRateList.add(ratingRepository.selectRatingByMemIdxAndEhIdx(memberIdx,exchangeHistory.getEhIdx()));
 			if(memberIdx.equals(exchangeHistory.getRequestMemIdx())) {
-				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestedMemIdx()));
+				opponentNickList.add(memberRepository.selectMemberWithMemberIdx(exchangeHistory.getRequestedMemIdx()).getMemberNick());
 			} else {
-				opponentNickList.add(memberRepository.selectMemberNickWithMemberIdx(exchangeHistory.getRequestMemIdx()));
+				opponentNickList.add(memberRepository.selectMemberWithMemberIdx(exchangeHistory.getRequestMemIdx()).getMemberNick());
 			}
 		}
 		List<String> requestedCardNameList = getFreeRequestedCardNameList(frlList);
