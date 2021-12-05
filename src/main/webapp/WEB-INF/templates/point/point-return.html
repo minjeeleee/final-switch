@@ -270,12 +270,12 @@
 									<div class="mypage-con" style="font-size: 40px; font-weight: bolder;">
 										<div >신청 금액</div>
 										<form th:action="@{/point/refund}" id="refundInfo">
-											<input type="number" step="100" name="points">p
+											<input type="number" step="100" name="refundPoint">p
 											<div style="font-size: 20px; margin-top: 30px;">생년월일</div>
-											<input type="number" style="font-size: 20px;"  id="birth" placeholder="YYMMDD">
+											<input type="number" style="font-size: 20px;" id="birth" placeholder="YYMMDD">
 											<div style="font-size: 20px; margin-top: 30px;">환급 계좌 번호</div>
-											<input type="number" style="font-size: 20px;" id="account">
-											<select name="bank" style="font-size: 20px;">
+											<input type="number" style="font-size: 20px;" id="account" name="account">
+											<select name="bankName" style="font-size: 20px;">
 												<option value="004">국민은행</option>
 												<option value="020">우리은행</option>
 												<option value="081">하나은행</option>
@@ -354,7 +354,7 @@
     let bankCode = ""; //은행코드
     function checkAccount(){
     	let inputAccount = $("#account").val();
-    	let inputBankCode = $("select[name=bank]").val();
+    	let inputBankCode = $("select[name=bankName]").val();
     	let birth = $("#birth").val();
     	
     	fetch("/point/checkAccount?accountNum="+ inputAccount + "&bankCodeStd=" + inputBankCode + "&accountHolderInfo=" + birth)
@@ -402,9 +402,9 @@
 		   alert("제출된 정보와 일치하지 않습니다./2");
 		   return;
 	   }
-	   if(bankCode != $("select[name=bank]").val()){
+	   if(bankCode != $("select[name=bankName]").val()){
 		   console.dir(bankCode);
-		   console.dir($("select[name=bank]").val());
+		   console.dir($("select[name=bankName]").val());
 		   alert("제출된 정보와 일치하지 않습니다./3");
 		   return;
 	   }
