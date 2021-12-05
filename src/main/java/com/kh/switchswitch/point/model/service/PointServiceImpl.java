@@ -17,7 +17,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
+import com.kh.switchswitch.point.model.dto.PointRefund;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.InquiryRealNameRepository;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
@@ -140,6 +142,10 @@ public class PointServiceImpl implements PointService{
 		}
 		
 		return null;
+	}
+
+	public void refundPoint(MemberAccount certifiedMember, PointRefund pointRefund) {
+		
 	}
 	
 	

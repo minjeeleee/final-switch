@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
+import com.kh.switchswitch.point.model.dto.PointRefund;
 import com.kh.switchswitch.point.model.service.PointService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
@@ -72,8 +75,14 @@ public class PointController {
 	}
 	
 	@GetMapping("refund")
-	public String refundPoint(/* 환불신청 테이블? */){
-		return "point/point-return";
+	public String refundPoint(@AuthenticationPrincipal MemberAccount certifiedMember , PointRefund pointRefund, Model model){
+		
+		pointService.refundPoint(certifiedMember, pointRefund);
+		
+		model.addAttribute("msg", "환급신청이 완료되었습니다.");
+		model.addAttribute("url", "point/point-return");
+		
+		return "common/result";
 	}
 
     
