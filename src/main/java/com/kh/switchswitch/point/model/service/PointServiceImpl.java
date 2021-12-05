@@ -22,6 +22,7 @@ import com.kh.switchswitch.point.model.dto.InquiryRealName;
 import com.kh.switchswitch.point.model.dto.PointRefund;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.InquiryRealNameRepository;
+import com.kh.switchswitch.point.model.repository.PointRefundRepository;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class PointServiceImpl implements PointService{
 	private final SavePointRepository savePointRepository;
 	private final RestTemplate http;
 	private final InquiryRealNameRepository inquiryRealNameRepository;
+	private final PointRefundRepository pointRefundRepository;
 
 	public void updateSavePointWithAvailableBal(int availableBal, int memberIdx) {
 		SavePoint savePoint = new SavePoint();
@@ -145,7 +147,18 @@ public class PointServiceImpl implements PointService{
 	}
 
 	public void refundPoint(MemberAccount certifiedMember, PointRefund pointRefund) {
-		
+		//환급 객체 생성
+		pointRefund.setMemberIdx(certifiedMember.getMemberIdx());
+		pointRefundRepository.insertPointRefund(pointRefund);
+		//가용 포인트 차감(refundPoint)
+		SavePoint savePoint = savePointRepository.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
+		Integer availableBal = savePoint.getAvailableBal() - pointRefund.getRefundPoint();
+		savePoint.setAvailableBal(availableBal);
+		savePointRepository.updateSavePoint(savePoint);
+	}
+
+	public SavePoint selectSavePointByMemberIdx(Integer memberIdx) {
+		return savePointRepository.selectSavePointByMemberIdx(memberIdx);
 	}
 	
 	
