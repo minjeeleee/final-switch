@@ -102,7 +102,7 @@ public class MypageController {
 
 		memberService.updateMemberDelYN(form.convertToMember());
 
-		return "redirect:/mypage/profile";
+		return "/mypage/profile";
 	}
 
 	@GetMapping("leave-member")
