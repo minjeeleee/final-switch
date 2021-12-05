@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,12 +17,12 @@ import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestCancelListRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
-import com.kh.switchswitch.common.schedule.Schedule;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +36,7 @@ public class CardServiceImpl implements CardService {
 	private final CardRequestListRepository cardRequestListRepository;
 	private final CardRequestCancelListRepository cardRequestCancelListRepository;
 	private final ExchangeRepository exchangeRepository;
-	
-	@Autowired
-	private Schedule schedule;
+	private final MemberRepository memberRepository;
 	
 	@Override
 	public void insertCard(List<MultipartFile> imgList, Card card) {
@@ -308,10 +305,22 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public List<Map<String, Object>> selectCardsTop5() {
-		if(schedule.getCardsTop5().isEmpty()) {
-			schedule.setCardsTop5();
+		/*
+		 * if(schedule.getCardsTop5().isEmpty()) { 
+		 * schedule.setCardsTop5(); } return
+		 * schedule.getCardsTop5();
+		 */
+		List<Map<String, Object>> cardsTop5 = new ArrayList<>();
+		List<Card> cards = cardRepository.selectCardsTop5();
+		if(cards != null) {
+			for (Card card : cards) {
+				cardsTop5.add(
+						Map.of("card", card, 
+								"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0), 
+								"cardOwnerRate", memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx()))) ;
+			}
 		}
-		return schedule.getCardsTop5();
+		return cardsTop5;
 	}
 
 	public List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember) {

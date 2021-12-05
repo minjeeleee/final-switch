@@ -207,7 +207,7 @@
 	</footer>
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
-	<script type="text/javascript">  	
+	<script type="text/javascript" th:inline="javascript">  	
  	
 	 	function transfer(e) {
 	 		let appendArea;
@@ -247,17 +247,17 @@
 	 	}
 	 	
 	 	function checkBalance(e){
-	 		let myBalance = parseInt("문자열 아님", document.querySelector("#available_bal").value);
-	 		if(e.value == ""){
-	 			e.value = 0;
-	 			return false;
-	 		}
-	 		let offerPoint =  parseInt("문자열 아님", e.value);
-	 		if(e.value > myBalance){
+	 		let myBalance = document.querySelector("#available_bal").value;
+	 		let offerPoint = e.value;
+	 		if(parseInt(offerPoint,10) > parseInt(myBalance,10)){
 	 			alert("사용 가능 포인트보다 많은 포인트는 제시할 수 없습니다.");
 	 			e.value = 0;
 	 			return false;
 	 		}
+	 		if(offerPoint == ""){
+	 			e.value = 0;
+	 		}
+	 		return true;
 	 	}
 
 		document.querySelector(".req-button").addEventListener("click", function(e){
@@ -266,12 +266,12 @@
 				return;
 			};
 			let cardCount = document.querySelector(".exc-whish-card-table").childElementCount;
+			console.dir(cardCount);
 			if(cardCount == 0){
 				alert("교환할 카드를 선택해 주세요.");
 				return;
-			} else {
-				document.querySelector("#submit").submit();
 			}
+			document.querySelector("#submit").submit();
 		})
 		
 		document.querySelector(".cancel-button").addEventListener("click", function(e){
