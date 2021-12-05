@@ -88,7 +88,7 @@ public class ChattingHandler extends TextWebSocketHandler {
 					mapToSend.put("bang_id", bang_id);
 					mapToSend.put("cmd", "CMD_MSG_SEND");
 					mapToSend.put("msg"
-							, memberRepository.selectMemberNickWithMemberIdx(senderId) 
+							, memberRepository.selectMemberWithMemberIdx(senderId).getMemberNick()
 							+ " : " + mapReceive.get("msg")+"("+isRead+")");
 					
 					String jsonStr = objectMapper.writeValueAsString(mapToSend);

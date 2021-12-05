@@ -329,7 +329,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	public String selectMemberNickWithMemberIdx(Integer requestMemIdx) {
-		return memberRepository.selectMemberNickWithMemberIdx(requestMemIdx);
+		return memberRepository.selectMemberWithMemberIdx(requestMemIdx).getMemberNick();
 	}
 
 	public List<Map<String, Object>> selectMembersTop5() {
