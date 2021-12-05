@@ -299,7 +299,9 @@
 		                                </a>
 	                                <hr class="sidebar-divider my-0">
                                 	</th:block>
-	                           
+	                           		<th:block th:unless="${chattingList}">
+	                           			<div>채팅방이 존재하지 않습니다</div>
+	                           		</th:block>
 	                                
                                 </div>
                             </div>
