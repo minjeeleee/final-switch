@@ -86,8 +86,6 @@ public class BoardServiceImpl implements BoardService{
 	public List<Reply> getCommetList(Map<String, Object> commandMap) {
 		 List<Reply> commentList = boardRepository.getCommentList(((Board)commandMap.get("board")).getBdIdx());
 		return commentList;
-
-
 	    }
 
 	@Override
@@ -97,6 +95,17 @@ public class BoardServiceImpl implements BoardService{
 		reply.setCmOrder(lastOrder+1);	
 		boardRepository.insertReplyDepth1(reply);
 		
+		
+	}
+
+	@Override
+	public void modifyReply(Reply reply) {
+		boardRepository.modifyReply(reply);
+	}
+
+	@Override
+	public void deleteReply(int cmIdx) {
+		boardRepository.deleteReply(cmIdx);
 		
 	}
 

@@ -57,7 +57,7 @@ public interface BoardRepository {
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
-	@Select("SELECT * FROM reply WHERE BD_IDX = #{bdIdx}")
+	@Select("SELECT * FROM reply WHERE  is_del=0 ORDER BY cm_idx DESC")
 	List<Reply> getCommentList(Integer bdIdx);
 
 	@Insert("insert into reply(CM_IDX, CM_PARENT,BD_IDX,USER_ID,CONTENT)"
@@ -66,6 +66,12 @@ public interface BoardRepository {
 	
 	@Select("select nvl (max(cm_order),0) from reply WHERE bd_idx=#{bdIdx}")
 	int selectLastOrderOfBoard(int bdIdx);
+
+	@Update("update reply set reg_date = SYSDATE, content = #{content} where cm_idx = #{cmIdx}")	
+	void modifyReply(Reply reply);
+
+	@Update("update reply set is_del = 1 where cm_idx = #{cmIdx}")	
+	void deleteReply(int cmIdx);
 
 
 

@@ -19,10 +19,7 @@ function commentForm(id){
 
 // 댓글 업데이트 폼 요청
 function commentUpdateForm(id){
-	if("${principal.id}" == ""){
-		login();
-		return;
-	}
+
 	var dropdownForm = $("#dropdownForm-"+id);
 	var commentForm = $("#commentForm-"+id);
 	var updateForm = $("#updateForm-"+id);
@@ -55,6 +52,8 @@ function commentTocommentForm(id){
 	$("#commentTocomment-"+id).focus();
 }
 
+
+
 //댓글 입력
 function commentCreate(){
 	var content = $("#commentContent").val();
@@ -83,6 +82,7 @@ function commentCreate(){
         },
 		success:(data) => {
 			console.dir(data);
+
 		},
 		error:(error) => {
 			 console.log(error)
@@ -90,6 +90,40 @@ function commentCreate(){
 	});
 	return false;
 }
+
+
+
+//댓글 수정
+function updateComment(){
+	var content = $("#commentContent").val();
+	
+	var reply = {
+			"bdIdx" :$(".bdIdx").val(),
+			"userId" :userId,
+			"content" : $("#commentContent").val()
+	}
+
+	$.ajax({
+		url:"http://localhost:9191/board/modify-reply",
+		type:"post",
+		 dataType: "json",
+		contentType : "application/json",
+		data: JSON.stringify(reply),
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
+			console.dir(data);
+
+		},
+		error:(error) => {
+			 console.log(error)
+		}
+	});
+	return false;
+}
+
+
 
 //대댓글 입력 
 function commentTocomment(id,commentGroup){
@@ -136,46 +170,7 @@ function commentTocomment(id,commentGroup){
 	return false;
 }
 
-// 댓글 업데이트 
-function commentUpdate(id){
-	
-	var requestcommentUpdateDto = {
-		id : id,
-		articleId : "${responseDto.id}",	
-		accountId : "${principal.id}",
-		content : $("#commentContent-"+id).val()
-	}
-	
-	$.ajax({
-		url:"/comment/"+id,
-		type:"patch",
-		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(requestcommentUpdateDto), 
-		success:function(data){
-			commentList("${responseDto.id}");
-		},
-		error:function(request,status,error){
-			jsonValue = jQuery.parseJSON(request.responseText);
-			code = jsonValue.code;
-			if(code == 'B001'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				history.back();
-			}
-			if(code == 'C003'){
-				console.log(code +" : "+jsonValue.message);
-				$("#commentContent-"+id).val("");
-				$("#commentContent-"+id).focus();
-			}
-			if(code == 'R002'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				commentList("${responseDto.id}");
-			}
-		}
-	});
-	return false;
-}
+
 
 function deleteConfirm(id){
 	if(confirm("댓글을 삭제하시겠습니까?")){
@@ -186,59 +181,33 @@ function deleteConfirm(id){
 }
 
 // 댓글 삭제 
-function commentDelete(id){
-	var requestcommentDeleteDto = {
-		id : id,
-		articleId : "${responseDto.id}",
-		accountId : "${principal.id}",
+function commentDelete(){
+	var content = $("#commentContent").val();
+
+	var reply = {
+			"cmIdx" :$(".cmIdx").val(),
+			"userId" :userId,
+			"content" : $("#commentContent").val()
 	}
-	
+
 	$.ajax({
-		url:"/comment/"+id,
-		type:"delete",
-		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(requestcommentDeleteDto),
-		success:function(data){
+		url:"http://localhost:9191/board/delete-reply",
+		type:"post",
+		 dataType: "json",
+		contentType : "application/json",
+		data: JSON.stringify(reply),
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
 			alert("댓글이 삭제되었습니다.");
-			commentList("${responseDto.id}");
 		},
-		error:function(request,status,error){
-			jsonValue = jQuery.parseJSON(request.responseText);
-			code = jsonValue.code;
-			if(code == 'B001'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				history.back();
-			}
-			if(code == 'R002'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				commentList("${responseDto.id}");
-			}
+		error:(error) => {
+			 console.log(error)
 		}
 	});
 	return false;
 }
-
-function uxin_timestamp(time){
-	var date = new Date(time);
-	var year = date.getFullYear();
-	var month = "0" + (date.getMonth()+1);
-	var day = "0" + date.getDate();
-	var hour = "0" + date.getHours();
-	var minute = "0" + date.getMinutes();
-	//var second = "0" + date.getSeconds();
-	return year + "-" + month.substr(-2) + "-" + day.substr(-2) + " " + hour.substr(-2) + ":" + minute.substr(-2);
-}
-
-function listConfirm(id){
-	if(confirm("새로고침 하시겠습니까?")){
-		commentList(id);
-	}else{
-		return;
-	}
-}
-
 
 function login(){
 	if(confirm("로그인 하시겠습니까?")){
@@ -247,4 +216,5 @@ function login(){
 		return;
 	}
 	return false;
+	
 }
