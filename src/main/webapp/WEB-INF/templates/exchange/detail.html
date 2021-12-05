@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="../resources/css/card/card.css">
 <!-- bodycss -->
 <link rel="stylesheet" href="../resources/css/exchange/exchangeCard.css">
+<!-- alarm -->
+<link rel="stylesheet" href="../resources/css/alarm/alarm.css">
 </head>
 
 <body>
@@ -71,79 +73,169 @@
 			<p>교환희망카드</p>
 
 		</div>
-		<form id="submit" th:action="@{/exchange/exchangeForm}" method="post">
 		<div class="refund-container inner-size">
-
+			
 			<div class="exc-whish-card-table" id="appendArea">
-				<div class="card-container" id="default-card">
-                        <div class="card">
-                            <img src="../resources/img/defaultCard.png" alt="">
-                        </div>
-                </div>
-				
+				<th:block th:if="${requestCardlist}">
+					<div class="card-container" th:each="card : ${requestCardlist}"
+						th:object="${card}" th:id="*{cardInfo.cardIdx}">
+						<div class="card">
+							<div class="card-name">
+								<p>[[*{cardInfo.name}]]</p>
+							</div>
+							<div class="grade-container">
+								<div class="icon">
+									<!-- 아이콘 변경 -->
+									<input type="hidden" th:value="*{cardInfo.category}"> <i
+										id="icon-val"></i>
+								</div>
+								<div class="user-grade">
+									<p>사용자 평점</p>
+									<!-- 사용자 별점 -->
+									<div class="star">
+										<th:block th:if="${reqMemRate} >= 1">
+											<th:block th:each="num : ${#numbers.sequence(1,reqMemRate)}">
+												<i class="fas fa-star full-star"></i>
+											</th:block>
+										</th:block>
+										<th:block th:if="${reqMemRate%1!=0}">
+											<i class="fas fa-star-half-alt"></i>
+										</th:block>
+										<th:block th:each="num : ${#numbers.sequence(0,5-reqMemRate)}">
+											<i th:unless="${num == 0}" class="far fa-star"></i>
+										</th:block>
+									</div>
+								</div>
+								<div class="item-grade">
+									<p>물건 평점</p>
+									<!-- 물건 별점 -->
+									<div class="star">
+										<th:block
+											th:each="num : *{#numbers.sequence(1,cardInfo.condition)}">
+											<i class="fas fa-star full-star"></i>
+										</th:block>
+										<th:block
+											th:each="num : *{#numbers.sequence(0,5-cardInfo.condition)}">
+											<i th:unless="${num == 0}" class="far fa-star"></i>
+										</th:block>
+									</div>
+								</div>
+							</div>
+							<div class="address">
+								<!-- 주소 -->
+								<p>
+									지역 <span th:text="*{cardInfo.region}"></span> <span
+										th:text="*{cardInfo.regionDetail}"></span>
+								</p>
+							</div>
+							<div class="card">
+								<input type="hidden" th:value="*{cardInfo.condition}"> <img
+									class="card-box" alt="">
+								<div class="card-img">
+									<!-- 카드 물건 이미지 -->
+									<img th:src="*{fileDTO.getDownloadURL()}" alt="">
+								</div>
+							</div>
+						</div>
+					</div>
+				</th:block>	
 			</div>
 
 		</div>
-		<input type="hidden" name="wishCardIdx" th:value="${wishCard.cardInfo.cardIdx}">
-		<input type="hidden" id="available_bal" name="availableBal" th:value="${availableBal}">
-
+		
+		<input type="hidden" name="reqIdx" id="reqIdx" th:value="${cardRequestList.reqIdx}">
+		
 		<div class="button-container">
 			<div class="button-wrap inner-size">
-				<span>요청포인트</span><input class="present-point" type="text" id="offerPoint" name="offerPoint" onchange="checkBalance(this)"
-					placeholder="포인트를입력하세요."><span>P</span>
-				<button type="button" class="req-button">요청</button>
-				<button type="button"class="cancel-button">취소</button>
+				<span>요청포인트</span>
+				<strong>[[${cardRequestList.propBalance}]]P</strong><span>P</span>
+				<!-- 신청자 -->
+				<th:block th:if="${#authentication.principal.MemberIdx} == ${cardRequestList.requestMemIdx}">
+					<!-- 요청취소 & 요청수정 -->
+					<th:block th:unless="${status}">
+						<button type="button" class="request-cancel-button" onclick="requestCancel()">요청취소</button>
+						<button type="button"class="revise-button" onclick="requestRevise()">요청수정</button>
+					</th:block>
+					<!-- 교환 취소 요청 -->
+					<th:block th:if="${status} == 'ONGOING'">
+						<button type="button" class="exchange-cancel-button" onclick="exchangeCancelRequest()">교환취소요청</button>
+					</th:block>
+					<!-- 신청자 취소 요청 받은 경우 -->
+					<th:block th:if="${status} == 'APPLICANTCANCEL'">
+						<strong>교환취소요청 대기중</strong>
+						<button type="button" class="exchange-complete-button">교환취소요청 취소</button>
+						<script>
+						</script>
+					</th:block>
+					<!-- 카드 주인 취소 요청 받은 경우 -->
+					<th:block th:if="${status} == 'OWNERCANCEL'">
+						<button type="button" class="exchange-cancel-button" onclick="exchangeRequestCancel()">교환취소요청 수락</button>
+						<button type="button" class="exchange-complete-button">교환취소요청 거절</button>
+					</th:block>
+				</th:block>
+					
+				<!-- 카드 주인 -->
+				<th:block th:if="${#authentication.principal.MemberIdx} == ${cardRequestList.requestedMemIdx}">	
+					<!-- 요청수락 & 요청거절 -->
+					<th:block th:unless="${status}">
+						<button type="button" class="request-cancel-button" onclick="requestAccept()">요청수락</button>
+						<button type="button"class="revise-button" onclick="requestReject()">요청거절</button>
+					</th:block>
+					<!-- 교환취소요청 & 교환 완료 -->
+					<th:block th:if="${status} == 'ONGOING'">
+						<button type="button" class="exchange-cancel-button" onclick="exchangeCancelRequest()">교환취소요청</button>
+						<button type="button" class="exchange-complete-button" onclick="exchangeComplete()">교환완료</button>
+					</th:block>
+					<!-- 신청자 취소 요청 받은 경우 -->
+					<th:block th:if="${status} == 'APPLICANTCANCEL'">
+						<button type="button" class="exchange-cancel-button" onclick="exchangeRequestCancel()">교환취소요청 수락</button>
+						<button type="button" class="exchange-complete-button">교환취소요청 거절</button>
+					</th:block>
+					<!-- 카드 주인 취소 요청 받은 경우 -->
+					<th:block th:if="${status} == 'OWNERCANCEL'">
+						<strong>교환취소요청 대기중</strong>
+						<button type="button" class="exchange-complete-button">교환취소요청 취소</button>
+					</th:block>
+				</th:block>
+				<th:block th:if="${status} == 'DONE'">
+					<strong>교환완료</strong>
+				</th:block>
+				<th:block th:if="${status} == 'REJECT'">
+					<strong>취소 또는 거절된 거래</strong>
+				</th:block>
+				<th:block th:if="${cardRequestCancelList}">
+					<strong>취소 또는 거절된 거래</strong>
+				</th:block>
 			</div>
 		</div>
-		</form>
-	
+		<form id="sendResponse"></form>
 	</section>
 
 	<footer>
 		<div th:replace="fragments/footer :: footer"></div>
 	</footer>
-	<script type="text/javascript" th:inline="javascript"> 
-		<!--
-		let cardContainer = document.createElement("div");
-		let card = document.createElement("div");
-		let img = document.createElement("img");
-		img.setAttribute("src", "../resources/img/defaultCard.png");
-		cardContainer.setAttribute("class", "card-contatiner");
-		cardContainer.setAttribute("id", "default-card")
-		card.setAttribute("class", "card");
-		cardContainer.appendChild(card);
-		card.appendChild(img);
-		document.querySelector("#appendArea").appendChild(cardContainer);
-		-->
- 	
-	   	document.querySelectorAll(".card-box").forEach(function(e){
-			switch(e.previousElementSibling.value){
-			case '1' : e.setAttribute("src","../resources/img/ddongCard.png"); break;
-			case '2' : e.setAttribute("src","../resources/img/BrownCard.png"); break;
-			case '3' : e.setAttribute("src","../resources/img/silverCard.png"); break;
-			case '4' : e.setAttribute("src","../resources/img/goldCard.png"); break;
-			case '5' : e.setAttribute("src","../resources/img/diaCard.png"); break;
-			default : console.dir("error!!!");
-			};
-		})
-		
-		document.querySelectorAll("#icon-val").forEach(function(e){
-			switch(e.previousElementSibling.value){
-			case '전자기기/생활가전' : e.setAttribute("class","fas fa-bolt"); break;
-			case '가구/인테리어' : e.setAttribute("class","fas fa-couch"); break;
-			case '유아동' : e.setAttribute("class","fal fa-baby"); break;
-			case '생활/가공식품' : e.setAttribute("class","fas fa-utensils"); break;
-			case '스포츠/레저' : e.setAttribute("class","fas fa-basketball-ball"); break;
-			case '패션/잡화' : e.setAttribute("class","fas fa-tshirt"); break;
-			case '게임/만화' : e.setAttribute("class","fas fa-gamepad"); break;
-			case '뷰티/미용' : e.setAttribute("class","fas fa-air-freshener"); break;
-			case '반려 동물 용품' : e.setAttribute("class","fas fa-paw"); break;
-			case '도서/티켓/음반' : e.setAttribute("class","fas fa-compact-disc"); break;
-			case '기타' : e.setAttribute("class","fas fa-cogs"); break;
-			default : console.dir("error!!!");
-			};
-		})
+	
+	<div class="noticePopUp notice">
+		<div class="notice_close_wrap">
+			<i class="fas fa-times" id="notice_close"></i>
+		</div>
+		<div class="notice_msg_wrap">
+			<p id="notice_msg"></p>
+		</div>
+		<div class="notice_btn_wrap">
+			<button type="button" id="submit_btn">제출</button>
+		</div>
+	</div>
+	
+	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
+	<script type="text/javascript" th:inline="javascript">
+		let reqIdx = $("#reqIdx").val();
+		let requestMemIdx = [[${cardRequestList.requestMemIdx}]];
+		let requestor = [[${#authentication.principal.memberIdx}]];
+		let status = requestor == requestMemIdx ? "APPLICANTCANCEL" : "OWNERCANCEL";
+		let counterpartNick = [[${counterpartNick}]];
 	</script>
+	<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/exchange/detail.js}"></script>
 
 </body>
 </html>

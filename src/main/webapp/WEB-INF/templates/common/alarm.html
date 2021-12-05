@@ -7,15 +7,15 @@
 	<script type="text/javascript" th:inline="javascript">
 		
 		let alarmType = '[(${alarmType})]';
-		let requestedMemIdx = '[(${cardRequestList.requestedMemIdx})]';
-		let reqIdx = '[(${cardRequestList.reqIdx})]';
+		let receiverIdx = '[(${receiverIdx})]';
+		let reqIdx = '[(${reqIdx})]';
 		let url = '[(${url})]';
 		
 		sock.onopen = function(){
 			if(alarmType) {
 				let message = alarmType+ ','
 							+ '' + ',' 
-							+ requestedMemIdx + ',' 
+							+ receiverIdx + ',' 
 							+ reqIdx;
 				//알람타입orisRead, alarmIDX, 수신자IDX, 요청IDX
 				sock.send(message);

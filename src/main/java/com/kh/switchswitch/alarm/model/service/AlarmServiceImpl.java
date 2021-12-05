@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.kh.switchswitch.alarm.model.dto.Alarm;
 import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
-import com.kh.switchswitch.card.model.dto.CardRequestList;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,8 +15,8 @@ public class AlarmServiceImpl implements AlarmService {
 	
 	private final AlarmRepository alarmRepository;
 	
-	public List<Alarm> selectAlarmList(Integer receiverIdx) {
-		return alarmRepository.selectAlarmList(receiverIdx);
+	public List<Alarm> selectAlarmListWithReceiverIdx(Integer receiverIdx) {
+		return alarmRepository.selectAlarmListWithReceiverIdx(receiverIdx);
 	}
 
 	public void insertAndUpdateAlarmList(List<Alarm> alarmList) {

@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -112,6 +111,9 @@ public interface CardRepository {
 
 	@Select("select * from (select c.* from card c order by views desc) where rownum < 6")
 	List<Card> selectCardsTop5();
+
+	@Select("select * from CardRequestList where req_idx=#{reqIdx}")
+	CardRequestList selectCardRequestListWithReqIdx(Integer reqIdx);
 
 	
 	

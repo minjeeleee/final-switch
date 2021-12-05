@@ -53,6 +53,7 @@ public class AlarmHandler extends TextWebSocketHandler {
         	String alarmTypeOrisRead = strs[0];
         	Integer alarmIdx = strs[1].equals("") ? null : Integer.parseInt(strs[1]);
         	Integer receiverIdx = Integer.parseInt(strs[2]);
+        	Integer reqIdx = Integer.parseInt(strs[3]);
         	
     		if(alarmTypeOrisRead.equals("read")) {
     			Alarm updateAlarm = new Alarm();
@@ -63,7 +64,7 @@ public class AlarmHandler extends TextWebSocketHandler {
             	newAlarm.setAlarmType(alarmTypeOrisRead);
             	newAlarm.setSenderIdx(loginMember.getMemberIdx());
             	newAlarm.setReceiverIdx(receiverIdx);
-        		newAlarm.setReqIdx(Integer.parseInt(strs[3]));
+        		newAlarm.setReqIdx(reqIdx);
     			alarmRepository.insertAlarm(newAlarm);
     			
     			newAlarm.setAlarmIdx(alarmRepository.selectCurrScAlarmIdx());
@@ -85,8 +86,11 @@ public class AlarmHandler extends TextWebSocketHandler {
 				case "교환확정":
 					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환을 확정했습니다."));
 					break;
+				case "교환취소요청":
+					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소를 요청하였습니다."));
+					break;
 				case "교환취소":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환을 취소했습니다."));
+					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + "교환취소가 완료되었습니다."));
 					break;
 				case "평점요청":
 					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님과의 교환은 어떠셨나요?<br>"

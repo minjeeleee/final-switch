@@ -72,12 +72,13 @@ public class ExchangeController {
 			, Model model) {
 		//교환요청리스트
 		CardRequestList crl = exchangeService.requestExchange(certifiedMember, wishCardIdx, cardIdxList, offerPoint);
-		
+		System.out.println(crl);
 		//포인트 holding ?? 후 가용 포인트
 		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
 		model.addAttribute("alarmType", "교환요청");
-		model.addAttribute("cardRequestList",crl);
+		model.addAttribute("reqIdx",crl.getReqIdx());
+		model.addAttribute("receiverIdx",crl.getRequestedMemIdx());
 		model.addAttribute("url","/market/cardmarket");
 		
 		return "/common/alarm";
@@ -86,9 +87,12 @@ public class ExchangeController {
 	@GetMapping("detail")
 	public void detail(
 			@AuthenticationPrincipal MemberAccount certifiedMember,
-			//int reqIdx,
+			@RequestParam(required = false) Integer reqIdx,
 			Model model) {
-		int reqIdx = 449;
+		
+		if(reqIdx == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_WITH_BAD_REQUEST);
+		}
 		
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
@@ -120,6 +124,9 @@ public class ExchangeController {
 		//cardRequestList
 		model.addAttribute("cardRequestList",cardRequestList);
 		
+		//cardRequestCancelList
+		model.addAttribute("cardRequestCancelList", cardService.selectCardRequestCancelListWithReqIdx(reqIdx));
+		
 		model.addAttribute("status", cardService.selectExchangeStatusType(cardRequestList.getReqIdx()));
 	}
 	
@@ -138,7 +145,9 @@ public class ExchangeController {
 		
 		//거절 알림 보내기
 		model.addAttribute("alarmType", "요청거절");
-		model.addAttribute("cardRequestList",cardRequestList);
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		model.addAttribute("url","/card/my-card");
 		
 		return "/common/alarm";
 	}
@@ -155,7 +164,8 @@ public class ExchangeController {
 		
 		//수락 알림 보내기
 		model.addAttribute("alarmType", "요청수락");
-		model.addAttribute("cardRequestList",cardRequestList);
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
 		model.addAttribute("url","/exchange/detail");
 		
 		return "/common/alarm";
@@ -169,7 +179,7 @@ public class ExchangeController {
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제
+		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환요청거절리스트 생성
 		cardService.requestCancelRequest(cardRequestList,"NONE");
 		
 		//돈 돌려줘야됨
@@ -177,29 +187,61 @@ public class ExchangeController {
 		
 		//취소 알림 보내기
 		model.addAttribute("alarmType", "요청취소");
-		model.addAttribute("cardRequestList",cardRequestList);
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
 		model.addAttribute("url","/market/cardmarket");
 		
 		return "/common/alarm";
 	}
 	
-	@GetMapping("exchange-cancel/{reqIdx}")
-	public void exchangeCancel(@PathVariable Integer reqIdx, Model model) {
+	@GetMapping("cancel-request/{reqIdx}")
+	public void cancelRequest(@PathVariable Integer reqIdx
+								,@RequestParam String status
+								, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
 		
-		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환현황 삭제
+		//card status ->'REQUEST->status("APPLICANTCANCEL"||"OWNERCANCEL")
+		cardService.requestCancel(reqIdx, status);
+		
+		//취소 알림 보내기
+		model.addAttribute("alarmType", "교환취소요청");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(status.equals("APPLICANTCANCEL")) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/market/cardmarket");
+	}
+	
+	@GetMapping("exchange-cancel/{reqIdx}")
+	public void exchangeCancel(@PathVariable Integer reqIdx
+								,@AuthenticationPrincipal MemberAccount certifiedMember
+								, Model model) {
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환현황 삭제 및 교환요청거절리스트 생성
 		cardService.exchangeCancelRequest(cardRequestList,"NONE");
 		
 		//돈 돌려줘야됨
 		pointService.updateSavePoint(cardRequestList);
 		
 		//취소 알림 보내기
-		model.addAttribute("alarmType", "요청취소");
-		model.addAttribute("cardRequestList",cardRequestList);
+		model.addAttribute("alarmType", "교환취소");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(certifiedMember.getMemberIdx().equals(cardRequestList.getRequestMemIdx())) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
 		model.addAttribute("url","/market/cardmarket");
 	}
 	
@@ -220,7 +262,8 @@ public class ExchangeController {
 		
 		//교환완료 알림 보내기
 		model.addAttribute("alarmType", "교환완료");
-		model.addAttribute("cardRequestList",cardRequestList);
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
 		model.addAttribute("url","/market/cardmarket");
 		
 		return "/common/alarm";

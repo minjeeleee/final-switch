@@ -17,7 +17,8 @@ public enum ErrorCode {
 	FAILED_TO_LEAVE_MEMBER("진행 중인 카드가 있어 탈퇴가 불가합니다.","/mypage/profile"),
 	FAILED_TO_UPDATE_INFO("변경할 정보가 없습니다.","/admin/all-members"),
 	FAILED_TO_DELETE_CARD("이미 삭제된 사진입니다.","/admin/real-time-cards"),
-	FAILED_TO_DELETE_IMG("존재하지 않은 이미지 입니다.","/admin/real-time-card-img");
+	FAILED_TO_DELETE_IMG("존재하지 않은 이미지 입니다.","/admin/real-time-card-img"), 
+	FAILED_TO_LOAD_WITH_BAD_REQUEST("올바른 요청이 아닙니다.");
 	
 	public final String MESSAGE;
 	public final String URL;

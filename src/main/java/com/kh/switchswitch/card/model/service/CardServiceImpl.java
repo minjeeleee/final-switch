@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.repository.CardRepository;
+import com.kh.switchswitch.card.model.repository.CardRequestCancelListRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
 import com.kh.switchswitch.common.schedule.Schedule;
 import com.kh.switchswitch.common.util.FileDTO;
@@ -33,6 +35,7 @@ public class CardServiceImpl implements CardService {
 	
 	private final CardRepository cardRepository;
 	private final CardRequestListRepository cardRequestListRepository;
+	private final CardRequestCancelListRepository cardRequestCancelListRepository;
 	private final ExchangeRepository exchangeRepository;
 	
 	@Autowired
@@ -90,8 +93,23 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public void deleteCardRequestList(Integer reqIdx) {
+		CardRequestList cardRequestList = cardRepository.selectCardRequestListWithReqIdx(reqIdx);
+		cardRequestCancelListRepository.insertCardRequestCancelList(convertCardRequestListToCardRequestCancelList(cardRequestList));
 		cardRepository.deleteCardRequestListWithReqIdx(reqIdx);
 		
+	}
+
+	private CardRequestCancelList convertCardRequestListToCardRequestCancelList(CardRequestList cardRequestList) {
+		CardRequestCancelList cardRequestCancelList = new CardRequestCancelList();
+		cardRequestCancelList.setRequestedMemIdx(cardRequestList.getRequestedMemIdx());
+		cardRequestCancelList.setRequestMemIdx(cardRequestList.getRequestMemIdx());
+		cardRequestCancelList.setRequestedCard(cardRequestList.getRequestedCard());
+		cardRequestCancelList.setRequestCard1(cardRequestList.getRequestCard1());
+		cardRequestCancelList.setRequestCard2(cardRequestList.getRequestCard2());
+		cardRequestCancelList.setRequestCard3(cardRequestList.getRequestCard3());
+		cardRequestCancelList.setRequestCard4(cardRequestList.getRequestCard4());
+		cardRequestCancelList.setPropBalance(cardRequestList.getPropBalance());
+		return cardRequestCancelList;
 	}
 
 	public void insertExchangeStatus(CardRequestList cardRequestList) {
@@ -358,6 +376,14 @@ public class CardServiceImpl implements CardService {
 			}
 		}
 		return cardlist;
+	}
+
+	public CardRequestCancelList selectCardRequestCancelListWithReqIdx(int reqIdx) {
+		return cardRequestCancelListRepository.selectCardRequestCancelList(reqIdx);
+	}
+
+	public void requestCancel(Integer reqIdx, String status) {
+		updateExchangeStatus(reqIdx, status);
 	}
 
 }
