@@ -48,7 +48,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 		
 		//새로운 채팅
 		Map<String, String> mapReceive = objectMapper.readValue(message.getPayload(), Map.class);
-		System.out.println("mapReceive : " + mapReceive );
 		switch (mapReceive.get("cmd")) {
 		// CLIENT 입장
 		case "CMD_ENTER":

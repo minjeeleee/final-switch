@@ -29,7 +29,8 @@ public interface AdminRepository {
 	List<Card> selectCardListByFree();
 	
 	//@Select("select * from card where is_del = 0")
-	List<Card> selectCardsDetail(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Nullable@Param("searchKeyword")String searchKeyword);
+	List<Card> selectCardsDetail(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Nullable@Param("searchKeyword")String searchKeyword,
+								 @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectCardImgListByCardIdx(Integer cardIdx);
@@ -44,10 +45,12 @@ public interface AdminRepository {
 	void deleteImg(Integer cardIdx);
 	
 	//@Select("select * from member where member_del_yn=0 and #{searchType}=#{keyword}")
-	List<Member> selectMemberAllList(@Param("searchType") String searchType, @Param("keyword") String keyword);
+	List<Member> selectMemberAllList(@Param("searchType") String searchType, @Param("keyword") String keyword, 
+									 @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
 	
 	//@Select("select * from member where code = 'D' and member_del_yn=0")
-	List<Member> selectMemberBlackList(@Param("searchType") String searchType, @Param("keyword") String keyword);
+	List<Member> selectMemberBlackList(@Param("searchType") String searchType, @Param("keyword") String keyword,
+									   @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
 	
 	@Insert("insert into menu(url_idx,code,url,url_name,position,depth,parent) values(sc_url_idx.nextval, #{code},#{url},#{urlName},#{position},#{depth},#{parent})")
 	void insertMenu(Menu Menu);
@@ -110,6 +113,13 @@ public interface AdminRepository {
 	
 	@Select("select card_idx from file_info where fl_idx = #{flIdx}")
 	Integer selectCardIdxByflIdx(Integer flIdx);
+	
+	//@Select("select count(*) from member where member_del_yn=0")
+	Integer memberCount(@Param("searchType") String searchType, @Param("keyword") String keyword);
+
+	Integer memberBlackListCount(@Param("searchType")String searchType, @Param("keyword")String keyword);
+
+	Integer cardCount(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
 	
 	
 	

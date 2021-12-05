@@ -111,13 +111,6 @@
        <div th:replace="fragments/footer :: footer"></div>
     </footer>
     <script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
-	<script type="text/javascript">
-		let sockForTop5Card = new SockJS('http://localhost:9090/batch');
-		sockForTop5Card.onmessage = function(msg){
-			var data = msg.data;
-			console.dir(data);
-		};
-	</script>
 </body>
 
 </html>

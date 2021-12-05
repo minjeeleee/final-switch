@@ -1,4 +1,4 @@
-package com.kh.switchswitch.common.schedule;
+/*package com.kh.switchswitch.common.schedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,3 +56,4 @@ public class Schedule {
 	}
 
 }
+*/

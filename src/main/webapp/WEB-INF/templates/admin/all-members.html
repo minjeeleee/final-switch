@@ -36,15 +36,15 @@
 								<form action="/admin/all-members" method="get">
 									<div style="display: flex; float: right;">
 									<select class="form-control" name="searchDetail" style="width: 120px;">
-									  <option value="member_idx">회원번호</option>
-									  <option value="member_email">회원이메일</option>
-									  <option value="member_name">회원이름</option>
-									  <option value="member_nick">회원닉네임</option>
-									  <option value="member_tell">연락처</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_idx')}" value="member_idx">회원번호</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_email')}" value="member_email">회원이메일</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_name')}" value="member_name">회원이름</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_nick')}" value="member_nick">회원닉네임</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_tell')}" value="member_tell">연락처</option>
 									</select>
 									<div class="" style="display: flex; width: 250px;">
 									  <input type="search" name="searchKeyword" class="form-control rounded" placeholder="Search" aria-label="Search"
-									  aria-describedby="search-addon" />
+									  aria-describedby="search-addon" th:value="${param.searchKeyword}" />
 									  <span class="input-group-text border-0" id="search-addon">
 									    <button class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></button>
 									  </span>
@@ -82,19 +82,22 @@
 								</table>
 							</div>
 							<div style="display: flex; justify-content: center;">
-								<ul class="pagination">
+								<ul class="pagination" th:object=${paging}>
 							    <li>
-							      <a href="#" aria-label="Previous">
+							      <a th:if="${param.searchDetail}" th:href="|*{url}?page=*{prev}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" aria-label="Previous">
 							        <span aria-hidden="true">&laquo;</span>
 							      </a>
+							      <a th:unless="${param.searchDetail}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
+							    	<span aria-hidden="true">&laquo;</span>
+							      </a>
 							    </li>
-							    <li><a href="#">1</a></li>
-							    <li><a href="#">2</a></li>
-							    <li><a href="#">3</a></li>
-							    <li><a href="#">4</a></li>
-							    <li><a href="#">5</a></li>
+							    <li><a th:if="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" th:text="${p}"></a></li>
+							    <li><a th:unless="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}"></a></li>
 							    <li>
-							      <a href="#" aria-label="Next">
+							      <a th:if="${param.searchDetail}" th:href="|*{url}?page=*{next}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							      <a th:unless="${param.searchDetail}" th:href="|*{url}?page=*{next}|" aria-label="Next">
 							        <span aria-hidden="true">&raquo;</span>
 							      </a>
 							    </li>
