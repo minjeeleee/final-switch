@@ -1,4 +1,4 @@
-package com.kh.switchswitch.common.socket.handler;
+/*package com.kh.switchswitch.common.socket.handler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,14 +42,14 @@ public class BatchHandler extends TextWebSocketHandler  {
 	@Scheduled(cron = "0 0/10 * * * *")
 	public void sendMessage() {
 		ObjectMapper objMapper = new ObjectMapper();
-		String json;
+		String jsonString;
 		try {
-			json = objMapper.writeValueAsString(schedule.getCardsTop5());
-			System.out.println(json);
+			jsonString = objMapper.writeValueAsString(schedule.getCardsTop5());
+			System.out.println(jsonString);
 			
 			for (WebSocketSession session : sessions) {
 				synchronized (session) {
-				session.sendMessage(new TextMessage(json));
+					session.sendMessage(new TextMessage(jsonString));
 				}
 			}
 		} catch (JsonProcessingException e) {
@@ -64,3 +64,4 @@ public class BatchHandler extends TextWebSocketHandler  {
 		sessions.remove(session);
 	}
 }
+*/

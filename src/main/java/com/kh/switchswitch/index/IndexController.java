@@ -24,8 +24,8 @@ public class IndexController {
 		//String : jsp 파일의 위치를 지정 -> rerunt "index/index" jsp file : WEB-INF/views/index/index.jsp
 		//ModelAndView : Model 객체 + view(jsp 위치)
 		
-		//model.addAttribute("cardsTop5",cardService.selectCardsTop5());
-		//model.addAttribute("usersTop5",memberService.selectMembersTop5());
+		model.addAttribute("cardsTop5",cardService.selectCardsTop5());
+		model.addAttribute("usersTop5",memberService.selectMembersTop5());
 		
 		return "index";
 	}
