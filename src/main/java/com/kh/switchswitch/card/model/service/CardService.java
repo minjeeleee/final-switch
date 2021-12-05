@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
@@ -98,4 +99,8 @@ public interface CardService {
 	void completeExchange(CardRequestList cardRequestList, String status);
 
 	List<Map<String, Object>> selectCardListForRevise(Set<Integer> cardIdxSet);
+
+	CardRequestCancelList selectCardRequestCancelListWithReqIdx(int reqIdx);
+
+	void requestCancel(Integer reqIdx, String status);
 }

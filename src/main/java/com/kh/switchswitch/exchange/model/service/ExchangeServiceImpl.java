@@ -79,6 +79,25 @@ public class ExchangeServiceImpl implements ExchangeService{
 	public int selectMemberIdxByCardIdx(int wishCardIdx) {
 		return cardRepository.selectMemberIdxByCardIdx(wishCardIdx);
 	}
+	
+	public CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint) {
+		CardRequestList cardRequestList = new CardRequestList();
+		cardRequestList.setRequestedCard(wishCardIdx);
+		if(cardIdxList != null) {
+			switch(5-cardIdxList.length) {
+			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
+			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
+			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
+			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
+			default : logger.debug("왜 0이 들어오지??");
+			}
+		}
+		cardRequestList.setRequestedMemIdx(cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx));
+		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
+		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
+				
+		return requestExchange(cardRequestList, cardIdxList.length);
+	}
 
 	public CardRequestList requestExchange(CardRequestList cardRequestList,int length) {
 		//card_request_list 테이블에 추가
@@ -280,25 +299,6 @@ public class ExchangeServiceImpl implements ExchangeService{
 	
 	public FreeRequestList selectFreeRequestListWithFreqIdx(Integer freqIdx) {
 		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
-	}
-
-	public CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint) {
-		CardRequestList cardRequestList = new CardRequestList();
-		cardRequestList.setRequestedCard(wishCardIdx);
-		if(cardIdxList != null) {
-			switch(5-cardIdxList.length) {
-			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
-			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
-			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
-			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
-			default : logger.debug("왜 0이 들어오지??");
-			}
-		}
-		cardRequestList.setRequestedMemIdx(cardRepository.selectCardMemberIdxWithCardIdx(wishCardIdx));
-		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
-		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
-				
-		return requestExchange(cardRequestList, cardIdxList.length);
 	}
 
 	public void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList) {

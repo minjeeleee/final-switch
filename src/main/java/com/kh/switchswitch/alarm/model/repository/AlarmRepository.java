@@ -13,7 +13,7 @@ import com.kh.switchswitch.alarm.model.dto.Alarm;
 public interface AlarmRepository {
 
 	@Select("select * from alarm where receiver_idx=#{receiverIdx} and sysdate < send_date + 7 order by is_read desc, alarm_idx desc")
-	List<Alarm> selectAlarmList(Integer receiverIdx);
+	List<Alarm> selectAlarmListWithReceiverIdx(Integer receiverIdx);
 
 	@Insert("insert into alarm values(sc_alarm_idx.nextval, #{senderIdx}, #{receiverIdx}, #{alarmType}, 0, #{reqIdx}, sysdate)")
 	void insertAlarm(Alarm alarm);
@@ -23,11 +23,5 @@ public interface AlarmRepository {
 
 	@Select("select sc_alarm_idx.currval from dual")
 	Integer selectCurrScAlarmIdx();
-	
-	@Select("select * from alarm where is_read = 0 and sysdate < send_date + 7 order by is_read desc, alarm_idx desc")
-	List<Alarm> selectUnreadAlarmList();
-	
-	@Select("select * from alarm where sysdate < send_date + 7 order by is_read desc, alarm_idx desc")
-	List<Alarm> selectRecentAlarmList();
 
 }

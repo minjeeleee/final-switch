@@ -1,5 +1,6 @@
 package com.kh.switchswitch.admin.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.member.model.dto.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -47,9 +49,33 @@ public class AdminService {
 		return cardList;
 	}
 	
-	public List<Card> selectCardListDetail(String searchPeriod, String searchType, String searchKeyword) {
-		List<Card> cardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword);
+	public List<Map<String, Object>> selectCardListDetail(String searchPeriod, String searchType, String searchKeyword,Integer page) {
+		//List<Card> cardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword);
+		List<Map<String, Object>> cardList = new ArrayList<>();
+		Integer cntPerPage = 10;
+		List<Card> memberCardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword, 1+(page-1)*cntPerPage,page*cntPerPage);
+		if (memberCardList != null) {
+			for (Card card : memberCardList) {
+				FileDTO mainImgFile = adminRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0);
+				List<FileDTO> imgFile = adminRepository.selectFileInfoByCardIdx(card.getCardIdx());
+				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
+			}
+		}
+		
 		return cardList;
+	}
+	
+	public Paging selectCardPaging(String searchPeriod, String searchType, String searchKeyword, int page) {
+		
+		Integer cntPerPage = 10;
+		Paging pageUtil = Paging.builder()
+				.url("/admin/all-cards")
+				.total(adminRepository.cardCount(searchPeriod, searchType, searchKeyword))
+				.cntPerPage(cntPerPage)
+				.blockCnt(5)
+				.curPage(page)
+				.build();
+		return pageUtil;
 	}
 	
 	public List<FileDTO> selectImgFileListByCardIdx(Integer cardIdx) {
@@ -101,10 +127,23 @@ public class AdminService {
 		return adminRepository.selectMenuAllList();
 	}
 
-	public List<Member> selectMemberAllList(String searchType, String keyword) {
+	public Map<String, Object> selectMemberAllListByPage(String searchType, String keyword, int page) {
+		
+		int cntPerPage = 3;
+		
+		List<Member> memberList = adminRepository.selectMemberAllList(searchType, keyword,1+(page-1)*cntPerPage,page*cntPerPage);
 		System.out.println(searchType);
 		System.out.println(keyword);
-		return adminRepository.selectMemberAllList(searchType, keyword);
+		
+		Paging pageUtil = Paging.builder()
+				.url("/admin/all-members")
+				.total(adminRepository.memberCount(searchType, keyword))
+				.cntPerPage(cntPerPage)
+				.blockCnt(5)
+				.curPage(page)
+				.build();
+		
+		return Map.of("memberList", memberList,"paging",pageUtil);
 	}
 
 	public void updateMemberCode(String code, int memberIdx) {
@@ -113,8 +152,20 @@ public class AdminService {
 		adminRepository.updateMemberCode(code, memberIdx);
 	}
 
-	public List<Member> selectMemberBlackList(String searchType, String keyword) {
-		return adminRepository.selectMemberBlackList(searchType, keyword);
+	public Map<String, Object> selectMemberBlackListByPage(String searchType, String keyword, int page) {
+		
+		int cntPerPage = 3;
+		
+		List<Member> memberList = adminRepository.selectMemberBlackList(searchType, keyword, 1+(page-1)*cntPerPage,page*cntPerPage);
+		
+		Paging pageUtil = Paging.builder()
+				.url("/admin/black-list-members")
+				.total(adminRepository.memberBlackListCount(searchType, keyword))
+				.cntPerPage(cntPerPage)
+				.blockCnt(5)
+				.curPage(page)
+				.build();
+		return Map.of("memberList", memberList,"paging",pageUtil);
 	}
 
 	public Map<String, Object> selectMemberByIdx(int memberIdx) {
@@ -188,6 +239,12 @@ public class AdminService {
 	public Integer selectCardIdxByflIdx(Integer flIdx) {
 		return adminRepository.selectCardIdxByflIdx(flIdx);
 	}
+
+	public List<Map<String, Object>> selectRefundHistoryList() {
+		return null;
+	}
+
+	
 
 	
 

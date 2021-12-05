@@ -27,8 +27,8 @@ import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.common.validator.ValidatorResult;
-import com.kh.switchswitch.member.model.dto.Member;
 
 @Controller
 @RequestMapping("admin")
@@ -76,9 +76,11 @@ public class AdminController {
 	@GetMapping("all-cards")
 	public void allCards(Model model, @Nullable @RequestParam(name = "searchPeriod") String searchPeriod,
 			@Nullable @RequestParam(name = "searchType") String searchType,
-			@Nullable @RequestParam(name = "searchKeyword") String searchKeyword) {
+			@Nullable @RequestParam(name = "searchKeyword") String searchKeyword,
+			@RequestParam(required = false, defaultValue = "1") int page) {
+		/*
 		List<Map<String, Object>> cardList = new ArrayList<>();
-		List<Card> memberCardList = adminService.selectCardListDetail(searchPeriod, searchType, searchKeyword);
+		List<Card> memberCardList = adminService.selectCardListDetail(searchPeriod, searchType, searchKeyword, page);
 		if (cardList != null) {
 			for (Card card : memberCardList) {
 				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
@@ -86,7 +88,19 @@ public class AdminController {
 				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
 			}
 		}
+		
+		Paging pageUtil = Paging.builder()
+				.url("/admin/all-cards")
+				.total(adminRepository.cardCount(searchPeriod, searchType, searchKeyword))
+				.cntPerPage(cntPerPage)
+				.blockCnt(5)
+				.curPage(page)
+				.build();
+		*/
+		List<Map<String, Object>> cardList = adminService.selectCardListDetail(searchPeriod, searchType, searchKeyword, page);
+		Paging pageUtil = adminService.selectCardPaging(searchPeriod, searchType, searchKeyword,page);
 		model.addAttribute("cardList", cardList);
+		model.addAttribute("paging",pageUtil);
 	}
 
 	@GetMapping("card-delete")
@@ -114,9 +128,8 @@ public class AdminController {
 
 	@GetMapping("all-members")
 	public void allMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
-			@Nullable @RequestParam(name = "searchKeyword") String keyword) {
-		List<Member> memberList = adminService.selectMemberAllList(searchType, keyword);
-		model.addAttribute("memberList", memberList);
+			@Nullable @RequestParam(name = "searchKeyword") String keyword, @RequestParam(required = false, defaultValue = "1") int page) {
+		model.addAllAttributes(adminService.selectMemberAllListByPage(searchType, keyword, page));
 	}
 
 	@GetMapping("changeMemberStatus")
@@ -127,9 +140,8 @@ public class AdminController {
 
 	@GetMapping("black-list-members")
 	public void blackListMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
-			@Nullable @RequestParam(name = "searchKeyword") String keyword) {
-		List<Member> memberList = adminService.selectMemberBlackList(searchType, keyword);
-		model.addAttribute("memberList", memberList);
+			@Nullable @RequestParam(name = "searchKeyword") String keyword, @RequestParam(required = false, defaultValue = "1") int page) {
+		model.addAllAttributes(adminService.selectMemberBlackListByPage(searchType, keyword, page));
 	}
 
 	@GetMapping("removeMemberBlack")
@@ -145,7 +157,8 @@ public class AdminController {
 	}
 
 	@GetMapping("refunds-history")
-	public void refundsHistory() {
+	public void refundsHistory(Model model) {
+		List<Map<String, Object>> res = adminService.selectRefundHistoryList();
 	}
 
 	@GetMapping("member-profile")
