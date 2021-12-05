@@ -76,8 +76,39 @@
   	 
   	 <select id="selectMemberAllList" resultType="com.kh.switchswitch.member.model.dto.Member">
   	 	select * 
-  	 	from member 
-  	 	where member_del_yn=0
+  	 	from 
+  	 		(select A.*, rownum rownum_ 
+  	 		from 
+  	 			(select 
+  	 				* 
+  	 			 from member where 
+  	 			 member_del_yn=0 
+  	 			 and code in('B','D') 
+  	 	<if test="searchType != null">
+	  	 	<if test="searchType == 'member_idx'">
+	  	 	and member_idx like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_email'">
+	  	 	and member_email like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_name'">
+	  	 	and member_name like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_nick'">
+	  	 	and member_nick like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_tell'">
+	  	 	and member_tell like '%'||#{keyword}||'%'
+	  	 	</if>
+  	 	</if>
+  	 	 order by member_idx desc) A 
+  	 	 )
+  	 	 where rownum_ between #{page} and #{cntPerPage}
+  	 </select>
+  	 <select id="memberCount" resultType="_int">
+  	 	select count(*) 
+			 from member where 
+			 member_del_yn=0 
   	 	<if test="searchType != null">
 	  	 	<if test="searchType == 'member_idx'">
 	  	 	and member_idx like '%'||#{keyword}||'%'
@@ -98,6 +129,37 @@
   	 </select>
   	 <select id="selectMemberBlackList" resultType="com.kh.switchswitch.member.model.dto.Member">
   	 	select * 
+  	 	from 
+  	 		(select A.*, rownum rownum_ 
+  	 		from 
+  	 			(select 
+  	 				* 
+  	 			 from member where 
+  	 	member_del_yn=0 
+  	 	and code = 'D' 
+  	 	<if test="searchType != null">
+	  	 	<if test="searchType == 'member_idx'">
+	  	 	and member_idx like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_email'">
+	  	 	and member_email like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_name'">
+	  	 	and member_name like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_nick'">
+	  	 	and member_nick like '%'||#{keyword}||'%'
+	  	 	</if>
+	  	 	<if test="searchType == 'member_tell'">
+	  	 	and member_tell like '%'||#{keyword}||'%'
+	  	 	</if>
+  	 	</if>
+  	 	 order by member_idx desc) A 
+  	 	 )
+  	 	 where rownum_ between #{page} and #{cntPerPage}
+  	 </select>
+  	 <select id="memberBlackListCount" resultType="_int">
+  	 	select count(*) 
   	 	from member 
   	 	where member_del_yn=0 
   	 	and code = 'D' 
@@ -121,8 +183,13 @@
   	 </select>
   	 <select id="selectCardsDetail" resultType="com.kh.switchswitch.card.model.dto.Card">
   	 	select * 
-  	 	from card
-  	 	where is_del = 0 
+  	 	from 
+  	 		(select A.*, rownum rownum_ 
+  	 		from 
+  	 			(select 
+  	 				* 
+  	 			 from card where 
+  	 			 is_del=0 
   	 	<if test="searchPeriod != null and searchType != null and searchKeyword != null">
   	 		<if test="searchPeriod == 'recent'">
 				<if test="searchType == 'card_idx'">
@@ -151,30 +218,93 @@
   	 		</if>
   	 		<if test="searchPeriod == 'month'">
 				<if test="searchType == 'card_idx'">
-  	 				and (reg_date > to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
   	 				and card_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 			<if test="searchType == 'name'">
-  	 				and (reg_date > to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
   	 				and name like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 			<if test="searchType == 'user_idx'">
-  	 				and (reg_date > to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
   	 				and user_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 		</if>
   	 		<if test="searchPeriod == 'year'">
 				<if test="searchType == 'card_idx'">
-  	 				and (reg_date > to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
   	 				and card_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 			<if test="searchType == 'name'">
-  	 				and (reg_date > to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
   	 				and name like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 			<if test="searchType == 'user_idx'">
-  	 				and (reg_date > to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
   	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 	</if>
+  	 	order by card_idx desc) A 
+  	 	 )
+  	 	 where rownum_ between #{page} and #{cntPerPage}
+  	 </select>
+  	 <select id="cardCount" resultType="_int">
+  	 	select count(*)
+			 from card where 
+			 is_del=0 
+  	 	<if test="searchPeriod != null and searchType != null and searchKeyword != null">
+  	 		<if test="searchPeriod == 'recent'">
+				<if test="searchType == 'card_idx'">
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_idx'">
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 		<if test="searchPeriod == 'week'">
+  	 			<if test="searchType == 'card_idx'">
+  	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_idx'">
+  	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 		<if test="searchPeriod == 'month'">
+				<if test="searchType == 'card_idx'">
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_idx'">
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 		</if>
+  	 		<if test="searchPeriod == 'year'">
+				<if test="searchType == 'card_idx'">
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and card_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'name'">
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_idx'">
+  	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 		</if>
   	 	</if>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -17,10 +18,10 @@
 				<div id="navbar-menu">
 					<ul class="nav navbar-right" style="display: flex; margin-top: 20px;">
 						<li>
-							<a href="#" class="" data-toggle="" style="background-color:#4F0E0E;color: white; "><span>Admin</span></a>
+							<a href="#" class="" data-toggle="" style="background-color:#4F0E0E;color: white; "><span>[[${#authentication.principal.memberNick}]]</span></a>
 						</li>
-						<li>
-							<a href="#" style="background-color:#4F0E0E;color: white; "><i class="lnr lnr-exit" style="color: white;"></i> <span>Logout</span></a>
+						<li style="margin-top: 7%;">
+							<form th:action="@{/member/logout}" method="post" ><button class="lnr lnr-exit" style="background-color:#4F0E0E;color: white;border: none; ">로그아웃</button></form>
 						</li>
 					</ul>
 				</div>
