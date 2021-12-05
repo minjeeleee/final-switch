@@ -1,5 +1,6 @@
-                                                        <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<th:block th:fragment="flg_head">
 		<meta charset="UTF-8">
@@ -106,11 +107,12 @@
 <script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
 <script type="text/javascript" th:inline="javascript" th:fragment="view">
 function updateView(e,cardIdx,ownerIdx,views){
-	let currMemberIdx = [[${#authentication.principal.memberIdx}]];
+	console.log("views"+views)
+	let currMemberIdx = $('.id-Check').val()
 	if(ownerIdx == currMemberIdx){
 		return;
 	}
-	fetch("http://localhost:9090/card/view?cardIdx=" + cardIdx + "&views=" + views, { headers : getCsrfHeader()})
+	fetch("/card/view?cardIdx=" + cardIdx + "&views=" + views, { headers : getCsrfHeader()})
 	.then(response => {
 		if(response.ok){
 			console.dir("card 조회수 +1");

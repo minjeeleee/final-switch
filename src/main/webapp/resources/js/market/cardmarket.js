@@ -1,5 +1,6 @@
 var token = "bd5667d9-4a6f-41c9-b7ba-67ad50ff8479"
 var header = "X-CSRF-TOKEN"
+let userId = $('.id-Check').val()
 
 function slickControll() {
     $('.detail-img').slick({
@@ -10,10 +11,19 @@ function slickControll() {
     });
 }
 
+function myCard(value) {
+		
+		if(value.memberNick == userId) {
+			alert("내카드입니다.")
+			event.preventDefault()
+			return;
+		}
+}
+
 function createCard(value,productStar,cardShape ,icon ,createMemberStar) {
     var result = '';
-
-    result += '<div class="card-container" id='+value.cardIdx+'>'
+	
+	result += '<div class="card-container" id='+value.cardIdx+' onclick="updateView(this,'+value.cardIdx+','+value.memberIdx+','+value.views+')">'
     result += '<input type="hidden" id="cardIdx" name="cardIdx" value="' +
         value.cardIdx + '">'
     result += '<div class="card-name" id='+value.cardIdx+'>'
@@ -52,7 +62,10 @@ function createCard(value,productStar,cardShape ,icon ,createMemberStar) {
 }
 
 function createPopup(value,productStar,memberStar) {
-	 let imgUrls = ''
+	let imgUrls = ''
+	
+	myCard(value);
+	
     
     for (let index = 0; index < value.imgUrl.length; index++) {
        imgUrls += '<div class="imgs"><img src="'+value.imgUrl[index]+'" alt=""></div>'
@@ -216,11 +229,11 @@ $(() =>{
                 let cardShape = createShape(value);
 
                 let icon = createIcon(value);
-
+				
                 let memberStar = createMemberStar(value);
-
+                
                 result += createCard(value,productStar,cardShape,icon,memberStar)
-
+		
                 lastindex = index + 1;
 
             })
@@ -402,6 +415,7 @@ function cardClose() {
 
 // popupAjax
 function cardClick() {
+	
         $('.card-container').on("click",(e) => {
             $('.popup-detail').removeClass('hide')
             let cardIdx = e.target.id
@@ -422,18 +436,19 @@ function cardClick() {
                 },
         
                 success: (data) => {
+					myCard(data)
                     $(".popup-detail").empty();
 
                     var result = '';
                     var lastindex = '';
         
-                        let productStar = createStar(data);
+                    let productStar = createStar(data);
 
-                        let memberStar = createMemberStar(data);
+                    let memberStar = createMemberStar(data);
                         
-                        result = createPopup(data,productStar,memberStar)
-                        console.log(data)
-        
+                    result = createPopup(data,productStar,memberStar)
+                    console.log(data)
+                        
                     $('.popup-detail').append(result);  
         
                 },
@@ -445,7 +460,6 @@ function cardClick() {
             })
 
             cardClose() 
-
             slickControll()
         })
 }

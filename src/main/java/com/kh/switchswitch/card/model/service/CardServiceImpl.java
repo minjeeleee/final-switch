@@ -396,7 +396,7 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public void updateCardViews(Card card) {
-		card.setViews(card.getViews()+1);
+		card.setViews(card.getViews() + 1);
 		updateCardWithCardIdx(card);
 	}
 
