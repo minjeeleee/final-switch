@@ -31,6 +31,10 @@ public interface InquiryRepository {
 	@Select("select count(*) from inquiry")
 	int selectContentCnt();
 	
+	//나의 게시글 갯수 출력
+	@Select("select count(*) from inquiry where user_id=#{memberNick}")
+	int selectMyContentCnt(String memberNick);
+	
 	//수정
 	void modifyInquiry(Inquiry inquiry);
 	
@@ -41,5 +45,7 @@ public interface InquiryRepository {
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Inquiry> selectInquiryListWithPageNo(Map<String, Integer> map);
 	
-
+	@Select("select * from (select rownum rnum, inquiry_idx,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,type from inquiry where user_id=#{userId}) inquiry"
+			+ " where rnum between #{startBoard} and #{lastBoard}")
+	List<Inquiry> selectInquiryListWitchUserId(Map<String, Object> map);
 }
