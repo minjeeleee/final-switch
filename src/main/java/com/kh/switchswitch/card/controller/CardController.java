@@ -91,7 +91,7 @@ public class CardController {
 	
 	@GetMapping("view")
 	@ResponseBody
-	public void updateView(@RequestParam Card card) {
+	public void updateView(Card card) {
 		cardService.updateCardViews(card);
 	}
 	
