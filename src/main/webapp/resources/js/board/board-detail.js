@@ -19,10 +19,7 @@ function commentForm(id){
 
 // 댓글 업데이트 폼 요청
 function commentUpdateForm(id){
-	if("${principal.id}" == ""){
-		login();
-		return;
-	}
+
 	var dropdownForm = $("#dropdownForm-"+id);
 	var commentForm = $("#commentForm-"+id);
 	var updateForm = $("#updateForm-"+id);
@@ -55,6 +52,8 @@ function commentTocommentForm(id){
 	$("#commentTocomment-"+id).focus();
 }
 
+
+
 //댓글 입력
 function commentCreate(){
 	var content = $("#commentContent").val();
@@ -83,6 +82,7 @@ function commentCreate(){
         },
 		success:(data) => {
 			console.dir(data);
+
 		},
 		error:(error) => {
 			 console.log(error)
@@ -90,6 +90,53 @@ function commentCreate(){
 	});
 	return false;
 }
+
+// 댓글 수정창
+
+			var html = "";
+			$.each(data, function(index, value) {
+				if(value.replyDepth == 0){
+					if(value.userId ==  "${#authentication.principal.memberNick}"){ 
+						html += "<div id='updateForm-"+value.id+"' style='display: none;'>"+
+						"<form method='post' action='/reply/"+value.id+"' onsubmit='return replyUpdate("+value.id+");'>"+
+							"<input type='hidden' name='_method' value='PUT'>"+
+							"<textarea id='replyContent-"+value.id+"' name='content' class='form-control z-depth-1' rows='3' maxlength='1000' placeholder='댓글을 입력해주세요.'>"+value.content+"</textarea>"+
+							"<input type='submit' style='width:50%' class='btn btn-success' value='수정'>"+
+							"<input type='button' style='width:50%' class='btn btn-primary' value='취소' onclick='replyForm("+value.id+")'>"+
+							"</form>"+
+					"</div>"
+
+//댓글 수정
+function updateComment(){
+	var content = $("#commentContent").val();
+	
+	var reply = {
+			"bdIdx" :$(".bdIdx").val(),
+			"userId" :userId,
+			"content" : $("#commentContent").val()
+	}
+
+	$.ajax({
+		url:"http://localhost:9191/board/modify-reply",
+		type:"post",
+		 dataType: "json",
+		contentType : "application/json",
+		data: JSON.stringify(reply),
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
+			console.dir(data);
+
+		},
+		error:(error) => {
+			 console.log(error)
+		}
+	});
+	return false;
+}
+
+
 
 //대댓글 입력 
 function commentTocomment(id,commentGroup){
@@ -136,46 +183,7 @@ function commentTocomment(id,commentGroup){
 	return false;
 }
 
-// 댓글 업데이트 
-function commentUpdate(id){
-	
-	var requestcommentUpdateDto = {
-		id : id,
-		articleId : "${responseDto.id}",	
-		accountId : "${principal.id}",
-		content : $("#commentContent-"+id).val()
-	}
-	
-	$.ajax({
-		url:"/comment/"+id,
-		type:"patch",
-		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(requestcommentUpdateDto), 
-		success:function(data){
-			commentList("${responseDto.id}");
-		},
-		error:function(request,status,error){
-			jsonValue = jQuery.parseJSON(request.responseText);
-			code = jsonValue.code;
-			if(code == 'B001'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				history.back();
-			}
-			if(code == 'C003'){
-				console.log(code +" : "+jsonValue.message);
-				$("#commentContent-"+id).val("");
-				$("#commentContent-"+id).focus();
-			}
-			if(code == 'R002'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				commentList("${responseDto.id}");
-			}
-		}
-	});
-	return false;
-}
+
 
 function deleteConfirm(id){
 	if(confirm("댓글을 삭제하시겠습니까?")){
@@ -186,35 +194,29 @@ function deleteConfirm(id){
 }
 
 // 댓글 삭제 
-function commentDelete(id){
-	var requestcommentDeleteDto = {
-		id : id,
-		articleId : "${responseDto.id}",
-		accountId : "${principal.id}",
+function commentDelete(){
+	var content = $("#commentContent").val();
+
+	var reply = {
+			"cmIdx" :$(".cmIdx").val(),
+			"userId" :userId,
+			"content" : $("#commentContent").val()
 	}
-	
+
 	$.ajax({
-		url:"/comment/"+id,
-		type:"delete",
-		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(requestcommentDeleteDto),
-		success:function(data){
+		url:"http://localhost:9191/board/delete-reply",
+		type:"post",
+		 dataType: "json",
+		contentType : "application/json",
+		data: JSON.stringify(reply),
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
 			alert("댓글이 삭제되었습니다.");
-			commentList("${responseDto.id}");
 		},
-		error:function(request,status,error){
-			jsonValue = jQuery.parseJSON(request.responseText);
-			code = jsonValue.code;
-			if(code == 'B001'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				history.back();
-			}
-			if(code == 'R002'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				commentList("${responseDto.id}");
-			}
+		error:(error) => {
+			 console.log(error)
 		}
 	});
 	return false;
@@ -247,4 +249,5 @@ function login(){
 		return;
 	}
 	return false;
+	
 }
