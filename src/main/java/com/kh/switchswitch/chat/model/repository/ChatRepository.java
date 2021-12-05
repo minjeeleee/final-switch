@@ -28,6 +28,9 @@ public interface ChatRepository {
 
 	@Insert("insert into chatting values(sc_chatting_idx.nextval,#{requestedMemIdx},#{requestedMemIdx2},sysdate)")
 	Object insertChatting(Integer requestedMemIdx, Integer requestedMemIdx2);
+	
+	@Insert("insert into chatting_history values(#{chattingIdx},#{attendee1},#{attendee2},#{createAt})")
+	void insertChattingHistory(Chatting chatting);
 
 	@Select("select * from chatting where ATTENDEE1 =#{memberIdx} or ATTENDEE2 = #{memberIdx}")
 	List<Chatting> selectAllChattingByMemberIdx(Integer memberIdx);
@@ -40,4 +43,18 @@ public interface ChatRepository {
 	
 	@Select("SELECT TO_CHAR(CREATED_AT,'hh:mm') FROM chat_messages where cm_idx=#{cmIdx}")
 	String selectSendTimeByCmId(Integer cmIdx);
+
+	@Select("select * from chatting where chatting_idx=#{chattingIdx}")
+	Chatting selectChattingByChattingIdx(Integer chattingIdx);
+	
+	@Select("select * from chatting where (attendee1 =#{requestedMemIdx} or attendee2=#{requestedMemIdx}) and (attendee1 =#{requestedMemIdx2} or attendee2=#{requestedMemIdx2})")
+	Chatting selectChattingByAttendeeMemIdxs(Integer requestedMemIdx, Integer requestedMemIdx2);
+
+	@Update("update chatting set attendee1 = null where chatting_idx = #{chattingIdx}")
+	void updateChattingAttendee1(Integer chattingIdx);
+	
+	@Update("update chatting set attendee2 = null where chatting_idx = #{chattingIdx}")
+	void updateChattingAttendee2(Integer chattingIdx);
+
+
 }

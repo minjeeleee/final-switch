@@ -48,7 +48,6 @@ public class ChattingHandler extends TextWebSocketHandler {
 		
 		//새로운 채팅
 		Map<String, String> mapReceive = objectMapper.readValue(message.getPayload(), Map.class);
-		System.out.println("mapReceive : " + mapReceive );
 		switch (mapReceive.get("cmd")) {
 		// CLIENT 입장
 		case "CMD_ENTER":
@@ -88,7 +87,7 @@ public class ChattingHandler extends TextWebSocketHandler {
 					mapToSend.put("bang_id", bang_id);
 					mapToSend.put("cmd", "CMD_MSG_SEND");
 					mapToSend.put("msg"
-							, memberRepository.selectMemberNickWithMemberIdx(senderId) 
+							, memberRepository.selectMemberWithMemberIdx(senderId).getMemberNick()
 							+ " : " + mapReceive.get("msg")+"("+isRead+")");
 					
 					String jsonStr = objectMapper.writeValueAsString(mapToSend);

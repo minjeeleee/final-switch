@@ -10,5 +10,11 @@ public interface ChatService {
 	void makeChatRoom(Integer requestedMemIdx, Integer requestMemIdx);
 
 	List<Map<String, Object>> selectAllChattingList(Integer memberIdx);
+	
+	 String getSenderNick(Integer chattingIdx,Integer memberIdx);
+	 
+	 String getNick(Integer memberIdx);
+
+	void leaveChatting(Integer chattingIdx, Integer memberIdx);
 
 }

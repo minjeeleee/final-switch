@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class Chatting {
 
-	private Integer ChattingIdx;
-	private Integer Attendee1;
-	private Integer Attendee2;
+	private Integer chattingIdx;
+	private Integer attendee1;
+	private Integer attendee2;
 	private Date createAt;
 }
