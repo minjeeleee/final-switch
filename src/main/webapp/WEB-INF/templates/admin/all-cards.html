@@ -31,22 +31,22 @@
 				<div style="display: flex; justify-content: space-between;">
 					<h3 class="page-title">전체 카드 조회</h3>
 					<div class="dropdown pull-right" style="margin-top:1.3%">
-						    <form>
+						    <form action="/admin/all-cards" method="get">
 								<div style="display: flex; float: right;">
 								<select class="form-control" name="searchPeriod" style="width: 120px;">
-								  <option value="recent">최근등록순</option>
-								  <option value="week">1주전</option>
-								  <option value="month">1개월전</option>
-								  <option value="year">1년전</option>
+								  <option th:selected="${#strings.equals(param.searchPeriod, 'recent')}" value="recent">최근등록순</option>
+								  <option th:selected="${#strings.equals(param.searchPeriod, 'week')}" value="week">1주전</option>
+								  <option th:selected="${#strings.equals(param.searchPeriod, 'month')}" value="month">1개월전</option>
+								  <option th:selected="${#strings.equals(param.searchPeriod, 'year')}" value="year">1년전</option>
 								</select>
 								<select class="form-control" name="searchType" style="width: 120px;">
-								  <option value="card_idx">카드번호</option>
-								  <option value="name">카드제목</option>
-								  <option value="user_idx">회원번호</option>
+								  <option th:selected="${#strings.equals(param.searchType, 'card_idx')}" value="card_idx">카드번호</option>
+								  <option th:selected="${#strings.equals(param.searchType, 'name')}" value="name">카드제목</option>
+								  <option th:selected="${#strings.equals(param.searchType, 'member_idx')}" value="member_idx">회원번호</option>
 								</select>
 								<div class="" style="display: flex; width: 250px;">
 								  <input type="search" class="form-control rounded" name="searchKeyword" placeholder="Search" aria-label="Search"
-								  aria-describedby="search-addon" />
+								  aria-describedby="search-addon" th:value="${param.searchKeyword}" />
 								  <span class="input-group-text border-0" id="search-addon">
 								    <button class="fa fa-search" aria-hidden="true" style="height: 35px;width: 35px; border: 0;"></button>
 								  </span>
@@ -57,7 +57,7 @@
  					 </div>
 					<div class="panel panel-headline demo-icons" style="background-color: white;">
 						<div class="content" th:if="${cardList}">
-							<ul class="list-unstyled row" style="padding-left: 6%;">
+							<ul class="list-unstyled row" style="padding-left: 5%;padding-top: 11%;">
 							<li class="card col-md-2 col-sm-4 col-xs-6" style="width: 18rem; height: 24rem;" th:each="card:${cardList}" th:object="${card}">
 							  <img class="card-img-top" th:src="*{fileDTO.getDownloadURL()}" alt="Card image cap" style="width: 100%; height: 60%;">
 							  <div class="card-body" style="height: 40%;">
@@ -103,23 +103,48 @@
 						
 					</div>
 					<div style="display: flex; justify-content: center;">
-							<ul class="pagination">
-						    <li>
-						      <a href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						      </a>
-						    </li>
-						    <li><a href="#">1</a></li>
-						    <li><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li><a href="#">5</a></li>
-						    <li>
-						      <a href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						      </a>
-						    </li>
-						  </ul>
+							<ul class="pagination" th:object=${paging}>
+								<th:block th:if="${param.searchKeyword}">
+							    <li>
+							      <a th:if="${param.searchType}" th:href="|*{url}?page=*{prev}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" aria-label="Previous">
+							        <span aria-hidden="true">&laquo;</span>
+							      </a>
+							      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
+							    	<span aria-hidden="true">&laquo;</span>
+							      </a>
+							    </li>
+							    <li><a th:if="${param.searchType}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" th:text="${p}"></a></li>
+							    <li><a th:unless="${param.searchType}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}"></a></li>
+							    <li>
+							      <a th:if="${param.searchType}" th:href="|*{url}?page=*{next}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{next}|" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							    </li>
+							    </th:block>
+							    <th:block th:unless="${param.searchKeyword}">
+								    <li>
+								      <a th:if="${param.searchType}" th:href="|*{url}?page=*{prev}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}|" aria-label="Previous">
+								        <span aria-hidden="true">&laquo;</span>
+								      </a>
+								      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
+								    	<span aria-hidden="true">&laquo;</span>
+								      </a>
+								    </li>
+								    <li><a th:if="${param.searchType}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}|" th:text="${p}"></a></li>
+								    <li><a th:unless="${param.searchPeriod}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}"></a></li>
+								    <li>
+								      <a th:if="${param.searchType}" th:href="|*{url}?page=*{next}&searchPeriod=${param.searchPeriod}&searchType=${param.searchType}|" aria-label="Next">
+								        <span aria-hidden="true">&raquo;</span>
+								      </a>
+								      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{next}|" aria-label="Next">
+								        <span aria-hidden="true">&raquo;</span>
+								      </a>
+								    </li>
+							    </th:block>
+							  </ul>
 					</div>
 			</div>
 			<!-- END MAIN CONTENT -->

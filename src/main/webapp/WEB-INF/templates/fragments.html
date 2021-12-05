@@ -73,26 +73,32 @@
 		console.dir(data);
 		let alarmIdx = data.split(",")[0]; //알림idx
 		let receivedMsg = data.split(",")[1]; //받은 알림 메시지
-		//알림 생성 (3초)
+		//알림 생성 (5초)
+		let alarmIdxInput = document.createElement("input");
+		alarmIdxInput.setAttribute("name","alarmIdx");
+		alarmIdxInput.setAttribute("type","hidden");
+		alarmIdxInput.setAttribute("value",alarmIdx);
+		document.body.appendChild(alarmIdxInput);
+		
 		let alarmBox = document.createElement("div");
-		alarmBox.style.position = "absolute";
+		alarmBox.setAttribute("id", "alarm");
+		alarmBox.style.position = "fixed";
 		alarmBox.style.right = "0px";
 		alarmBox.style.bottom = "0px";
-		alarmBox.style.width = "150px";
-		alarmBox.style.height = "60px";
-		alarmBox.style.backgroundColor = "lightyellow";
-		alarmBox.innerHtml = receivedMsg;
+		alarmBox.style.backgroundColor = "rgba(252, 236, 3, 0.67)";
+		alarmBox.style.fontSize = "18px";
+		alarmBox.style.textAlign = "center";
+		alarmBox.style.padding = "20px 5px 20px 5px"
 		alarmBox.style.zIndex = "5000";
-		alarmBox.appendTo("body");
 		
-		function displayNone(){
-			alarmBox.style.display = none;
-		};
+		alarmBox.innerHTML = receivedMsg;
+		document.body.appendChild(alarmBox);
 		
-		setTimeout(displayNone(),3000);
+		setTimeout(()=>{
+			alarmBox.style.display = "none";
+		}, 5000);
 	};
 </script>
-
 
 </body>
 </html>
