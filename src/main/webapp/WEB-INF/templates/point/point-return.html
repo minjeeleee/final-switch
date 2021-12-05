@@ -398,8 +398,8 @@
 	   console.dir(typeof availableBal);
 	   console.dir(refundPoint);
 	   console.dir(typeof refundPoint);
-	   if(validUserName != [[${#authentication.principal.memberName}]]){
-		   alert("제출된 정보와 일치하지 않습니다./1");
+	   if(refundPoint > availableBal){
+		   alert("환급 가능 포인트를 초과하였습니다.");
 		   return;
 	   }
 	   if(validUserName != [[${#authentication.principal.memberName}]]){
