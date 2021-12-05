@@ -31,6 +31,10 @@ public interface InquiryRepository {
 	@Select("select count(*) from inquiry")
 	int selectContentCnt();
 	
+	//나의 게시글 갯수 출력
+	@Select("select count(*) from inquiry where user_id=#{memberNick}")
+	int selectMyContentCnt(String memberNick);
+	
 	//수정
 	void modifyInquiry(Inquiry inquiry);
 	

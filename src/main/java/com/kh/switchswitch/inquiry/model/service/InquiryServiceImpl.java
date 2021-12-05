@@ -54,7 +54,7 @@ public class InquiryServiceImpl implements InquiryService{
 		int cntPerPage = 10;
 		Paging pageUtil = Paging.builder()
 				.url("/mypage/personal-inquiry")
-				.total(inquiryRepository.selectContentCnt())
+				.total(inquiryRepository.selectMyContentCnt(memberNick))
 				.curPage(page)
 				.blockCnt(10)
 				.cntPerPage(cntPerPage)
