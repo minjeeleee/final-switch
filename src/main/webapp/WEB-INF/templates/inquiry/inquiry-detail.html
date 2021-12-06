@@ -35,9 +35,11 @@
 						th:action="|/inquiry/delete?${_csrf.parameterName}=${_csrf.token}&inquiryIdx=${datas.inquiry.inquiryIdx}|"
 						method="post" enctype="multipart/form-data">
 						<div class='btn_area'>
+						<span th:if="${#authentication.principal.memberNick} == ${datas.inquiry.userId}">
 							<a class="btn"
 								th:href="@{/inquiry/inquiry-modify(inquiryIdx=${datas.inquiry.inquiryIdx})}">수정</a>
 							<button id="btnDelete" class="btn">삭제</button>
+						</span>
 							<a class="btn" th:href="@{/inquiry/inquiry-list}">목록</a>
 						</div>
 					</form>
