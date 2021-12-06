@@ -1,58 +1,24 @@
 
-//댓글 입력 폼 요청
-function commentForm(id){
-	if("${principal.id}" == ""){
-		login();
-		return;
-	}
-	var dropdownForm = $("#dropdownForm-"+id);
-	var commentForm = $("#commentForm-"+id);
-	var updateForm = $("#updateForm-"+id);
-	var commentTocommentForm = $("#commentTocommentForm-"+id);
-	
-	updateForm.hide();
-	commentTocommentForm.hide();
-	commentForm.show();
-	dropdownForm.show();
-	$("#commentForm-"+id).focus();
+function replyList(){
+		$.ajax({
+		url:"http://localhost:9191/board/reply-list",
+		type:"post",
+		 dataType: "json",
+		contentType : "application/json",
+		data: JSON.stringify(reply),
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
+			console.dir(data);
+	$('#commentList').append(result);
+		},
+		error:(error) => {
+			 console.log(error)
+		}
+	});
+	return false;
 }
-
-// 댓글 업데이트 폼 요청
-function commentUpdateForm(id){
-
-	var dropdownForm = $("#dropdownForm-"+id);
-	var commentForm = $("#commentForm-"+id);
-	var updateForm = $("#updateForm-"+id);
-	var commentTocommentForm = $("#commentTocommentForm-"+id);
-	
-	$("#commentContent-"+id).val($("#comment-"+id).text());
-	commentForm.hide();
-	dropdownForm.hide();
-	commentTocommentForm.hide();
-	updateForm.show();
-	$("#commentContent-"+id).focus();
-}
-
-//대댓글 폼 요청
-function commentTocommentForm(id){
-	if("${principal.id}" == ""){
-		login();
-		return;
-	}
-	var dropdownForm = $("#dropdownForm-"+id);
-	var commentForm = $("#commentForm-"+id);
-	var updateForm = $("#updateForm-"+id);
-	var commentTocommentForm = $("#commentTocommentForm-"+id);
-	
-	$("#commentTocomment-"+id).val("");
-	commentForm.show();
-	dropdownForm.hide();
-	updateForm.hide();
-	commentTocommentForm.show();
-	$("#commentTocomment-"+id).focus();
-}
-
-
 
 //댓글 입력
 function commentCreate(){
@@ -124,6 +90,106 @@ function updateComment(){
 }
 
 
+function deleteConfirm(idx){
+	if(confirm("댓글을 삭제하시겠습니까?")){
+		commentDelete(idx);
+	}else{
+		return;
+	}
+}
+
+// 댓글 삭제 
+function commentDelete(idx){
+	console.log(idx)
+	var cmIdx  = $(".cmIdx").val();
+	console.log(cmIdx)
+	console.log(typeof cmIdx)
+	console.log(userId)
+	$.ajax({
+		url:"http://localhost:9191/board/delete-reply?cmIdx="+cmIdx,
+		type:"post",
+		contentType : "application/json",
+		 beforeSend: function (xhr) {
+            xhr.setRequestHeader(header,token);
+        },
+		success:(data) => {
+			console.dir(document.getElementById(idx));
+			document.getElementById(idx).style.display = 'none';
+			alert("댓글이 삭제되었습니다.");
+			
+		},
+		error:(error) => {
+			 console.log(error)
+		}
+	});
+	return false;
+}
+
+function login(){
+	if(confirm("로그인 하시겠습니까?")){
+		location.href="/member/login";	
+	}else{
+		return;
+	}
+	return false;
+	
+}
+
+//댓글 입력 폼 요청
+function commentForm(id){
+	if("${principal.id}" == ""){
+		login();
+		return;
+	}
+	var dropdownForm = $("#dropdownForm-"+id);
+	var commentForm = $("#commentForm-"+id);
+	var updateForm = $("#updateForm-"+id);
+	var commentTocommentForm = $("#commentTocommentForm-"+id);
+	
+	updateForm.hide();
+	commentTocommentForm.hide();
+	commentForm.show();
+	dropdownForm.show();
+	$("#commentForm-"+id).focus();
+}
+
+// 댓글 업데이트 폼 요청
+function commentUpdateForm(id){
+
+	var dropdownForm = $("#dropdownForm-"+id);
+	var commentForm = $("#commentForm-"+id);
+	var updateForm = $("#updateForm-"+id);
+	var commentTocommentForm = $("#commentTocommentForm-"+id);
+	
+	$("#commentContent-"+id).val($("#comment-"+id).text());
+	commentForm.hide();
+	dropdownForm.hide();
+	commentTocommentForm.hide();
+	updateForm.show();
+	$("#commentContent-"+id).focus();
+}
+
+//대댓글 폼 요청
+function commentTocommentForm(id){
+	if("${principal.id}" == ""){
+		login();
+		return;
+	}
+	var dropdownForm = $("#dropdownForm-"+id);
+	var commentForm = $("#commentForm-"+id);
+	var updateForm = $("#updateForm-"+id);
+	var commentTocommentForm = $("#commentTocommentForm-"+id);
+	
+	$("#commentTocomment-"+id).val("");
+	commentForm.show();
+	dropdownForm.hide();
+	updateForm.hide();
+	commentTocommentForm.show();
+	$("#commentTocomment-"+id).focus();
+}
+
+
+
 
 //대댓글 입력 
 function commentTocomment(id,commentGroup){
@@ -168,53 +234,4 @@ function commentTocomment(id,commentGroup){
 		}
 	});
 	return false;
-}
-
-
-
-function deleteConfirm(id){
-	if(confirm("댓글을 삭제하시겠습니까?")){
-		commentDelete(id);
-	}else{
-		return;
-	}
-}
-
-// 댓글 삭제 
-function commentDelete(){
-	var content = $("#commentContent").val();
-
-	var reply = {
-			"cmIdx" :$(".cmIdx").val(),
-			"userId" :userId,
-			"content" : $("#commentContent").val()
-	}
-
-	$.ajax({
-		url:"http://localhost:9191/board/delete-reply",
-		type:"post",
-		 dataType: "json",
-		contentType : "application/json",
-		data: JSON.stringify(reply),
-		 beforeSend: function (xhr) {
-            xhr.setRequestHeader(header,token);
-        },
-		success:(data) => {
-			alert("댓글이 삭제되었습니다.");
-		},
-		error:(error) => {
-			 console.log(error)
-		}
-	});
-	return false;
-}
-
-function login(){
-	if(confirm("로그인 하시겠습니까?")){
-		location.href="/member/login";	
-	}else{
-		return;
-	}
-	return false;
-	
 }

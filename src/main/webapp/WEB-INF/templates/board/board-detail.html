@@ -68,8 +68,8 @@
 					</div>
 					
 					<!-- 댓글 -->				
-					<div>
-						<div class="cmt_wrap" th:each="comment : ${commentList}">
+					<div  id="commentList">
+						<div class="cmt_wrap" th:each="comment : ${commentList}" th:id="${comment.cmIdx}">
 							<div>
 									<div class="cmt_info">
 										<div>
@@ -80,9 +80,10 @@
 								<pre>[[${comment.content}]]</pre>
 							</div>
 							<span th:if="${#authentication.principal.memberNick} == ${comment.userId}">
-						        <button id="btn-delete" class="btn btn-danger" type="submit" name="submit" value="delete" onclick="commentDelete()">삭제</button>
+						        <button id="btn-delete" class="btn btn-danger" type="submit" name="submit" value="delete" th:onclick="'deleteConfirm(' + ${comment.cmIdx} + ')'">삭제</button>
 						        <button id="btn-update" class="btn btn-warning" type="submit" name="submit" value="update" onclick="updateComment()">수정</button>
 						    </span>
+						    <input type="hidden"  th:value="${comment.cmIdx}" class="cmIdx">
 						</div>
 					</div>
 
@@ -96,7 +97,7 @@
 							<div style="position: relative; height: 100%">
 								<div>
 										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
-										<input type="button" class="btn btn-default" onclick="commentCreate()" style="width: 100%;" value="작성">
+										<input type="button" class="btn btn-default" id="commentCreate" onclick="commentCreate()" style="width: 100%;" value="작성">
 										<input type="hidden"  th:value="${datas.board.bdIdx}" class="bdIdx">
 								</div>
 							</div>

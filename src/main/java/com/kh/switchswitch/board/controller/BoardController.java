@@ -1,16 +1,10 @@
 package com.kh.switchswitch.board.controller;
 
-import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +21,9 @@ import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.service.BoardService;
 import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.comment.model.service.ReplyService;
-import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -57,10 +48,10 @@ public class BoardController {
 	}
 
 	@PostMapping("upload")
-	public String uploadBoard(Board board, List<MultipartFile> files, @AuthenticationPrincipal MemberAccount member) {
+	public String uploadBoard(@RequestParam(required = false) List<MultipartFile> imgList, Board board, @AuthenticationPrincipal MemberAccount member) {
 		// ,@SessionAttribute("authentication") Member member
 		board.setUserId(member.getMemberNick());
-		boardService.insertBoard(files, board);
+		boardService.insertBoard(imgList, board);
 		return "redirect:/board/board-list";
 	}
 
@@ -79,7 +70,17 @@ public class BoardController {
 
 		return "board/board-detail";
 	}
-
+//	조회
+/*    @ResponseBody
+    @PostMapping("reply-list")
+	public String replyList(int bdIdx, Model model) {
+    	
+		Map<String, Object> commandMap = boardService.selectBoardByIdx(bdIdx);
+		model.addAttribute("commentList", boardService.getCommetList(commandMap));
+		
+		return "success";
+	}
+*/
 	@GetMapping("board-modify")
 	public void boardModify(Model model, int bdIdx) {
 		Map<String, Object> commandMap = boardService.selectBoardByIdx(bdIdx);
@@ -123,8 +124,10 @@ public class BoardController {
 	@CrossOrigin("*")
 	@ResponseBody
 	@PostMapping("delete-reply")
-	public String deleteReply(@RequestBody int cmIdx) {
+	public String deleteReply(@RequestParam int cmIdx) {
+
 		boardService.deleteReply(cmIdx);
+		//boardService.deleteReply(Integer.toString(cmIdx));
 		return "success";
 	}
 	

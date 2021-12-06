@@ -28,12 +28,12 @@ public class BoardServiceImpl implements BoardService{
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BoardRepository boardRepository;
 	
-	public void insertBoard(List<MultipartFile> files, Board board) {
+	public void insertBoard(List<MultipartFile> imgList, Board board) {
 		FileUtil  fileUtil = new FileUtil();
 		
 		boardRepository.insertBoard(board);
 		
-		for (MultipartFile multipartFile : files) {
+		for (MultipartFile multipartFile : imgList) {
 			if(!multipartFile.isEmpty()) {
 				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
 			}
@@ -82,13 +82,11 @@ public class BoardServiceImpl implements BoardService{
 		
 	}
 
-	@Override
 	public List<Reply> getCommetList(Map<String, Object> commandMap) {
 		 List<Reply> commentList = boardRepository.getCommentList(((Board)commandMap.get("board")).getBdIdx());
 		return commentList;
 	    }
 
-	@Override
 	public void boardReplyInsert(Reply reply) {
 		
 		int lastOrder = boardRepository.selectLastOrderOfBoard(reply.getBdIdx());		
@@ -98,12 +96,10 @@ public class BoardServiceImpl implements BoardService{
 		
 	}
 
-	@Override
 	public void modifyReply(Reply reply) {
 		boardRepository.modifyReply(reply);
 	}
 
-	@Override
 	public void deleteReply(int cmIdx) {
 		boardRepository.deleteReply(cmIdx);
 		
