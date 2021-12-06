@@ -35,13 +35,13 @@ public class NoticeController {
 	public String uploadNotice(Notice notice,  @AuthenticationPrincipal MemberAccount member ) {
 		notice.setUserId(member.getCode());
 		noticeService.insertNotice(notice);
-		return "redirect:/notice/notice-list";
+		return "redirect:/notice/notice-list2";
 	}
 	
-	  @GetMapping("notice-list") 
+	  @GetMapping("notice-list2") 
 	  public String noticeList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		  model.addAllAttributes(noticeService.selectNoticeList(page));
-			return "notice/notice-list";
+			return "notice/notice-list2";
 	}
 	  @GetMapping("notice-detail")
 	public void noticeDetail(int noticeIdx, Model model) {
@@ -70,7 +70,7 @@ public class NoticeController {
 				notice.setUserId(member.getCode());
 				noticeService.deleteNotice(noticeIdx);
 				redirectAttrs.addFlashAttribute("message", "게시글 삭제가 완료되었습니다."); //수정필요
-			return "redirect:/notice/notice-list"; 
+			return "redirect:/notice/notice-list2"; 
 		}
 
 		

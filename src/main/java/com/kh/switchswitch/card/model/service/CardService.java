@@ -63,6 +63,8 @@ public interface CardService {
 	void modifyCard(List<MultipartFile> imgList, Card card);
 
 	List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx);
+	
+	List<Map<String, Object>> selectWishCard(Integer memberIdx);
 
 	List<Map<String, Object>> selectMyFreeCard(Integer memberIdx);
 

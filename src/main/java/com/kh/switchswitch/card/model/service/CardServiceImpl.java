@@ -401,8 +401,26 @@ public class CardServiceImpl implements CardService {
 		updateCardWithCardIdx(card);
 	}
 
+
 	public void cancelRequestReject(Integer reqIdx, String status) {
 		updateExchangeStatus(reqIdx, status);
 	}
 
+	public List<Map<String, Object>> selectWishCard(Integer memberIdx) {
+		List<Map<String, Object>> wishCard = new ArrayList();
+		List<Card> cardList = cardRepository.selectWishCardByMemberIdx(memberIdx);
+		for (Card card : cardList) {
+			wishCard.add(Map.of("wishCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return wishCard;
+	}
+
 }
+
+
+
+
+
+
+

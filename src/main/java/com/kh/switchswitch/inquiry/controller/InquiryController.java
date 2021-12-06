@@ -38,10 +38,10 @@ public class InquiryController {
 		return "redirect:/inquiry/inquiry-detail?inquiryIdx="+inquiry.getInquiryIdx();
 	}
 
-	  @GetMapping("inquiry-list") 
+	  @GetMapping("inquiry-list2") 
 	  public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		  model.addAllAttributes(inquiryService.selectInquiryList(page));
-			return "inquiry/inquiry-list";
+			return "inquiry/inquiry-list2";
 	}
 
 	

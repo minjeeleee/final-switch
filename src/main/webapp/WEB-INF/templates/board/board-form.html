@@ -1,26 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>        
-
-		<meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Switch-Switch</title>
-        <!-- Favicon-->
-        <link rel="icon" type="resources/img/x-icon" href="../../../resources/assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../resources/css/styles.css" rel="stylesheet" />
-        <!-- fontawesome -->
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/board.css" rel="stylesheet" />
-</head>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<head>
+			<!-- refund -->
+		    <link rel="stylesheet" href="../resources/css/board/board.css">
+	</head>
     
     <body>
+         <header th:replace="fragments/subBodyHeader :: header">
+    	</header>
         
-        
+        <nav th:replace="fragments/subMenu" :: subNav>
+    	</nav>
+    	
   <section>
     <div class="container">
     
@@ -38,7 +31,18 @@
 				<div class='frm_content_area'>
 					<textarea id="editor1" name="content" placeholder="내용을 입력하세요" data-sample-short></textarea>
 				</div>
-				<div class="add_file_box">파일 : <input type="file" name="files" id="contract_file" multiple/></div>
+				<div class="form-group">
+                            <div class="col-sm-12">
+                               <input class="form-control" id="image" name="imgList" type="file" multiple="multiple"
+                               onchange="fileCheck(this.files)" required/>
+                            </div>
+                </div>
+                 <div class="rejectMsg"></div>
+                        <div class="form-group">
+                            <div class="preview">
+                               <p>No files currently selected for upload</p>
+                            </div>
+                        </div>
 				<div class='btn_area'>
 						<a class="btn" href="/board/board-list">목록</a>
 						<button id="btnSubmit" class="btn">작성하기</button>
@@ -49,5 +53,76 @@
 		
 	</div>
   </section>
+  
+ <footer>
+    <div th:replace="fragments/footer :: footer" ></div>
+</footer>
+
+  <script type="text/javascript">
+  var input = document.querySelector('#image');
+  var preview = document.querySelector('.preview');
+
+  input.addEventListener('change', updateImageDisplay);
+
+  function updateImageDisplay() {
+  	  while(preview.firstChild) {
+  	    preview.removeChild(preview.firstChild);
+  	  }
+
+  	  const curFiles = input.files;
+  	  if(curFiles.length === 0) {
+  	    const para = document.createElement('p');
+  	    para.textContent = 'No files currently selected for upload';
+  	    preview.appendChild(para);
+  	  } else {
+  	    const list = document.createElement('ol');
+  	    preview.appendChild(list);
+
+  	    for(const file of curFiles) {
+  	      const listItem = document.createElement('li');
+  	      const para = document.createElement('p');
+  	      if(validFileType(file)) {
+  	        para.textContent = `File name ${file.name}, file size ${returnFileSize(file.size)}.`;
+  	        const image = document.createElement('img');
+  	        
+  	        image.style.setProperty("width","300px");
+  	        image.style.setProperty("height","200px");
+  	        
+  	        image.src = URL.createObjectURL(file);
+
+  	        listItem.appendChild(image);
+  	        listItem.appendChild(para);
+  	      } else {
+  	        para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+  	        listItem.appendChild(para);
+  	      }
+
+  	      list.appendChild(listItem);
+  	    }
+  	  }
+  }
+  	
+  const fileTypes = [
+  	  "image/gif",
+  	  "image/jpeg",
+  	  "image/png",
+  	  "image/jpg"
+  ];
+
+  function validFileType(file) {
+  	 return fileTypes.includes(file.type);
+  }
+  	
+  function returnFileSize(number) {
+  	if(number < 1024) {
+  		return number + 'bytes';
+  	} else if(number >= 1024 && number < 1048576) {
+  		return (number/1024).toFixed(1) + 'KB';
+  	} else if(number >= 1048576) {
+  		return (number/1048576).toFixed(1) + 'MB';
+  	}
+  }
+
+  </script>
 </body>
 </html>

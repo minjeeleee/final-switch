@@ -15,6 +15,7 @@
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 		<link href="../../../resources/css/board/board.css" rel="stylesheet" />
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     </head>
     
     <body>
@@ -33,17 +34,25 @@
 				</div>
 				<div class='frm_content_area'>
 					<textarea id="editor1" name="content" required="required" th:text="*{board.content}" data-sample-short></textarea>
-				</div>			
-				<div class="add_file_box">파일 : <input type="file" name="files" id="contract_file" multiple/></div>
-				<div class='info file_info'>
-					<ol>
-					<!--파일 삭제 처리필요  -->
-						<li th:each="file : ${datas.files}" th:object="${file}"
-							th:onclick="|removeFile(this,*{flIdx})|"><a> 
-								[[*{originFileName}]] <b>x</b>
-						</a></li>
-					</ol>
 				</div>
+				       <h4 class="heading">이미지</h4>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                               <input class="form-control" id="image" name="imgList" type="file" multiple="multiple"
+                               onchange="fileCheck(this.files)" />
+                               <div class="img-wrap">
+                               <img style="width: 300px; height: 200px; display: inline-block;" th:each="file : *{files}" th:object="${file}" alt="" th:src="*{getDownloadURL()}"
+                               th:onclick="|removeFile(this,*{flIdx})|">
+                               </div>
+                            </div>
+                        </div>
+                        <div class="rejectMsg"></div>
+                        <div class="form-group">
+                            <div class="preview">
+                               <p>No files currently selected for upload</p>
+                            </div>
+                        </div>
+				
 					<div class='btn_area'>
 							<button id="btnModify" class="btn">수정</button>
 							<a id="btnSubmit" class="btn" th:href="@{/board/board-list}">목록</a>
@@ -53,19 +62,84 @@
 			</div>
 		</div>
   </section>
-<script type="text/javascript">
-let removeFile = (e,flIdx) => {
+<script type="text/javascript"  th:inline="javascript">
+var input = document.querySelector('#image');
+var preview = document.querySelector('.preview');
 
-	e.style.display = 'none';	
+input.addEventListener('change', updateImageDisplay);
 
-	let hidden = document.createElement('input');
-	hidden.type='hidden';
-	hidden.name='removeFlIdx';
-	hidden.value= flIdx;
-	document.querySelector('form').append(hidden);
+function updateImageDisplay() {
+	  while(preview.firstChild) {
+	    preview.removeChild(preview.firstChild);
+	  }
+
+	  const curFiles = input.files;
+	  if(curFiles.length === 0) {
+	    const para = document.createElement('p');
+	    para.textContent = 'No files currently selected for upload';
+	    preview.appendChild(para);
+	  } else {
+	    const list = document.createElement('ol');
+	    preview.appendChild(list);
+
+	    for(const file of curFiles) {
+	      const listItem = document.createElement('li');
+	      const para = document.createElement('p');
+	      if(validFileType(file)) {
+	        para.textContent = `File name ${file.name}, file size ${returnFileSize(file.size)}.`;
+	        const image = document.createElement('img');
+	        
+	        image.style.setProperty("width","300px");
+	        image.style.setProperty("height","200px");
+	        
+	        image.src = URL.createObjectURL(file);
+
+	        listItem.appendChild(image);
+	        listItem.appendChild(para);
+	      } else {
+	        para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+	        listItem.appendChild(para);
+	      }
+
+	      list.appendChild(listItem);
+	    }
+	  }
+}
+	
+const fileTypes = [
+	  "image/gif",
+	  "image/jpeg",
+	  "image/png",
+	  "image/jpg"
+];
+
+function validFileType(file) {
+	 return fileTypes.includes(file.type);
+}
+	
+function returnFileSize(number) {
+	if(number < 1024) {
+		return number + 'bytes';
+	} else if(number >= 1024 && number < 1048576) {
+		return (number/1024).toFixed(1) + 'KB';
+	} else if(number >= 1048576) {
+		return (number/1048576).toFixed(1) + 'MB';
+	}
 }
 
 
+
+let removeFile = (e,flIdx) => {
+
+	e.remove();
+	
+	let hidden = document.createElement('input');
+	hidden.type = 'hidden';
+	hidden.name = 'removeFlIdx';
+	hidden.value = flIdx;
+	
+	document.querySelector('form').append(hidden);
+}
 
 </script>
 </body>
