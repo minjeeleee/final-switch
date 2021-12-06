@@ -89,6 +89,18 @@ public class CardController {
 		return "card/my-card";
 	}
 	
+	@GetMapping("wish-card")
+	public String wishCard(@AuthenticationPrincipal MemberAccount memberAccount
+			,Model model) {
+		
+		List<Map<String, Object>> myExchangeCards = cardService.selectMyExchangeCard(memberAccount.getMemberIdx()); 
+		
+		model.addAttribute("myExchangeCards",myExchangeCards);
+		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
+		
+		return "card/wish-card";
+	}
+	
 	@GetMapping("view")
 	@ResponseBody
 	public void updateView(Card card) {
