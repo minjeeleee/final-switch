@@ -112,7 +112,7 @@ public interface CardRepository {
 	@Select("select * from (select c.* from card c order by views desc) where rownum < 6")
 	List<Card> selectCardsTop5();
 
-	@Select("select * from CardRequestList where req_idx=#{reqIdx}")
+	@Select("select * from Card_Request_List where req_idx=#{reqIdx}")
 	CardRequestList selectCardRequestListWithReqIdx(Integer reqIdx);
 
 	

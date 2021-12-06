@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.switchswitch.alarm.model.dto.Alarm;
 import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
+import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,20 @@ public class AlarmServiceImpl implements AlarmService {
 	private final AlarmRepository alarmRepository;
 	private final MemberRepository memberRepository;
 	
-	public List<Map<String, Object>> selectAlarmListWithReceiverIdx(Integer receiverIdx) {
+	public List<Object> selectAlarmListWithReceiverIdx(Integer receiverIdx, int page) {
+		List<Object> pageAndAlarm = new ArrayList<Object>();
+		int cntPerPage = 10;
+		Paging pageUtil = Paging.builder()
+				.url("/mypage/alarm")
+				.total(alarmRepository.selectAlarmCnt())
+				.curPage(page)
+				.blockCnt(5)
+				.cntPerPage(cntPerPage)
+				.build();
+		pageAndAlarm.add(pageUtil);
 		List<Map<String, Object>> alarmList = new ArrayList<Map<String,Object>>();
-		List<Alarm> alarms = alarmRepository.selectAlarmListWithReceiverIdx(receiverIdx);
+		List<Alarm> alarms = alarmRepository.selectAlarmListWithReceiverIdx(
+				(Map<String, Integer>) Map.of("receiverIdx", receiverIdx,"startAlarm",(page-1)*cntPerPage+1,"lastAlarm",(page-1)*cntPerPage+cntPerPage));
 		String msg = "";
 		for (Alarm alarm : alarms) {
 			switch(alarm.getAlarmType()) {
@@ -49,9 +61,9 @@ public class AlarmServiceImpl implements AlarmService {
 				break;
 			}
 			alarmList.add(Map.of("alarm", alarm, "message", msg));
-			
 		}
-		return alarmList;
+		pageAndAlarm.add(alarmList);
+		return pageAndAlarm;
 	}
 
 	public void insertAndUpdateAlarmList(List<Alarm> alarmList) {

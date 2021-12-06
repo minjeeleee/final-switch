@@ -1,36 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/subHeader :: subHeader"></head>
-<body>
-<!-- <header th:replace="fragments/bodyHeader :: bodyHeader"></header> -->  
-<!-- <nav th:replace="fragments/subMenu :: subNav"></nav> -->
-<div>
-	<p>알림</p>
-	<table th:styleappend ="|padding:10px 0 10px 0|">
-		<thead><tr><td>알림리스트</td></tr></thead>
-		<tbody>
-			<th:block th:each="alarm : ${alarms}" th:object="${alarm.alarm}">
-				<tr th:if="*{isRead} == 0" th:styleappend ="|background-color:rgba(152, 151, 165, 0.68)|" 
-					 th:onclick="|updateIsRead(this,*{alarmIdx})|">
-					<td th:text="${alarm.message}"></td><td th:text="*{sendDate}"></td>
-				</tr>
-				<tr th:if="*{isRead} == 1">
-					<td th:text="${alarm.message}"></td><td th:text="*{sendDate}"></td>
-				</tr>
-			</th:block>
-			
-		</tbody>
-	</table>
+
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<head>
+		<!-- refund -->
+	    <link rel="stylesheet" th:href="@{/resources/css/board/boardList.css}">
+	</head>
 	
-</div>
+<body>
+
+    <header th:replace="fragments/subBodyHeader :: header">
+    </header>
+	
+	<nav th:replace="fragments/subMenu" :: subNav>
+    </nav>
+
+    <section>
+
+        <div class="ref-title-container">
+            <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>알림 메시지</h1>
+                </div>
+
+                <div class="ref-img">
+                    <img th:src="@{/resources/img/infoback.png}" alt="">
+                </div>
+
+            </div>
+
+			<div class="refund-container inner-size">
+
+				<div class="histroy-table">
+					<table>
+						<thead>
+							<tr>
+								<th style="width: 10%;">No</th>
+								<th style="width: 75%;">내용</th>
+								<th style="width: 15%;">받은날짜</th>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="alarm,iterStat : ${alarms}"
+								th:object="${alarm.alarm}">
+								<tr th:if="*{isRead} == 0" th:onclick="|updateIsRead(this,*{alarmIdx})|"
+									style="height: 30px; line-height: 30px;">
+									<td th:text="${iterStat.count}"></td>
+									<td><a th:text="${alarm.message}"
+										th:href="|/exchange/detail/*{reqIdx}|"></a></td>
+									<td th:text="*{sendDate}"></td>
+								</tr>
+								<tr th:if="*{isRead} == 1" style="height: 30px; line-height: 30px;">
+									<td th:text="${iterStat.count}"></td>
+									<td><a th:text="${alarm.message}"
+										th:href="|/exchange/detail/*{reqIdx}|"></a></td>
+									<td th:text="*{sendDate}"><i class="fas fa-eye"></i></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+		</div>
+
+        <!-- 페이징 -->
+        <div class="pagin-wrap">
+			<nav class="paging" th:object=${paging}>
+				<ul class="pagination">
+					<li class="page-item"><a class="page-link"
+						th:href="|*{url}?page=*{prev}|" aria-label="Previous"> <span
+							aria-hidden="true">&laquo;</span>
+					</a></li>
+
+					<li class="page-item"
+						th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}">
+						<a th:href="|*{url}?page=${p}|" class="page-link" th:text="${p}">1</a>
+					</li>
+
+					<li class="page-item"><a class="page-link" href="#"
+						th:href="|*{url}?page=*{next}|"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</ul>
+			</nav>
+		</div>
 
 
-<footer>
-	<div th:replace="fragments/footer :: footer"></div>
-</footer>
-<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
-<script type="text/javascript" th:inline="javascript">
+    </section>
+
+	<footer>
+		<div th:replace="fragments/footer :: footer"></div>
+	</footer>
+	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
+	<script type="text/javascript" th:inline="javascript">
 	function updateIsRead(e,alarmIdx){
 		fetch("http://localhost:9090/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
 		.then(response => {
@@ -41,7 +106,8 @@
 			}
 		})
 	}
-</script>
-</body>
+	</script>
 
+
+</body>
 </html>

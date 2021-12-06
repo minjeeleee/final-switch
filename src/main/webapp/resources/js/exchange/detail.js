@@ -11,6 +11,7 @@ function requestRevise(){
 <!-- 요청수락 -->
 function requestAccept(){
 	$("#sendResponse").attr("action", "http://localhost:9090/exchange/accept/"+reqIdx);
+	console.dir("요청수락 보내기 전");
 	$("#sendResponse").submit();
 }
 <!-- 요청거절 -->
@@ -25,6 +26,7 @@ function exchangeCancelRequest(){
 	.attr("action", 
 			"http://localhost:9090/exchange/cancel-request/"+reqIdx
 			+"?status="+status);
+	console.dir("요청수락 보내기 후");
 	$("#sendResponse").submit();
 }
 <!-- 교환취소요청 수락 -->
@@ -72,7 +74,7 @@ for(let i = 0; i < loofCnt; i++){
 	let cardContainer = document.createElement("div");
 	let card = document.createElement("div");
 	let img = document.createElement("img");
-	img.setAttribute("src", "../resources/img/defaultCard.png");
+	img.setAttribute("src", "/resources/img/defaultCard.png");
 	cardContainer.setAttribute("class", "card-contatiner");
 	cardContainer.setAttribute("id", "default-card")
 	card.setAttribute("class", "card");

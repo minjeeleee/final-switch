@@ -5,11 +5,11 @@
 <head th:replace="fragments/subHeader :: subHeader"></head>
 <head>
 <!-- card -->
-<link rel="stylesheet" href="../resources/css/card/card.css">
+<link rel="stylesheet" th:href="@{/resources/css/card/card.css}">
 <!-- bodycss -->
-<link rel="stylesheet" href="../resources/css/exchange/exchangeCard.css">
+<link rel="stylesheet" th:href="@{/resources/css/exchange/exchangeCard.css}">
 <!-- alarm -->
-<link rel="stylesheet" href="../resources/css/alarm/alarm.css">
+<link rel="stylesheet" th:href="@{/resources/css/alarm/alarm.css}">
 </head>
 
 <body>
@@ -233,9 +233,10 @@
 		let requestMemIdx = [[${cardRequestList.requestMemIdx}]];
 		let requestor = [[${#authentication.principal.memberIdx}]];
 		let status = requestor == requestMemIdx ? "APPLICANTCANCEL" : "OWNERCANCEL";
+		console.dir(status);
 		let counterpartNick = [[${counterpartNick}]];
 	</script>
-	<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/exchange/detail.js}"></script>
+	<script type="text/javascript" th:inline="javascript" th:src="@{/resources/js/exchange/detail.js}"></script>
 
 </body>
 </html>

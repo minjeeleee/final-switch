@@ -74,7 +74,6 @@ public class ExchangeController {
 			, Model model) {
 		//교환요청리스트
 		CardRequestList crl = exchangeService.requestExchange(certifiedMember, wishCardIdx, cardIdxList, offerPoint);
-		System.out.println(crl);
 		//포인트 holding ?? 후 가용 포인트
 		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
@@ -86,10 +85,10 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	@GetMapping("detail")
-	public void detail(
+	@GetMapping("detail/{reqIdx}")
+	public String detail(
 			@AuthenticationPrincipal MemberAccount certifiedMember,
-			@RequestParam(required = false) Integer reqIdx,
+			@PathVariable Integer reqIdx,
 			Model model) {
 		
 		if(reqIdx == null) {
@@ -130,6 +129,7 @@ public class ExchangeController {
 		model.addAttribute("cardRequestCancelList", cardService.selectCardRequestCancelListWithReqIdx(reqIdx));
 		
 		model.addAttribute("status", cardService.selectExchangeStatusType(cardRequestList.getReqIdx()));
+		return "exchange/detail";
 	}
 	
 	@GetMapping("reject/{reqIdx}")
@@ -156,20 +156,25 @@ public class ExchangeController {
 	
 	@GetMapping("accept/{reqIdx}")
 	public String accept(@PathVariable Integer reqIdx, Model model) {
+		logger.info("1");
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		logger.info(cardRequestList.toString());
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
+		logger.info("2");
 		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 생성
 		cardService.acceptRequest(cardRequestList,"ONGOING");
+		logger.info("3");
 		//요청 수락시 채팅방 생성
 		chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
+		logger.info("4");
 		//수락 알림 보내기
 		model.addAttribute("alarmType", "요청수락");
 		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
 		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
-		model.addAttribute("url","/exchange/detail");
+		model.addAttribute("url","/exchange/detail/"+reqIdx);
 		
 		return "/common/alarm";
 	}
@@ -198,7 +203,7 @@ public class ExchangeController {
 	}
 	
 	@GetMapping("cancel-request/{reqIdx}")
-	public void cancelRequest(@PathVariable Integer reqIdx
+	public String cancelRequest(@PathVariable Integer reqIdx
 								,@RequestParam String status
 								, Model model) {
 		//교환요청리스트
@@ -219,10 +224,12 @@ public class ExchangeController {
 			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
 		}
 		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
 	}
 	
 	@GetMapping("exchange-cancel/{reqIdx}")
-	public void exchangeCancel(@PathVariable Integer reqIdx
+	public String exchangeCancel(@PathVariable Integer reqIdx
 								,@AuthenticationPrincipal MemberAccount certifiedMember
 								, Model model) {
 		//교환요청리스트
@@ -246,6 +253,8 @@ public class ExchangeController {
 			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
 		}
 		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
 	}
 	
 	@GetMapping("complete/{reqIdx}")
