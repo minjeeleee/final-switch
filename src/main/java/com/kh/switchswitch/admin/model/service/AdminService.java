@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -91,7 +92,15 @@ public class AdminService {
 	}
 	
 	public void insertMenu(Menu menu) {
-		adminRepository.insertMenu(menu);
+		
+		try {
+			Thread.sleep(30000);
+			adminRepository.insertMenu(menu);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	public List<Menu> selectMenuList() {

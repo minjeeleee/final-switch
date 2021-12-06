@@ -21,12 +21,12 @@ public class MemberUpdateValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz.equals(MemberUpdateForm.class);
+		return clazz.equals(MemberUpdate.class);
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		MemberUpdateForm form = (MemberUpdateForm) target;
+		MemberUpdate form = (MemberUpdate) target;
 		boolean valid;
 		
 		if(form.getMemberPass().equals("")) form.setMemberPass(null);
@@ -37,6 +37,7 @@ public class MemberUpdateValidator implements Validator {
 			valid = Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Zㄱ-힣0-9]).{8,}", form.getMemberPass());
 			if(!valid) {
 				errors.rejectValue("memberPass", "error-memberPass", "비밀번호는 8글자 이상의 숫자 영문자 특수문자 조합 입니다.");
+				System.out.println(errors.getFieldValue("memberPass"));
 			}
 		}
 		/*

@@ -23,7 +23,7 @@ body {
   background-color: #F3F5F8;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 15px;
-  color: #FACE7F; }
+  color: black; }
 
 a {
   color: #630A10; }
@@ -361,7 +361,7 @@ ul.notifications > li {
   z-index: 9; }
   .sidebar .nav > li > a {
     padding: 18px 30px;
-    color: #AEB7C2;
+    color: white;
     }
     .sidebar .nav > li > a:hover, .sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
       color: #fff;
@@ -369,7 +369,7 @@ ul.notifications > li {
       .sidebar .nav > li > a:hover i, .sidebar .nav > li > a:focus i, .sidebar .nav > li > a.active i {
         color: #FACE7F; }
     .sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
-      background-color: #630A10;
+      background-color: rgba(0, 0, 0, 0.445);
        }
     .sidebar .nav > li > a[data-toggle="collapse"] .icon-submenu {
       display: inline-block;
