@@ -99,6 +99,8 @@ public class ChatServiceImpl implements ChatService{
 			}
 			if(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx() != null) {
 				attendeeFileList.add(memberRepository.selectFileInfoByFlIdx(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx()));
+			}else {
+				attendeeFileList.add(new FileDTO());
 			}
 			isReadList.add(chatRepository.selectCountOfIsReadByChattingIdx(chatting.getChattingIdx(),memberIdx));
 		}
