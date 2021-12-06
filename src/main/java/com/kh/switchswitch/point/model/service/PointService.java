@@ -4,6 +4,7 @@ import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
 import com.kh.switchswitch.point.model.dto.PointRefund;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 
 public interface PointService {
 
@@ -14,5 +15,7 @@ public interface PointService {
 	String checkAccount(InquiryRealName inquiryRealName);
 
 	void refundPoint(MemberAccount certifiedMember, PointRefund pointRefund);
+
+	SavePoint selectSavePointByMemberIdx(Integer memberIdx);
 
 }

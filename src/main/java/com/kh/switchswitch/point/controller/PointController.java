@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
 import com.kh.switchswitch.point.model.dto.PointRefund;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.service.PointService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("point")
 public class PointController {
@@ -47,7 +51,10 @@ public class PointController {
 	public void pointHistory2() {}
 	
 	@GetMapping("point-return")
-	public void pointReturn() {}
+	public void pointReturn(@AuthenticationPrincipal MemberAccount memberAccount, Model model) {
+		SavePoint savePoint = pointService.selectSavePointByMemberIdx(memberAccount.getMemberIdx());
+		model.addAttribute("availableBal", savePoint.getAvailableBal());
+	}
 	
 	@GetMapping("point-return2")
 	public void pointReturn2() {}
@@ -77,10 +84,18 @@ public class PointController {
 	@GetMapping("refund")
 	public String refundPoint(@AuthenticationPrincipal MemberAccount certifiedMember , PointRefund pointRefund, Model model){
 		
+		switch(pointRefund.getBankName()){
+		   case "004" : pointRefund.setBankName("국민은행"); break;
+		   case "020" : pointRefund.setBankName("우리은행"); break;
+		   case "081" : pointRefund.setBankName("하나은행"); break;
+		   case "088" : pointRefund.setBankName("신한은행"); break;
+		   case "090" : pointRefund.setBankName("카카오뱅크"); break;
+		}
+		
 		pointService.refundPoint(certifiedMember, pointRefund);
 		
 		model.addAttribute("msg", "환급신청이 완료되었습니다.");
-		model.addAttribute("url", "point/point-return");
+		model.addAttribute("url", "/point/point-return");
 		
 		return "common/result";
 	}

@@ -103,4 +103,6 @@ public interface CardService {
 	CardRequestCancelList selectCardRequestCancelListWithReqIdx(int reqIdx);
 
 	void requestCancel(Integer reqIdx, String status);
+
+	void updateCardViews(Card card);
 }

@@ -12,7 +12,7 @@ import com.kh.switchswitch.alarm.model.dto.Alarm;
 @Mapper
 public interface AlarmRepository {
 
-	@Select("select * from alarm where receiver_idx=#{receiverIdx} and sysdate < send_date + 7 order by is_read desc, alarm_idx desc")
+	@Select("select * from alarm where receiver_idx=#{receiverIdx} and sysdate < send_date + 7 order by is_read, alarm_idx desc")
 	List<Alarm> selectAlarmListWithReceiverIdx(Integer receiverIdx);
 
 	@Insert("insert into alarm values(sc_alarm_idx.nextval, #{senderIdx}, #{receiverIdx}, #{alarmType}, 0, #{reqIdx}, sysdate)")
