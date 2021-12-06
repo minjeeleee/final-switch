@@ -15,7 +15,6 @@ import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 @Mapper
 public interface ExchangeRepository {
 
-	@Insert("insert into exchange_status values(sc_e_idx.nextval, #{requestMemIdx}, #{requestedMemIdx}, 'ONGOING', #{propBalance}, #{reqIdx}, #{freqIdx})" )
 	void insertExchangeStatus(ExchangeStatus exchangeStatus);
 
 
