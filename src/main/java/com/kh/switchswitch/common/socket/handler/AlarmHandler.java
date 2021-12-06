@@ -46,18 +46,17 @@ public class AlarmHandler extends TextWebSocketHandler {
 		
 		System.out.println("#ChattingController, handleMessage");
         
-        //protocol: 알람타입orisRead, alarmIDX, 수신자IDX, 요청IDX
+        //protocol: 알람타입, 수신자IDX, 요청IDX
         String msg = message.getPayload();
         if(!StringUtils.isEmpty(msg)) {
         	String[] strs = msg.split(",");
         	String alarmType = strs[0];
-        	Integer alarmIdx = strs[1].equals("") ? null : Integer.parseInt(strs[1]);
-        	Integer receiverIdx = Integer.parseInt(strs[2]);
+        	Integer receiverIdx = Integer.parseInt(strs[1]);
         	
         	newAlarm.setAlarmType(alarmType);
         	newAlarm.setSenderIdx(loginMember.getMemberIdx());
         	newAlarm.setReceiverIdx(receiverIdx);
-    		newAlarm.setReqIdx(Integer.parseInt(strs[3]));
+    		newAlarm.setReqIdx(Integer.parseInt(strs[2]));
 			alarmRepository.insertAlarm(newAlarm);
 			
 			newAlarm.setAlarmIdx(alarmRepository.selectCurrScAlarmIdx());

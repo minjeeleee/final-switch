@@ -98,6 +98,7 @@ public class CardServiceImpl implements CardService {
 
 	private CardRequestCancelList convertCardRequestListToCardRequestCancelList(CardRequestList cardRequestList) {
 		CardRequestCancelList cardRequestCancelList = new CardRequestCancelList();
+		cardRequestCancelList.setReqIdx(cardRequestList.getReqIdx());
 		cardRequestCancelList.setRequestedMemIdx(cardRequestList.getRequestedMemIdx());
 		cardRequestCancelList.setRequestMemIdx(cardRequestList.getRequestMemIdx());
 		cardRequestCancelList.setRequestedCard(cardRequestList.getRequestedCard());
