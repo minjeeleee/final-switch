@@ -16,7 +16,7 @@ public interface BoardService {
 	//게시글 목록
 	Map<String,Object> selectBoardList(int page);
 	//게시글 수정
-	void modifyBoard(Board board, List<MultipartFile> files);
+	void modifyBoard(Board board, List<MultipartFile> imgList);
 	//게시글 삭제
 	void deleteBoard(int bdIdx);
 	

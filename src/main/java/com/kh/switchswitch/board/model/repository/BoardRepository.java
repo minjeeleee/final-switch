@@ -40,7 +40,7 @@ public interface BoardRepository {
 	//파일업로드
 	@Insert("insert into file_info(fl_idx,bd_idx,origin_file_name, rename_file_name, save_path)"
 			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
-	void insertFileInfo(FileDTO fileDTO);
+	void insertFileInfo(FileDTO fileUpload);
 	
 	//파일다운
 	@Select("select * from file_info where bd_idx = #{bdIdx}")
@@ -72,6 +72,9 @@ public interface BoardRepository {
 
 	@Update("update reply set is_del = 1 where cm_idx = #{cmIdx}")	
 	void deleteReply(int cmIdx);
+	
+	@Update("update file_info set is_del = 1 where bd_idx=#{bdIdx}")
+	void deleteBoardImg(Integer bdIdx);
 
 
 

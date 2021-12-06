@@ -17,6 +17,9 @@
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 		<link href="../resources/css/board/board.css" rel="stylesheet" />
 		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<style type="text/css">
+
+</style>
 </head>
 <body>
 
@@ -64,6 +67,10 @@
 						</div>
 						<div class="section_container">
 							<pre>[[*{board.content}]]</pre>
+							<div class="file-img">
+								<!--  이미지 -->
+								<img th:each="file : ${datas.files}" th:object="${file}" alt="" th:src="*{getDownloadURL()}" width="500px" height="auto">
+							</div>
 						</div>
 					</div>
 					

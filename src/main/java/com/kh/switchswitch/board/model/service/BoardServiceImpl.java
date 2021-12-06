@@ -64,12 +64,13 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Transactional
-	public void modifyBoard(Board board, List<MultipartFile> files) {
+	public void modifyBoard(Board board, List<MultipartFile> imgList) {
 		FileUtil  fileUtil = new FileUtil();
 		boardRepository.modifyBoard(board);
-
+		//삭제
+		boardRepository.deleteBoardImg(board.getBdIdx());
 		
-		for (MultipartFile multipartFile : files) {
+		for (MultipartFile multipartFile : imgList) {
 			if(!multipartFile.isEmpty()) {
 				boardRepository.modifyFileInfo(fileUtil.fileUpload(multipartFile),board.getBdIdx());
 			}
