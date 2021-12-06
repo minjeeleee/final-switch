@@ -76,6 +76,12 @@ public interface BoardRepository {
 	@Update("update file_info set is_del = 1 where bd_idx=#{bdIdx}")
 	void deleteBoardImg(Integer bdIdx);
 
+	@Select("select * from community where bd_idx=#{bdIdx}")
+	Board selectBoardModifyBdIdx(int bdIdx);
+
+	@Select("select * from file_info where is_del= 0 and bd_idx=#{bdIdx}")
+	List<FileDTO> selectFileInfoBybdIdx(int bdIdx);
+
 
 
 

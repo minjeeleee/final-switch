@@ -94,6 +94,7 @@
 						</div>
 					</div>
 
+
 					<!-- 댓글 입력란 -->
 					<div class="form-group shadow-textarea">
 						<th:if test="${principal == null}">
@@ -104,7 +105,7 @@
 							<div style="position: relative; height: 100%">
 								<div>
 										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
-										<input type="button" class="btn btn-default" id="commentCreate" onclick="commentCreate()" style="width: 100%;" value="작성">
+										<input type="button" class="btn btn-default" id="commentCreate" onclick="uploadConfirm()" style="width: 100%;" value="작성">
 										<input type="hidden"  th:value="${datas.board.bdIdx}" class="bdIdx">
 								</div>
 							</div>

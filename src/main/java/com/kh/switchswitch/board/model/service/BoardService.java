@@ -28,6 +28,8 @@ public interface BoardService {
 	void modifyReply(Reply reply);
 	
 	void deleteReply(int cmIdx);
+	
+	Map<String, Object> selectBoardModifyBdIdx(int bdIdx);
 
 
 

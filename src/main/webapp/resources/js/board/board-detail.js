@@ -20,8 +20,15 @@ function replyList(){
 	return false;
 }
 
+function uploadConfirm(cmIdx){
+	if(confirm("댓글을 입력하시겠습니까?")){
+		commentCreate(cmIdx);
+	}else{
+		return;
+	}
+}
 //댓글 입력
-function commentCreate(){
+function commentCreate(data){
 	var content = $("#commentContent").val();
 	
 	if(content==""){
@@ -46,10 +53,14 @@ function commentCreate(){
 		 beforeSend: function (xhr) {
             xhr.setRequestHeader(header,token);
         },
-		success:(data) => {
-			console.dir(data);
+		success:(text) => {
+			console.dir(text);
+			console.dir(document.getElementById(cmIdx));
+			document.getElementById(cmIdx).style.visibility = 'visible';
+			alert("댓글이 입력되었습니다.");
 
 		},
+		
 		error:(error) => {
 			 console.log(error)
 		}

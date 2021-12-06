@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.repository.BoardRepository;
+import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
@@ -104,6 +105,14 @@ public class BoardServiceImpl implements BoardService{
 	public void deleteReply(int cmIdx) {
 		boardRepository.deleteReply(cmIdx);
 		
+	}
+
+	@Override
+	public Map<String, Object> selectBoardModifyBdIdx(int bdIdx) {
+		Board board = boardRepository.selectBoardModifyBdIdx(bdIdx);
+		List<FileDTO> files = boardRepository.selectFileInfoBybdIdx(bdIdx);
+		
+		return Map.of("board",board,"files",files );
 	}
 
 
