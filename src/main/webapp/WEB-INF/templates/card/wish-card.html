@@ -18,7 +18,7 @@
 
             <div class="wscd-innerwrap inner-size">
                 <div class="wscd-title">
-                    <h1>찜카드</h1>
+                    <h1>나의찜카드</h1>
                 </div>
 
                 <div class="wscd-img">
@@ -28,17 +28,12 @@
             </div>
 
             <div class="mk-card-list inner-size">
-                <div class="search-info">
-                    <p>120개 카드 찾음</p>
-                    <div class="divid"></div>
-                    <p>검색 조건 : "전체검색"</p>
-                </div>
 
                 <div class="card-list">
     
-	            <div class="card-container" style="width: 180px;" th:each="myExchangeCard : ${myExchangeCards}" th:object="${myExchangeCard}">
+	            <div class="card-container" style="width: 180px;" th:each="wishCard : ${wishCards}" th:object="${wishCard}">
 					<div class="card-name">
-						<p>[[*{myExchangeCard.name}]]</p>
+						<p>[[*{wishCard.name}]]</p>
 					</div>
 					<div class="grade-container">
 						<div class="icon">
@@ -68,11 +63,11 @@
 							<p>물건 평점</p>
 							<!-- 물건 별점 -->
 							<div class="star">
-								<th:block th:each="num : *{#numbers.sequence(1,myExchangeCard.condition)}">
+								<th:block th:each="num : *{#numbers.sequence(1,wishCard.condition)}">
 									<i class="fas fa-star full-star"></i>
 								</th:block>
 								<th:block
-									th:each="num : *{#numbers.sequence(0,5-myExchangeCard.condition)}">
+									th:each="num : *{#numbers.sequence(0,5-wishCard.condition)}">
 									<i th:unless="${num == 0}" class="far fa-star"></i>
 								</th:block>
 							</div>
@@ -81,12 +76,12 @@
 					<div class="address">
 						<!-- 주소 -->
 						<p>
-							지역 <span th:text="*{myExchangeCard.region}"></span> <span
-								th:text="*{myExchangeCard.regionDetail}"></span>
+							지역 <span th:text="*{wishCard.region}"></span> <span
+								th:text="*{wishCard.regionDetail}"></span>
 						</p>
 					</div>
 					<div class="card">
-						<input type="hidden" th:value="*{myExchangeCard.condition}"> <img
+						<input type="hidden" th:value="*{wishCard.condition}"> <img
 							class="card-box" alt="">
 						<div class="card-img">
 							<!-- 카드 물건 이미지 -->

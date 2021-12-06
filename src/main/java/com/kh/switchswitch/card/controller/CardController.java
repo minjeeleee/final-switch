@@ -93,9 +93,9 @@ public class CardController {
 	public String wishCard(@AuthenticationPrincipal MemberAccount memberAccount
 			,Model model) {
 		
-		List<Map<String, Object>> myExchangeCards = cardService.selectMyExchangeCard(memberAccount.getMemberIdx()); 
+		List<Map<String, Object>> wishCard = cardService.selectWishCard(memberAccount.getMemberIdx()); 
 		
-		model.addAttribute("myExchangeCards",myExchangeCards);
+		model.addAttribute("wishCards",wishCard);
 		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
 		
 		return "card/wish-card";
