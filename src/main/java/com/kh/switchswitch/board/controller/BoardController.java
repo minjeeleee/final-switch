@@ -52,13 +52,13 @@ public class BoardController {
 		// ,@SessionAttribute("authentication") Member member
 		board.setUserId(member.getMemberNick());
 		boardService.insertBoard(imgList, board);
-		return "redirect:/board/board-list";
+		return "redirect:/board/board-list2";
 	}
 
 	@GetMapping("board-list")
 	public String boardList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		model.addAllAttributes(boardService.selectBoardList(page));
-		return "board/board-list";
+		return "board/board-list2";
 	}
 
 	// 이미지
@@ -83,7 +83,7 @@ public class BoardController {
 */
 	@GetMapping("board-modify")
 	public void boardModify(Model model, int bdIdx) {
-		Map<String, Object> commandMap = boardService.selectBoardByIdx(bdIdx);
+		Map<String, Object> commandMap = boardService.selectBoardModifyBdIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 	}
 
@@ -99,7 +99,7 @@ public class BoardController {
 	@PostMapping("delete")
 	public String deleteBoard(int bdIdx) {
 		boardService.deleteBoard(bdIdx);
-		return "redirect:/board/board-list";
+		return "redirect:/board/board-list2";
 	}
 
 	// AJAX 호출 (댓글 등록)
@@ -111,6 +111,8 @@ public class BoardController {
 		boardService.boardReplyInsert(reply);
 		return "success";
 	}
+	
+	//v2
 	@CrossOrigin("*")
 	@ResponseBody
 	@PostMapping("modify-reply")
