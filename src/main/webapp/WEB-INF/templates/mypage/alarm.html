@@ -48,15 +48,19 @@
 								<tr th:if="*{isRead} == 0" th:onclick="|updateIsRead(this,*{alarmIdx})|"
 									style="height: 30px; line-height: 30px;">
 									<td th:text="${iterStat.count}"></td>
-									<td><a th:text="${alarm.message}"
-										th:href="|/exchange/detail/*{reqIdx}|"></a></td>
+									<td th:if="*{alarmType}=='평점요청'">
+									<p th:text="${alarm.message}" th:onclick="move()"></p>
+									</td>
+									<td th:unless="*{alarmType}=='평점요청'">
+									<a th:text="${alarm.message}" th:href="|/exchange/detail/*{reqIdx}|"></a>
+									</td>
 									<td th:text="*{sendDate}"></td>
 								</tr>
 								<tr th:if="*{isRead} == 1" style="height: 30px; line-height: 30px;">
 									<td th:text="${iterStat.count}"></td>
 									<td><a th:text="${alarm.message}"
 										th:href="|/exchange/detail/*{reqIdx}|"></a></td>
-									<td th:text="*{sendDate}"><i class="fas fa-eye"></i></td>
+									<td th:text="*{sendDate}"></td>
 								</tr>
 							</th:block>
 						</tbody>
@@ -94,18 +98,59 @@
 	<footer>
 		<div th:replace="fragments/footer :: footer"></div>
 	</footer>
+	
+	<div class="noticePopUp notice">
+		<div class="notice_close_wrap">
+			<i class="fas fa-times" id="notice_close"></i>
+		</div>
+		<div class="notice_msg_wrap">
+			<p id="notice_msg"></p>
+		</div>
+		<div class="notice_btn_wrap">
+			<button type="button" id="submit_btn">제출</button>
+		</div>
+	</div>
+	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
 	<script type="text/javascript" th:inline="javascript">
 	function updateIsRead(e,alarmIdx){
 		fetch("http://localhost:9090/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
 		.then(response => {
 			if(response.ok){
-				e.style.backgroundColor = "white";
+				e.style.backgroundColor = "lightyellow";
 			} else {
 				throw new Error(response.status);
 			}
 		})
 	}
+	
+	<!-- 교환완료 -->
+	function exchangeComplete(){
+		<!-- 사용자평가 모달창 생성 -->
+		let msg = counterpartNick+"님과의 교환은 어떠셨나요?<br>"
+			+ counterpartNick + "에 대한 평점을 남겨주세요.";
+		noticeSet(msg);
+	}
+	
+	document.querySelector("#notice_close").addEventListener("click", (e)=> {
+		noticeInitialize();
+	});
+	
+	function noticeInitialize(){
+		document.querySelector("#notice_msg").innerHTML = "";
+		document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
+	}
+
+	function noticeSet(msg){
+		document.querySelector("#notice_msg").innerHTML = msg;
+		document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
+	}
+
+	function move(){
+		exchangeComplete();
+		<!-- 제출 -->
+		location.href="http://localhost:9090/market/cardmarket";
+	})
 	</script>
 
 

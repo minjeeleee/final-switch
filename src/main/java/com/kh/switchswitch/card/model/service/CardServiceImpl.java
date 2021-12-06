@@ -401,4 +401,8 @@ public class CardServiceImpl implements CardService {
 		updateCardWithCardIdx(card);
 	}
 
+	public void cancelRequestReject(Integer reqIdx, String status) {
+		updateExchangeStatus(reqIdx, status);
+	}
+
 }
