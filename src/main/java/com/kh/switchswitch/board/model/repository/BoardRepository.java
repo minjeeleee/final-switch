@@ -40,7 +40,7 @@ public interface BoardRepository {
 	//파일업로드
 	@Insert("insert into file_info(fl_idx,bd_idx,origin_file_name, rename_file_name, save_path)"
 			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
-	void insertFileInfo(FileDTO fileDTO);
+	void insertFileInfo(FileDTO fileUpload);
 	
 	//파일다운
 	@Select("select * from file_info where bd_idx = #{bdIdx}")
@@ -57,7 +57,7 @@ public interface BoardRepository {
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
-	@Select("SELECT * FROM reply WHERE  is_del=0 ORDER BY cm_idx DESC")
+	@Select("SELECT * FROM reply WHERE  is_del=0 and bd_idx=#{bdIdx} ORDER BY cm_idx DESC")
 	List<Reply> getCommentList(Integer bdIdx);
 
 	@Insert("insert into reply(CM_IDX, CM_PARENT,BD_IDX,USER_ID,CONTENT)"
@@ -72,6 +72,15 @@ public interface BoardRepository {
 
 	@Update("update reply set is_del = 1 where cm_idx = #{cmIdx}")	
 	void deleteReply(int cmIdx);
+	
+	@Update("update file_info set is_del = 1 where bd_idx=#{bdIdx}")
+	void deleteBoardImg(Integer bdIdx);
+
+	@Select("select * from community where bd_idx=#{bdIdx}")
+	Board selectBoardModifyBdIdx(int bdIdx);
+
+	@Select("select * from file_info where is_del= 0 and bd_idx=#{bdIdx}")
+	List<FileDTO> selectFileInfoBybdIdx(int bdIdx);
 
 
 
