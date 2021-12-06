@@ -57,7 +57,7 @@ public interface BoardRepository {
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
-	@Select("SELECT * FROM reply WHERE  is_del=0 ORDER BY cm_idx DESC")
+	@Select("SELECT * FROM reply WHERE  is_del=0 and bd_idx=#{bdIdx} ORDER BY cm_idx DESC")
 	List<Reply> getCommentList(Integer bdIdx);
 
 	@Insert("insert into reply(CM_IDX, CM_PARENT,BD_IDX,USER_ID,CONTENT)"
