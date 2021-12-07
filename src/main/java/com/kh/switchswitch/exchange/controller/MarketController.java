@@ -176,8 +176,14 @@ public class MarketController {
         
 		if(memberAccount != null) {
 			CardRequestList requestCard = cardRepository.selectRequestdCardByMemberIdx(searchCard.getCardIdx(),memberAccount.getMemberIdx());
-			searchCard.setReqIdx(requestCard.getReqIdx());
-			searchCard.setRequestedCardIdx(requestCard.getRequestedCard());
+			log.info("requestCard={}" ,requestCard);
+			if(requestCard == null) {
+				searchCard.setReqIdx(0);
+				searchCard.setRequestedCardIdx(0);
+			} else {
+				searchCard.setReqIdx(requestCard.getReqIdx());
+				searchCard.setRequestedCardIdx(requestCard.getRequestedCard());
+			}
 		}
         
         List imgUrl = new ArrayList();
