@@ -24,8 +24,7 @@ public class ChatServiceImpl implements ChatService{
 
 	public List<Map<String, Object>> selectChatMessageByChattingIdx(Integer chattingIdx,Integer memberIdx) {
 		List<Map<String, Object>> chatMessageList = new ArrayList<Map<String,Object>>();
-		List<ChatMessages> chatMessages = chatRepository.selectChatMessagesList(chattingIdx);
-		for (ChatMessages chatMessage : chatMessages) {
+		for (ChatMessages chatMessage : chatRepository.selectChatMessagesList(chattingIdx)) {
 			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
 			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
 				chatRepository.updateChatIsRead(chatMessage.getCmIdx());
@@ -34,7 +33,7 @@ public class ChatServiceImpl implements ChatService{
 			if(chatMessage.getSenderId() == null) senderNick = "(알수없음)";
 			else senderNick = getNick(chatMessage.getSenderId());
 			chatMessageList.add(
-					Map.of("chatMessage",chatMessage
+					Map.of("chatMessage",chatRepository.selectChatMessages(chatMessage.getCmIdx())
 							,"senderName",senderNick
 							,"sendTime",chatRepository.selectSendTimeByCmId(chatMessage.getCmIdx())));
 		}

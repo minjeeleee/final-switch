@@ -17,6 +17,8 @@ public interface ChatRepository {
 	@Select("select * from chat_messages where chatting_idx=#{chattingIdx}  order by cm_idx asc")
 	List<ChatMessages> selectChatMessagesList(Integer receiverIdx);
 
+	@Select("select * from chat_messages where cm_idx=#{cmIdx}")
+	ChatMessages selectChatMessages(Integer cmIdx);
 	
 	@Insert("insert into chat_messages values(sc_chat_idx.nextval,#{chattingIdx},#{senderId},#{message},sysdate,1)")
 	void insertChatMessage(ChatMessages chatMessages);
