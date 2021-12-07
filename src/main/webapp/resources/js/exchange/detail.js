@@ -76,6 +76,7 @@ for(let i = 0; i < loofCnt; i++){
 	let img = document.createElement("img");
 	img.setAttribute("src", "/resources/img/defaultCard.png");
 	cardContainer.setAttribute("class", "card-contatiner");
+	cardContainer.setAttribute("style", "width:230px;");
 	cardContainer.setAttribute("id", "default-card")
 	card.setAttribute("class", "card");
 	cardContainer.appendChild(card);

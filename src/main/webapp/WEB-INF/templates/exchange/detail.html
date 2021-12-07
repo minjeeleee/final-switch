@@ -68,12 +68,16 @@
 			</div>
 		</div>
 
+
+		<div class="exc-title-container">
 		<div class="exc-single-title inner-size">
 
 			<p>교환희망카드</p>
 
 		</div>
 		<div class="refund-container inner-size">
+			
+			
 			
 			<div class="exc-whish-card-table" id="appendArea">
 				<th:block th:if="${requestCardlist}">
@@ -139,6 +143,7 @@
 						</div>
 					</div>
 				</th:block>	
+			</div>
 			</div>
 
 		</div>
@@ -206,7 +211,6 @@
 				<th:block th:if="${cardRequestCancelList}">
 					<strong>취소 또는 거절된 거래</strong>
 				</th:block>
-				<button type="button" class="back-button" onclick="history.back()">뒤로</button>
 			</div>
 		</div>
 		<form id="sendResponse"></form>
@@ -230,12 +234,10 @@
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
 	<script type="text/javascript" th:inline="javascript">
-		let reqIdx = [[${cardRequestList.reqIdx}]];
+		let reqIdx = $("#reqIdx").val();
 		let requestMemIdx = [[${cardRequestList.requestMemIdx}]];
 		let requestor = [[${#authentication.principal.memberIdx}]];
-		console.dir(reqIdx);
 		let status = requestor == requestMemIdx ? "APPLICANTCANCEL" : "OWNERCANCEL";
-		
 		console.dir(status);
 		let counterpartNick = [[${counterpartNick}]];
 	</script>
@@ -243,4 +245,3 @@
 
 </body>
 </html>
-

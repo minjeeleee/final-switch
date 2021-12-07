@@ -26,6 +26,10 @@ public class ChatServiceImpl implements ChatService{
 		List<Map<String, Object>> chatMessageList = new ArrayList<Map<String,Object>>();
 		List<ChatMessages> chatMessages = chatRepository.selectChatMessagesList(chattingIdx);
 		for (ChatMessages chatMessage : chatMessages) {
+			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
+			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
+				chatRepository.updateChatIsRead(chatMessage.getCmIdx());
+			}
 			String senderNick = "";
 			if(chatMessage.getSenderId() == null) senderNick = "(알수없음)";
 			else senderNick = getNick(chatMessage.getSenderId());
@@ -33,10 +37,6 @@ public class ChatServiceImpl implements ChatService{
 					Map.of("chatMessage",chatMessage
 							,"senderName",senderNick
 							,"sendTime",chatRepository.selectSendTimeByCmId(chatMessage.getCmIdx())));
-			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
-			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
-				chatRepository.updateChatIsRead(chatMessage.getCmIdx());
-			}
 		}
 		return chatMessageList;
 	}
@@ -64,12 +64,15 @@ public class ChatServiceImpl implements ChatService{
 
 	//채팅방 생성
 	public void makeChatRoom(Integer requestedMemIdx, Integer requestMemIdx) {
-		Chatting chatting = new Chatting();
 		//해당 회원들이 있는 채팅방이 존재하지 않다면 채팅방 생성
-		if(chatRepository.selectChattingByAttendeeMemIdxs(requestedMemIdx, requestedMemIdx) == null) {
-			 chatRepository.insertChatting(requestedMemIdx,requestedMemIdx);
-			 chatting = chatRepository.selectChattingByAttendeeMemIdxs(requestedMemIdx, requestedMemIdx);
-			 chatRepository.insertChattingHistory(chatting);
+		if(chatRepository.selectChattingByAttendeeMemIdxs(requestedMemIdx, requestMemIdx) == null) {
+			 Chatting chatting = new Chatting();
+			 chatting.setAttendee1(requestMemIdx);
+			 chatting.setAttendee2(requestedMemIdx);
+			 chatRepository.insertChatting(chatting);
+			 //history table에 추가
+			Chatting hiChatting = chatRepository.selectChattingByAttendeeMemIdxs(requestedMemIdx, requestMemIdx);
+			 chatRepository.insertChattingHistory(hiChatting);
 		}
 	}
 
@@ -88,7 +91,12 @@ public class ChatServiceImpl implements ChatService{
 		List<Integer> isReadList = new ArrayList<Integer>();
 		for (Chatting chatting : chattingList) {
 			Integer attendeeIdx = 0;
-			lastMessageList.add(chatRepository.selectLastChatMessages(chatting.getChattingIdx()));
+			if(chatRepository.selectLastChatMessages(chatting.getChattingIdx()) != null) {
+				lastMessageList.add(chatRepository.selectLastChatMessages(chatting.getChattingIdx()));
+			}else {
+				lastMessageList.add("");
+			}
+			
 			if(chatting.getAttendee1() != memberIdx) {
 				attendeeIdx=chatting.getAttendee1();
 				attendeeList.add(memberRepository.selectMemberByMemberIdx(chatting.getAttendee1()));

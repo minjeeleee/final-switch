@@ -166,7 +166,7 @@ public class ExchangeController {
 		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 생성
 		cardService.acceptRequest(cardRequestList,"ONGOING");
 		//요청 수락시 채팅방 생성
-		//chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
+		chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
 		//수락 알림 보내기
 		model.addAttribute("alarmType", "요청수락");
 		model.addAttribute("reqIdx",cardRequestList.getReqIdx());

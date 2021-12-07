@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.chat.model.service.ChatService;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
@@ -20,6 +21,7 @@ public class FreeSharingController {
 
 	private final ExchangeService exchangeService;
 	private final CardService cardService;
+	private final ChatService chatService;
 	
 	//무료나눔 신청
 	@GetMapping("request/{cardIdx}")
@@ -49,6 +51,8 @@ public class FreeSharingController {
 		cardService.insertExchangeStatusByFreeRequesetList(freeRequest);
 		//수락 알림
 		
+		//채팅방 생성
+		chatService.makeChatRoom(freeRequest.getRequestedMemIdx(),freeRequest.getRequestMemIdx());
 		return "redirect:/";
 	}
 	
