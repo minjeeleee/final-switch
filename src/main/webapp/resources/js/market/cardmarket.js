@@ -15,8 +15,8 @@ function myCard(value) {
 		
 		if(value.memberNick == userId) {
 			alert("내카드입니다.")
-			event.preventDefault()
-			return;
+			stopPropagation()
+			return false;
 		}
 }
 
@@ -416,7 +416,7 @@ function cardClose() {
 function cardClick() {
 	
         $('.card-container').on("click",(e) => {
-            $('.popup-detail').removeClass('hide')
+            
             let cardIdx = e.target.id
             console.log(cardIdx);
 
@@ -436,6 +436,7 @@ function cardClick() {
         
                 success: (data) => {
 					myCard(data)
+					$('.popup-detail').removeClass('hide')
                     $(".popup-detail").empty();
 
                     var result = '';

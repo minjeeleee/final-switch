@@ -5,11 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<title>카드 리스트</title>
+<title>SwitchSwitch-관리자 페이지</title>
 <th:block th:replace="admin/fragments/head :: admin_head"></th:block>
 <style type="text/css">
-div, p, i, a {
-	color: #AEB7C2;
+
+.valid-msg, .valid-msg-e{
+	font-size: 2vw !important;
+	color : red !important;
+}
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight:500;
 }
 </style>
 </head>
@@ -24,7 +30,7 @@ div, p, i, a {
 		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
-		<div class="main">
+		<div class="main" th:object="${memberInfo}">
 			<!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
@@ -35,8 +41,12 @@ div, p, i, a {
 							<div class="profile-header">
 								<div class="overlay"></div>
 								<div class="profile-main">
-									<img th:if="${memberInfo.member.flIdx}" th:src="${memberInfo.memberImg.getDownloadURL()}" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
-										<img th:unless="${memberInfo.member.flIdx}" src="/resources/img/undraw_profile.svg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									<th:block th:if="*{member.flIdx}">
+										<img  th:src="|/${memberInfo.memberImg.getDownloadURL()}|" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									</th:block>
+									<th:block th:unless="*{member.flIdx}}">
+										<img  th:src="@{/resources/img/undraw_profile.svg}" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									</th:block>
 									<h3 class="name" style="color: white;"
 										th:text="${memberInfo.member.memberName}"></h3>
 								</div>
@@ -45,8 +55,8 @@ div, p, i, a {
 							<!-- PROFILE DETAIL -->
 							<div class="profile-detail">
 								<form
-									th:action="|/admin/member-profile-edit-success?${_csrf.headerName}=${_csrf.token}|"
-									th:object="${memberUpdateForm}" id="frm_modify" method="post">
+									th:action="|/admin/member-profile-edit-success/${memberInfo.member.memberIdx}?${_csrf.headerName}=${_csrf.token}|"
+									th:object="${memberUpdate}" id="frm_modify" method="post">
 									<div class="profile-info">
 										<h4 class="heading">사용자 정보</h4>
 										<ul class="list-unstyled list-justify">
@@ -54,6 +64,9 @@ div, p, i, a {
 											<li th:text="${memberInfo.member.memberEmail}"></li>
 											<li>비밀번호 <input type="password" name="memberPass"
 												class="form-control" placeholder="비밀번호 입력" th:field="*{memberPass}">
+												<span
+												th:unless="${#fields.hasErrors('memberPass')}"
+												id="" class="valid-msg"></span>
 												<span th:if="${#fields.hasErrors('memberPass')}"
 												th:errors="*{memberPass}" class="valid-msg-e"></span>
 											</li>
@@ -104,8 +117,7 @@ div, p, i, a {
 		<footer>
 			<div class="container-fluid">
 				<p class="copyright">
-					Shared by <i class="fa fa-love"></i><a
-						href="https://bootstrapthemes.co">BootstrapThemes</a>
+					© 2021 SwitchSwitch. All rights reserved.
 				</p>
 			</div>
 		</footer>

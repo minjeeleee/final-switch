@@ -4,17 +4,18 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<title>카드 리스트</title>
+	<title>SwitchSwitch-관리자 페이지</title>
 	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
 	<style type="text/css">
-	div,p,i,a{
-		color:#AEB7C2;
-	}
 	.test{
 		margin-top:100px;
 		-ms-touch-action:pan-y;
 		touch-action:pan-y;
 	}
+	body{
+		font-family: 'Noto Sans KR', sans-serif;
+		font-weight:500;
+		}
 	</style>
 </head>
 
@@ -36,8 +37,9 @@
 					<h3 class="page-title">실시간 카드이미지 조회</h3>
 					<div>
 						    <select class="form-control" style="width: 120px; float: right; margin-top: 2%;" onchange="changeReloadTime(this.value)">
+								  <option>시간선택</option>
 								  <option value="7000">7초</option>
-								  <option selected="selected" value="5000">5초</option>
+								  <option value="5000">5초</option>
 								  <option value="3000">3초</option>
 							</select>
 						</div>
@@ -66,7 +68,7 @@
 		<div class="clearfix"></div>
 		<footer>
 			<div class="container-fluid">
-				<p class="copyright">&copy; 2017 <a href="https://www.themeineed.com" target="_blank">Theme I Need</a>. All Rights Reserved.</p>
+				<p class="copyright">© 2021 SwitchSwitch. All rights reserved.</p>
 			</div>
 		</footer>
 	</div>
@@ -88,42 +90,30 @@
 				})
 			}
 		})
-		//window.addEventListener.("mousewheel",boxscroll, {passive:false})
 		
 		let cnt = 0;
 		
+		var seconds = 5000;
+		var interval;
 		
-		//function changeReloadTime(time) {
-			//if (cnt < 2) {
-				//cnt++;
-				setInterval(function() {
-					location.reload();
-					//$('.test').load(location.href + '.test');
-					console.dir('새로고침');
-					 if ($('div').hasClass('modal-backdrop')) {
-						$("div").remove(".modal-backdrop");
-						$('#myModal').removeClass("in");
-						$('#myModal').css("display","none");
-					 	console.dir('태그삭제');
-					}
-				}, 5000);
-				/*
-			} else {
-				cnt--;
-				clearInterval(timer);
-				setInterval(function() {
-					$('.panel-body').load(location.href + ' .panel-body');
-					console.dir('새로고침');
-					if ($('div').hasClass('modal-backdrop')) {
-						$("div").remove(".modal-backdrop");
-						//$('#myModal').removeClass("in");
-						//$('#myModal').css("display","none");
-						console.dir('태그삭제');
-					}
-				}, time);
-			}
+		function changeReloadTime(optionValue){
+			seconds = optionValue;
+			window.clearInterval(interval);
+			interval = window.setInterval(reloadFunction, seconds);
 		}
-		*/
+		
+		var reloadFunction = () =>{
+			location.reload();
+			 if ($('div').hasClass('modal-backdrop')) {
+					$("div").remove(".modal-backdrop");
+					$('#myModal').removeClass("in");
+					$('#myModal').css("display","none");
+				 	console.dir('태그삭제');
+				}
+		}
+		
+		interval = window.setInterval(reloadFunction, seconds);
+		
 		function deleteCard(FlIdx) {
 			if(FlIdx){
 				fetch("/admin/card-delete-by-Img?flIdx="+FlIdx)

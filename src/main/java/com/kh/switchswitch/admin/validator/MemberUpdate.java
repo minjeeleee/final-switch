@@ -6,7 +6,7 @@ import com.kh.switchswitch.member.model.dto.Member;
 import lombok.Data;
 
 @Data
-public class MemberUpdateForm {
+public class MemberUpdate {
 	
 	private String memberName;
 	private String memberEmail;

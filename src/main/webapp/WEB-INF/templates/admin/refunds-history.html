@@ -4,14 +4,14 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<title>카드 리스트</title>
+	<title>SwitchSwitch-관리자 페이지</title>
 	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
-	<style type="text/css">
-	div,p,i,a{
-		color:#AEB7C2;
-	}
-	
-	</style>
+<style type="text/css">
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight:500;
+}
+</style>
 </head>
 
 <body>
@@ -33,26 +33,26 @@
 						<!-- TABLE HOVER -->
 						<div class="panel" style="background-color: white;">
 							<div class="panel-heading" style="height: 70px">
-								<form>
+								<form action="/admin/refunds-history" method="get" >
 									<div style="display: flex; float: right;">
-									<select class="form-control" style="width: 120px;">
-									  <option>전체보기</option>
-									  <option>검토중</option>
-									  <option>보류중</option>
-									  <option>승인</option>
+									<select class="form-control" style="width: 120px;" name="statusCode">
+									  <option th:selected="${#strings.equals(param.statusCode, '전체보기')}" value="전체보기">전체보기</option>
+									  <option th:selected="${#strings.equals(param.statusCode, '심사중')}" value="심사중">심사중</option>
+									  <option th:selected="${#strings.equals(param.statusCode, '보류중')}" value="보류중">보류중</option>
+									  <option th:selected="${#strings.equals(param.statusCode, '승인')}" value="승인">승인</option>
+									  <option th:selected="${#strings.equals(param.statusCode, '취소')}" value="취소">취소</option>
 									</select>
-									<select class="form-control" style="width: 120px;">
-									  <option>회원번호</option>
-									  <option>회원아이디</option>
-									  <option>회원이름</option>
-									  <option>회원닉네임</option>
-									  <option>연락처</option>
+									<select class="form-control" style="width: 120px;" name="searchType">
+									  <option th:selected="${#strings.equals(param.searchType, 'member_idx')}" value="member_idx">회원번호</option>
+									  <option th:selected="${#strings.equals(param.searchType, 'member_name')}" value="member_name">회원이름</option>
+									  <option th:selected="${#strings.equals(param.searchType, 'member_nick')}" value="member_nick">회원닉네임</option>
+									  <option th:selected="${#strings.equals(param.searchType, 'member_tell')}" value="member_tell">연락처</option>
 									</select>
 									<div class="" style="display: flex; width: 250px;">
 									  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-									  aria-describedby="search-addon" />
+									  aria-describedby="search-addon" name="searchKeyword" th:value="${param.searchKeyword}" />
 									  <span class="input-group-text border-0" id="search-addon">
-									    <i class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></i>
+									    <button class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></button>
 									  </span>
 									</div>
 									</div>
@@ -62,38 +62,40 @@
 								<table class="table table-hover text-center">
 									<thead>
 										<tr class="">
+											<th class="text-center">신청번호</th>
 											<th class="text-center">회원번호</th>
-											<th class="text-center">아이디</th>
 											<th class="text-center">이름</th>
 											<th class="text-center">닉네임</th>
 											<th class="text-center">연락처</th>
 											<th class="text-center">신청금액(원)</th>
 											<th class="text-center">은행명</th>
 											<th class="text-center">계좌번호</th>
+											<th class="text-center">신청일시</th>
 											<th class="text-center">처리결과</th>
 											<th class="text-center">상태변경</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr class="">
-											<td>000001</td>
-											<td>test01</td>
-											<td>박광례</td>
-											<td>박332</td>
-											<td>01011112222</td>
-											<td>10000</td>
-											<td>신한은행</td>
-											<td>110123541233</td>
-											<td>보류중</td>
+										<tr class="" th:if="${pointRefund}" th:each="point:${pointRefund}" th:object="${point}">
+											<td th:text="*{point.prIdx}"></td>
+											<td th:text="*{point.memberIdx}"></td>
+											<td th:text="*{member.memberName}"></td>
+											<td th:text="*{member.memberNick}"></td>
+											<td th:text="*{member.memberTell}"></td>
+											<td th:text="*{point.refundPoint}"></td>
+											<td th:text="*{point.bankName}"></td>
+											<td th:text="*{point.account}"></td>
+											<td th:text="*{point.regDate}"></td>
+											<td th:text="*{point.statusCode}"></td>
 											<td><div class="dropdown">
 											  <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											    선택
 											    <span class="caret"></span>
 											  </button>
 											  <ul class="dropdown-menu" aria-labelledby="dLabel">
-											    <li>심사중</li>
-											    <li>보류중</li>
-											    <li>완료</li>
+											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=보류중,prIdx=*{point.prIdx})}">보류중</a></li>
+											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=완료,prIdx=*{point.prIdx})}">완료</a></li>
+											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=취소,prIdx=*{point.prIdx})}">취소</a></li>
 											  </ul>
 											</div></td>
 										</tr>
@@ -101,22 +103,47 @@
 								</table>
 							</div>
 							<div style="display: flex; justify-content: center;">
-								<ul class="pagination">
+								<ul class="pagination" th:object="${paging}">
+							    <th:block th:if="${param.searchKeyword}" >
 							    <li>
-							      <a href="#" aria-label="Previous">
+							      <a th:if="${param.searchType}" th:href="|*{url}?page=*{prev}&statusCode=${param.statusCode}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" aria-label="Previous">
 							        <span aria-hidden="true">&laquo;</span>
 							      </a>
+							      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
+							    	<span aria-hidden="true">&laquo;</span>
+							      </a>
 							    </li>
-							    <li><a href="#">1</a></li>
-							    <li><a href="#">2</a></li>
-							    <li><a href="#">3</a></li>
-							    <li><a href="#">4</a></li>
-							    <li><a href="#">5</a></li>
+							    <li><a th:if="${param.searchType}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&statusCode=${param.statusCode}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" th:text="${p}"></a></li>
+							    <li><a th:unless="${param.searchType}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}"></a></li>
 							    <li>
-							      <a href="#" aria-label="Next">
+							      <a th:if="${param.searchType}" th:href="|*{url}?page=*{next}&statusCode=${param.statusCode}&searchType=${param.searchType}&searchKeyword=${param.searchKeyword}|" aria-label="Next">
+							        <span aria-hidden="true">&raquo;</span>
+							      </a>
+							      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{next}|" aria-label="Next">
 							        <span aria-hidden="true">&raquo;</span>
 							      </a>
 							    </li>
+							    </th:block>
+							    <th:block th:unless="${param.searchKeyword}">
+								    <li>
+								      <a th:if="${param.searchType}" th:href="|*{url}?page=*{prev}&statusCode=${param.statusCode}&searchType=${param.searchType}|" aria-label="Previous">
+								        <span aria-hidden="true" style="color: black">&laquo;</span>
+								      </a>
+								      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
+								    	<span aria-hidden="true" style="color: black">&laquo;</span>
+								      </a>
+								    </li>
+								    <li><a th:if="${param.searchType}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&statusCode=${param.statusCode}&searchType=${param.searchType}|" th:text="${p}" style="color: black"></a></li>
+								    <li><a th:unless="${param.statusCode}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}" style="color: black"></a></li>
+								    <li>
+								      <a th:if="${param.searchType}" th:href="|*{url}?page=*{next}&statusCode=${param.statusCode}&searchType=${param.searchType}|" aria-label="Next">
+								        <span aria-hidden="true" style="color: black">&raquo;</span>
+								      </a>
+								      <a th:unless="${param.searchType}" th:href="|*{url}?page=*{next}|" aria-label="Next">
+								        <span aria-hidden="true" style="color: black">&raquo;</span>
+								      </a>
+								    </li>
+							    </th:block>
 							  </ul>
 							</div>
 						</div>
@@ -131,8 +158,7 @@
 		<footer>
 			<div class="container-fluid">
 				<p class="copyright">
-					Shared by <i class="fa fa-love"></i><a
-						href="https://bootstrapthemes.co">BootstrapThemes</a>
+					© 2021 SwitchSwitch. All rights reserved.
 				</p>
 			</div>
 		</footer>

@@ -52,11 +52,12 @@ public class AlarmHandler extends TextWebSocketHandler {
         	String[] strs = msg.split(",");
         	String alarmType = strs[0];
         	Integer receiverIdx = Integer.parseInt(strs[1]);
+        	Integer reqIdx = Integer.parseInt(strs[2]);
         	
         	newAlarm.setAlarmType(alarmType);
         	newAlarm.setSenderIdx(loginMember.getMemberIdx());
         	newAlarm.setReceiverIdx(receiverIdx);
-    		newAlarm.setReqIdx(Integer.parseInt(strs[2]));
+    		newAlarm.setReqIdx(reqIdx);
 			alarmRepository.insertAlarm(newAlarm);
 			
 			newAlarm.setAlarmIdx(alarmRepository.selectCurrScAlarmIdx());
@@ -66,25 +67,25 @@ public class AlarmHandler extends TextWebSocketHandler {
         	if( receiverSession != null) {
 				switch (alarmType) {
 				case "교환요청":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님으로부터 교환 요청이 왔습니다."));
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님으로부터 교환 요청이 왔습니다."));
 					break;
 				case "요청거절":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환 요청을 거절하였습니다."));
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환 요청을 거절하였습니다."));
 					break;
 				case "요청수락":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환 요청을 수락했습니다."));
-					break;
-				case "교환확정":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환을 확정했습니다."));
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님이 교환 요청을 수락했습니다."));
 					break;
 				case "교환취소요청":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소를 요청하였습니다."));
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소를 요청하였습니다."));
+					break;
+				case "교환취소요청거절":
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소요청을 거절하였습니다."));
 					break;
 				case "교환취소":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + "교환취소가 완료되었습니다."));
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + "교환취소가 완료되었습니다."));
 					break;
 				case "평점요청":
-					receiverSession.sendMessage(new TextMessage(newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님과의 교환은 어떠셨나요?<br>"
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + loginMember.getMemberNick() + "님과의 교환은 어떠셨나요?<br>"
 							+ loginMember.getMemberNick() + "에 대한 평점을 남겨주세요."));
 					break;
 				}

@@ -25,11 +25,11 @@ function exchangeCancelRequest(){
 	$("#sendResponse")
 	.attr("action", 
 			"http://localhost:9090/exchange/cancel-request/"+reqIdx
-			+"?status="+status);
+			+"/"+status);
 	console.dir("요청수락 보내기 후");
 	$("#sendResponse").submit();
 }
-<!-- 교환취소요청 수락 -->
+<!-- 교환취소요청수락 -->
 function exchangeRequestCancel(){
 	$("#sendResponse").attr("action", "http://localhost:9090/exchange/exchange-cancel/"+reqIdx);
 	$("#sendResponse").submit();

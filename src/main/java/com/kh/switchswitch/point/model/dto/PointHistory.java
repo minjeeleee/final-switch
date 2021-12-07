@@ -1,16 +1,18 @@
 package com.kh.switchswitch.point.model.dto;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data
 public class PointHistory {
 	
 	private Integer phIdx;
-	private String userId;
-	private Integer type;
+	private Integer userIdx;
+	private String type;
 	private Integer points;
 	private Integer resultPoint;
-	private Integer key;
-	private Integer registrationDate;
+	private Date regDate;
+	private String content;
 
 }
