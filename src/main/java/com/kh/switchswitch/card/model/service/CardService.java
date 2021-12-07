@@ -109,4 +109,6 @@ public interface CardService {
 	void updateCardViews(Card card);
 
 	void cancelRequestReject(Integer reqIdx, String string);
+
+	List<Map<String, Object>> selectMyCardListExceptRequestCardList(MemberAccount certifiedMember, Set<Integer> cardIdxSet);
 }

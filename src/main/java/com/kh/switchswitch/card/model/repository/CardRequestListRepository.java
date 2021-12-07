@@ -21,4 +21,6 @@ public interface CardRequestListRepository {
 	@Select("select sc_req_idx.currval from dual")
 	Integer selectNewReqIdx();
 
+	void updateCardRequestList(CardRequestList cardRequestList);
+
 }

@@ -3,7 +3,6 @@ package com.kh.switchswitch.exchange.model.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +45,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public float selectMyRate(int certifiedMemberIdx) {
-		return Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(certifiedMemberIdx));
+		return Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(certifiedMemberIdx).orElse("0"));
 	}
 
 	public FileDTO selectImgFileByCardIdx(int cardIdx) {
@@ -138,8 +137,6 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public void updateRequestExchange(CardRequestList cardRequestList, int length) {
-		//card_request_list 테이블에 추가
-		//cardRequestListRepository.updateCardRequestList(cardRequestList);
 			Card card;
 			switch(5-length) {
 			case 1 : 
@@ -292,9 +289,10 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
 	}
 
-	public void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList) {
+	public void reviseRequest(CardRequestList cardRequestList, int length, String[] previousCardIdxArr, String[] cardIdxList) {
+		
+		cardRequestListRepository.updateCardRequestList(cardRequestList);
 		updateRequestExchange(cardRequestList, length);
-		String[] previousCardIdxArr = (String[]) previousCardIdxSet.toArray();
 		for(int i = 0;i < previousCardIdxArr.length; i++) {
 			for(int j = 0; j < cardIdxList.length; j++) {
 				if(previousCardIdxArr[i] == cardIdxList[j]) {

@@ -330,12 +330,14 @@ public class ExchangeController {
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		
 		Set<Integer> cardIdxSet = cardService.getCardIdxSet(cardRequestList);
 		model.addAttribute("cardIdxSet",cardIdxSet);
 		model.addAttribute("cardlist", cardService.selectCardListForRevise(cardIdxSet));
 		model.addAttribute("myRate",exchangeService.selectMyRate(certifiedMember.getMemberIdx()));
 		
+		//내카드 리스트(확정요청리스트 제외)
+		model.addAttribute("myCardlist", cardService.selectMyCardListExceptRequestCardList(certifiedMember,cardIdxSet));
+	
 		//교환 희망 카드
 		Map<String, Object> card = cardService.selectCard(cardRequestList.getRequestedCard());
 		model.addAttribute("userRate", exchangeService.selectMyRate(cardRequestList.getRequestedCard()));
@@ -349,30 +351,32 @@ public class ExchangeController {
 		}
 		
 		model.addAttribute("propBalance", cardRequestList.getPropBalance());
+		model.addAttribute("reqIdx", reqIdx);
 		
-		return "exchange/detailReviceForm";
+		return "exchange/detailReviseForm";
 	}
 	
-	@PostMapping("reviseForm")
+	@PostMapping("reviseForm/{reqIdx}")
 	public String revise(@AuthenticationPrincipal MemberAccount certifiedMember
+			, @PathVariable int reqIdx
 			, int wishCardIdx
 			, String offerPoint
 			, int availableBal
-			, Set<Integer> previousCardIdxSet
+			, String[] previousCardIdxArr
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
 		
 		//교환요청리스트
-		CardRequestList cardRequestList = createCardRequestList(certifiedMember, cardIdxList, wishCardIdx, offerPoint);
-		exchangeService.reviseRequest(cardRequestList, cardIdxList.length, previousCardIdxSet, cardIdxList);
+		CardRequestList cardRequestList = createCardRequestList(certifiedMember, cardIdxList, wishCardIdx, offerPoint, reqIdx);
+		exchangeService.reviseRequest(cardRequestList, cardIdxList.length, previousCardIdxArr, cardIdxList);
 		
 		//포인트 holding ?? 후 가용 포인트
 		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
-		return "exchange/detailReviceForm";
+		return "redirect:/exchange/detail/"+reqIdx;
 	}
 	
-	private CardRequestList createCardRequestList(MemberAccount certifiedMember, String[] cardIdxList, int wishCardIdx, String offerPoint) {
+	private CardRequestList createCardRequestList(MemberAccount certifiedMember, String[] cardIdxList, int wishCardIdx, String offerPoint, int reqIdx) {
 		CardRequestList cardRequestList = new CardRequestList();
 		if(cardIdxList != null) {
 			switch(5-cardIdxList.length) {
@@ -386,6 +390,7 @@ public class ExchangeController {
 		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
 		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
+		cardRequestList.setReqIdx(reqIdx);
 		return cardRequestList;
 	}
 	

@@ -55,7 +55,7 @@ public interface MemberRepository {
 	Member selectMemberWithMemberIdx(Integer requestMemIdx);
 
 	@Select("select member_score from member where member_idx = #{memberIdx}")
-	String selectMemberScoreByMemberIdx(Integer memberIdx);
+	Optional<String> selectMemberScoreByMemberIdx(Integer memberIdx);
 
 	@Select("select * from (select m.* from member m order by member_score) where rownum < 6")
 	List<Member> selectMembersTop5();

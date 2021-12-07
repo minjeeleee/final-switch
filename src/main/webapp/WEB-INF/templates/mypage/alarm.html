@@ -46,7 +46,7 @@
 							<th:block th:each="alarm,iterStat : ${alarms}"
 								th:object="${alarm.alarm}">
 								<tr th:if="*{isRead} == 0" th:onclick="|updateIsRead(this,*{alarmIdx})|"
-									style="height: 30px; line-height: 30px;">
+									style="height: 30px; line-height: 30px;background-color:lightyellow;">
 									<td th:text="${iterStat.count}"></td>
 									<td th:if="*{alarmType}=='평점요청'">
 									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx})|"></p>
