@@ -63,11 +63,9 @@ public class MypageController {
 
 	@GetMapping("profile")
 	public void profile(@AuthenticationPrincipal MemberAccount member,Model model) {
-		float myRate = exchangeService.selectMyRate(member.getMemberIdx());
 		int myRateCnt = exchangeService.selectMyRateCnt(member.getMemberIdx()).size();
-				
 		List<Integer> totalMyRate = exchangeService.selectMyRateCnt(member.getMemberIdx());
-		model.addAttribute("myRate", Map.of("score",Math.ceil(myRate*10)/10,"cnt",myRateCnt));
+		model.addAttribute("myRate", Map.of("score",exchangeService.selectMyRate(member.getMemberIdx()),"cnt",myRateCnt));
 		model.addAttribute("rateList"
 							,Map.of("one",Math.round((double)Collections.frequency(totalMyRate, 1)/(double)myRateCnt*100)
 									,"two",Math.round((double)Collections.frequency(totalMyRate, 2)/(double)myRateCnt*100)
