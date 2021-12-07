@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.board.model.dto.Board;
-import com.kh.switchswitch.comment.model.dto.Reply;
+import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 

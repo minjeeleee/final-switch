@@ -1,4 +1,4 @@
-package com.kh.switchswitch.comment.model.dto;
+package com.kh.switchswitch.board.model.dto;
 
 import java.sql.Date;
 

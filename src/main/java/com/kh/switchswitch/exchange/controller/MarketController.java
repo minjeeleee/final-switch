@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,6 +35,7 @@ import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -109,11 +111,17 @@ public class MarketController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@PostMapping("card")
     @ResponseBody
-    public String searchCard(@RequestBody Card card, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
+    public String searchCard(@RequestBody Card card,
+    		@AuthenticationPrincipal MemberAccount memberAccount
+    		, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
         
 		log.info("sting={}" ,card);
 		
         Card searchCard = cardService.selectCardWithCardIdx(card.getCardIdx());
+        
+		if(memberAccount != null) {
+			searchCard.setRequestedCardIdx(cardRepository.selectRequestdCardByMemberIdx(memberAccount.getMemberIdx()));
+		}
         
         List imgUrl = new ArrayList();
         List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(searchCard.getCardIdx());

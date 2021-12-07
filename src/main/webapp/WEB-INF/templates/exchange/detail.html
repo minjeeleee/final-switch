@@ -77,6 +77,8 @@
 		</div>
 		<div class="refund-container inner-size">
 			
+			
+			
 			<div class="exc-whish-card-table" id="appendArea">
 				<th:block th:if="${requestCardlist}">
 					<div class="card-container" th:each="card : ${requestCardlist}"
@@ -209,7 +211,6 @@
 				<th:block th:if="${cardRequestCancelList}">
 					<strong>취소 또는 거절된 거래</strong>
 				</th:block>
-				<button type="button" class="back-button" onclick="history.back()">뒤로</button>
 			</div>
 		</div>
 		<form id="sendResponse"></form>
@@ -233,13 +234,11 @@
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
 	<script type="text/javascript" th:inline="javascript">
-	
 		let reqIdx = [[${cardRequestList.reqIdx}]];
 		let requestMemIdx = [[${cardRequestList.requestMemIdx}]];
 		let requestor = [[${#authentication.principal.memberIdx}]];
 		console.dir(reqIdx);
 		let updateStatus = requestor == requestMemIdx ? "APPLICANTCANCEL" : "OWNERCANCEL";
-		
 		console.dir(updateStatus);
 		let counterpartNick = [[${counterpartNick}]];
 	</script>
@@ -247,4 +246,3 @@
 
 </body>
 </html>
-
