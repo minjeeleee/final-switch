@@ -1,6 +1,5 @@
 package com.kh.switchswitch.mypage.controller;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +38,6 @@ import com.kh.switchswitch.common.validator.ValidatorResult;
 
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.inquiry.model.service.InquiryService;
-import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
@@ -115,13 +112,15 @@ public class MypageController {
 		
 		//security에 다시 회원 등록
 		//=> 로그아웃이 되버림 ,, 왜지?
-		MemberAccount mem = new MemberAccount(memberService.selectMemberByEmailAndDelN(member.getMemberEmail()));
-		//여기를 못 타는 것 같음
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(mem.getUsername(), mem.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());
+		UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal,
+																					 authentication.getCredentials(),
+		                                                                             newPrincipal.getAuthorities());
+		newAuth.setDetails(authentication.getDetails());
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		//session.setAttribute("SPRING_SECURITY_CONTEXT", authentication);
-		return "/mypage/profile";
+		return "redirect:/mypage/profile";
 	}
 
 	@GetMapping("leave-member")

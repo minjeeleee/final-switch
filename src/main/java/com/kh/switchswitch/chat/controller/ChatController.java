@@ -23,7 +23,6 @@ public class ChatController {
 	public void chat(Integer chattingIdx,Model model,@AuthenticationPrincipal MemberAccount member) {
 		model.addAttribute("chatMessageList", chatService.selectChatMessageByChattingIdx(chattingIdx,member.getMemberIdx()));
 		model.addAttribute("senderNick", chatService.getSenderNick(chattingIdx, member.getMemberIdx()));
-		System.out.println(chatService.selectChatMessageByChattingIdx(chattingIdx,member.getMemberIdx()));
 	}
 	
 	@GetMapping("chatting-list")

@@ -26,6 +26,10 @@ public class ChatServiceImpl implements ChatService{
 		List<Map<String, Object>> chatMessageList = new ArrayList<Map<String,Object>>();
 		List<ChatMessages> chatMessages = chatRepository.selectChatMessagesList(chattingIdx);
 		for (ChatMessages chatMessage : chatMessages) {
+			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
+			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
+				chatRepository.updateChatIsRead(chatMessage.getCmIdx());
+			}
 			String senderNick = "";
 			if(chatMessage.getSenderId() == null) senderNick = "(알수없음)";
 			else senderNick = getNick(chatMessage.getSenderId());
@@ -33,10 +37,6 @@ public class ChatServiceImpl implements ChatService{
 					Map.of("chatMessage",chatMessage
 							,"senderName",senderNick
 							,"sendTime",chatRepository.selectSendTimeByCmId(chatMessage.getCmIdx())));
-			//목록 불러올 때 읽음 처리 되어 있지 않은 메세지들 전부 읽음 처리
-			if(chatMessage.getIsRead() == 1 && chatMessage.getSenderId() != memberIdx) {
-				chatRepository.updateChatIsRead(chatMessage.getCmIdx());
-			}
 		}
 		return chatMessageList;
 	}
