@@ -435,6 +435,18 @@ function cardClick() {
                 },
         
                 success: (data) => {
+					
+					if(data.requestedCardIdx != null) {
+						$.each(data.requestedCardIdx, (index, Idx) => {
+							if(Idx == data.cardIdx) {
+								alert("거래중인카드입니다.")
+								location.href = "/exchange/exchangeForm/"+data.cardIdx
+								stopPropagation()
+								return false;
+							} 
+           				})
+					}
+		
 					myCard(data)
 					$('.popup-detail').removeClass('hide')
                     $(".popup-detail").empty();
