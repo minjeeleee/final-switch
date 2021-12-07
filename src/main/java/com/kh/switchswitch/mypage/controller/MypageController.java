@@ -111,12 +111,9 @@ public class MypageController {
 		}
 		
 		//security에 다시 회원 등록
-		//=> 로그아웃이 되버림 ,, 왜지?
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());
-		UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal,
-																					 authentication.getCredentials(),
-		                                                                             newPrincipal.getAuthorities());
+		UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, authentication.getCredentials(),newPrincipal.getAuthorities());
 		newAuth.setDetails(authentication.getDetails());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
@@ -131,6 +128,7 @@ public class MypageController {
 									 ,String password 
 									,RedirectAttributes redirectAttr
 									,Model model
+									,HttpSession session
 								){
 
 		System.out.println("비밀번호 : "+password);
@@ -147,7 +145,7 @@ public class MypageController {
 		
 		member.getMember().setMemberDelYn(1);
 		memberService.updateMemberDelYNForLeave(member.getMember());
-		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
+		session.invalidate();
 		return "redirect:/";
 	}
 	
@@ -212,6 +210,6 @@ public class MypageController {
 	  public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
 		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
 		System.out.println(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
-		return "inquiry/inquiry-list";
+		return "mypage/personal-inquiry";
 	}
 }
