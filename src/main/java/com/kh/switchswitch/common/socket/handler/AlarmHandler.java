@@ -39,12 +39,11 @@ public class AlarmHandler extends TextWebSocketHandler {
 
 	@Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		System.out.println("#ChattingController, handleMessage");
 		
 		Alarm newAlarm = new Alarm();
 		
 		Member loginMember = memberRepository.selectMemberByEmailAndDelN(session.getPrincipal().getName());
-		
-		System.out.println("#ChattingController, handleMessage");
         
         //protocol: 알람타입, 수신자IDX, 요청IDX
         String msg = message.getPayload();

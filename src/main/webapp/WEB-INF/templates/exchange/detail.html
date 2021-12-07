@@ -234,11 +234,12 @@
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
 	<script type="text/javascript" th:inline="javascript">
-		let reqIdx = $("#reqIdx").val();
+		let reqIdx = [[${cardRequestList.reqIdx}]];
 		let requestMemIdx = [[${cardRequestList.requestMemIdx}]];
 		let requestor = [[${#authentication.principal.memberIdx}]];
-		let status = requestor == requestMemIdx ? "APPLICANTCANCEL" : "OWNERCANCEL";
-		console.dir(status);
+		console.dir(reqIdx);
+		let updateStatus = requestor == requestMemIdx ? "APPLICANTCANCEL" : "OWNERCANCEL";
+		console.dir(updateStatus);
 		let counterpartNick = [[${counterpartNick}]];
 	</script>
 	<script type="text/javascript" th:inline="javascript" th:src="@{/resources/js/exchange/detail.js}"></script>

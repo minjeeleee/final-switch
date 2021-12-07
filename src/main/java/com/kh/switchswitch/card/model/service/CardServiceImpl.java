@@ -318,7 +318,7 @@ public class CardServiceImpl implements CardService {
 				cardsTop5.add(
 						Map.of("card", card, 
 								"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0), 
-								"cardOwnerRate", memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx()))) ;
+								"cardOwnerRate", Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx())) )) ;
 			}
 		}
 		return cardsTop5;

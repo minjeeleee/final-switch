@@ -67,7 +67,7 @@ public class MarketController {
 		
 		for (Card content : allCard) {
 			List imgUrl = new ArrayList();
-			content.setMemberRate(exchangeService.selectMyRate(content.getCardIdx()));
+			content.setMemberRate(exchangeService.selectMyRate(content.getMemberIdx()));
 			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(content.getCardIdx());
 		    for (FileDTO img : cardImgs) {
 		    	imgUrl.add(img.getDownloadURL());

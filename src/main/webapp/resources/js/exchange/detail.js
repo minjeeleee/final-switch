@@ -25,7 +25,7 @@ function exchangeCancelRequest(){
 	$("#sendResponse")
 	.attr("action", 
 			"http://localhost:9090/exchange/cancel-request/"+reqIdx
-			+"/"+status);
+			+"/"+updateStatus);
 	console.dir("요청수락 보내기 후");
 	$("#sendResponse").submit();
 }
@@ -36,11 +36,17 @@ function exchangeRequestCancel(){
 }
 
 <!-- 교환완료 -->
+<!-- 평점요청창 생성 -->
 function exchangeComplete(){
 	<!-- 사용자평가 모달창 생성 -->
 	let msg = counterpartNick+"님과의 교환은 어떠셨나요?<br>"
 		+ counterpartNick + "에 대한 평점을 남겨주세요.";
 	noticeSet(msg);
+}
+
+function noticeSet(msg){
+	document.querySelector("#notice_msg").innerHTML = msg;
+	document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
 }
 
 document.querySelector("#notice_close").addEventListener("click", (e)=> {
@@ -52,10 +58,6 @@ function noticeInitialize(){
 	document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 }
 
-function noticeSet(msg){
-	document.querySelector("#notice_msg").innerHTML = msg;
-	document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
-}
 
 $("#submit_btn").on("click", function(){
 	$(".notice").appendTo("#sendResponse");
