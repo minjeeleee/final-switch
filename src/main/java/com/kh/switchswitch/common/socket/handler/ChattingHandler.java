@@ -84,11 +84,12 @@ public class ChattingHandler extends TextWebSocketHandler {
 					int isRead = 1;
 					if(sessionList.size() == 2) isRead = 0;
 					
+					Member member =memberRepository.selectMemberWithMemberIdx(senderId);
 					mapToSend.put("bang_id", bang_id);
 					mapToSend.put("cmd", "CMD_MSG_SEND");
-					mapToSend.put("msg"
-							, memberRepository.selectMemberWithMemberIdx(senderId).getMemberNick()
-							+ " : " + mapReceive.get("msg")+"("+isRead+")");
+					mapToSend.put("senderId", member.getMemberNick());
+					mapToSend.put("isRead", Integer.toString(isRead));
+					mapToSend.put("msg",mapReceive.get("msg"));
 					
 					String jsonStr = objectMapper.writeValueAsString(mapToSend);
 					sess.sendMessage(new TextMessage(jsonStr));

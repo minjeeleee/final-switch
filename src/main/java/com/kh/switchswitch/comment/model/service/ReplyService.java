@@ -2,7 +2,7 @@ package com.kh.switchswitch.comment.model.service;
 
 import java.util.List;
 
-import com.kh.switchswitch.comment.model.dto.Reply;
+import com.kh.switchswitch.board.model.dto.Reply;
 
 public interface ReplyService {
 
