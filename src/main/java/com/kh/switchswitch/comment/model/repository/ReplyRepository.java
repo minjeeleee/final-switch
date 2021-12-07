@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import com.kh.switchswitch.comment.model.dto.Reply;
+import com.kh.switchswitch.board.model.dto.Reply;
 
 @Mapper
 public interface ReplyRepository {

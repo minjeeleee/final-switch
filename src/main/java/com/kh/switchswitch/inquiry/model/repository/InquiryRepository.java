@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.inquiry.model.dto.Answer;
 import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 
 @Mapper
@@ -21,7 +22,7 @@ public interface InquiryRepository {
 
 	//상세글조회 
 	@Select("select * from inquiry where inquiry_idx = #{inquiryIdx}")
-	Inquiry selectInquiryByIdx(int inquiryIdx);
+	Inquiry selectInquiryByIdx(Integer inquiryIdx);
 	
 	//게시글목록
 	@Select("select * from inquiry where  is_del=0 ORDER BY inquiry_idx DESC") 
@@ -39,7 +40,7 @@ public interface InquiryRepository {
 	void modifyInquiry(Inquiry inquiry);
 	
 	@Update("update inquiry set is_del = 1 where inquiry_idx = #{inquiryIdx}")	
-	void deleteInquiry(int inquiryIdx);
+	void deleteInquiry(Integer inquiryIdx);
 	
 	@Select("select * from (select rownum rnum, inquiry_idx,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,type from inquiry) inquiry"
 			+ " where rnum between #{startBoard} and #{lastBoard}")
@@ -48,4 +49,14 @@ public interface InquiryRepository {
 	@Select("select * from (select rownum rnum, inquiry_idx,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,type from inquiry where user_id=#{userId}) inquiry"
 			+ " where rnum between #{startBoard} and #{lastBoard}")
 	List<Inquiry> selectInquiryListWitchUserId(Map<String, Object> map);
+
+	@Insert("insert into answer(answer_idx,user_id,answer,inquiry_idx)"
+			+ " values(sc_answer_idx.nextval, #{userId}, #{answer},#{inquiryIdx})")
+	void insertAnswer(Answer answer);
+	
+	@Select("SELECT * FROM answer WHERE  is_del=0 and inquiry_idx=#{inquiryIdx}")
+	List<Answer> getAnswer(Integer inquiryIdx);
+
+	@Update("update answer set is_del = 1 where answer_idx = #{answerIdx}")	
+	void deleteAnswer(int answerIdx);
 }

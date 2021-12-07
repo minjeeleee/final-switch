@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
+import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.board.model.repository.BoardRepository;
 import com.kh.switchswitch.card.model.dto.Card;
-import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.common.util.pagination.Paging;
