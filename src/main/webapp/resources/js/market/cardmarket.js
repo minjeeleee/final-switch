@@ -440,7 +440,7 @@ function cardClick() {
 						$.each(data.requestedCardIdx, (index, Idx) => {
 							if(Idx == data.cardIdx) {
 								alert("거래중인카드입니다.")
-								location.href = "/exchange/exchangeForm/"+data.cardIdx
+								location.href = "/exchange/detail/"+data.cardIdx
 								stopPropagation()
 								return false;
 							} 
