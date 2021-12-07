@@ -63,6 +63,8 @@ public interface CardService {
 	void modifyCard(List<MultipartFile> imgList, Card card);
 
 	List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx);
+	
+	List<Map<String, Object>> selectWishCard(Integer memberIdx);
 
 	List<Map<String, Object>> selectMyFreeCard(Integer memberIdx);
 
@@ -105,4 +107,6 @@ public interface CardService {
 	void requestCancel(Integer reqIdx, String status);
 
 	void updateCardViews(Card card);
+
+	void cancelRequestReject(Integer reqIdx, String string);
 }

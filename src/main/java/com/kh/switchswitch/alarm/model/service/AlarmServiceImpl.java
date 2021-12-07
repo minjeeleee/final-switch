@@ -46,9 +46,6 @@ public class AlarmServiceImpl implements AlarmService {
 			case "요청수락":
 				msg = memberRepository.selectMemberNickByMemberIdx(alarm.getSenderIdx()) + "님이 교환 요청을 수락했습니다.";
 				break;
-			case "교환확정":
-				msg = memberRepository.selectMemberNickByMemberIdx(alarm.getSenderIdx()) + "님이 교환을 확정했습니다.";
-				break;
 			case "교환취소요청":
 				msg = memberRepository.selectMemberNickByMemberIdx(alarm.getSenderIdx()) + "이 교환취소를 요청하였습니다.";
 				break;

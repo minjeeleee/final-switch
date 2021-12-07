@@ -115,6 +115,7 @@ public interface CardRepository {
 	@Select("select * from Card_Request_List where req_idx=#{reqIdx}")
 	CardRequestList selectCardRequestListWithReqIdx(Integer reqIdx);
 
-	
+	@Select("select * from card where card_idx = (select card_idx from wishlist where member_idx=#{memberIdx})")
+	List<Card> selectWishCardByMemberIdx(Integer memberIdx);
 	
 }

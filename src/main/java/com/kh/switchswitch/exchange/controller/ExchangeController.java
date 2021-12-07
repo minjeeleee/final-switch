@@ -42,10 +42,10 @@ public class ExchangeController {
 	private final MemberService memberService;
 	private final ChatService chatService;
 	
-	@GetMapping("exchangeForm")
-	public void exchagneForm(
+	@GetMapping("exchangeForm/{wishCardIdx}")
+	public String exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
-			, int wishCardIdx
+			,@PathVariable int wishCardIdx
 			, Model model){
 		//내카드 리스트
 		model.addAttribute("cardlist", cardService.selectMyCardList(certifiedMember));
@@ -62,6 +62,7 @@ public class ExchangeController {
 			model.addAttribute("availableBal", savePoint.getAvailableBal());
 			model.addAttribute("balance", savePoint.getBalance());
 		}
+		return "exchange/exchangeForm";
 	}
 	
 	@PostMapping("exchangeForm")
@@ -88,7 +89,7 @@ public class ExchangeController {
 	@GetMapping("detail/{reqIdx}")
 	public String detail(
 			@AuthenticationPrincipal MemberAccount certifiedMember,
-			@PathVariable Integer reqIdx,
+			@PathVariable(required = false) Integer reqIdx,
 			Model model) {
 		
 		if(reqIdx == null) {
@@ -156,20 +157,16 @@ public class ExchangeController {
 	
 	@GetMapping("accept/{reqIdx}")
 	public String accept(@PathVariable Integer reqIdx, Model model) {
-		logger.info("1");
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		logger.info(cardRequestList.toString());
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		logger.info("2");
 		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 생성
 		cardService.acceptRequest(cardRequestList,"ONGOING");
-		logger.info("3");
 		//요청 수락시 채팅방 생성
-		chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
-		logger.info("4");
+		//chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
 		//수락 알림 보내기
 		model.addAttribute("alarmType", "요청수락");
 		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
@@ -202,9 +199,9 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	@GetMapping("cancel-request/{reqIdx}")
+	@GetMapping("cancel-request/{reqIdx}/{status}")
 	public String cancelRequest(@PathVariable Integer reqIdx
-								,@RequestParam String status
+								,@PathVariable String status
 								, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
@@ -212,7 +209,7 @@ public class ExchangeController {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
 		
-		//card status ->'REQUEST->status("APPLICANTCANCEL"||"OWNERCANCEL")
+		//exchange status ->'ONGOING'->status("APPLICANTCANCEL"||"OWNERCANCEL")
 		cardService.requestCancel(reqIdx, status);
 		
 		//취소 알림 보내기
@@ -224,6 +221,33 @@ public class ExchangeController {
 			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
 		}
 		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
+	}
+	
+	@GetMapping("cancel-request-reject/{reqIdx}/{status}")
+	public String cancelRequestReject(@PathVariable Integer reqIdx
+								,@PathVariable String status
+								, Model model) {
+		
+		//exchange status ->status("APPLICANTCANCEL"||"OWNERCANCEL")->ONGOING
+		cardService.cancelRequestReject(reqIdx, "ONGOING");
+		
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		//거절 알림 보내기
+		model.addAttribute("alarmType", "교환취소요청거절");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(status.equals("APPLICANTCANCEL")) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/exchange/detail/"+reqIdx);
 		
 		return "/common/alarm";
 	}
@@ -273,7 +297,7 @@ public class ExchangeController {
 		exchangeService.insertExchangeHistory(cardService.selectExchangeStatusWithReqIdx(reqIdx));
 		
 		//교환완료 알림 보내기
-		model.addAttribute("alarmType", "교환완료");
+		model.addAttribute("alarmType", "평점요청");
 		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
 		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
 		model.addAttribute("url","/market/cardmarket");

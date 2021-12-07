@@ -22,7 +22,7 @@
             <div class="ref-innerwrap inner-size">
 
                 <div class="ref-title">
-                    <h1>정보공유</h1>
+                    <h1>문의사항</h1>
                 </div>
 
                 <div class="ref-img">
@@ -36,7 +36,7 @@
                 <div class="search">
                     <input type="text" placeholder="검색어를 입력해주세요." maxlength="15">
                 </div>
-                <a class="board-write" href="/board/board-form">글쓰기</a>
+                <a class="board-write" href="/inquiry/inquiry-form">글쓰기</a>
                 
             </div>
 
@@ -46,18 +46,18 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 10%;">No</th>
-                                <th style="width: 75%;">제목</th>
+                                <th style="width: 10%">문의유형</th>
+                                <th style="width: 65%;">제목</th>
                                 <th style="width: 15%;">작성일</th>
                             </tr>  
                         </thead>
                         <tbody>
-                            <tr th:each="board : ${boardList}"
+                            <tr th:each="inquiry : ${inquiryList}"
 									style="height: 30px; line-height: 30px;">
-									<td th:text="${board.bdIdx}"></td>
-									<td><a th:text="${board.title}"
-										th:href="@{/board/board-detail(bdIdx=${board.bdIdx})}"></a></td>
-									<td th:text="${board.regDate}"></td>
+									<td th:text="${inquiry.type}"></td>
+									<td><a th:text="${inquiry.title}"
+										th:href="@{/inquiry/inquiry-detail(inquiryIdx=${inquiry.inquiryIdx})}"></a></td>
+									<td th:text="${inquiry.regDate}"></td>
 								</tr>
                         </tbody>
                     </table>
@@ -94,5 +94,7 @@
        <div th:replace="fragments/footer :: footer" ></div>
    	</footer>
 
+
+    
 </body>
 </html>

@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.repository.BoardRepository;
+import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
@@ -28,12 +29,12 @@ public class BoardServiceImpl implements BoardService{
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final BoardRepository boardRepository;
 	
-	public void insertBoard(List<MultipartFile> files, Board board) {
+	public void insertBoard(List<MultipartFile> imgList, Board board) {
 		FileUtil  fileUtil = new FileUtil();
 		
 		boardRepository.insertBoard(board);
 		
-		for (MultipartFile multipartFile : files) {
+		for (MultipartFile multipartFile : imgList) {
 			if(!multipartFile.isEmpty()) {
 				boardRepository.insertFileInfo(fileUtil.fileUpload(multipartFile));
 			}
@@ -64,12 +65,13 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Transactional
-	public void modifyBoard(Board board, List<MultipartFile> files) {
+	public void modifyBoard(Board board, List<MultipartFile> imgList) {
 		FileUtil  fileUtil = new FileUtil();
 		boardRepository.modifyBoard(board);
-
+		//삭제
+		boardRepository.deleteBoardImg(board.getBdIdx());
 		
-		for (MultipartFile multipartFile : files) {
+		for (MultipartFile multipartFile : imgList) {
 			if(!multipartFile.isEmpty()) {
 				boardRepository.modifyFileInfo(fileUtil.fileUpload(multipartFile),board.getBdIdx());
 			}
@@ -82,13 +84,11 @@ public class BoardServiceImpl implements BoardService{
 		
 	}
 
-	@Override
 	public List<Reply> getCommetList(Map<String, Object> commandMap) {
 		 List<Reply> commentList = boardRepository.getCommentList(((Board)commandMap.get("board")).getBdIdx());
 		return commentList;
 	    }
 
-	@Override
 	public void boardReplyInsert(Reply reply) {
 		
 		int lastOrder = boardRepository.selectLastOrderOfBoard(reply.getBdIdx());		
@@ -98,15 +98,21 @@ public class BoardServiceImpl implements BoardService{
 		
 	}
 
-	@Override
 	public void modifyReply(Reply reply) {
 		boardRepository.modifyReply(reply);
 	}
 
-	@Override
 	public void deleteReply(int cmIdx) {
 		boardRepository.deleteReply(cmIdx);
 		
+	}
+
+	@Override
+	public Map<String, Object> selectBoardModifyBdIdx(int bdIdx) {
+		Board board = boardRepository.selectBoardModifyBdIdx(bdIdx);
+		List<FileDTO> files = boardRepository.selectFileInfoBybdIdx(bdIdx);
+		
+		return Map.of("board",board,"files",files );
 	}
 
 
