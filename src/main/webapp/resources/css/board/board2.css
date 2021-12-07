@@ -1,6 +1,11 @@
-@charset "UTF-8";
-.section * {
-    font-size: 13px;
+
+.preview p{
+	margin-top:10px;
+	font-size : 12px;
+}
+
+.form-control {
+	margin-top:10px;
 }
 
 .select_subject {
@@ -132,6 +137,16 @@
 .btn{
 	border-color: transparent;
 }
+
+.btn_area {
+	margin-top: 10px
+}
+
+.btn_area p {
+	font-size : 15px;
+	font-weight: 300;
+}
+
 .btn_area>button{
 	padding: 6px 50px;
     border-radius: 8px;
@@ -140,7 +155,7 @@
     margin-left: 10px;
 }
 .btn_area>a {
-	padding: 6px 50px;
+	padding: 11px 66px;
     border-radius: 8px;
     background: #2b53a9;
     color: white;
