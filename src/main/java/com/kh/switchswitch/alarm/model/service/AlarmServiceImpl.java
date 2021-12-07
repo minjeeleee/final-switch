@@ -53,7 +53,7 @@ public class AlarmServiceImpl implements AlarmService {
 				msg = "교환취소가 완료되었습니다.";
 				break;
 			case "평점요청":
-				msg = memberRepository.selectMemberNickByMemberIdx(alarm.getSenderIdx())  + "님과의 교환은 어떠셨나요?<br>"
+				msg = memberRepository.selectMemberNickByMemberIdx(alarm.getSenderIdx())  + "님과의 교환은 어떠셨나요?"
 						+ memberRepository.selectMemberNickByMemberIdx(alarm.getSenderIdx()) + "에 대한 평점을 남겨주세요.";
 				break;
 			}
