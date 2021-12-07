@@ -25,7 +25,7 @@ function exchangeCancelRequest(){
 	$("#sendResponse")
 	.attr("action", 
 			"http://localhost:9090/exchange/cancel-request/"+reqIdx
-			+"/"+status);
+			+"/"+updateStatus);
 	console.dir("요청수락 보내기 후");
 	$("#sendResponse").submit();
 }
@@ -44,6 +44,11 @@ function exchangeComplete(){
 	noticeSet(msg);
 }
 
+function noticeSet(msg){
+	document.querySelector("#notice_msg").innerHTML = msg;
+	document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
+}
+
 document.querySelector("#notice_close").addEventListener("click", (e)=> {
 	noticeInitialize();
 });
@@ -53,10 +58,6 @@ function noticeInitialize(){
 	document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 }
 
-function noticeSet(msg){
-	document.querySelector("#notice_msg").innerHTML = msg;
-	document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
-}
 
 $("#submit_btn").on("click", function(){
 	$(".notice").appendTo("#sendResponse");
@@ -68,14 +69,6 @@ function doSubmit(){
 	$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
 	$("#sendResponse").submit();
 }
-
-<!-- 뒤로가기 -->
-function moveBack(){
-	let preUrl = document.referer;
-	
-	location.href=preUrl;
-}
-
 
 
 let loofCnt = 4-document.querySelector(".exc-whish-card-table").childElementCount;

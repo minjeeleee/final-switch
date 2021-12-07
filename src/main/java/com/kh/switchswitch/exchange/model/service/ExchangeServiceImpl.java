@@ -46,16 +46,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public float selectMyRate(int certifiedMemberIdx) {
-		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx);
-		
-		float sum = 0;
-		for (Float f : ratingList) {
-			sum += f;
-		}
-		if(sum == 0) {
-			return 0;
-		}
-		return sum/ratingList.size();
+		return Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(certifiedMemberIdx));
 	}
 
 	public FileDTO selectImgFileByCardIdx(int cardIdx) {
@@ -331,6 +322,10 @@ public class ExchangeServiceImpl implements ExchangeService{
 		card.setCardIdx(previousCardIdx);
 		card.setExchangeStatus(status);
 		cardRepository.modifyCard(card);
+	}
+
+	public ExchangeStatus selectExchangeStatus(Integer reqIdx) {
+		return exchangeRepository.selectExchangeStatus(reqIdx);
 	}
 
 }

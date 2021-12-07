@@ -1,11 +1,13 @@
 package com.kh.switchswitch.exchange.model.repository;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import com.kh.switchswitch.exchange.model.dto.Rating;
 
 @Mapper
 public interface RatingRepository {
@@ -19,6 +21,12 @@ public interface RatingRepository {
 
 	@Select("select count(*) from rating where user_idx = #{memberIdx} and eh_idx=#{ehIdx}")
 	Integer selectRatingByMemIdxAndEhIdx(@Param("memberIdx") Integer memberIdx,@Param("ehIdx") Integer ehIdx);
+
+	@Insert("insert into rating values(sc_rating_idx.nextval, #{ehIdx}, #{userIdx}, #{rating})")
+	void insertRating(Rating rating);
+
+	@Select("select avg(rating) from rating where user_idx=#{requestedMemIdx}")
+	Integer calAvgRate(Integer requestedMemIdx);
 	
 	
 }

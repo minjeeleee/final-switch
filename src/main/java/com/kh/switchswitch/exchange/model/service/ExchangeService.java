@@ -51,6 +51,8 @@ public interface ExchangeService {
 	CardRequestList requestExchange(MemberAccount certifiedMember, int wishCardIdx, String[] cardIdxList, String offerPoint);
 
 	void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList);
+
+	ExchangeStatus selectExchangeStatus(Integer reqIdx);
 	
 	
 
