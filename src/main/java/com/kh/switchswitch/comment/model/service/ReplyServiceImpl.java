@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.switchswitch.comment.model.dto.Reply;
+import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.comment.model.repository.ReplyRepository;
 
 import lombok.RequiredArgsConstructor;

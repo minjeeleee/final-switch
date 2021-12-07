@@ -1,6 +1,7 @@
 package com.kh.switchswitch.inquiry.model.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -8,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.switchswitch.board.model.dto.Board;
+import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.inquiry.model.dto.Answer;
 import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 import com.kh.switchswitch.inquiry.model.repository.InquiryRepository;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
@@ -28,7 +32,7 @@ public class InquiryServiceImpl implements InquiryService{
 	}
 	
 	//11/17
-	public Map<String, Object> selectInquiryByIdx(int inquiryIdx) {
+	public Map<String, Object> selectInquiryByIdx(Integer inquiryIdx) {
 		Inquiry inquiry = inquiryRepository.selectInquiryByIdx(inquiryIdx);
 		return Map.of("inquiry",inquiry);
 	}
@@ -72,11 +76,25 @@ public class InquiryServiceImpl implements InquiryService{
 		
 	}
 
-	public void deleteInquiry(int inquiryIdx) {
+	public void deleteInquiry(Integer inquiryIdx) {
 		inquiryRepository.deleteInquiry(inquiryIdx);
 		
 	}
 
+	public void insertAnswer(Answer answer) {
+		inquiryRepository.insertAnswer(answer);
+		
+	}
+
+	public List<Answer> getAnswer(Map<String, Object> commandMap) {
+		 List<Answer> answer = inquiryRepository.getAnswer(((Inquiry)commandMap.get("inquiry")).getInquiryIdx());
+			return answer;
+	}
+
+	public void deleteAnswer(int answerIdx) {
+		inquiryRepository.deleteAnswer(answerIdx);
+		
+	}
 
 
 

@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.board.model.dto.Board;
+import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.board.model.service.BoardService;
-import com.kh.switchswitch.comment.model.dto.Reply;
 import com.kh.switchswitch.comment.model.service.ReplyService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
