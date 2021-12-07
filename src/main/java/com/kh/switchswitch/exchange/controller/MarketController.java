@@ -55,15 +55,40 @@ public class MarketController {
 	
 	@GetMapping("cardmarket")
 	public void exchangeCard() {}
+	
+	@GetMapping("freemarket")
+	public void freemarket() {}
 
 //	전체카드조회
 	@ResponseStatus(code = HttpStatus.OK)
     @ResponseBody
-//    @GetMapping(value = "getcard", produces = "application/json; charset=utf8")
     @GetMapping("getcard")
 	public String responseBodyJason(HttpServletResponse response) {
 		
 		List<Card> allCard = cardService.selectAllCard();
+		
+		for (Card content : allCard) {
+			List imgUrl = new ArrayList();
+			content.setMemberRate(exchangeService.selectMyRate(content.getMemberIdx()));
+			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(content.getCardIdx());
+		    for (FileDTO img : cardImgs) {
+		    	imgUrl.add(img.getDownloadURL());
+			}
+		    content.setImgUrl(imgUrl);
+        }
+		
+		String json = new Gson().toJson(allCard);
+		
+		log.info("json={}" ,json);
+		return json;
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("getfreecard")
+	public String responseBodyJason2(HttpServletResponse response) {
+		
+		List<Card> allCard = cardRepository.selectFreeCard();
 		
 		for (Card content : allCard) {
 			List imgUrl = new ArrayList();
@@ -88,7 +113,7 @@ public class MarketController {
     @ResponseBody
     public String searchCardList(@RequestBody SearchCard searchCard, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
         
-		log.info("sting={}" ,searchCard);
+		log.info("string={}" ,searchCard);
 		
         List<Card> allCard = cardService.selectCardTrim(searchCard);
         
