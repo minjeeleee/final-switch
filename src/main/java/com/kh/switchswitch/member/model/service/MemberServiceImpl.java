@@ -195,9 +195,10 @@ public class MemberServiceImpl implements MemberService {
 	public void updateMemberWithFile(Member member, MultipartFile profileImage) {
 		member.setMemberIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getMemberIdx());
 		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
+		member.setFlIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getFlIdx());
 		
-		System.out.println(profileImage);
 		if(profileImage.getSize() != 0) {
+			memberRepository.deleteProfileImg(member.getFlIdx());
 			FileUtil fileUtil = new FileUtil();
 			memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
 			memberRepository.updateMemberForFile(member);

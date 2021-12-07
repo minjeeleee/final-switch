@@ -3,10 +3,8 @@ package com.kh.switchswitch.mypage.controller;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,20 +27,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
-
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.inquiry.model.service.InquiryService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +53,6 @@ public class MypageController {
 	private final ExchangeService exchangeService;
 	private final CardService cardService;
 	private final InquiryService inquiryService;
-	private final AuthenticationManager authenticationManager;
 
 
 	@InitBinder(value = "modifyForm")
@@ -130,8 +124,6 @@ public class MypageController {
 									,Model model
 									,HttpSession session
 								){
-
-		System.out.println("비밀번호 : "+password);
 		
 		if(!passwordEncoder.matches(password,member.getMemberPass())) {
 			model.addAttribute("message","비밀번호가 틀렸습니다"); 
@@ -206,10 +198,9 @@ public class MypageController {
 		return json;
 	}
 	
-	 @GetMapping("personal-inquiry") 
-	  public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
+	@GetMapping("personal-inquiry") 
+	public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
 		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
-		System.out.println(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
 		return "mypage/personal-inquiry";
 	}
 }
