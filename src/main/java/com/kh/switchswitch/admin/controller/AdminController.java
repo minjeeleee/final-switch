@@ -176,7 +176,7 @@ public class AdminController {
 	}
 
 	@GetMapping("member-profile/{memberIdx}")
-	public String memberProfile(@PathVariable Integer memberIdx, Model model) {
+	public String memberProfile(@PathVariable(name = "memberIdx") Integer memberIdx, Model model) {
 		// 회원정보
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
 		// 회원이 등록한 카드 수량
@@ -200,7 +200,7 @@ public class AdminController {
 	}
 
 	@GetMapping("member-profile-edit/{memberIdx}")
-	public String memberProfileEdit(@PathVariable Integer memberIdx, Model model) {
+	public String memberProfileEdit(@PathVariable(required=false, name = "memberIdx") Integer memberIdx, Model model) {
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
 		for (String str : memberInfo.keySet()) {
 			System.out.println(memberInfo.get(str) + "+ " + str);
@@ -213,7 +213,7 @@ public class AdminController {
 
 	@PostMapping("member-profile-edit-success/{memberIdx}")
 	public String memberProfileEditSuccess(@Validated MemberUpdate form, Errors errors, 
-			@PathVariable Integer memberIdx, Model model) {
+			@PathVariable(required=false,name = "memberIdx") Integer memberIdx, Model model) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
 		if (errors.hasErrors()) {
