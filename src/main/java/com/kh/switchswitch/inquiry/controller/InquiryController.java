@@ -38,9 +38,9 @@ public class InquiryController {
 
 	@PostMapping("upload")
 	public String uploadInquiry(Inquiry inquiry, @AuthenticationPrincipal MemberAccount member ) {
-		inquiry.setUserId(member.getMemberNick());
+		inquiry.setUserId(member.getMemberName());
 		inquiryService.insertInquiry(inquiry);
-		return "redirect:/inquiry/inquiry-detail?inquiryIdx="+inquiry.getInquiryIdx();
+		return "redirect:/inquiry/inquiry-list2";
 	}
 
 	  @GetMapping("inquiry-list2") 
@@ -51,11 +51,11 @@ public class InquiryController {
 
 	
 	  @GetMapping("inquiry-detail")
-		public void inquiryDetail(Integer inquiryIdx, Model model) {
+		public String inquiryDetail(Integer inquiryIdx, Model model) {
 			Map<String,Object> commandMap = inquiryService.selectInquiryByIdx(inquiryIdx);
 			model.addAttribute("datas", commandMap);
 			model.addAttribute("answer", inquiryService.getAnswer(commandMap));
-
+			return "inquiry/inquiry-detail";
 		}
 		@GetMapping("inquiry-modify")
 		public void inquiryModify(Model model, Integer inquiryIdx) {

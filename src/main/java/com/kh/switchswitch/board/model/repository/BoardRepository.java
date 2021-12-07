@@ -42,7 +42,7 @@ public interface BoardRepository {
 			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
 	void insertFileInfo(FileDTO fileUpload);
 	
-	@Select("select * from file_info  where is_del= 0 and bd_idx = #{bdIdx} ")
+	@Select("select * from file_info  where is_del= 0 and bd_idx = #{bdIdx} ORDER BY REG_DATE DESC")
 	List<FileDTO> selectFilesByBdIdx(int bdIdx);
 
 	@Update("update community set is_del = 1 where bd_idx = #{bdIdx}")	
@@ -53,7 +53,7 @@ public interface BoardRepository {
 	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("bdIdx")Integer bdIdx);
 	
 	@Select("select * from (select rownum rnum, BD_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL from community) community"
-			+ " where rnum between #{startBoard} and #{lastBoard} ORDER BY REG_DATE DESC")
+			+ " where is_del=0 and rnum between #{startBoard} and #{lastBoard} ORDER BY REG_DATE DESC")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
 	@Select("SELECT * FROM reply WHERE  is_del=0 and bd_idx=#{bdIdx} ORDER BY cm_idx DESC")
@@ -75,7 +75,7 @@ public interface BoardRepository {
 	@Update("update file_info set is_del = 1 where bd_idx=#{bdIdx}")
 	void deleteBoardImg(Integer bdIdx);
 
-	@Select("select * from community where bd_idx=#{bdIdx}")
+	@Select("select * from community where is_del=0 and bd_idx=#{bdIdx} order by reg_date desc")
 	Board selectBoardModifyBdIdx(int bdIdx);
 
 	@Select("select * from file_info where is_del= 0 and bd_idx=#{bdIdx}")
