@@ -80,6 +80,9 @@ public class AlarmHandler extends TextWebSocketHandler {
 				case "교환취소요청거절":
 					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소요청을 거절하였습니다."));
 					break;
+				case "교환취소요청취소":
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소요청을 취소하였습니다."));
+					break;
 				case "교환취소":
 					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + "교환취소가 완료되었습니다."));
 					break;

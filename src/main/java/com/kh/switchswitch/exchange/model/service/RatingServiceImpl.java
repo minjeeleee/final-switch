@@ -7,6 +7,7 @@ import com.kh.switchswitch.exchange.model.dto.Rating;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.exchange.model.repository.RatingRepository;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.AllArgsConstructor;
@@ -19,12 +20,18 @@ public class RatingServiceImpl implements RatingService {
 	private final ExchangeRepository exchangeRepository;
 	private final MemberRepository memberRepository;
 	
-	public void createRating(ExchangeStatus exchangeStatus, Integer rate) {
+	public void createRating(ExchangeStatus exchangeStatus, Integer rate, MemberAccount certifiedMember) {
 		
 		Integer ehIdx = exchangeRepository.selectEhIdxByReqIdx(exchangeStatus.getReqIdx());
 		Rating rating = new Rating();
 		rating.setEhIdx(ehIdx);
-		rating.setUserIdx(exchangeStatus.getRequestedMemIdx());
+		if(certifiedMember.getMemberIdx()==exchangeStatus.getRequestedMemIdx()) {
+			rating.setUserIdx(exchangeStatus.getRequestMemIdx());
+		} else {
+			rating.setUserIdx(exchangeStatus.getRequestedMemIdx());
+		}
+		
+		
 		rating.setRating(rate);
 		ratingRepository.insertRating(rating);
 		
