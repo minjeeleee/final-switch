@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.Member;
@@ -62,4 +63,7 @@ public interface MemberRepository {
 
 	@Select("select member_nick from member where member_idx=#{senderIdx}")
 	String selectMemberNickByMemberIdx(Integer senderIdx);
+	
+	@Update("update file_info set is_del = 1 where fl_idx=#{flIdx}")
+	void deleteProfileImg(Integer flIdx);
 }
