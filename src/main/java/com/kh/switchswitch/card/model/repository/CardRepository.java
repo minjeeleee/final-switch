@@ -85,6 +85,8 @@ public interface CardRepository {
 	String selectCardNameByCardIdx(Integer cardIdx);
 
 	List<Card> selectCardTrim(SearchCard searchCard);
+	
+	List<Card> selectFreeCardTrim(SearchCard searchCard);
 
 	void modifyCard(Card card);
 

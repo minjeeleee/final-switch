@@ -283,7 +283,7 @@ $('.searchbox').change(function search() {
     $.ajax({
 
         type: 'post',
-        url: "/market/category",
+        url: "/market/freecategory",
         dataType: "json",
         async: false,
         data: JSON.stringify(category),

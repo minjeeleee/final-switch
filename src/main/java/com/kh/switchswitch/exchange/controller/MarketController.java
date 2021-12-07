@@ -111,7 +111,8 @@ public class MarketController {
 	@ResponseStatus(code = HttpStatus.OK)
 	@PostMapping("category")
     @ResponseBody
-    public String searchCardList(@RequestBody SearchCard searchCard, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
+    public String searchCardList(@RequestBody SearchCard searchCard
+    		, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
         
 		log.info("string={}" ,searchCard);
 		
@@ -119,7 +120,35 @@ public class MarketController {
         
         for (Card card : allCard) {
         	List imgUrl = new ArrayList();
-			card.setMemberRate(exchangeService.selectMyRate(card.getCardIdx()));
+			card.setMemberRate(exchangeService.selectMyRate(card.getMemberIdx()));
+			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(card.getCardIdx());
+		    for (FileDTO img : cardImgs) {
+		    	imgUrl.add(img.getDownloadURL());
+			}
+		    card.setImgUrl(imgUrl);
+		}
+        
+        String json = new Gson().toJson(allCard);
+        log.info("json={}" ,json);
+        
+        return json;
+    }
+	
+//	카테고리
+	@CrossOrigin("*")
+	@ResponseStatus(code = HttpStatus.OK)
+	@PostMapping("freecategory")
+    @ResponseBody
+    public String searchCardList2(@RequestBody SearchCard searchCard
+    		, HttpServletResponse response) throws JsonMappingException, JsonProcessingException {
+        
+		log.info("string={}" ,searchCard);
+		
+        List<Card> allCard = cardRepository.selectFreeCardTrim(searchCard);
+        
+        for (Card card : allCard) {
+        	List imgUrl = new ArrayList();
+			card.setMemberRate(exchangeService.selectMyRate(card.getMemberIdx()));
 			List<FileDTO> cardImgs = cardRepository.selectFileInfoByCardIdx(card.getCardIdx());
 		    for (FileDTO img : cardImgs) {
 		    	imgUrl.add(img.getDownloadURL());
