@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.service.CardService;
@@ -120,7 +121,9 @@ public class MarketController {
         Card searchCard = cardService.selectCardWithCardIdx(card.getCardIdx());
         
 		if(memberAccount != null) {
-			searchCard.setRequestedCardIdx(cardRepository.selectRequestdCardByMemberIdx(memberAccount.getMemberIdx()));
+			CardRequestList requestCard = cardRepository.selectRequestdCardByMemberIdx(searchCard.getCardIdx(),memberAccount.getMemberIdx());
+			searchCard.setReqIdx(requestCard.getReqIdx());
+			searchCard.setRequestedCardIdx(requestCard.getRequestedCard());
 		}
         
         List imgUrl = new ArrayList();

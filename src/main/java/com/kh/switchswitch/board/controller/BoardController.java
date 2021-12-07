@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.board.model.service.BoardService;
-import com.kh.switchswitch.comment.model.service.ReplyService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,6 @@ public class BoardController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final BoardService boardService;
-	private final ReplyService commentService;
 
 	@GetMapping("board-form")
 	public void boardForm() {
@@ -50,8 +48,9 @@ public class BoardController {
 	@PostMapping("upload")
 	public String uploadBoard(@RequestParam(required = false) List<MultipartFile> imgList, Board board, @AuthenticationPrincipal MemberAccount member) {
 		// ,@SessionAttribute("authentication") Member member
-		board.setUserId(member.getMemberNick());
+		board.setUserId(member.getMemberName());
 		boardService.insertBoard(imgList, board);
+
 		return "redirect:/board/board-list2";
 	}
 
@@ -67,7 +66,7 @@ public class BoardController {
 		Map<String, Object> commandMap = boardService.selectBoardByIdx(bdIdx);
 		model.addAttribute("datas", commandMap);
 		model.addAttribute("commentList", boardService.getCommetList(commandMap));
-
+		System.out.println(commandMap);
 		return "board/board-detail";
 	}
 //	조회

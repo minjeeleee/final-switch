@@ -437,14 +437,12 @@ function cardClick() {
                 success: (data) => {
 					
 					if(data.requestedCardIdx != null) {
-						$.each(data.requestedCardIdx, (index, Idx) => {
-							if(Idx == data.cardIdx) {
+							if(data.requestedCardIdx == data.cardIdx) {
 								alert("거래중인카드입니다.")
-								location.href = "/exchange/detail/"+data.cardIdx
+								location.href = "/exchange/detail/"+data.reqIdx
 								stopPropagation()
 								return false;
 							} 
-           				})
 					}
 		
 					myCard(data)

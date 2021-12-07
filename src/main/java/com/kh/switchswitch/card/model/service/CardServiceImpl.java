@@ -67,7 +67,6 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public Card selectCardWithCardIdx(Integer requestedCard) {
-		
 		return cardRepository.selectCardByCardIdx(requestedCard);
 	}
 

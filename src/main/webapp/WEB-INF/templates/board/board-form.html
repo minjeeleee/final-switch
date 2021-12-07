@@ -4,7 +4,7 @@
 	<head th:replace="fragments/subHeader :: subHeader"></head>
 	<head>
 			<!-- refund -->
-		    <link rel="stylesheet" href="../resources/css/board/board.css">
+		    <link rel="stylesheet" href="../resources/css/board/board2.css">
 	</head>
     
     <body>
@@ -15,14 +15,20 @@
     	</nav>
     	
   <section>
-    <div class="container">
-    
+  <div class="ref-title-container">
+              <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>정보공유 작성페이지</h1>
+                </div>
+
+                <div class="ref-img">
+                    <img src="../resources/img/infoback.png" alt="">
+                </div>
+
+            </div>
 		<div class='section'>
 			<form class='frm_post' th:action="|/board/upload?${_csrf.parameterName}=${_csrf.token}|" method="post" enctype="multipart/form-data">
-				<div class='frm_header_area'>
-					<h2 class='sub_title'>정보공유 작성페이지</h2>
-					
-				</div>
 				<div class='frm_title_area'>
 					<div>
 					<input type='text' class="post_title" name="title" required="required" placeholder='제목을 입력하세요'>
@@ -44,15 +50,15 @@
                             </div>
                         </div>
 				<div class='btn_area'>
-						<a class="btn" href="/board/board-list">목록</a>
-						<button id="btnSubmit" class="btn">작성하기</button>
+						<a class="btn" href="/board/board-list"><p>목록</p></a>
+						<button id="btnSubmit" class="btn"><p>작성하기</p></button>
 					</div>
 				
 			</form>
 		</div>
 		
 	</div>
-  </section>
+</section>
   
  <footer>
     <div th:replace="fragments/footer :: footer" ></div>

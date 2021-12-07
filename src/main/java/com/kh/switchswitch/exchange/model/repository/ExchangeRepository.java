@@ -48,7 +48,7 @@ public interface ExchangeRepository {
 	ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx);
 	
 	//나눔요청 리스트 검색
-	@Select("select * from exchange_satus where freq_idx=#{freqIdx}")
+	@Select("select * from exchange_status where freq_idx=#{freqIdx}")
 	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 	
 	@Insert("insert into exchange_history values(sc_eh_idx.nextval, #{eIdx}, sysdate, #{requestedMemIdx}, #{requestMemIdx})")
