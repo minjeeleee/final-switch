@@ -36,6 +36,7 @@ function exchangeRequestCancel(){
 }
 
 <!-- 교환완료 -->
+<!-- 평점요청창 생성 -->
 function exchangeComplete(){
 	<!-- 사용자평가 모달창 생성 -->
 	let msg = counterpartNick+"님과의 교환은 어떠셨나요?<br>"
@@ -67,6 +68,14 @@ function doSubmit(){
 	$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
 	$("#sendResponse").submit();
 }
+
+<!-- 뒤로가기 -->
+function moveBack(){
+	let preUrl = document.referer;
+	
+	location.href=preUrl;
+}
+
 
 
 let loofCnt = 4-document.querySelector(".exc-whish-card-table").childElementCount;
