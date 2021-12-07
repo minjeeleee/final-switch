@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -37,6 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	    return firewall;
 	}
 
+	//authenticationManager bean 등록
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+	    return super.authenticationManagerBean();
+	}
 	
 	//remember-me 기능
 	public PersistentTokenRepository tokenRepository() {
@@ -73,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.rememberMe()
 			.userDetailsService(memberService)
 			.tokenRepository(tokenRepository());
-		
+				
 		//동시 로그인 차단
 		http.sessionManagement()
 		.sessionFixation().migrateSession()

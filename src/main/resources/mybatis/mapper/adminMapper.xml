@@ -309,4 +309,50 @@
   	 		</if>
   	 	</if>
   	 </select>
+  	 <select id="selectRefundHistoryList" resultType="com.kh.switchswitch.point.model.dto.PointRefund">
+  	 	select * 
+  	 		from 
+  	 		(select A.*, rownum rownum_ 
+  	 		from 
+  	 			(select 
+  	 				* 
+  	 			 from point_refund 
+  	 	<if test="statusCode != null">
+  	 		<if test="statusCode != '전체보기'">
+  	 		where status_code = #{statusCode} 
+  	 		</if>
+  	 	</if>
+  	 	order by pr_idx desc) A 
+  	 	 )
+  	 	 where rownum_ between #{page} and #{cntPerPage}
+  	 </select>
+  	 <select id="selectMemberByIdxWithDetail" resultType="com.kh.switchswitch.member.model.dto.Member">
+  	 	select * 
+			from member 
+			where member_del_yn=0 
+			and member_idx = #{memberIdx} 
+  	 	<if test="searchType != null and searchKeyword != null">
+				<if test="searchType == 'member_idx'">
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_name'">
+  	 				and member_name like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_nick'">
+  	 				and member_nick like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 			<if test="searchType == 'member_tell'">
+  	 				and member_tell like '%'||#{searchKeyword}||'%'
+  	 			</if>
+  	 	</if>
+  	 </select>
+  	 <select id="selectRefundHistoryListForCount" resultType="com.kh.switchswitch.point.model.dto.PointRefund">
+  	 	select * 
+  	 		from point_refund 
+  	 	<if test="statusCode != null">
+  	 		<if test="statusCode != '전체보기'">
+  	 		where status_code = #{statusCode} 
+  	 		</if>
+  	 	</if>
+  	 </select>
   </mapper>

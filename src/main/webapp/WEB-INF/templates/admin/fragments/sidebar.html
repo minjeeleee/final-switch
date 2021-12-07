@@ -3,10 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+}
+</style>
 </head>
 <body>
 	<th:block th:fragment="admin_sidebar">
-		<div id="sidebar-nav" class="sidebar" style="background-color: #911F27;">
+		<div id="sidebar-nav" class="sidebar" style="background-color: #ff5403; color: white;">
 			<div class="sidebar-scroll">
 				<nav>
 					<ul class="nav">
@@ -14,7 +19,7 @@
 						<li>
 							<a href="#subPages" data-toggle="collapse" class="collapsed" ><i class="fa fa-search"></i> <span>카드리스트</span> <i class="icon-submenu lnr lnr-chevron-left" style="color: white;"></i></a>
 							<div id="subPages" class="collapse " >
-								<ul class="nav" style="background-color: #630A10">
+								<ul class="nav" style="background-color: rgba(0, 0, 0, 0.445)">
 									<li><a href="/admin/real-time-cards" class="">실시간 카드 조회</a></li>
 									<li><a href="/admin/real-time-card-img" class="">실시간 카드이미지 조회</a></li>
 									<li><a href="/admin/all-cards" class="">전체 카드 조회</a></li>
@@ -24,7 +29,7 @@
 						<li>
 							<a href="#collapseExample" data-toggle="collapse" class="collapsed" ><i class="fa fa-user-o" aria-hidden="true"></i> <span>회원리스트</span> <i class="icon-submenu lnr lnr-chevron-left" style="color: white;"></i></a>
 							<div id="collapseExample" class="collapse ">
-								<ul class="nav" style="background-color: #630A10">
+								<ul class="nav" style="background-color: rgba(0, 0, 0, 0.445)">
 									<li><a href="/admin/all-members" class="">전체 회원 조회</a></li>
 									<li><a href="/admin/black-list-members" class="">블랙리스트 회원 조회</a></li>
 								</ul>

@@ -401,7 +401,11 @@ public class CardServiceImpl implements CardService {
 		updateCardWithCardIdx(card);
 	}
 
-	@Override
+
+	public void cancelRequestReject(Integer reqIdx, String status) {
+		updateExchangeStatus(reqIdx, status);
+	}
+
 	public List<Map<String, Object>> selectWishCard(Integer memberIdx) {
 		List<Map<String, Object>> wishCard = new ArrayList();
 		List<Card> cardList = cardRepository.selectWishCardByMemberIdx(memberIdx);

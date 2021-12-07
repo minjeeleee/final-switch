@@ -4,14 +4,14 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<title>카드 리스트</title>
+	<title>SwitchSwitch-관리자 페이지</title>
 	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
-	<style type="text/css">
-	div,p,i,a{
-		color:#AEB7C2;
-	}
-	
-	</style>
+<style type="text/css">
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight:500;
+}
+</style>
 </head>
 
 <body>
@@ -82,20 +82,20 @@
 								<ul class="pagination" th:object=${paging}>
 							    <li>
 							      <a th:if="${param.searchDetail}" th:href="|*{url}?page=*{prev}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" aria-label="Previous">
-							        <span aria-hidden="true">&laquo;</span>
+							        <span aria-hidden="true" style="color: black">&laquo;</span>
 							      </a>
 							      <a th:unless="${param.searchDetail}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
-							    	<span aria-hidden="true">&laquo;</span>
+							    	<span aria-hidden="true" style="color: black">&laquo;</span>
 							      </a>
 							    </li>
-							    <li><a th:if="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" th:text="${p}"></a></li>
-							    <li><a th:unless="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}"></a></li>
+							    <li><a th:if="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" th:text="${p}" style="color: black"></a></li>
+							    <li><a th:unless="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}" style="color: black"></a></li>
 							    <li>
 							      <a th:if="${param.searchDetail}" th:href="|*{url}?page=*{next}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" aria-label="Next">
-							        <span aria-hidden="true">&raquo;</span>
+							        <span aria-hidden="true" style="color: black">&raquo;</span>
 							      </a>
 							      <a th:unless="${param.searchDetail}" th:href="|*{url}?page=*{next}|" aria-label="Next">
-							        <span aria-hidden="true">&raquo;</span>
+							        <span aria-hidden="true" style="color: black">&raquo;</span>
 							      </a>
 							    </li>
 							  </ul>
@@ -112,8 +112,7 @@
 		<footer>
 			<div class="container-fluid">
 				<p class="copyright">
-					Shared by <i class="fa fa-love"></i><a
-						href="https://bootstrapthemes.co">BootstrapThemes</a>
+					© 2021 SwitchSwitch. All rights reserved.
 				</p>
 			</div>
 		</footer>

@@ -33,12 +33,12 @@ public class CardController {
 	
 	@PostMapping("card-form")
 	public String createCard(@RequestParam(required = false) List<MultipartFile> imgList
-			//,@AuthenticationPrincipal MemberAccount member
+			,@AuthenticationPrincipal MemberAccount member
 			, Card card
 
 			) {
 		System.out.println(card.toString());
-		card.setMemberIdx(1);
+		card.setMemberIdx(member.getMemberIdx());
 		cardService.insertCard(imgList, card); 
 
 		return "redirect:/";

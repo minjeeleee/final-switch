@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.lang.Nullable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
-import com.kh.switchswitch.admin.validator.MemberUpdateForm;
+import com.kh.switchswitch.admin.validator.MemberUpdate;
 import com.kh.switchswitch.admin.validator.MemberUpdateValidator;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.code.ErrorCode;
@@ -29,6 +32,7 @@ import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 @Controller
 @RequestMapping("admin")
@@ -43,7 +47,7 @@ public class AdminController {
 		this.memberUpdateValidator = memberUpdateValidator;
 	}
 
-	@InitBinder(value = "memberUpdateForm")
+	@InitBinder(value = "memberUpdate")
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(memberUpdateValidator);
 	}
@@ -157,12 +161,22 @@ public class AdminController {
 	}
 
 	@GetMapping("refunds-history")
-	public void refundsHistory(Model model) {
-		List<Map<String, Object>> res = adminService.selectRefundHistoryList();
+	public void refundsHistory(Model model, @Nullable @RequestParam String statusCode,
+			@Nullable @RequestParam String searchType, @Nullable @RequestParam String searchKeyword, @RequestParam(required = false, defaultValue = "1") int page) {
+		List<Map<String, Object>> pointRefund = adminService.selectRefundHistoryList(statusCode, searchType, searchKeyword,page);
+		Paging pageUtil = adminService.selectRefundByPaging(statusCode, searchType, searchKeyword,page);
+		model.addAttribute("pointRefund",pointRefund);
+		model.addAttribute("paging",pageUtil);
+	}
+	
+	@GetMapping("change-refund-status")
+	public String changeRefundStatus(@AuthenticationPrincipal MemberAccount member,@RequestParam String statusCode, @RequestParam Integer prIdx ) {
+			adminService.updateStatusCode(member,statusCode, prIdx);
+			return "redirect:/admin/refunds-history";
 	}
 
-	@GetMapping("member-profile")
-	public void memberProfile(@RequestParam int memberIdx, Model model) {
+	@GetMapping("member-profile/{memberIdx}")
+	public String memberProfile(@PathVariable(name = "memberIdx") Integer memberIdx, Model model) {
 		// 회원정보
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
 		// 회원이 등록한 카드 수량
@@ -182,26 +196,33 @@ public class AdminController {
 		model.addAttribute("memberCardList", memberCardList);
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute("cardCnt", cardCountFromMember);
+		return "admin/member-profile";
 	}
 
-	@GetMapping("member-profile-edit")
-	public void memberProfileEdit(@RequestParam int memberIdx, Model model) {
+	@GetMapping("member-profile-edit/{memberIdx}")
+	public String memberProfileEdit(@PathVariable(required=false, name = "memberIdx") Integer memberIdx, Model model) {
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
+		for (String str : memberInfo.keySet()) {
+			System.out.println(memberInfo.get(str) + "+ " + str);
+		}
+		
 		model.addAttribute("memberInfo", memberInfo);
-		model.addAttribute(new MemberUpdateForm()).addAttribute("error", new ValidatorResult().getError());
+		model.addAttribute(new MemberUpdate()).addAttribute("error", new ValidatorResult().getError());
+		return "admin/member-profile-edit";
 	}
 
-	@PostMapping("member-profile-edit-success")
-	public String memberProfileEditSuccess(@Validated MemberUpdateForm form, Model model,
-			@RequestParam Integer memberIdx, Errors errors, RedirectAttributes redirectAttr) {
+	@PostMapping("member-profile-edit-success/{memberIdx}")
+	public String memberProfileEditSuccess(@Validated MemberUpdate form, Errors errors, 
+			@PathVariable(required=false,name = "memberIdx") Integer memberIdx, Model model) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
 		if (errors.hasErrors()) {
 			vr.addErrors(errors);
-			return "redirect:/admin/member-profile-edit?memberIdx=" + memberIdx;
+			model.addAttribute("memberIdx",memberIdx);
+			return "admin/member-profile-edit";
 		}
 		adminService.updateMemberInfo(form.convertToMember(), memberIdx);
-		return "redirect:/admin/member-profile?memberIdx=" + memberIdx;
+		return "admin/member-profile/{memberIdx}";
 	}
 
 	@GetMapping("nick-check")
@@ -254,7 +275,8 @@ public class AdminController {
 		model.addAttribute("parentsSideMenuList", adminService.selectParentsMenuListBySideMenu());
 		model.addAttribute("codeList", adminService.selectCodeList());
 	}
-
+	
+	//@Async
 	@PostMapping("add-menu")
 	public String addPage(Menu menu) {
 		try {
@@ -268,6 +290,7 @@ public class AdminController {
 		} catch (Exception e) {
 			throw new HandlableException(ErrorCode.DATABASE_ACCESS_ERROR);
 		}
+		System.out.println("배치진입");
 		return "redirect:/admin/page-setting";
 	}
 

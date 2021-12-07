@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
+import com.kh.switchswitch.point.model.dto.PointHistory;
 import com.kh.switchswitch.point.model.dto.PointRefund;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.InquiryRealNameRepository;
@@ -155,6 +156,15 @@ public class PointServiceImpl implements PointService{
 		Integer availableBal = savePoint.getAvailableBal() - pointRefund.getRefundPoint();
 		savePoint.setAvailableBal(availableBal);
 		savePointRepository.updateSavePoint(savePoint);
+		if(savePointRepository.updateSavePoint(savePoint)) {
+			PointHistory pointHistory = new PointHistory();
+			pointHistory.setContent("환전");
+			pointHistory.setPoints(pointRefund.getRefundPoint());
+			pointHistory.setResultPoint(savePoint.getBalance());
+			pointHistory.setType("사용");
+			pointHistory.setUserIdx(certifiedMember.getMemberIdx());
+			savePointRepository.registHistory(pointHistory);
+		}
 	}
 
 	public SavePoint selectSavePointByMemberIdx(Integer memberIdx) {

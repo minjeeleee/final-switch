@@ -74,8 +74,9 @@
 	sock.onmessage = function(msg){
 		var data = msg.data;
 		console.dir(data);
-		let alarmIdx = data.split(",")[0]; //알림idx
-		let receivedMsg = data.split(",")[1]; //받은 알림 메시지
+		let reqIdx = data.split(",")[0];
+		let alarmIdx = data.split(",")[1]; //알림idx
+		let receivedMsg = data.split(",")[2]; //받은 알림 메시지
 		//알림 생성 (5초)
 		let alarmIdxInput = document.createElement("input");
 		alarmIdxInput.setAttribute("name","alarmIdx");
@@ -100,6 +101,10 @@
 		setTimeout(()=>{
 			alarmBox.style.display = "none";
 		}, 5000);
+		
+		alarmBox.addEventListener("click",function(){
+			location.href="/exchange/detail/"+reqIdx;
+		})
 	};
 </script>
 
