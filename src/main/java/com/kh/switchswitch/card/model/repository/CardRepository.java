@@ -39,8 +39,11 @@ public interface CardRepository {
 	@Select("select * from card where card_idx=#{wishCardIdx}")
 	Card selectCardByCardIdx(int wishCardIdx);
 	
-	@Select("select * from card order by card_idx desc")
+	@Select("select * from card where isfree = 'N' order by card_idx desc")
 	List<Card> selectAllCard();
+	
+	@Select("select * from card where isfree = 'Y' order by card_idx desc")
+	List<Card> selectFreeCard();
 
 	@Select("select member_idx from card where card_idx=#{wishCardIdx}")
 	int selectMemberIdxByCardIdx(int wishCardIdx);
