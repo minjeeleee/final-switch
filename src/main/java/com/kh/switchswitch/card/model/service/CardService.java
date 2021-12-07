@@ -109,4 +109,5 @@ public interface CardService {
 	void updateCardViews(Card card);
 
 	void cancelRequestReject(Integer reqIdx, String string);
+
 }

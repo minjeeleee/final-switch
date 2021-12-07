@@ -30,4 +30,6 @@ public class Card {
 	private float memberRate;
 	private String memberNick;
 	private List imgUrl;
+	private Integer requestedCardIdx;
+	private Integer reqIdx;
 }

@@ -2,6 +2,7 @@ package com.kh.switchswitch.member.model.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -54,7 +55,7 @@ public interface MemberRepository {
 	Member selectMemberWithMemberIdx(Integer requestMemIdx);
 
 	@Select("select member_score from member where member_idx = #{memberIdx}")
-	Float selectMemberScoreByMemberIdx(Integer memberIdx);
+	String selectMemberScoreByMemberIdx(Integer memberIdx);
 
 	@Select("select * from (select m.* from member m order by member_score) where rownum < 6")
 	List<Member> selectMembersTop5();

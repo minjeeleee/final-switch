@@ -21,7 +21,9 @@ import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.chat.model.service.ChatService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.exchange.model.service.RatingService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.point.model.dto.SavePoint;
@@ -41,6 +43,7 @@ public class ExchangeController {
 	private final CardService cardService;
 	private final MemberService memberService;
 	private final ChatService chatService;
+	private final RatingService ratingService;
 	
 	@GetMapping("exchangeForm/{wishCardIdx}")
 	public String exchagneForm(
@@ -282,8 +285,15 @@ public class ExchangeController {
 	}
 	
 	@GetMapping("complete/{reqIdx}")
-	public String complete(@PathVariable Integer reqIdx, Model model) {
-		//교환완료 버튼 클릭 시 front에서 상대방 평가폼 생성해서 함께 정보 받아오기?
+	public String complete(@PathVariable Integer reqIdx
+						,@RequestParam(required = false) Integer rate
+						, Model model) {
+		//교환완료 알림 확인 시 상대방 평가 받아오기
+		ExchangeStatus exchangeStatus = exchangeService.selectExchangeStatus(reqIdx);
+		if(exchangeStatus.getType().equals("DONE")) {
+			ratingService.createRating(exchangeStatus,rate);
+			return "/exchange/detail/"+reqIdx;
+		}
 		
 		//확정요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
@@ -295,6 +305,11 @@ public class ExchangeController {
 		
 		//교환 내역 생성
 		exchangeService.insertExchangeHistory(cardService.selectExchangeStatusWithReqIdx(reqIdx));
+		
+		//교환완료 버튼 클릭 시 front에서 상대방 평가폼 생성해서 함께 정보 받아오기?
+		if(rate != null) {
+			ratingService.createRating(exchangeStatus,rate);
+		}
 		
 		//교환완료 알림 보내기
 		model.addAttribute("alarmType", "평점요청");

@@ -1,5 +1,8 @@
 package com.kh.switchswitch.chat.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +24,8 @@ public class ChatController {
 	
 	@GetMapping("chat")
 	public void chat(Integer chattingIdx,Model model,@AuthenticationPrincipal MemberAccount member) {
-		model.addAttribute("chatMessageList", chatService.selectChatMessageByChattingIdx(chattingIdx,member.getMemberIdx()));
+		List<Map<String, Object>> chatMessageList = chatService.selectChatMessageByChattingIdx(chattingIdx,member.getMemberIdx());
+		model.addAttribute("chatMessageList", chatMessageList);
 		model.addAttribute("senderNick", chatService.getSenderNick(chattingIdx, member.getMemberIdx()));
 	}
 	
