@@ -1,12 +1,41 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/subHeader :: subHeader"></head>
 <head>
-<link rel="stylesheet" href="../resources/css/all.css">
-<link rel="stylesheet" href="../resources/css/reset.css">
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- refund -->
+    <link rel="stylesheet" href="../resources/css/board/boardList.css">
+</head>
+<body>
+
+	<header th:replace="fragments/subBodyHeader :: header"></header>
+	
+	<nav th:replace="fragments/subMenu" :: subNav></nav>
+	
+	<section>
+		<div style="width: 800px; height: 700px; padding: 10px; border: solid 1px #e1e3e9; overflow: scroll;" id="chatBox">
+			<div id="divChatData">
+				<th:block th:if="${chatMessageList} != null" th:each ="chatMessage : ${chatMessageList}" th:object="${chatMessage}">
+					<div>[[*{senderName}]] : [[*{chatMessage.message}]] ([[*{chatMessage.isRead}]]) &nbsp;[[*{chatMessage.createdAt}]]&nbsp;[[*{sendTime}]]</div>
+				</th:block>
+			</div>
+		</div>
+		<input type="hidden" id="memberIdx" th:value="${#authentication.principal.memberNick}"> 
+		<div style="width: 100%; height: 10%; padding: 10px;">
+		<th:block th:if="${senderNick} == '(알수없음)'">
+			<div  id="message">상대방이 탈퇴하여 채팅할 수 없습니다.</div>
+		</th:block>
+		<th:block th:if="${senderNick} != '(알수없음)'">
+			<input type="text" id="message" size="110" style=""/>
+			<input type="button" id="btnSend" value="채팅 전송" onclick="webSocket.sendChat()" />
+		</th:block>
+		</div>
+	</section>
+	
+	<footer>
+       <div th:replace="fragments/footer :: footer"></div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 	let roomUrl = window.location.search;
@@ -30,7 +59,7 @@
 			receiveMessage: function(msgData) {
 				// 정의된 CMD 코드에 따라서 분기 처리
 				if(msgData.cmd == 'CMD_MSG_SEND') {		
-					$('#divChatData').append('<div>' + msgData.msg +d.toISOString().split('T')[0]+changeHours(d.getHours())+':'+d.getMinutes()+'</div>');
+					$('#divChatData').append('<div>' +  msgData.senderId+" : "+msgData.msg + " ("+ msgData.isRead+") "+d.toISOString().split('T')[0]+changeHours(d.getHours())+':'+d.getMinutes()+'</div>');
 				}
 				// 입장
 				else if(msgData.cmd == 'CMD_ENTER') {
@@ -79,25 +108,6 @@
 			webSocket.init({ url: 'http://localhost:9898/chat' });	
 		});
 	</script>
-</head>
-<body>
-	<div style="width: 800px; height: 700px; padding: 10px; border: solid 1px #e1e3e9; overflow: scroll;" id="chatBox">
-		<div id="divChatData">
-			<th:block th:if="${chatMessageList} != null" th:each ="chatMessage : ${chatMessageList}" th:object="${chatMessage}">
-				<div>[[*{senderName}]] : [[*{chatMessage.message}]] ([[*{chatMessage.isRead}]]) &nbsp;[[*{chatMessage.createdAt}]]&nbsp;[[*{sendTime}]]</div>
-			</th:block>
-		</div>
-	</div>
-	<input type="hidden" id="memberIdx" th:value="${#authentication.principal.memberNick}"> 
-	<div style="width: 100%; height: 10%; padding: 10px;">
-	<th:block th:if="${senderNick} == '(알수없음)'">
-		<div  id="message">상대방이 탈퇴하여 채팅할 수 없습니다.</div>
-	</th:block>
-	<th:block th:if="${senderNick} != '(알수없음)'">
-		<input type="text" id="message" size="110" style=""/>
-		<input type="button" id="btnSend" value="채팅 전송" onclick="webSocket.sendChat()" />
-	</th:block>
-	</div>
 	<script type="text/javascript">
 	$("#message").keydown(function (key) {
 		 
