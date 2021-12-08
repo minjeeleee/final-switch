@@ -17,19 +17,19 @@
                     <input type="checkbox" id="idSave" name="remember-me">
                     <label for="idSave"><span>이메일 저장</span></label>
                     <div class="id-input">
-                        <input type="text" name="memberEmail" class="memberEmail" placeholder="이메일을 입력해주세요." value="test@email.com">
-                       <!--  <div class="error-msg">
+                        <input type="text" name="memberEmail" class="memberEmail" placeholder="이메일을 입력해주세요.">
+                       <div class="error-msg-id" style="visibility:hidden">
                             <p>아이디는 필수 입력입니다.</p>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="pass-input">
-                        <input type="password" name="password" class="password" placeholder="비밀번호를 입력해주세요." value="123qwe!@#">
-                       <!--  <div class="error-msg">
+                        <input type="password" name="password" class="password" placeholder="비밀번호를 입력해주세요.">
+                       <div class="error-msg-pw" style="visibility:hidden">
                             <p>비밀번호는 필수 입력입니다.</p>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="login-sm">
-                        <button type="submit" class="loginButton">로그인</button>
+                        <button type="button" class="loginButton" onclick="checkBlank()">로그인</button>
                     </div>
                 </form>
 				<form id="login-form"  action="" class="login-inner inner-size">
@@ -59,6 +59,24 @@
 	<script type="text/javascript" th:inline="javascript">
     let email = "[(${email})]";
     let pw = "[(${password})]";
+    
+    function checkBlank(){
+    	document.querySelector(".error-msg-id").style.visibility = 'hidden';
+    	document.querySelector(".error-msg-pw").style.visibility = 'hidden';
+    	let flg = true;
+    	if(!$(".memberEmail").val() || !document.querySelector(".memberEmail").value.trim()){
+    		document.querySelector(".error-msg-id").style.visibility = 'visible';
+    		flg = false;
+    	}
+    	if(!$(".password").val() || !document.querySelector(".password").value.trim()){
+    		document.querySelector(".error-msg-pw").style.visibility = 'visible';
+    		flg = false;
+    	}
+    	if(flg){
+    		$(".login").submit();
+    	}
+    	
+    }
 	</script>
 	<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/member/login.js}"></script>
 	
