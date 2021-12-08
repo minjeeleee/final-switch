@@ -5,6 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
@@ -85,25 +89,7 @@ public class AdminController {
 			@Nullable @RequestParam(name = "searchType") String searchType,
 			@Nullable @RequestParam(name = "searchKeyword") String searchKeyword,
 			@RequestParam(required = false, defaultValue = "1") int page) {
-		/*
-		List<Map<String, Object>> cardList = new ArrayList<>();
-		List<Card> memberCardList = adminService.selectCardListDetail(searchPeriod, searchType, searchKeyword, page);
-		if (cardList != null) {
-			for (Card card : memberCardList) {
-				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
-				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
-				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
-			}
-		}
 		
-		Paging pageUtil = Paging.builder()
-				.url("/admin/all-cards")
-				.total(adminRepository.cardCount(searchPeriod, searchType, searchKeyword))
-				.cntPerPage(cntPerPage)
-				.blockCnt(5)
-				.curPage(page)
-				.build();
-		*/
 		List<Map<String, Object>> cardList = adminService.selectCardListDetail(searchPeriod, searchType, searchKeyword, page);
 		Paging pageUtil = adminService.selectCardPaging(searchPeriod, searchType, searchKeyword,page);
 		model.addAttribute("cardList", cardList);
@@ -186,67 +172,70 @@ public class AdminController {
 			return "redirect:/admin/refunds-history";
 	}
 
-	@GetMapping("member-profile/{memberIdx}")
-	public String memberProfile(@PathVariable(name = "memberIdx") Integer memberIdx, Model model) {
-		// 회원정보
-		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
-		// 회원이 등록한 카드 수량
-		Integer cardCountFromMember = adminService.selectCardCountByMemberIdx(memberIdx);
-
-		// 회원이 등록한 카드
-		List<Map<String, Object>> cardList = new ArrayList<>();
-		List<Card> memberCardList = adminService.selectCardListByMemberIdx(memberIdx);
-		if (memberCardList != null) {
-			for (Card card : memberCardList) {
-				FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
-				List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
-				cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
-			}
-			model.addAttribute("cardList", cardList);
+	@GetMapping("member-profile")
+	public String memberProfile(@RequestParam Integer memberIdx, Model model) {
+		
+		String adminCheck = adminService.selectCheckAdmin(memberIdx);
+		if(adminCheck.equals("C")) {
+			throw new HandlableException(ErrorCode.FAILED_TO_ACCESS_ADMIN_PROFILE);
 		}
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
-		//회원 포인트 내역
-		List<PointHistory> pointHistories = adminService.selectPointHistoriesByMemberIdxFromAll(memberIdx);
-		List<PointHistory> pointHistoriesUse = adminService.selectPointHistoriesByMemberIdxFromUse(memberIdx);
-		List<PointHistory> pointHistoriesSave = adminService.selectPointHistoriesByMemberIdxFromAllSave(memberIdx);
-		Integer userPoint = adminService.selectPointByMemberIdx(memberIdx);
-		if(userPoint == null) userPoint = 0;
-		model.addAttribute("userPoint", userPoint);
-		model.addAttribute("point", pointHistories);
-		model.addAttribute("usePoint", pointHistoriesUse);
-		model.addAttribute("savePoint", pointHistoriesSave);
-		model.addAttribute("memberCardList", memberCardList);
-		model.addAttribute("memberInfo", memberInfo);
-		model.addAttribute("cardCnt", cardCountFromMember);
-		return "admin/member-profile";
+			// 회원정보
+			Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
+			// 회원이 등록한 카드 수량
+			Integer cardCountFromMember = adminService.selectCardCountByMemberIdx(memberIdx);
+	
+			// 회원이 등록한 카드
+			List<Map<String, Object>> cardList = new ArrayList<>();
+			List<Card> memberCardList = adminService.selectCardListByMemberIdx(memberIdx);
+			if (memberCardList != null) {
+				for (Card card : memberCardList) {
+					FileDTO mainImgFile = adminService.selectMainImgFileByCardIdx(card.getCardIdx());
+					List<FileDTO> imgFile = adminService.selectImgFileListByCardIdx(card.getCardIdx());
+					cardList.add(Map.of("card", card, "fileDTO", mainImgFile, "fileDTOAll", imgFile));
+				}
+				model.addAttribute("cardList", cardList);
+			}
+			Integer refundCount = adminService.selectRefundNewCount();
+			model.addAttribute("refundCount",refundCount);
+			//회원 포인트 내역
+			List<PointHistory> pointHistories = adminService.selectPointHistoriesByMemberIdxFromAll(memberIdx);
+			List<PointHistory> pointHistoriesUse = adminService.selectPointHistoriesByMemberIdxFromUse(memberIdx);
+			List<PointHistory> pointHistoriesSave = adminService.selectPointHistoriesByMemberIdxFromAllSave(memberIdx);
+			Integer userPoint = adminService.selectPointByMemberIdx(memberIdx);
+			if(userPoint == null) userPoint = 0;
+			model.addAttribute("userPoint", userPoint);
+			model.addAttribute("point", pointHistories);
+			model.addAttribute("usePoint", pointHistoriesUse);
+			model.addAttribute("savePoint", pointHistoriesSave);
+			model.addAttribute("memberCardList", memberCardList);
+			model.addAttribute("memberInfo", memberInfo);
+			model.addAttribute("cardCnt", cardCountFromMember);
+			return "admin/member-profile";
 	}
 
-	@GetMapping("member-profile-edit/{memberIdx}")
-	public String memberProfileEdit(@PathVariable(required=false, name = "memberIdx") Integer memberIdx, Model model) {
+	@GetMapping("member-profile-edit")
+	public void memberProfileEdit(@RequestParam Integer memberIdx, Model model) {
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
-		for (String str : memberInfo.keySet()) {
-			System.out.println(memberInfo.get(str) + "+ " + str);
-		}
+		
 		Integer refundCount = adminService.selectRefundNewCount();
 		model.addAttribute("refundCount",refundCount);
+		
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute(new MemberUpdate()).addAttribute("error", new ValidatorResult().getError());
-		return "admin/member-profile-edit";
 	}
 
-	@PostMapping("member-profile-edit-success/{memberIdx}")
+	@PostMapping("member-profile-edit-success")
+	@ResponseBody
 	public String memberProfileEditSuccess(@Validated MemberUpdate form, Errors errors, 
-			@PathVariable(required=false,name = "memberIdx") Integer memberIdx, Model model) {
-		ValidatorResult vr = new ValidatorResult();
-		model.addAttribute("error", vr.getError());
-		if (errors.hasErrors()) {
-			vr.addErrors(errors);
-			model.addAttribute("memberIdx",memberIdx);
-			return "admin/member-profile-edit";
+			@RequestParam Integer memberIdx, Model model, HttpSession session) {
+		System.out.println("여기는옴?");
+		if (memberIdx != null) {
+			adminService.updateMemberInfo(form.convertToMember(), memberIdx);
+			System.out.println("여기는?");
+			return "success";
+		}else {
+			return "redirect:/admin/member-profile?memberIdx=" + memberIdx;
 		}
-		adminService.updateMemberInfo(form.convertToMember(), memberIdx);
-		return "admin/member-profile/{memberIdx}";
 	}
 
 	@GetMapping("nick-check")

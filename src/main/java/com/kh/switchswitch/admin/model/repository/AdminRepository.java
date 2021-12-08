@@ -169,6 +169,9 @@ public interface AdminRepository {
 	@Update("update point_refund set confirm_check = 'Y' where confirm_check = 'N'")
 	void updateConfirmCheck();
 	
+	@Select("select code from member where member_idx = #{memberIdx}")
+	String selectCheckAdmin(Integer memberIdx);
+	
 	
 	
 	

@@ -343,6 +343,10 @@ public class AdminService {
 		return adminRepository.selectRefundNewCount();
 	}
 
+	public String selectCheckAdmin(Integer memberIdx) {
+		return adminRepository.selectCheckAdmin(memberIdx);
+	}
+
 	
 
 	

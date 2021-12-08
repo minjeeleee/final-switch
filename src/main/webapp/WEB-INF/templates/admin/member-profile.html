@@ -21,7 +21,7 @@ body{
 		<th:block th:replace="admin/fragments/nav :: admin_nav"></th:block>
 		<!-- END NAVBAR -->
 		<!-- LEFT SIDEBAR -->
-		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar (refuntCount=${refundCount})"></th:block>
+		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
 		<div class="main">
@@ -75,7 +75,7 @@ body{
 									</div>
 									<div class="profile-info">
 									</div>
-									<div class="text-center"><a th:href="|/admin/member-profile-edit/${memberInfo.member.memberIdx}|" class="btn btn-primary">회원정보수정</a></div>
+									<div class="text-center"><a th:href="|/admin/member-profile-edit?memberIdx=${memberInfo.member.memberIdx}|" class="btn btn-primary">회원정보수정</a></div>
 								</div>
 								<!-- END PROFILE DETAIL -->
 							</div>
