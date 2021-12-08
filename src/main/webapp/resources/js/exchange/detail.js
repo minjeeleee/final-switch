@@ -20,7 +20,6 @@ function requestReject(){
 	$("#sendResponse").submit();
 }
 <!-- 교환취소요청 -->
-
 function exchangeCancelRequest(){
 	$("#sendResponse")
 	.attr("action", 
@@ -34,6 +33,16 @@ function exchangeRequestCancel(){
 	$("#sendResponse").attr("action", "http://localhost:9090/exchange/exchange-cancel/"+reqIdx);
 	$("#sendResponse").submit();
 }
+<!-- 교환취소요청거절 -->
+function exchangeRequestCancelReject(){
+	$("#sendResponse").attr("action", "http://localhost:9090/exchange/cancel-request-reject/" +reqIdx+ "/" +previousStatus);
+	$("#sendResponse").submit();
+}
+<!-- 교환취소요청취소 -->
+function cancelExchangeRequestCancel(){
+	$("#sendResponse").attr("action", "http://localhost:9090/exchange/cancel-request-cancel/" +reqIdx+ "/" +previousStatus);
+	$("#sendResponse").submit();
+}
 
 <!-- 교환완료 -->
 <!-- 평점요청창 생성 -->
@@ -41,10 +50,6 @@ function exchangeComplete(){
 	<!-- 사용자평가 모달창 생성 -->
 	let msg = counterpartNick+"님과의 교환은 어떠셨나요?<br>"
 		+ counterpartNick + "에 대한 평점을 남겨주세요.";
-	noticeSet(msg);
-}
-
-function noticeSet(msg){
 	document.querySelector("#notice_msg").innerHTML = msg;
 	document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
 }

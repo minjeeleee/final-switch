@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.chat.model.service.ChatService;
@@ -100,8 +101,12 @@ public class ExchangeController {
 		}
 		
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		CardRequestCancelList cardRequstCancelList = cardService.selectCardRequestCancelListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
-			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+			if(cardRequstCancelList == null) {
+				throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+			}
+			cardRequestList = convertToCardRequestList(cardRequstCancelList);
 		}
 		
 		//희망 카드
@@ -130,12 +135,17 @@ public class ExchangeController {
 		model.addAttribute("cardRequestList",cardRequestList);
 		
 		//cardRequestCancelList
-		model.addAttribute("cardRequestCancelList", cardService.selectCardRequestCancelListWithReqIdx(reqIdx));
+		model.addAttribute("cardRequestCancelList", cardRequstCancelList);
 		
-		model.addAttribute("status", cardService.selectExchangeStatusType(cardRequestList.getReqIdx()));
+		if(cardRequstCancelList==null) {
+			model.addAttribute("status", cardService.selectExchangeStatusType(cardRequestList.getReqIdx()));
+		} else {
+			model.addAttribute("status", "CANCELED");
+		}
+		
 		return "exchange/detail";
 	}
-	
+
 	@GetMapping("reject/{reqIdx}")
 	public String reject(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
@@ -179,7 +189,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	
+	//요청취소
 	@GetMapping("request-cancel/{reqIdx}")
 	public String requestCancel(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
@@ -202,6 +212,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//교환취소요청
 	@GetMapping("cancel-request/{reqIdx}/{status}")
 	public String cancelRequest(@PathVariable Integer reqIdx
 								,@PathVariable String status
@@ -228,6 +239,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//교환취소요청거절
 	@GetMapping("cancel-request-reject/{reqIdx}/{status}")
 	public String cancelRequestReject(@PathVariable Integer reqIdx
 								,@PathVariable String status
@@ -255,6 +267,35 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//교환취소요청취소
+	@GetMapping("cancel-request-cancel/{reqIdx}/{status}")
+	public String cancelRequestCancel(@PathVariable Integer reqIdx
+								,@PathVariable String status
+								, Model model) {
+		
+		//exchange status ->status("APPLICANTCANCEL"||"OWNERCANCEL")->ONGOING
+		cardService.cancelRequestReject(reqIdx, "ONGOING");
+		
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		//거절 알림 보내기
+		model.addAttribute("alarmType", "교환취소요청취소");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(status.equals("APPLICANTCANCEL")) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/exchange/detail/"+reqIdx);
+		
+		return "/common/alarm";
+	}
+	
+	//교환취소
 	@GetMapping("exchange-cancel/{reqIdx}")
 	public String exchangeCancel(@PathVariable Integer reqIdx
 								,@AuthenticationPrincipal MemberAccount certifiedMember
@@ -284,15 +325,18 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//교환완료
 	@GetMapping("complete/{reqIdx}")
-	public String complete(@PathVariable Integer reqIdx
+	public String complete(
+						@AuthenticationPrincipal MemberAccount certifiedMember
+						, @PathVariable Integer reqIdx
 						,@RequestParam(required = false) Integer rate
 						, Model model) {
 		//교환완료 알림 확인 시 상대방 평가 받아오기
 		ExchangeStatus exchangeStatus = exchangeService.selectExchangeStatus(reqIdx);
 		if(exchangeStatus.getType().equals("DONE")) {
-			ratingService.createRating(exchangeStatus,rate);
-			return "/exchange/detail/"+reqIdx;
+			ratingService.createRating(exchangeStatus,rate, certifiedMember);
+			return "redirect:/exchange/detail/"+reqIdx;
 		}
 		
 		//확정요청리스트
@@ -308,7 +352,7 @@ public class ExchangeController {
 		
 		//교환완료 버튼 클릭 시 front에서 상대방 평가폼 생성해서 함께 정보 받아오기?
 		if(rate != null) {
-			ratingService.createRating(exchangeStatus,rate);
+			ratingService.createRating(exchangeStatus,rate, certifiedMember);
 		}
 		
 		//교환완료 알림 보내기
@@ -330,12 +374,14 @@ public class ExchangeController {
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		
 		Set<Integer> cardIdxSet = cardService.getCardIdxSet(cardRequestList);
 		model.addAttribute("cardIdxSet",cardIdxSet);
 		model.addAttribute("cardlist", cardService.selectCardListForRevise(cardIdxSet));
 		model.addAttribute("myRate",exchangeService.selectMyRate(certifiedMember.getMemberIdx()));
 		
+		//내카드 리스트(확정요청리스트 제외)
+		model.addAttribute("myCardlist", cardService.selectMyCardListExceptRequestCardList(certifiedMember,cardIdxSet));
+	
 		//교환 희망 카드
 		Map<String, Object> card = cardService.selectCard(cardRequestList.getRequestedCard());
 		model.addAttribute("userRate", exchangeService.selectMyRate(cardRequestList.getRequestedCard()));
@@ -349,30 +395,32 @@ public class ExchangeController {
 		}
 		
 		model.addAttribute("propBalance", cardRequestList.getPropBalance());
+		model.addAttribute("reqIdx", reqIdx);
 		
-		return "exchange/detailReviceForm";
+		return "exchange/detailReviseForm";
 	}
 	
-	@PostMapping("reviseForm")
+	@PostMapping("reviseForm/{reqIdx}")
 	public String revise(@AuthenticationPrincipal MemberAccount certifiedMember
+			, @PathVariable int reqIdx
 			, int wishCardIdx
 			, String offerPoint
 			, int availableBal
-			, Set<Integer> previousCardIdxSet
+			, String[] previousCardIdxArr
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
 		
 		//교환요청리스트
-		CardRequestList cardRequestList = createCardRequestList(certifiedMember, cardIdxList, wishCardIdx, offerPoint);
-		exchangeService.reviseRequest(cardRequestList, cardIdxList.length, previousCardIdxSet, cardIdxList);
+		CardRequestList cardRequestList = createCardRequestList(certifiedMember, cardIdxList, wishCardIdx, offerPoint, reqIdx);
+		exchangeService.reviseRequest(cardRequestList, cardIdxList.length, previousCardIdxArr, cardIdxList);
 		
 		//포인트 holding ?? 후 가용 포인트
 		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
-		return "exchange/detailReviceForm";
+		return "redirect:/exchange/detail/"+reqIdx;
 	}
 	
-	private CardRequestList createCardRequestList(MemberAccount certifiedMember, String[] cardIdxList, int wishCardIdx, String offerPoint) {
+	private CardRequestList createCardRequestList(MemberAccount certifiedMember, String[] cardIdxList, int wishCardIdx, String offerPoint, int reqIdx) {
 		CardRequestList cardRequestList = new CardRequestList();
 		if(cardIdxList != null) {
 			switch(5-cardIdxList.length) {
@@ -386,6 +434,21 @@ public class ExchangeController {
 		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
 		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
+		cardRequestList.setReqIdx(reqIdx);
+		return cardRequestList;
+	}
+	
+	private CardRequestList convertToCardRequestList(CardRequestCancelList cardRequstCancelList) {
+		CardRequestList cardRequestList = new CardRequestList();
+		cardRequestList.setReqIdx(cardRequstCancelList.getReqIdx());
+		cardRequestList.setPropBalance(cardRequstCancelList.getPropBalance());
+		cardRequestList.setRequestCard1(cardRequstCancelList.getRequestCard1());
+		cardRequestList.setRequestCard2(cardRequstCancelList.getRequestCard2());
+		cardRequestList.setRequestCard3(cardRequstCancelList.getRequestCard3());
+		cardRequestList.setRequestCard4(cardRequstCancelList.getRequestCard4());
+		cardRequestList.setRequestedCard(cardRequstCancelList.getRequestedCard());
+		cardRequestList.setRequestedMemIdx(cardRequstCancelList.getRequestedMemIdx());
+		cardRequestList.setRequestMemIdx(cardRequstCancelList.getRequestMemIdx());
 		return cardRequestList;
 	}
 	

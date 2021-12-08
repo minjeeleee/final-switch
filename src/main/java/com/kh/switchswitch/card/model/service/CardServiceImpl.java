@@ -318,7 +318,9 @@ public class CardServiceImpl implements CardService {
 				cardsTop5.add(
 						Map.of("card", card, 
 								"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0), 
-								"cardOwnerRate", Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx())) )) ;
+								"cardOwnerRate", Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx()).orElse("0"))
+								)
+						);
 			}
 		}
 		return cardsTop5;
@@ -414,6 +416,22 @@ public class CardServiceImpl implements CardService {
 		}
 		
 		return wishCard;
+	}
+
+	public List<Map<String, Object>> selectMyCardListExceptRequestCardList(MemberAccount certifiedMember,
+			Set<Integer> cardIdxSet) {
+		List<Map<String, Object>> cardlist = new ArrayList<>();
+		List<Card> cardList = cardRepository.selectCardByMemberIdx(certifiedMember.getMemberIdx());
+		if(cardList != null) {
+			for (Card card : cardList) {
+				for (Integer cardIdx : cardIdxSet) {
+					if(!card.getCardIdx().equals(cardIdx)) {
+						cardlist.add(selectCard(card.getCardIdx()));
+					}
+				}
+			}
+		}
+		return cardlist;
 	}
 	
 }
