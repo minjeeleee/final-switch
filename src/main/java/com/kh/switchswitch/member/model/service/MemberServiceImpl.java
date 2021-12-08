@@ -198,7 +198,9 @@ public class MemberServiceImpl implements MemberService {
 		member.setFlIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getFlIdx());
 		
 		if(profileImage.getSize() != 0) {
-			memberRepository.deleteProfileImg(member.getFlIdx());
+			if(member.getFlIdx() != null) {
+				memberRepository.deleteProfileImg(member.getFlIdx());
+			}
 			FileUtil fileUtil = new FileUtil();
 			memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
 			memberRepository.updateMemberForFile(member);
