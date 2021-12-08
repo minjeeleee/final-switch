@@ -19,6 +19,7 @@ public class CustomFailureHandler implements AuthenticationFailureHandler{
 		
 		System.out.println("로그인 실패!!!");
 		
+		response.sendRedirect("/member/login");
 	}
 
 }
