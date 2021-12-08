@@ -133,7 +133,7 @@
 	
 	
 	function updateIsRead(e,alarmIdx){
-		fetch("http://localhost:9090/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
+		fetch("/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
 		.then(response => {
 			if(response.ok){
 				e.style.backgroundColor = "lightyellow";
