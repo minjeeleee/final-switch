@@ -3,6 +3,7 @@ package com.kh.switchswitch.point.model.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -187,6 +188,16 @@ public class PointServiceImpl implements PointService{
 		savePoint.setAvailableBal(savePoint.getAvailableBal() + points);
 		
 		savePointRepository.updateSavePoint(savePoint);
+	}
+
+	
+	public List<PointHistory> selectPointHistoryByMemIdx(Integer memberIdx) {
+		return pointHistoryRepository.selectPoinHistoryBymemberIdx(memberIdx);
+	}
+
+	
+	public List<PointHistory> selectPointHistoryByMemIdxAndType(Integer memberIdx, String type) {
+	    return pointHistoryRepository.selectPoinHistoryBymemberIdxAndType(memberIdx,type);
 	}
 	
 	

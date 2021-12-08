@@ -3,8 +3,10 @@ package com.kh.switchswitch.point.controller;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.google.gson.Gson;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
 import com.kh.switchswitch.point.model.dto.PointHistory;
@@ -46,11 +50,6 @@ public class PointController {
 	@GetMapping("point-charge")
 	public void pointCharge() {}
 	
-	@GetMapping("point-history")
-	public void pointHistory() {}
-	
-	@GetMapping("point-history2")
-	public void pointHistory2() {}
 	
 	@GetMapping("point-return")
 	public void pointReturn(@AuthenticationPrincipal MemberAccount memberAccount, Model model) {
@@ -105,8 +104,61 @@ public class PointController {
 		
 		return "common/result";
 	}
+	
+	@GetMapping("point-history")
+	public void pointHistory(Model model, @AuthenticationPrincipal MemberAccount member) {
+		model.addAttribute("savePoint", pointService.selectSavePointByMemberIdx(member.getMemberIdx()));
+	}
+	
 
-    
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("total-point-history")
+	public String totalPointHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
 		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(pointService.selectPointHistoryByMemIdx(member.getMemberIdx()));
+		log.info("json={}" ,json);
+		return json;
+	}
+		
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("charge-point-history")
+	public String chargePoinHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(pointService.selectPointHistoryByMemIdxAndType(member.getMemberIdx(),"충전"));		
+		log.info("json={}" ,json);
+		return json;
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("use-point-history")
+	public String usePoinHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		System.out.println("사용");
+		String json = new Gson().toJson(pointService.selectPointHistoryByMemIdxAndType(member.getMemberIdx(),"사용"));		
+		log.info("json={}" ,json);
+		return json;
+	}
+	
+	
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("refund-point-history")
+	public String refundPoinHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(pointService.selectPointHistoryByMemIdxAndType(member.getMemberIdx(),"환급"));
+		
+		log.info("json={}" ,json);
+		return json;
+	}
 
 }
