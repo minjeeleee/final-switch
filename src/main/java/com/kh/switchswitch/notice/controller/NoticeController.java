@@ -1,6 +1,5 @@
 package com.kh.switchswitch.notice.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -12,9 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.notice.model.dto.Notice;
 import com.kh.switchswitch.notice.model.service.NoticeService;
@@ -29,21 +27,20 @@ public class NoticeController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private final NoticeService noticeService;
-
 	@GetMapping("notice-form")
 	public void noticeForm() {}
 	
 	@PostMapping("upload")
-	public String uploadBoard(Notice notice,  @AuthenticationPrincipal MemberAccount member ) {
+	public String uploadNotice(Notice notice,  @AuthenticationPrincipal MemberAccount member ) {
 		notice.setUserId(member.getCode());
 		noticeService.insertNotice(notice);
-		return "redirect:/";
+		return "redirect:/notice/notice-list2";
 	}
 	
-	  @GetMapping("notice-list") 
+	  @GetMapping("notice-list2") 
 	  public String noticeList(Model model, @RequestParam(required = true, defaultValue = "1") int page) {
 		  model.addAllAttributes(noticeService.selectNoticeList(page));
-			return "notice/notice-list";
+			return "notice/notice-list2";
 	}
 	  @GetMapping("notice-detail")
 	public void noticeDetail(int noticeIdx, Model model) {
@@ -51,7 +48,7 @@ public class NoticeController {
 		model.addAttribute("datas", commandMap);
 	}
 		@GetMapping("notice-modify")
-		public void noticeModify(Notice notice,Model model, int noticeIdx,@AuthenticationPrincipal MemberAccount member) {
+		public void noticeModify(Notice notice,Model model, Integer noticeIdx,@AuthenticationPrincipal MemberAccount member) {
 			Map<String,Object> commandMap = noticeService.selectNoticeByIdx(noticeIdx);
 			notice.setUserId(member.getCode());
 			model.addAttribute("datas", commandMap);
@@ -59,17 +56,20 @@ public class NoticeController {
 		
 
 		@PostMapping("modify")
-		public String modifyNotice(Notice notice, int noticeIdx,@AuthenticationPrincipal MemberAccount member) {
+		public String modifyNotice(Notice notice, Integer noticeIdx,@AuthenticationPrincipal MemberAccount member) {
 			notice.setUserId(member.getCode());
 			notice.setNoticeIdx(noticeIdx);
 			noticeService.modifyNotice(notice);
 			return "redirect:/notice/notice-detail?noticeIdx="+notice.getNoticeIdx();
 		}
 
-		@PostMapping("delete")
-		public String deleteNotice(int noticeIdx) {
-			noticeService.deleteNotice(noticeIdx);
-			return "redirect:/";
+		@GetMapping("delete")
+		public String deleteNotice(Notice notice, @RequestParam Integer noticeIdx,@AuthenticationPrincipal MemberAccount member, RedirectAttributes redirectAttrs) {
+
+				notice.setUserId(member.getCode());
+				noticeService.deleteNotice(noticeIdx);
+				redirectAttrs.addFlashAttribute("message", "게시글 삭제가 완료되었습니다."); //수정필요
+			return "redirect:/notice/notice-list2"; 
 		}
 
 		

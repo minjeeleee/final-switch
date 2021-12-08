@@ -6,7 +6,8 @@ import lombok.Data;
 
 @Data
 public class Inquiry {
-   private int inquiryIdx;
+   private Integer inquiryIdx;
+   private int answerIdx;
    private String userId;
    private Date regDate;
    private String title;

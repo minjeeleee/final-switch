@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.common.util.FileDTO;
 
@@ -39,8 +39,11 @@ public interface CardRepository {
 	@Select("select * from card where card_idx=#{wishCardIdx}")
 	Card selectCardByCardIdx(int wishCardIdx);
 	
-	@Select("select * from card order by card_idx desc")
+	@Select("select * from card where isfree = 'N' order by card_idx desc")
 	List<Card> selectAllCard();
+	
+	@Select("select * from card where isfree = 'Y' order by card_idx desc")
+	List<Card> selectFreeCard();
 
 	@Select("select member_idx from card where card_idx=#{wishCardIdx}")
 	int selectMemberIdxByCardIdx(int wishCardIdx);
@@ -50,8 +53,6 @@ public interface CardRepository {
 	
 	@Select("select * from card where category=#{category}")
 	List<Card> searchCategoryCard(String category);
-
-	void updateCard(Card card);
 	
 	@Select("select * from card_request_list where REQUESTED_MEM_IDX=#{memberIdx} or REQUEST_MEM_IDX=#{memberIdx}")
 	List<CardRequestList> selectCardRequestListByMemIdx(Integer memberIdx);
@@ -83,14 +84,9 @@ public interface CardRepository {
 	@Select("select name from card where card_idx=#{cardIdx}")
 	String selectCardNameByCardIdx(Integer cardIdx);
 
-	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
-			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
-			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
-			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
-			+ "where e_idx =#{eIdx}")
-	CardRequestList selectCardRequestByEIdx(Integer eIdx);
-
 	List<Card> selectCardTrim(SearchCard searchCard);
+	
+	List<Card> selectFreeCardTrim(SearchCard searchCard);
 
 	void modifyCard(Card card);
 
@@ -104,5 +100,36 @@ public interface CardRepository {
 
 	@Select("select * from card where member_idx = #{memberIdx} and isfree = #{isfree} and is_del = 0 and exchange_status <> 'done'")
 	List<Card> selectCardByMemberIdxAndIsFreeExceptDone(@Param("memberIdx") Integer memberIdx, @Param("isfree") String isfree);
+
+	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
+			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
+			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
+			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
+			+ "where e_idx =#{eIdx}")
+	CardRequestList selectCardRequestByEIdx(Integer eIdx);
+	
+	@Select("select f.REQUESTED_CARD,"
+			+ " f.REQUESTED_MEM_IDX,f.REQUEST_MEM_IDX"
+			+ " from free_request_list f JOIN exchange_status e USING (freq_idx) "
+			+ "where e_idx =#{eIdx}")
+	FreeRequestList selectFreeRequestByEIdx(Integer eIdx);
+
+	@Select("select * from (select c.* from card c order by views desc) where rownum < 6")
+	List<Card> selectCardsTop5();
+
+	@Select("select * from Card_Request_List where req_idx=#{reqIdx}")
+	CardRequestList selectCardRequestListWithReqIdx(Integer reqIdx);
+
+	@Select("select * from card where card_idx = (select card_idx from wishlist where member_idx=#{memberIdx})")
+	List<Card> selectWishCardByMemberIdx(Integer memberIdx);
+
+	@Select("select req_idx,requested_card from card_request_list where requested_card = #{cardIdx} and request_mem_idx = #{memberIdx}")
+	CardRequestList selectRequestdCardByMemberIdx(@Param("cardIdx") Integer cardIdx,@Param("memberIdx") Integer memberIdx);
+
+	@Select("select * from card where exchange_status <> 'DONE' and isfree = 'N' order by card_idx desc")
+	List<Card> selectAllCardExceptDone();
+
+	@Select("select * from card where exchange_status <> 'DONE' and isfree = 'Y' order by card_idx desc")
+	List<Card> selectAllFreeCardExceptDone();
 	
 }

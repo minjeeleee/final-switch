@@ -1,10 +1,13 @@
 package com.kh.switchswitch.member.model.repository;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.Member;
@@ -19,6 +22,9 @@ public interface MemberRepository {
 	
 	@Select("select * from member where member_email = #{memberEmail} and member_del_yn = 0")
 	Member selectMemberByEmailAndDelN(String memberEmail);
+	
+	@Select("select * from member where member_idx = #{memberIdx}")
+	Member selectMemberByMemberIdx(Integer memberIdx);
 
 	@Select("select * from member where member_nick = #{memberNick} and member_del_yn = 0")
 	Member selectMemberByNicknameAndDelN(String memberNick);
@@ -46,6 +52,18 @@ public interface MemberRepository {
 	@Select("select member_email from member where member_nick = #{nickname} and member_tell = #{tell} and member_del_yn = 0")
 	String selectEmailByNicknameAndTell(Map<String, String> map);
 	
-	@Select("select member_nick from member where member_idx = #{requestMemIdx}")
-	String selectMemberNickWithMemberIdx(Integer requestMemIdx);
+	@Select("select * from member where member_idx = #{requestMemIdx}")
+	Member selectMemberWithMemberIdx(Integer requestMemIdx);
+
+	@Select("select member_score from member where member_idx = #{memberIdx}")
+	Optional<String> selectMemberScoreByMemberIdx(Integer memberIdx);
+
+	@Select("select * from (select m.* from member m order by member_score) where rownum < 6")
+	List<Member> selectMembersTop5();
+
+	@Select("select member_nick from member where member_idx=#{senderIdx}")
+	String selectMemberNickByMemberIdx(Integer senderIdx);
+	
+	@Update("update file_info set is_del = 1 where fl_idx=#{flIdx}")
+	void deleteProfileImg(Integer flIdx);
 }

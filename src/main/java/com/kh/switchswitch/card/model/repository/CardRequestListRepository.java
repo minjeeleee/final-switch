@@ -18,4 +18,9 @@ public interface CardRequestListRepository {
 	@Select("select requested_card from card_request_list where requested_mem_idx=#{memberIdx}")
 	List<Integer> selectCardIdxWithMemberIdx(Integer memberIdx);
 
+	@Select("select sc_req_idx.currval from dual")
+	Integer selectNewReqIdx();
+
+	void updateCardRequestList(CardRequestList cardRequestList);
+
 }

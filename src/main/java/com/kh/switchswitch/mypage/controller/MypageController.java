@@ -1,13 +1,16 @@
 package com.kh.switchswitch.mypage.controller;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,43 +23,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.kh.switchswitch.card.model.dto.Card;
-import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
-import com.kh.switchswitch.exchange.model.dto.ExchangeHistory;
-import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.inquiry.model.service.InquiryService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("mypage")
 public class MypageController {
 	
-	private MemberService memberService;
-	private ModifyFormValidator modifyFormValidator;
-	private PasswordEncoder passwordEncoder;
-	private ExchangeService exchangeService;
-	private CardService cardService;
-
-
-	public MypageController(MemberService memberService, ModifyFormValidator modifyFormValidator,
-			PasswordEncoder passwordEncoder,ExchangeService exchangeService,CardService cardService) {
-		super();
-		this.memberService = memberService;
-		this.modifyFormValidator = modifyFormValidator;
-		this.passwordEncoder = passwordEncoder;
-		this.exchangeService = exchangeService;
-		this.cardService = cardService;
-	}
+	private final MemberService memberService;
+	private final ModifyFormValidator modifyFormValidator;
+	private final PasswordEncoder passwordEncoder;
+	private final ExchangeService exchangeService;
+	private final CardService cardService;
+	private final InquiryService inquiryService;
 
 
 	@InitBinder(value = "modifyForm")
@@ -67,11 +62,9 @@ public class MypageController {
 
 	@GetMapping("profile")
 	public void profile(@AuthenticationPrincipal MemberAccount member,Model model) {
-		float myRate = exchangeService.selectMyRate(member.getMemberIdx());
 		int myRateCnt = exchangeService.selectMyRateCnt(member.getMemberIdx()).size();
-		
 		List<Integer> totalMyRate = exchangeService.selectMyRateCnt(member.getMemberIdx());
-		model.addAttribute("myRate", Map.of("score",Math.ceil(myRate*10)/10,"cnt",myRateCnt));
+		model.addAttribute("myRate", Map.of("score",exchangeService.selectMyRate(member.getMemberIdx()),"cnt",myRateCnt));
 		model.addAttribute("rateList"
 							,Map.of("one",Math.round((double)Collections.frequency(totalMyRate, 1)/(double)myRateCnt*100)
 									,"two",Math.round((double)Collections.frequency(totalMyRate, 2)/(double)myRateCnt*100)
@@ -91,22 +84,32 @@ public class MypageController {
 							,Model model
 							,HttpSession session
 							,RedirectAttributes redirectAttr
+							,@AuthenticationPrincipal MemberAccount member
 			) {
 		
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
 
-		System.out.println(profileImage);
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
 			return "mypage/profile";
 		}
 
-		memberService.updateMemberWithFile(form.convertToMember(),profileImage);
+		if(profileImage == null) {
+			memberService.updateMemberDelYN(form.convertToMember());
+		}else {
+			memberService.updateMemberWithFile(form.convertToMember(),profileImage);
+		}
+		
+		System.out.println("하이");
+		//security에 다시 회원 등록
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());
+		UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, authentication.getCredentials(),newPrincipal.getAuthorities());
+		newAuth.setDetails(authentication.getDetails());
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		memberService.updateMemberDelYN(form.convertToMember());
-
-		return "redirect:/mypage/profile";
+		return "mypage/profile";
 	}
 
 	@GetMapping("leave-member")
@@ -117,23 +120,22 @@ public class MypageController {
 									 ,String password 
 									,RedirectAttributes redirectAttr
 									,Model model
+									,HttpSession session
 								){
-
-		System.out.println("비밀번호 : "+password);
 		
 		if(!passwordEncoder.matches(password,member.getMemberPass())) {
 			model.addAttribute("message","비밀번호가 틀렸습니다"); 
 			return "mypage/leave-member"; 
 		}
 		
-		System.out.println(exchangeService.checkExchangeOngoing(member.getMemberIdx()));
+		//교환,나눔중인게 있으면 탈퇴 불가
 		if(exchangeService.checkExchangeOngoing(member.getMemberIdx())) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LEAVE_MEMBER);
  		}
 		
 		member.getMember().setMemberDelYn(1);
 		memberService.updateMemberDelYNForLeave(member.getMember());
-		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
+		session.invalidate();
 		return "redirect:/";
 	}
 	
@@ -158,11 +160,7 @@ public class MypageController {
 			return "disable";
 		}
 	}
-	
 
-	@GetMapping("chatting")
-	public void chatting() {}
-	
 	@GetMapping("history")
 	public void history(@AuthenticationPrincipal MemberAccount member,Model model) {
 		//내 별점 구하기
@@ -170,9 +168,37 @@ public class MypageController {
 		//거래 완료된 카드들
 		model.addAttribute("doneCardList",cardService.selectDoneCardList(member.getMemberIdx()));
 		//교환내역 찾기
-		model.addAttribute("ehList", exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
 	}
 	
-	@GetMapping("mypage-inquiry")
-	public void mypageInquiry() {}
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("exchange-history")
+	public String exchangeHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(exchangeService.selectExchangeHistoryByMemIdx(member.getMemberIdx()));
+		
+		log.info("json={}" ,json);
+		return json;
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+    @ResponseBody
+    @GetMapping("free-history")
+	public String freeHistoryJason(@AuthenticationPrincipal MemberAccount member,HttpServletResponse response) {
+		
+		response.addHeader("Access-Control-Allow-Origin","*");
+		
+		String json = new Gson().toJson(exchangeService.selectFreeRequestHistoryByMemIdx(member.getMemberIdx()));
+		
+		log.info("json={}" ,json);
+		return json;
+	}
+	
+	@GetMapping("personal-inquiry") 
+	public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
+		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
+		return "mypage/personal-inquiry";
+	}
 }

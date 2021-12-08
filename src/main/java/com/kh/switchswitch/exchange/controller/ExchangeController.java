@@ -1,11 +1,8 @@
 package com.kh.switchswitch.exchange.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kh.switchswitch.alarm.model.dto.Alarm;
-import com.kh.switchswitch.alarm.model.service.AlarmService;
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.service.CardService;
+import com.kh.switchswitch.chat.model.service.ChatService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
-import com.kh.switchswitch.common.util.FileDTO;
+import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.exchange.model.service.RatingService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.point.model.dto.SavePoint;
@@ -44,37 +42,23 @@ public class ExchangeController {
 	private final ExchangeService exchangeService;
 	private final PointService pointService;
 	private final CardService cardService;
-	private final AlarmService alarmService;
 	private final MemberService memberService;
+	private final ChatService chatService;
+	private final RatingService ratingService;
 	
-	@GetMapping("exchangeForm")
-	public void exchangeForm(
+	@GetMapping("exchangeForm/{wishCardIdx}")
+	public String exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
-			//, int wishCardIdx
-			, Model model) {
+			,@PathVariable int wishCardIdx
+			, Model model){
 		//내카드 리스트
-		List<Map<String,Object>> cardlist = new ArrayList<>();
-		List<Card> myCardList = exchangeService.selecAvailableMyCardList(certifiedMember.getMemberIdx());
-		int wishCardIdx = 393;
-		
-		if(myCardList != null) {
-			for (Card card : myCardList) {
-				FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
-				cardlist.add(Map.of("card", card, "fileDTO", fileDTO));
-			}
-		}
-		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
-		
-		model.addAttribute("cardlist", cardlist);
-		model.addAttribute("myRate",myRate);
+		model.addAttribute("cardlist", cardService.selectMyCardList(certifiedMember));
+		model.addAttribute("myRate", exchangeService.selectMyRate(certifiedMember.getMemberIdx()));
 		
 		//교환 희망 카드
-		Card cardInfo = exchangeService.selectCardByCardIdx(wishCardIdx);
-		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(wishCardIdx);
-		float userRate = exchangeService.selectMyRate(cardInfo.getMemberIdx());
-		
-		model.addAttribute("userRate", userRate);
-		model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
+		Map<String, Object> card = cardService.selectCard(wishCardIdx);
+		model.addAttribute("userRate", exchangeService.selectMyRate(((Card)card.get("cardInfo")).getMemberIdx()));
+		model.addAttribute("wishCard", card);
 		
 		//포인트 잔액
 		SavePoint savePoint = exchangeService.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
@@ -82,7 +66,7 @@ public class ExchangeController {
 			model.addAttribute("availableBal", savePoint.getAvailableBal());
 			model.addAttribute("balance", savePoint.getBalance());
 		}
-		
+		return "exchange/exchangeForm";
 	}
 	
 	@PostMapping("exchangeForm")
@@ -94,177 +78,290 @@ public class ExchangeController {
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
 		//교환요청리스트
-		CardRequestList cardRequestList = new CardRequestList();
-		cardRequestList.setRequestedCard(wishCardIdx);
-		if(cardIdxList != null) {
-			switch(5-cardIdxList.length) {
-			case 1 : cardRequestList.setRequestCard4(Integer.valueOf(cardIdxList[3]));
-			case 2 : cardRequestList.setRequestCard3(Integer.valueOf(cardIdxList[2])); 
-			case 3 : cardRequestList.setRequestCard2(Integer.valueOf(cardIdxList[1]));
-			case 4 : cardRequestList.setRequestCard1(Integer.valueOf(cardIdxList[0])); break;
-			default : logger.debug("왜 0이 들어오지??");
-			}
-		}
-		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
-		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
-		Integer offerPointInt = Integer.parseInt(offerPoint);
-		cardRequestList.setPropBalance(offerPointInt);
-		exchangeService.requestExchange(cardRequestList, cardIdxList.length);
-		
+		CardRequestList crl = exchangeService.requestExchange(certifiedMember, wishCardIdx, cardIdxList, offerPoint);
 		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(availableBal - offerPointInt, certifiedMember.getMemberIdx());
+		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
-		return "redirect:/";
+		model.addAttribute("alarmType", "교환요청");
+		model.addAttribute("reqIdx",crl.getReqIdx());
+		model.addAttribute("receiverIdx",crl.getRequestedMemIdx());
+		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
 	}
 	
-	@GetMapping("detail")
-	public void detail(
+	@GetMapping("detail/{reqIdx}")
+	public String detail(
 			@AuthenticationPrincipal MemberAccount certifiedMember,
-			//Alarm alarm, 
+			@PathVariable(required = false) Integer reqIdx,
 			Model model) {
-		Alarm alarm = new Alarm();
-		alarm.setAlarmIdx(1);
-		alarm.setReqIdx(450);
 		
-		//알림 테이블 is_read 업데이트
-		alarmService.updateAlarm(alarm);
+		if(reqIdx == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_WITH_BAD_REQUEST);
+		}
 		
-		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(alarm.getReqIdx());
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		CardRequestCancelList cardRequstCancelList = cardService.selectCardRequestCancelListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
-			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+			if(cardRequstCancelList == null) {
+				throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+			}
+			cardRequestList = convertToCardRequestList(cardRequstCancelList);
 		}
 		
-		Card card = cardService.selectCardWithCardIdx(cardRequestList.getRequestedCard());
-		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
+		//희망 카드
+		Map<String, Object>  requestedCard = cardService.selectCard(cardRequestList.getRequestedCard());
+		model.addAttribute("userRate", exchangeService.selectMyRate(((Card)requestedCard.get("cardInfo")).getMemberIdx()));
+		model.addAttribute("wishCard", requestedCard);
 		
-		//요청 유저 카드 리스트
-		List<Map<String,Object>> cardList = new ArrayList<Map<String,Object>>();
-		for (Integer cardIdx : cardService.getCardIdxSet(cardRequestList)) {
-			Card reqCard = cardService.selectCardWithCardIdx(cardIdx);
-			FileDTO reqfileDTO = exchangeService.selectImgFileByCardIdx(reqCard.getCardIdx());
-			cardList.add(Map.of("card",reqCard,"fileDTO",reqfileDTO));
-		}
-		
-		//요청받은 유저 카드
-		model.addAttribute("requestedCard", Map.of("card",card, "fileDTO", fileDTO));
 		//요청받은 유저 평점
 		model.addAttribute("requestedMemRate",exchangeService.selectMyRate(cardRequestList.getRequestedMemIdx()));
 		
-		//상대방 닉네임
+		//교환희망카드
+		List<Map<String,Object>> requestCardlist = cardService.selectRequestCardListByReqIdx(cardRequestList);
+		model.addAttribute("requestCardlist",requestCardlist);
+		
+		//요청 유저 평점
+		model.addAttribute("reqMemRate", exchangeService.selectMyRate(cardRequestList.getRequestMemIdx()));
+		
+		//상대방 닉네임**
 		if(certifiedMember.getMemberIdx().equals(cardRequestList.getRequestMemIdx())) {
 			model.addAttribute("counterpartNick",memberService.selectMemberNickWithMemberIdx(cardRequestList.getRequestedMemIdx()));
 		} else {
 			model.addAttribute("counterpartNick",memberService.selectMemberNickWithMemberIdx(cardRequestList.getRequestMemIdx()));
 		}
 		
-		//요청 유저 평점
-		model.addAttribute("reqMemRate", exchangeService.selectMyRate(cardRequestList.getRequestMemIdx()));
-		
 		//cardRequestList
 		model.addAttribute("cardRequestList",cardRequestList);
 		
-		model.addAttribute("status", cardService.selectExchangeStatusType(cardRequestList.getReqIdx()));
+		//cardRequestCancelList
+		model.addAttribute("cardRequestCancelList", cardRequstCancelList);
+		
+		if(cardRequstCancelList==null) {
+			model.addAttribute("status", cardService.selectExchangeStatusType(cardRequestList.getReqIdx()));
+		} else {
+			model.addAttribute("status", "CANCELED");
+		}
+		
+		return "exchange/detail";
 	}
-	
+
 	@GetMapping("reject/{reqIdx}")
-	public void reject(@PathVariable Integer reqIdx) {
+	public String reject(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'NONE'
-		cardService.updateCardStatusWithCardIdxSet(cardRequestList,"NONE");
+		//card status ->'REQUEST->'NONE' 변경 및 교환요청리스트 삭제
+		cardService.rejectRequest(cardRequestList,"NONE");
 		
 		//돈 돌려줘야됨
 		pointService.updateSavePoint(cardRequestList);
 		
-		//교환요청리스트 삭제
-		cardService.deleteCardRequestList(cardRequestList.getReqIdx());
-		
 		//거절 알림 보내기
-		alarmService.sendAlarmWithStatus(cardRequestList, "요청거절");
+		model.addAttribute("alarmType", "요청거절");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		model.addAttribute("url","/card/my-card");
+		
+		return "/common/alarm";
 	}
 	
 	@GetMapping("accept/{reqIdx}")
-	public void accept(@PathVariable Integer reqIdx) {
+	public String accept(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		logger.info(cardRequestList.toString());
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'ONGOING'
-		cardService.updateCardStatusWithCardIdxSet(cardRequestList,"ONGOING");
-		
-		//교환형황 테이블 생성
-		cardService.insertExchangeStatus(cardRequestList);
-		
+		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 생성
+		cardService.acceptRequest(cardRequestList,"ONGOING");
+		//요청 수락시 채팅방 생성
+		chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());
 		//수락 알림 보내기
-		alarmService.sendAlarmWithStatus(cardRequestList, "요청수락");
+		model.addAttribute("alarmType", "요청수락");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		model.addAttribute("url","/exchange/detail/"+reqIdx);
+		
+		return "/common/alarm";
 	}
 	
-	
+	//요청취소
 	@GetMapping("request-cancel/{reqIdx}")
-	public void requestCancel(@PathVariable Integer reqIdx) {
+	public String requestCancel(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'NONE'
-		cardService.updateCardStatusWithCardIdxSet(cardRequestList,"NONE");
+		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환요청거절리스트 생성
+		cardService.requestCancelRequest(cardRequestList,"NONE");
 		
 		//돈 돌려줘야됨
 		pointService.updateSavePoint(cardRequestList);
 		
-		//교환요청리스트 삭제
-		cardService.deleteCardRequestList(cardRequestList.getReqIdx());
-		
 		//취소 알림 보내기
-		alarmService.sendAlarmWithStatus(cardRequestList, "요청취소");
+		model.addAttribute("alarmType", "요청취소");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
 	}
 	
+	//교환취소요청
+	@GetMapping("cancel-request/{reqIdx}/{status}")
+	public String cancelRequest(@PathVariable Integer reqIdx
+								,@PathVariable String status
+								, Model model) {
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		//exchange status ->'ONGOING'->status("APPLICANTCANCEL"||"OWNERCANCEL")
+		cardService.requestCancel(reqIdx, status);
+		
+		//취소 알림 보내기
+		model.addAttribute("alarmType", "교환취소요청");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(status.equals("APPLICANTCANCEL")) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
+	}
+	
+	//교환취소요청거절
+	@GetMapping("cancel-request-reject/{reqIdx}/{status}")
+	public String cancelRequestReject(@PathVariable Integer reqIdx
+								,@PathVariable String status
+								, Model model) {
+		
+		//exchange status ->status("APPLICANTCANCEL"||"OWNERCANCEL")->ONGOING
+		cardService.cancelRequestReject(reqIdx, "ONGOING");
+		
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		//거절 알림 보내기
+		model.addAttribute("alarmType", "교환취소요청거절");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(status.equals("APPLICANTCANCEL")) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/exchange/detail/"+reqIdx);
+		
+		return "/common/alarm";
+	}
+	
+	//교환취소요청취소
+	@GetMapping("cancel-request-cancel/{reqIdx}/{status}")
+	public String cancelRequestCancel(@PathVariable Integer reqIdx
+								,@PathVariable String status
+								, Model model) {
+		
+		//exchange status ->status("APPLICANTCANCEL"||"OWNERCANCEL")->ONGOING
+		cardService.cancelRequestReject(reqIdx, "ONGOING");
+		
+		//교환요청리스트
+		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
+		if(cardRequestList == null) {
+			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
+		}
+		
+		//거절 알림 보내기
+		model.addAttribute("alarmType", "교환취소요청취소");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(status.equals("APPLICANTCANCEL")) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/exchange/detail/"+reqIdx);
+		
+		return "/common/alarm";
+	}
+	
+	//교환취소
 	@GetMapping("exchange-cancel/{reqIdx}")
-	public void exchangeCancel(@PathVariable Integer reqIdx) {
+	public String exchangeCancel(@PathVariable Integer reqIdx
+								,@AuthenticationPrincipal MemberAccount certifiedMember
+								, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'NONE'
-		cardService.updateCardStatusWithCardIdxSet(cardRequestList,"NONE");
+		
+		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환현황 삭제 및 교환요청거절리스트 생성
+		cardService.exchangeCancelRequest(cardRequestList,"NONE");
 		
 		//돈 돌려줘야됨
 		pointService.updateSavePoint(cardRequestList);
 		
-		//교환요청리스트 삭제
-		cardService.deleteCardRequestList(cardRequestList.getReqIdx());
-		
-		//교환현황 삭제
-		cardService.deleteExchangeStatus(cardRequestList.getReqIdx());
-		
 		//취소 알림 보내기
-		alarmService.sendAlarmWithStatus(cardRequestList, "교환취소");
+		model.addAttribute("alarmType", "교환취소");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		if(certifiedMember.getMemberIdx().equals(cardRequestList.getRequestMemIdx())) {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+		} else {
+			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		}
+		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
 	}
 	
+	//교환완료
 	@GetMapping("complete/{reqIdx}")
-	public void complete(@PathVariable Integer reqIdx) {
+	public String complete(
+						@AuthenticationPrincipal MemberAccount certifiedMember
+						, @PathVariable Integer reqIdx
+						,@RequestParam(required = false) Integer rate
+						, Model model) {
+		//교환완료 알림 확인 시 상대방 평가 받아오기
+		ExchangeStatus exchangeStatus = exchangeService.selectExchangeStatus(reqIdx);
+		if(exchangeStatus.getType().equals("DONE")) {
+			ratingService.createRating(exchangeStatus,rate, certifiedMember);
+			return "redirect:/exchange/detail/"+reqIdx;
+		}
+		
 		//확정요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'DONE'
-		cardService.updateCardStatusWithCardIdxSet(cardRequestList,"DONE");
-		
-		//교환현황 -> 'ONGOING'->'DONE'
-		cardService.updateExchangeStatus(cardRequestList.getReqIdx(), "DONE");
+		//card status ->'REQUEST->'DONE' 및 교환현황 -> 'ONGOING'->'DONE'
+		cardService.completeExchange(cardRequestList,"DONE");
 		
 		//교환 내역 생성
 		exchangeService.insertExchangeHistory(cardService.selectExchangeStatusWithReqIdx(reqIdx));
 		
+		//교환완료 버튼 클릭 시 front에서 상대방 평가폼 생성해서 함께 정보 받아오기?
+		if(rate != null) {
+			ratingService.createRating(exchangeStatus,rate, certifiedMember);
+		}
+		
 		//교환완료 알림 보내기
-		alarmService.sendAlarmWithStatus(cardRequestList, "교환완료");
+		model.addAttribute("alarmType", "평점요청");
+		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
+		model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+		model.addAttribute("url","/market/cardmarket");
+		
+		return "/common/alarm";
 	}
 	
 	@GetMapping("revise/{reqIdx}")
@@ -277,30 +374,18 @@ public class ExchangeController {
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		
 		Set<Integer> cardIdxSet = cardService.getCardIdxSet(cardRequestList);
-		List<Card> cardList = cardService.selectCardList(cardIdxSet);
-		
-		List<Map<String,Object>> cardlist = new ArrayList<>();
-		if(cardList != null) {
-			for (Card card : cardList) {
-				FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(card.getCardIdx());
-				cardlist.add(Map.of("card", card, "fileDTO", fileDTO));
-			}
-		}
-		float myRate = exchangeService.selectMyRate(certifiedMember.getMemberIdx());
-		
 		model.addAttribute("cardIdxSet",cardIdxSet);
-		model.addAttribute("cardlist", cardlist);
-		model.addAttribute("myRate",myRate);
+		model.addAttribute("cardlist", cardService.selectCardListForRevise(cardIdxSet));
+		model.addAttribute("myRate",exchangeService.selectMyRate(certifiedMember.getMemberIdx()));
 		
+		//내카드 리스트(확정요청리스트 제외)
+		model.addAttribute("myCardlist", cardService.selectMyCardListExceptRequestCardList(certifiedMember,cardIdxSet));
+	
 		//교환 희망 카드
-		Card cardInfo = exchangeService.selectCardByCardIdx(cardRequestList.getRequestedCard());
-		FileDTO fileDTO = exchangeService.selectImgFileByCardIdx(cardRequestList.getRequestedCard());
-		float userRate = exchangeService.selectMyRate(cardInfo.getMemberIdx());
-		
-		model.addAttribute("userRate", userRate);
-		model.addAttribute("wishCard", Map.of("cardInfo", cardInfo, "fileDTO", fileDTO));
+		Map<String, Object> card = cardService.selectCard(cardRequestList.getRequestedCard());
+		model.addAttribute("userRate", exchangeService.selectMyRate(cardRequestList.getRequestedCard()));
+		model.addAttribute("wishCard", card);
 		
 		//포인트 잔액
 		SavePoint savePoint = exchangeService.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
@@ -310,20 +395,32 @@ public class ExchangeController {
 		}
 		
 		model.addAttribute("propBalance", cardRequestList.getPropBalance());
+		model.addAttribute("reqIdx", reqIdx);
 		
-		return "exchange/detailReviceForm";
+		return "exchange/detailReviseForm";
 	}
 	
-	@PostMapping("reviseForm")
+	@PostMapping("reviseForm/{reqIdx}")
 	public String revise(@AuthenticationPrincipal MemberAccount certifiedMember
+			, @PathVariable int reqIdx
 			, int wishCardIdx
 			, String offerPoint
 			, int availableBal
-			, Set<Integer> previousCardIdxSet
+			, String[] previousCardIdxArr
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
 		
 		//교환요청리스트
+		CardRequestList cardRequestList = createCardRequestList(certifiedMember, cardIdxList, wishCardIdx, offerPoint, reqIdx);
+		exchangeService.reviseRequest(cardRequestList, cardIdxList.length, previousCardIdxArr, cardIdxList);
+		
+		//포인트 holding ?? 후 가용 포인트
+		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
+		
+		return "redirect:/exchange/detail/"+reqIdx;
+	}
+	
+	private CardRequestList createCardRequestList(MemberAccount certifiedMember, String[] cardIdxList, int wishCardIdx, String offerPoint, int reqIdx) {
 		CardRequestList cardRequestList = new CardRequestList();
 		if(cardIdxList != null) {
 			switch(5-cardIdxList.length) {
@@ -336,36 +433,23 @@ public class ExchangeController {
 		}
 		cardRequestList.setRequestedMemIdx(cardService.selectCardMemberIdxWithCardIdx(wishCardIdx));
 		cardRequestList.setRequestMemIdx(certifiedMember.getMemberIdx());
-		Integer offerPointInt = Integer.parseInt(offerPoint);
-		cardRequestList.setPropBalance(offerPointInt);
-		exchangeService.updateRequestExchange(cardRequestList, cardIdxList.length);
-		
-		String[] previousCardIdxArr = (String[]) previousCardIdxSet.toArray();
-		for(int i = 0;i < previousCardIdxArr.length; i++) {
-			for(int j = 0; j < cardIdxList.length; j++) {
-				if(previousCardIdxArr[i] == cardIdxList[j]) {
-					previousCardIdxArr[i] = null;
-					cardIdxList[j] = null;
-				}
-			}
-		}
-		// previousCardIdxArr -> request -> none 으로 변경해야되는 값
-		for (String previousCardIdx : previousCardIdxArr) {
-			if(previousCardIdx != null) {
-				cardService.updateCardWithStatus(Integer.parseInt(previousCardIdx), "NONE");
-			}
-		}
-		// cardIdxList -> none -> request 로 변경해야되는 값
-		for (String cardIdx : cardIdxList) {
-			if(cardIdx != null) {
-				cardService.updateCardWithStatus(Integer.parseInt(cardIdx), "REQUEST");
-			}
-		}
-		
-		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(availableBal - offerPointInt, certifiedMember.getMemberIdx());
-		
-		return "exchange/detailReviceForm";
+		cardRequestList.setPropBalance(Integer.parseInt(offerPoint));
+		cardRequestList.setReqIdx(reqIdx);
+		return cardRequestList;
+	}
+	
+	private CardRequestList convertToCardRequestList(CardRequestCancelList cardRequstCancelList) {
+		CardRequestList cardRequestList = new CardRequestList();
+		cardRequestList.setReqIdx(cardRequstCancelList.getReqIdx());
+		cardRequestList.setPropBalance(cardRequstCancelList.getPropBalance());
+		cardRequestList.setRequestCard1(cardRequstCancelList.getRequestCard1());
+		cardRequestList.setRequestCard2(cardRequstCancelList.getRequestCard2());
+		cardRequestList.setRequestCard3(cardRequstCancelList.getRequestCard3());
+		cardRequestList.setRequestCard4(cardRequstCancelList.getRequestCard4());
+		cardRequestList.setRequestedCard(cardRequstCancelList.getRequestedCard());
+		cardRequestList.setRequestedMemIdx(cardRequstCancelList.getRequestedMemIdx());
+		cardRequestList.setRequestMemIdx(cardRequstCancelList.getRequestMemIdx());
+		return cardRequestList;
 	}
 	
 

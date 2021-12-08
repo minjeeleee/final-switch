@@ -25,6 +25,9 @@ public class Paging {
 		this.cntPerPage = builder.cntPerPage;
 		
 		this.lastPage = (int)Math.ceil((double)total/cntPerPage);
+		if(lastPage == 0) {
+			this.lastPage = 1;
+		}
 		this.prev = curPage == 1 ? 1 : curPage - 1;
 		this.next = curPage == lastPage ? lastPage : curPage + 1;
 		calBlockStartAndEnd();

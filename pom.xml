@@ -19,6 +19,10 @@
 			<id>ojdbc6-repo</id>
 			<url>http://www.datanucleus.org/downloads/maven2/</url>
 		</repository>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 	
 	<dependencies>
@@ -313,7 +317,11 @@
 		    <artifactId>gson</artifactId>
 		    <version>2.8.9</version>
 		</dependency>
-		
+	<dependency>
+		<groupId>org.springframework.data</groupId>
+		<artifactId>spring-data-commons</artifactId>
+		<version>2.5.6</version>
+	</dependency>
 		<!-- socket -->
 		<dependency>
 		 	<groupId>org.springframework</groupId>
@@ -331,8 +339,41 @@
 		    <version>1.1</version>
 		    <scope>provided</scope>
 		</dependency>
-		  
+		<!-- stomp -->
+		<dependency>
+		    <groupId>org.springframework.integration</groupId>
+		    <artifactId>spring-integration-stomp</artifactId>
+		    <version>5.3.2.RELEASE</version>
+		</dependency> 
+		<!-- iamport -->
+		<dependency>
+		    <groupId>com.github.iamport</groupId>
+		    <artifactId>iamport-rest-client-java</artifactId>
+		    <version>0.2.17</version>
+		</dependency>  
+		
+		<dependency>
+		  <groupId>com.sun.xml.bind</groupId>
+		  <artifactId>jaxb-core</artifactId>
+		  <version>2.3.0.1</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>javax.xml.bind</groupId>
+		  <artifactId>jaxb-api</artifactId>
+		  <version>2.3.1</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>com.sun.xml.bind</groupId>
+		  <artifactId>jaxb-impl</artifactId>
+		  <version>2.3.1</version>
+		</dependency>
 	</dependencies>
+	
+	
+	
+	
     <build>
         <plugins>
             <plugin>

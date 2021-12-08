@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.service.CardService;
-import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 
@@ -33,12 +33,12 @@ public class CardController {
 	
 	@PostMapping("card-form")
 	public String createCard(@RequestParam(required = false) List<MultipartFile> imgList
-			//,@AuthenticationPrincipal MemberAccount member
+			,@AuthenticationPrincipal MemberAccount member
 			, Card card
 
 			) {
 		System.out.println(card.toString());
-		card.setMemberIdx(1);
+		card.setMemberIdx(member.getMemberIdx());
 		cardService.insertCard(imgList, card); 
 
 		return "redirect:/";
@@ -76,7 +76,7 @@ public class CardController {
 	}
 	
 	@GetMapping("my-card")
-	public void myCard(@AuthenticationPrincipal MemberAccount memberAccount
+	public String myCard(@AuthenticationPrincipal MemberAccount memberAccount
 			,Model model) {
 		
 		List<Map<String, Object>> myExchangeCards = cardService.selectMyExchangeCard(memberAccount.getMemberIdx()); 
@@ -85,6 +85,26 @@ public class CardController {
 		model.addAttribute("myExchangeCards",myExchangeCards);
 		model.addAttribute("myFreeCards",myFreeCards);
 		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
+		
+		return "card/my-card";
+	}
+	
+	@GetMapping("wish-card")
+	public String wishCard(@AuthenticationPrincipal MemberAccount memberAccount
+			,Model model) {
+		
+		List<Map<String, Object>> wishCard = cardService.selectWishCard(memberAccount.getMemberIdx()); 
+		
+		model.addAttribute("wishCards",wishCard);
+		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
+		
+		return "card/wish-card";
+	}
+	
+	@GetMapping("view")
+	@ResponseBody
+	public void updateView(Card card) {
+		cardService.updateCardViews(card);
 	}
 	
 }

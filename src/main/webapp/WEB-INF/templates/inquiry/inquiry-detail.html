@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>        
 		<meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Switch-Switch</title>
-        <!-- Favicon-->
-        <link rel="icon" type="resources/img/x-icon" href="../../../resources/assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="../../../resources/css/styles.css" rel="stylesheet" />
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 		<link href="../../../resources/css/board/inquiry.css" rel="stylesheet" />
-
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <style type="text/css">
 
 </style>
@@ -35,10 +32,12 @@
 						th:action="|/inquiry/delete?${_csrf.parameterName}=${_csrf.token}&inquiryIdx=${datas.inquiry.inquiryIdx}|"
 						method="post" enctype="multipart/form-data">
 						<div class='btn_area'>
+						<span th:if="${#authentication.principal.memberName} == ${datas.inquiry.userId}">
 							<a class="btn"
 								th:href="@{/inquiry/inquiry-modify(inquiryIdx=${datas.inquiry.inquiryIdx})}">수정</a>
 							<button id="btnDelete" class="btn">삭제</button>
-							<a class="btn" th:href="@{/inquiry/inquiry-list}">목록</a>
+						</span>
+							<a class="btn" th:href="@{/inquiry/inquiry-list2}">목록</a>
 						</div>
 					</form>
 					<div class="section_content_box"  th:object="${datas}">
@@ -54,41 +53,45 @@
 						<div class="content_area" id=editor1>
 							<pre>[[*{inquiry.content}]]</pre>
 						</div>
-
-								<div>
-									<div class="cmt_wrap">
-										<div class="cmt_info">
-											<div>
-												관리자 <a href="/reply/delete-reply?rp_idx=${reply.rpIdx }&bd_idx=${inquiry.inquiryIdx }" style="margin-left: 10px;"><i class="fas fa-times"></i></a>
-											</div>
-
-										</div>
-										<div>문의사항 답변드립니다.</div>
-									</div>
-								</div>
-
+<!-- 
 								<form class="frm_write_cmt" action="/reply/add-reply?bd_idx=${board.bdIdx }" method="POST">
 									<div class="cmt_write_box">
 										<div class="cmt_writer_id"></div>
 										<textarea name="content" placeholder="답변을 입력하세요" required="required"></textarea>
 										<button class="cmt_write_btn">등록</button>
 									</div>
-								</form>
+								</form> -->
 					</div>
-				</div>
-				
+				</div>				
 			</div>
+				<a class="btn" th:href="@{/inquiry/inquiry-answer(inquiryIdx=${datas.inquiry.inquiryIdx})}">답글 작성</a>
+					<div  id="answer">
+						<div class="cmt_wrap" th:each="answer : ${answer}" th:id="${answer.answerIdx}">
+							<div>
+									<div class="cmt_info">
+										<div>
+											<a th:text="|작성자 : ${answer.userId}|"
+												style="margin-left: 10px;"><i class="fas fa-times"></i></a>
+										</div>
+									</div>						
+								<pre>[[${answer.answer}]]</pre>
+							</div>
+							<span th:if="${#authentication.principal.memberName} == ${answer.userId}">
+						        <button id="btn-delete" class="btn btn-danger" type="submit" name="submit" value="delete" th:onclick="'deleteConfirm(' + ${answer.answerIdx} + ')'">삭제</button>						
+							</span>
+							<input type="hidden"  th:value="${answer.answerIdx}" class="answerIdx">
+						</div>
+					</div>
 		</div>
-	</section>
-	<script type="text/javascript">
-		let downloadFile = (ofn,rfn,path) => {
-			let paramObj = {
-					originFileName : ofn,
-					renameFileName : rfn,
-					savePath : path
-			}
-			location.href = '/download?' + urlEncoder(paramObj);
-		}
+</section>
+	<script type="text/javascript" th:inline="javascript">
+	let header = "[(${_csrf.headerName})]";
+    let token = "[(${_csrf.token})]";
+    let inquiryIdx = [[${param.inquiryIdx}]];
+    let answerIdx = [[${param.answerIdx}]];
+    let userId = [[${#authentication.principal.memberName}]];
 	</script>
+<script type="text/javascript" th:inline="javascript" th:src="@{../resources/js/answer/inquiry-detail.js}">
+</script>
 </body>
 </html>

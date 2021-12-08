@@ -31,4 +31,19 @@
   		</trim>
   		)
   	</insert>
+  	
+  	<update id="updateCardRequestList">
+  		update card_request_list 
+  		<trim prefix="set" suffixOverrides=",">
+  		<if test="requestedCard != null">requested_card = #{requestedCard},</if>
+  		<if test="requestCard1 != null">request_card1 = #{requestCard1},</if>
+  		<if test="requestCard2 != null">request_card2 = #{requestCard2},</if>
+  		<if test="requestCard3 != null">request_card3 = #{requestCard3},</if>
+  		<if test="requestCard4 != null">request_card4 = #{requestCard4},</if>
+  		<if test="requestedMemIdx != null">requested_mem_idx = #{requestedMemIdx},</if>
+  		<if test="requestMemIdx != null">request_mem_idx = #{requestMemIdx},</if>
+  		<if test="propBalance != null">prop_balance = #{propBalance}</if>
+  		</trim>
+  		where req_idx = #{reqIdx}
+  	</update>
   </mapper>

@@ -8,18 +8,30 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.lang.Nullable;
 
 import com.kh.switchswitch.admin.model.dto.Code;
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.point.model.dto.PointRefund;
 
 @Mapper
 public interface AdminRepository {
 	
 	@Select("select * from card where is_del = 0")
-	List<Card> selectCards();
+	List<Card> selectCardList();
+	
+	@Select("select * from card where is_del = 0 and isfree = 'N'")
+	List<Card> selectCardListByTrade();
+	
+	@Select("select * from card where is_del = 0 and isfree = 'Y'")
+	List<Card> selectCardListByFree();
+	
+	//@Select("select * from card where is_del = 0")
+	List<Card> selectCardsDetail(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Nullable@Param("searchKeyword")String searchKeyword,
+								 @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectCardImgListByCardIdx(Integer cardIdx);
@@ -30,8 +42,16 @@ public interface AdminRepository {
 	@Update("update card set is_del = 1 where card_idx = #{cardIdx}")
 	Integer deleteCard(Integer cardIdx);
 	
-	@Select("select * from member where member_del_yn=0")
-	List<Member> selectMemberAllList();
+	@Update("update file_info set is_del = 1 where card_idx = #{cardIdx}")
+	void deleteImg(Integer cardIdx);
+	
+	//@Select("select * from member where member_del_yn=0 and #{searchType}=#{keyword}")
+	List<Member> selectMemberAllList(@Param("searchType") String searchType, @Param("keyword") String keyword, 
+									 @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
+	
+	//@Select("select * from member where code = 'D' and member_del_yn=0")
+	List<Member> selectMemberBlackList(@Param("searchType") String searchType, @Param("keyword") String keyword,
+									   @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
 	
 	@Insert("insert into menu(url_idx,code,url,url_name,position,depth,parent) values(sc_url_idx.nextval, #{code},#{url},#{urlName},#{position},#{depth},#{parent})")
 	void insertMenu(Menu Menu);
@@ -63,9 +83,6 @@ public interface AdminRepository {
 	@Update("update member set code=#{code} where member_idx=#{memberIdx}")
 	void updateMemberCode(@Param("code")String code,@Param("memberIdx") int memberIdx);
 	
-	@Select("select * from member where code = 'D' and member_del_yn=0")
-	List<Member> selectMemberBlackList();
-	
 	@Select("select * from member where member_idx = #{memberIdx} and member_del_yn=0")
 	Member selectMemberByIdx(int memberIdx);
 	
@@ -88,6 +105,42 @@ public interface AdminRepository {
 	
 	@Select("select * from file_info where card_idx is not null and card_idx = #{cardIdx}")
 	List<FileDTO> selectFileInfoByCardIdx(Integer cardIdx);
+	
+	@Select("select * from card where member_idx = #{memberIdx} and rownum < 6 and is_del = 0")
+	List<Card> selectCardListByMemberIdx(int memberIdx);
+	
+	@Select("select * from file_info where card_idx is not null and is_del = 0 ")
+	List<FileDTO> selectCardImgList();
+	
+	@Select("select card_idx from file_info where fl_idx = #{flIdx}")
+	Integer selectCardIdxByflIdx(Integer flIdx);
+	
+	//@Select("select count(*) from member where member_del_yn=0")
+	Integer memberCount(@Param("searchType") String searchType, @Param("keyword") String keyword);
+
+	Integer memberBlackListCount(@Param("searchType")String searchType, @Param("keyword")String keyword);
+
+	Integer cardCount(@Param("searchPeriod")String searchPeriod, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
+
+	List<PointRefund> selectRefundHistoryList(@Param("statusCode")String statusCode, @Param("page")Integer page, @Param("cntPerPage")Integer cntPerPage);
+	
+	@Select("select * from member where member_email = #{memberEmail}")
+	Member selectMemberByEmail(String memberEmail);
+	
+	@Update("update point_refund set admin_name=#{adminName},status_code=#{statusCode} where pr_idx = #{prIdx}")
+	void updateStatusCode(@Param("statusCode") String statusCode, @Param("adminName")String adminName, @Param("prIdx") Integer prIdx);
+
+	Member selectMemberByIdxWithDetail(@Param("memberIdx")Integer memberIdx, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
+	
+	List<PointRefund> selectRefundHistoryListForCount(String statusCode);
+	
+	
+	
+	
+	
+
+
+	
 
 	
 

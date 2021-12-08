@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,6 +16,8 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 
+import com.kh.switchswitch.common.security.CustomFailureHandler;
+import com.kh.switchswitch.common.security.CustomSuccessHandler;
 import com.kh.switchswitch.member.model.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private final DataSource dataSource;
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
+	private final CustomSuccessHandler customSuccessHandler;
+	private final CustomFailureHandler customFailureHandler;
 	
 	@Bean
 	public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
@@ -35,6 +40,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	    return firewall;
 	}
 
+	//authenticationManager bean 등록
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+	    return super.authenticationManagerBean();
+	}
 	
 	//remember-me 기능
 	public PersistentTokenRepository tokenRepository() {
@@ -52,8 +63,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	public void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
-			.mvcMatchers("/alarm/**","/mypage/**","/member/logout","/exchange/**").authenticated()
-			.mvcMatchers("/notice/notice-form").hasAuthority("C")
+			.mvcMatchers("/alarm/**","/mypage/**","/member/logout","/exchange/**", "/card/**","/chat/**","/board/**","/notice/**","/inquiry/**").authenticated()
+			.mvcMatchers("/notice/notice-form","/notice/notice-modify","/top/top-form","/top/top-modify").hasAuthority("C")
 			.mvcMatchers("/admin/**").hasAuthority("C")
 			.anyRequest().permitAll();
 		
@@ -61,7 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.loginProcessingUrl("/member/login")
 			.usernameParameter("memberEmail")
 			.loginPage("/member/login")
-			.defaultSuccessUrl("/");
+			.successHandler(customSuccessHandler)
+			.failureHandler(customFailureHandler);
 		
 		http.logout()
 		.logoutUrl("/member/logout")
@@ -71,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.rememberMe()
 			.userDetailsService(memberService)
 			.tokenRepository(tokenRepository());
-		
+				
 		//동시 로그인 차단
 		http.sessionManagement()
 		.sessionFixation().migrateSession()
@@ -83,7 +95,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.csrf().ignoringAntMatchers("/mail");
 		http.csrf().ignoringAntMatchers("/member/addrPopup");
-		http.csrf().ignoringAntMatchers("/market/category/**");
+		http.csrf().ignoringAntMatchers("/market/**");
+		http.csrf().ignoringAntMatchers("/point/**");
+		http.csrf().ignoringAntMatchers("/board/**");
 		
 //		http.csrf().disable();
 	}

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header">
   	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,13 +14,30 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
     
     <!-- indexcss -->
-    <link rel="stylesheet" href="../resources/css/index/index.css">
+    <link rel="stylesheet" th:href="@{/resources/css/index/index.css}">
     
     <!-- cardcss -->
-    <link rel="stylesheet" href="../resources/css/card/card2.css">
+    <link rel="stylesheet" th:href="@{/resources/css/card/card2.css}">
     
     <!-- favicon -->
-    <link rel="icon" type="../resources/img/x-icon" href="../resources/img/favicon.ico">
+    <link rel="icon" th:type="@{/resources/img/x-icon}" th:href="@{/resources/img/favicon.ico}">
+    
+    <!-- submenu -->
+    <link rel="stylesheet" th:href="@{/resources/css/subMenu.css}">
+    
+    <!-- submenujquery -->
+    <script defer th:src="@{/resources/js/subMenu.js}"></script>
+    
+    <!-- jQuery 스크립트 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
     <title>SwitchSwitch</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <th:block sec:authorize="isAuthenticated()">
+     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+   	 <script type="text/javascript" th:inline="javascript" th:replace="fragments :: alarm"></script>
+    </th:block>
+   
 </head>

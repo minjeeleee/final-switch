@@ -1,7 +1,6 @@
 package com.kh.switchswitch.notice.model.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -9,9 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.switchswitch.board.model.dto.Board;
-import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.common.util.pagination.PagingV2;
 import com.kh.switchswitch.notice.model.dto.Notice;
 import com.kh.switchswitch.notice.model.repository.NoticeRepository;
 
@@ -31,39 +29,35 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 
 	public Map<String, Object> selectNoticeList(int page) {
-		int cntPerPage = 5;
-		Paging pageUtil = Paging.builder()
-				.url("/board/board-list")
-				.total(10)
-				.curPage(page)
-				.blockCnt(10)
-				.cntPerPage(cntPerPage)
-				.build();
-
+		int cntPerPage = 10;
+		int total = (noticeRepository.selectContentCnt());
+		int nowPage = page;
+		String url = "/notice/notice-list2";
+		
+		PagingV2 pagingV2 = new PagingV2(total, nowPage, cntPerPage, url);
+				
 		Map<String,Object> commandMap = new HashMap<String,Object>();
-		commandMap.put("paging", pageUtil);
-		commandMap.put("noticeList", noticeRepository.selectNoticeList(pageUtil));
+		commandMap.put("paging", pagingV2);
+		commandMap.put("noticeList", noticeRepository.selectNoticeListWithPageNo(Map.of("startBoard",pagingV2.getStartAlarm(),"lastBoard",pagingV2.getEndAlarm())));
 		return commandMap;
+		
 	}
 
-	public Map<String, Object> selectNoticeByIdx(int noticeIdx) {
+	public Map<String, Object> selectNoticeByIdx(Integer noticeIdx) {
 		Notice notice = noticeRepository.selectNoticeByIdx(noticeIdx);
 		return Map.of("notice",notice);
 	}
 
-	@Override
+	@Transactional
 	public void modifyNotice(Notice notice) {
 		noticeRepository.modifyNotice(notice);
 		
 	}
 
-	@Override
-	public void deleteNotice(int noticeIdx) {
+	public void deleteNotice(Integer noticeIdx) {
 		noticeRepository.deleteNotice(noticeIdx);
 		
 	}
-
-
 
 
 

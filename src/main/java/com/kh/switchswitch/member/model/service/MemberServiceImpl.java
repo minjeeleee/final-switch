@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -27,17 +29,24 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
+import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
+import com.kh.switchswitch.card.model.repository.CardRequestCancelListRepository;
+import com.kh.switchswitch.card.model.repository.FreeRequestListRepository;
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
+import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
 import com.kh.switchswitch.member.model.dto.KakaoLogin;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.KakaoRepository;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 import com.kh.switchswitch.member.validator.JoinForm;
+import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -53,6 +62,11 @@ public class MemberServiceImpl implements MemberService {
 	private final PasswordEncoder passwordEncoder;
 	private final CardRepository cardRepository;
 	private final MailSender mailSender;
+	private final ExchangeRepository exchangeRepository;
+	private final FreeRequestListRepository freeRequestListRepository;
+	private final SavePointRepository savePointRepository;
+	private final CardRequestCancelListRepository cardRequestCancelListRepository;
+	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -67,6 +81,7 @@ public class MemberServiceImpl implements MemberService {
        Member member = form.convertToMember();
        member.setMemberPass(passwordEncoder.encode(form.getMemberPass()));
        memberRepository.insertMember(member);
+       savePointRepository.insertSavePoint();
     }
 
 	public void authenticateByEmail(JoinForm form, String token) {
@@ -156,21 +171,34 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	public void updateMemberDelYNForLeave(Member member) {
-		if(cardRepository.selectCardRequestListByMemIdx(member.getMemberIdx()) != null) {
-			cardRepository.deleteAllCardRequestByMemIdx(member.getMemberIdx());
-			cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
-		}else {
-			cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
+		//교환
+		List<CardRequestList> cardRequestList = cardRepository.selectCardRequestListByMemIdx(member.getMemberIdx());
+		//exchangeStatus에 값이 없으면 삭제
+		for (CardRequestList cardRequest: cardRequestList) {
+			if(exchangeRepository.selectExchangeStatusWithReqIdx(cardRequest.getReqIdx()) == null) {
+				cardRequestCancelListRepository.insertCardRequestCancelList(convertCardRequestListToCardRequestCancelList(cardRequest));
+				cardRepository.deleteCardRequestListWithReqIdx(cardRequest.getReqIdx());
+			}
 		}
+		
+		//나눔
+		List<FreeRequestList> freeRequestList = freeRequestListRepository.selectFreeRequestListByMemIdx(member.getMemberIdx());
+		for (FreeRequestList freeRequest: freeRequestList) {
+			if(exchangeRepository.selectExchangeStatusWithFreqIdx(freeRequest.getFreqIdx()) == null) {
+				freeRequestListRepository.deleteFreeRequestList(freeRequest.getFreqIdx());
+			}
+		}
+		cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
 		memberRepository.updateMember(member);
 	}
 	
 	public void updateMemberWithFile(Member member, MultipartFile profileImage) {
 		member.setMemberIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getMemberIdx());
 		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
+		member.setFlIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getFlIdx());
 		
-		System.out.println(profileImage);
 		if(profileImage.getSize() != 0) {
+			memberRepository.deleteProfileImg(member.getFlIdx());
 			FileUtil fileUtil = new FileUtil();
 			memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
 			memberRepository.updateMemberForFile(member);
@@ -307,7 +335,36 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	public String selectMemberNickWithMemberIdx(Integer requestMemIdx) {
-		return memberRepository.selectMemberNickWithMemberIdx(requestMemIdx);
+		return memberRepository.selectMemberWithMemberIdx(requestMemIdx).getMemberNick();
+	}
+
+	public List<Map<String, Object>> selectMembersTop5() {
+		List<Map<String, Object>> usersTop5 = new ArrayList<Map<String,Object>>();
+		List<Member> users = memberRepository.selectMembersTop5();
+		for (Member user : users) {
+			if(user.getFlIdx() == null) {
+				usersTop5.add(Map.of("user",user,"fileDTO",new FileDTO()));
+			} else {
+				usersTop5.add(Map.of("user",user,"fileDTO",memberRepository.selectFileInfoByFlIdx(user.getFlIdx())));
+			}
+			
+		}
+		return usersTop5;
 	}
 	
+
+	private CardRequestCancelList convertCardRequestListToCardRequestCancelList(CardRequestList cardRequestList) {
+		CardRequestCancelList cardRequestCancelList = new CardRequestCancelList();
+		cardRequestCancelList.setReqIdx(cardRequestList.getReqIdx());
+		cardRequestCancelList.setRequestedMemIdx(cardRequestList.getRequestedMemIdx());
+		cardRequestCancelList.setRequestMemIdx(cardRequestList.getRequestMemIdx());
+		cardRequestCancelList.setRequestedCard(cardRequestList.getRequestedCard());
+		cardRequestCancelList.setRequestCard1(cardRequestList.getRequestCard1());
+		cardRequestCancelList.setRequestCard2(cardRequestList.getRequestCard2());
+		cardRequestCancelList.setRequestCard3(cardRequestList.getRequestCard3());
+		cardRequestCancelList.setRequestCard4(cardRequestList.getRequestCard4());
+		cardRequestCancelList.setPropBalance(cardRequestList.getPropBalance());
+		return cardRequestCancelList;
+	}
+
 }

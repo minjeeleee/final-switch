@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/subHeader :: subHeader"></head>
+<body>
+
+   	<header th:replace="fragments/subBodyHeader :: header">
+    </header>
+	
+	
+   
+    <section>
+
+        <div class="ref-title-container">
+            <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>포인트</h1>
+                    <p>잔여포인트</p><span>2000P</span>
+                    <p>가용포인트</p><span>2000P</span>
+                </div>
+
+                <div class="ref-img">
+                    <img src="../resources/img/pointCoin.png" alt="">
+                </div>
+
+            </div>
+
+            <div class="single-title inner-size">
+
+                <p>환급</p>
+                
+            </div>
+
+            <div class="refund-container inner-size">
+
+                <div class="refund-input">
+                    <form class="refund-form" th:action="@{/point/refund}" id="refundInfo">
+                        <div class="req_point">
+                            <p>신청금액</p>
+                            <input type="number" id="" name="refundPoint">
+                        </div>
+                        <!-- 생년월일 입력창 필요 -->
+                        <div class="account">
+                            <p>환급계좌번호</p>
+                            <input type="number" id="account" name="account">
+                            <select name="bankName" style="font-size: 20px;">
+								<option value="004">국민은행</option>
+								<option value="020">우리은행</option>
+								<option value="081">하나은행</option>
+								<option value="088">신한은행</option>
+								<option value="090">카카오뱅크</option>
+							</select>
+                        </div>
+						<!-- 계좌조회 버튼 필요  -->
+                        <button class="ref-submit-button" onclick="doExchange()" type="submit">신청하기</button>
+                    </form>
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+    <footer>
+       <div th:replace="fragments/footer :: footer" ></div>
+   	</footer>
+    
+     <script type="text/javascript" th:inline="javascript">
+    let validUserName = ""; //이름
+    let account = ""; // 계좌
+    let bankName = ""; // 은행이름
+    let bankCode = ""; //은행코드
+    function checkAccount(){
+    	let inputAccount = $("#account").val();
+    	let inputBankCode = $("select[name=bankName]").val();
+    	let birth = $("#birth").val();
+    	
+    	fetch("/point/checkAccount?accountNum="+ inputAccount + "&bankCodeStd=" + inputBankCode + "&accountHolderInfo=" + birth)
+    	.then(response =>{
+    		console.dir(response);
+    		if(response.ok){
+    			return response.text();
+    		}else{
+    			throw new Error(response.status);
+    		}
+    	})
+    	.then(text => {
+    		console.dir(text);
+			if(text == '실패'){
+				console.dir(text);
+			}else{
+				let texts = text.split(",");
+				console.dir(texts[1]);
+				console.dir([[${#authentication.principal.memberName}]]);
+				if(texts[1] == [[${#authentication.principal.memberName}]] ){
+					alert("계좌실명인증이 완료되었습니다.");
+					validUserName = texts[1];
+					account = texts[0];
+					bankName = texts[2];
+					bankCode = texts[3];
+				} else {
+					alert("회원가입 시 입력한 이름과 계좌 소유주 이름이 다른 경우 어떻게 할까요?????");
+				}
+				
+			}
+		})
+		.catch(error => {
+			console.dir(error);
+		});
+    }
+    
+   function doExchange(){
+	   if(validUserName != [[${#authentication.principal.memberName}]]){
+		   alert("제출된 정보와 일치하지 않습니다./1");
+		   return;
+	   }
+	   if(account != $("#account").val()){
+		   console.dir(account);
+		   console.dir($("#account").val());
+		   alert("제출된 정보와 일치하지 않습니다./2");
+		   return;
+	   }
+	   if(bankCode != $("select[name=bankName]").val()){
+		   console.dir(bankCode);
+		   console.dir($("select[name=bankName]").val());
+		   alert("제출된 정보와 일치하지 않습니다./3");
+		   return;
+	   }
+	   $("#refundInfo").submit();
+   }
+    </script>
+</body>
+</html>

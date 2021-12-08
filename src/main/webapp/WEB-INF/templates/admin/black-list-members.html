@@ -4,14 +4,14 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-	<title>카드 리스트</title>
+	<title>SwitchSwitch-관리자 페이지</title>
 	<th:block th:replace="admin/fragments/head :: admin_head"></th:block>
-	<style type="text/css">
-	div,p,i,a{
-		color:#AEB7C2;
-	}
-	
-	</style>
+<style type="text/css">
+body{
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight:500;
+}
+</style>
 </head>
 
 <body>
@@ -33,20 +33,20 @@
 						<!-- TABLE HOVER -->
 						<div class="panel" style="background-color: white;">
 							<div class="panel-heading" style="height: 70px">
-								<form>
+								<form action="/admin/black-list-members" method="get">
 									<div style="display: flex; float: right;">
-									<select class="form-control" style="width: 120px;">
-									  <option>회원번호</option>
-									  <option>회원아이디</option>
-									  <option>회원이름</option>
-									  <option>회원닉네임</option>
-									  <option>연락처</option>
+									<select class="form-control" name="searchDetail" style="width: 120px;">
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_idx')}" value="member_idx">회원번호</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_email')}" value="member_email">회원아이디</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_name')}" value="member_name">회원이름</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_nick')}" value="member_nick">회원닉네임</option>
+									  <option th:selected="${#strings.equals(param.searchDetail, 'member_tell')}" value="member_tell">연락처</option>
 									</select>
 									<div class="" style="display: flex; width: 250px;">
-									  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-									  aria-describedby="search-addon" />
+									  <input type="search" name="searchKeyword" class="form-control rounded" placeholder="Search" aria-label="Search"
+									  aria-describedby="search-addon" th:value="${param.searchKeyword}" />
 									  <span class="input-group-text border-0" id="search-addon">
-									    <i class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></i>
+									    <button class="fa fa-search" aria-hidden="true" style="font-size: 30px;"></button>
 									  </span>
 									</div>
 									</div>
@@ -75,34 +75,27 @@
 											<td th:text="${memberList.memberRegDate}"></td>
 											<td><button type="button" class="btn btn-secondary btn-sm" th:text="해제하기" th:onclick="'location.href=\''+ @{/admin/removeMemberBlack(code=${memberList.code},memberIdx=${memberList.memberIdx})}+'\''"></button></td>
 										</tr>
-										<tr class="">
-											<td><a>000002</a></td>
-											<td>test02</td>
-											<td>김길순</td>
-											<td>홍231</td>
-											<td>01033331212</td>
-											<td>21-10-24</td>
-											<td><button type="button"
-													class="btn btn-secondary btn-sm">해제하기</button></td>
-										</tr>
 									</tbody>
 								</table>
 							</div>
 							<div style="display: flex; justify-content: center;">
-								<ul class="pagination">
+								<ul class="pagination" th:object=${paging}>
 							    <li>
-							      <a href="#" aria-label="Previous">
-							        <span aria-hidden="true">&laquo;</span>
+							      <a th:if="${param.searchDetail}" th:href="|*{url}?page=*{prev}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" aria-label="Previous">
+							        <span aria-hidden="true" style="color: black">&laquo;</span>
+							      </a>
+							      <a th:unless="${param.searchDetail}" th:href="|*{url}?page=*{prev}|" aria-label="Previous">
+							    	<span aria-hidden="true" style="color: black">&laquo;</span>
 							      </a>
 							    </li>
-							    <li><a href="#">1</a></li>
-							    <li><a href="#">2</a></li>
-							    <li><a href="#">3</a></li>
-							    <li><a href="#">4</a></li>
-							    <li><a href="#">5</a></li>
+							    <li><a th:if="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" th:text="${p}" style="color: black"></a></li>
+							    <li><a th:unless="${param.searchDetail}" th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}" th:href="|*{url}?page=${p}|" th:text="${p}" style="color: black"></a></li>
 							    <li>
-							      <a href="#" aria-label="Next">
-							        <span aria-hidden="true">&raquo;</span>
+							      <a th:if="${param.searchDetail}" th:href="|*{url}?page=*{next}&searchDetail=${param.searchDetail}&searchKeyword=${param.searchKeyword}|" aria-label="Next">
+							        <span aria-hidden="true" style="color: black">&raquo;</span>
+							      </a>
+							      <a th:unless="${param.searchDetail}" th:href="|*{url}?page=*{next}|" aria-label="Next">
+							        <span aria-hidden="true" style="color: black">&raquo;</span>
 							      </a>
 							    </li>
 							  </ul>
@@ -119,8 +112,7 @@
 		<footer>
 			<div class="container-fluid">
 				<p class="copyright">
-					Shared by <i class="fa fa-love"></i><a
-						href="https://bootstrapthemes.co">BootstrapThemes</a>
+					© 2021 SwitchSwitch. All rights reserved.
 				</p>
 			</div>
 		</footer>

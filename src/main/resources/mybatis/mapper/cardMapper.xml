@@ -26,10 +26,23 @@
   	
   	<select id="selectCardTrim" resultType="com.kh.switchswitch.card.model.dto.Card">
   		select * from card
-  		<trim prefix="where" prefixOverrides="and|or">
+  		<trim prefix="where" prefixOverrides="and|or" suffix="and isfree = 'N'">
   			<if test="category != null and !category.equals('')" >and category = #{category}</if>
   			<if test="region != null and !region.equals('')">and region = #{region}</if>
   			<if test="content != null and !content.equals('')">and (name like '%'||#{content}||'%' or content like '%'||#{content}||'%')</if>
+  			<if test="category.equals('') and region.equals('') and content.equals('')">and is_del = 0</if>
   		</trim>
+  		 order by card_idx desc
+  	</select>
+  	
+  	<select id="selectFreeCardTrim" resultType="com.kh.switchswitch.card.model.dto.Card">
+  		select * from card
+  		<trim prefix="where" prefixOverrides="and|or" suffix="and isfree = 'Y'">
+  			<if test="category != null and !category.equals('')" >and category = #{category}</if>
+  			<if test="region != null and !region.equals('')">and region = #{region}</if>
+  			<if test="content != null and !content.equals('')">and (name like '%'||#{content}||'%' or content like '%'||#{content}||'%')</if>
+  			<if test="category.equals('') and region.equals('') and content.equals('')">and is_del = 0</if>
+  		</trim>
+  		order by card_idx desc
   	</select>
   </mapper>

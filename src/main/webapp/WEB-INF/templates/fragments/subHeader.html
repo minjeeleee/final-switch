@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="subHeader">
 
@@ -9,6 +10,8 @@
     <meta name="_csrf" th:content="${_csrf.token}">
 	<meta name="_csrf_header" th:content="${_csrf.headerName}">
     
+    
+    
     <!-- fontawesome -->
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
@@ -17,32 +20,46 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
     
     <!-- headerfootercss -->
-    <link rel="stylesheet" href="../resources/css/haederFooter.css">
+    <link rel="stylesheet" th:href="@{/resources/css/haederFooter.css}">
     
     <!-- marketcss -->
-    <link rel="stylesheet" href="../resources/css/market/cardmarket.css">
+    <link rel="stylesheet" th:href="@{/resources/css/market/cardmarket.css}">
     
     <!-- logincss -->
-    <link rel="stylesheet" href="../resources/css/member/login.css">
+    <link rel="stylesheet" th:href="@{/resources/css/member/login.css}">
     
     <!-- cardcss -->
-    <link rel="stylesheet" href="../resources/css/card/card2.css">
+    <link rel="stylesheet" th:href="@{/resources/css/card/card2.css}">
     
     <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="../resources/img/favicon.ico">
+    <link rel="icon" type="image/x-icon" th:href="@{/resources/img/favicon.ico}">
     
-     <!-- detailpop -->
-     <link rel="stylesheet" href="../resources/css/card/carddetail.css">
+    <!-- detailpop -->
+    <link rel="stylesheet" th:href="@{/resources/css/card/carddetail.css}">
      
-     <!-- slick css -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
+    <!-- refund -->
+    <link rel="stylesheet" th:href="@{/resources/css/point/refund.css}">
+    
+    <!-- submenu -->
+    <link rel="stylesheet" th:href="@{/resources/css/subMenu.css}">
+    
+    <!-- submenujquery -->
+    <script defer th:src="@{/resources/js/subMenu.js}"></script>
+     
+    <!-- slick css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
      
     <!-- jQuery 스크립트 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <!-- slick -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-
+    
     <title>SwitchSwitch</title>
+    
+    <th:block sec:authorize="isAuthenticated()">
+     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+   	 <script type="text/javascript" th:inline="javascript" th:replace="fragments :: alarm"></script>
+    </th:block>
     
 </head>

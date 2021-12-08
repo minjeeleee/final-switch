@@ -32,6 +32,7 @@
 			<attribute name="m2e-apt" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
 	<classpathentry kind="src" output="target/test-classes" path=".apt_generated_tests">
 		<attributes>
 			<attribute name="test" value="true"/>

@@ -7,9 +7,12 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 public interface CardService {
 
@@ -26,10 +29,6 @@ public interface CardService {
 	List<Card> CardListWithMemberIdx(Integer requestMemIdx);
 
 	void updateCardWithCardIdx(Card card);
-
-	void deleteCardRequestList(Integer reqIdx);
-
-	void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status);
 
 	void insertExchangeStatus(CardRequestList cardRequestList);
 	
@@ -64,8 +63,54 @@ public interface CardService {
 	void modifyCard(List<MultipartFile> imgList, Card card);
 
 	List<Map<String, Object>> selectMyExchangeCard(Integer memberIdx);
+	
+	List<Map<String, Object>> selectWishCard(Integer memberIdx);
 
 	List<Map<String, Object>> selectMyFreeCard(Integer memberIdx);
 
 	Map<String, Object> selectModifyCard(Integer cardIdx);
+
+	void insertExchangeStatusByFreeRequesetList(FreeRequestList freeRequest);
+	
+	void deleteExchangeStatusWithFreqIdx(Integer freqIdx);
+	
+	void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type);
+	
+	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
+	
+	List<Map<String,Object>> selectCardsTop5();
+
+	List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember);
+
+	Map<String, Object> selectCard(int cardIdx);
+
+	List<Map<String, Object>> selectRequestCardListByReqIdx(CardRequestList cardRequestList);
+
+	void rejectRequest(CardRequestList cardRequestList, String status);
+
+	void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String string);
+
+	void deleteCardRequestList(Integer reqIdx);
+
+	void acceptRequest(CardRequestList cardRequestList, String status);
+
+	void requestCancelRequest(CardRequestList cardRequestList, String status);
+
+	void exchangeCancelRequest(CardRequestList cardRequestList, String status);
+
+	void completeExchange(CardRequestList cardRequestList, String status);
+
+	List<Map<String, Object>> selectCardListForRevise(Set<Integer> cardIdxSet);
+
+	CardRequestCancelList selectCardRequestCancelListWithReqIdx(int reqIdx);
+
+	void requestCancel(Integer reqIdx, String status);
+
+	void updateCardViews(Card card);
+
+	void cancelRequestReject(Integer reqIdx, String string);
+
+	List<Map<String, Object>> selectMyCardListExceptRequestCardList(MemberAccount certifiedMember, Set<Integer> cardIdxSet);
+
+	List<Card> selectAllCardExceptDone();
 }

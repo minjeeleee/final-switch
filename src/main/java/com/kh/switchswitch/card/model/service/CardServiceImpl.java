@@ -10,15 +10,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.switchswitch.card.model.dto.Card;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
+import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.dto.SearchCard;
-import com.kh.switchswitch.card.model.dto.WishList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
+import com.kh.switchswitch.card.model.repository.CardRequestCancelListRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
 import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +34,9 @@ public class CardServiceImpl implements CardService {
 	
 	private final CardRepository cardRepository;
 	private final CardRequestListRepository cardRequestListRepository;
+	private final CardRequestCancelListRepository cardRequestCancelListRepository;
 	private final ExchangeRepository exchangeRepository;
+	private final MemberRepository memberRepository;
 	
 	@Override
 	public void insertCard(List<MultipartFile> imgList, Card card) {
@@ -47,7 +53,6 @@ public class CardServiceImpl implements CardService {
 		}
 	}
 
-	@Override
 	public List<Card> selectAllCard() {
 		return cardRepository.selectAllCard();
 	}
@@ -71,7 +76,7 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public void updateCardWithCardIdx(Card card) {
-		cardRepository.updateCard(card);
+		cardRepository.modifyCard(card);
 	}
 	
 	public void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status) {
@@ -79,13 +84,29 @@ public class CardServiceImpl implements CardService {
 			Card card = new Card();
 			card.setCardIdx(cardIdx);
 			card.setExchangeStatus(status);
-			cardRepository.updateCard(card);
+			cardRepository.modifyCard(card);
 		}
 	}
 
 	public void deleteCardRequestList(Integer reqIdx) {
+		CardRequestList cardRequestList = cardRepository.selectCardRequestListWithReqIdx(reqIdx);
+		cardRequestCancelListRepository.insertCardRequestCancelList(convertCardRequestListToCardRequestCancelList(cardRequestList));
 		cardRepository.deleteCardRequestListWithReqIdx(reqIdx);
 		
+	}
+
+	private CardRequestCancelList convertCardRequestListToCardRequestCancelList(CardRequestList cardRequestList) {
+		CardRequestCancelList cardRequestCancelList = new CardRequestCancelList();
+		cardRequestCancelList.setReqIdx(cardRequestList.getReqIdx());
+		cardRequestCancelList.setRequestedMemIdx(cardRequestList.getRequestedMemIdx());
+		cardRequestCancelList.setRequestMemIdx(cardRequestList.getRequestMemIdx());
+		cardRequestCancelList.setRequestedCard(cardRequestList.getRequestedCard());
+		cardRequestCancelList.setRequestCard1(cardRequestList.getRequestCard1());
+		cardRequestCancelList.setRequestCard2(cardRequestList.getRequestCard2());
+		cardRequestCancelList.setRequestCard3(cardRequestList.getRequestCard3());
+		cardRequestCancelList.setRequestCard4(cardRequestList.getRequestCard4());
+		cardRequestCancelList.setPropBalance(cardRequestList.getPropBalance());
+		return cardRequestCancelList;
 	}
 
 	public void insertExchangeStatus(CardRequestList cardRequestList) {
@@ -116,6 +137,11 @@ public class CardServiceImpl implements CardService {
 	public void deleteExchangeStatus(Integer reqIdx) {
 		exchangeRepository.deleteExchangeStatusWithReqIdx(reqIdx);
 	}
+	
+	public void deleteExchangeStatusWithFreqIdx(Integer freqIdx) {
+		exchangeRepository.deleteExchangeStatusWithFreqIdx(freqIdx);
+	}
+
 
 	public void updateExchangeStatus(Integer reqIdx, String type) {
 		ExchangeStatus exchangeStatus = new ExchangeStatus();
@@ -123,9 +149,21 @@ public class CardServiceImpl implements CardService {
 		exchangeStatus.setType(type);
 		exchangeRepository.updateExchangeStatus(exchangeStatus);
 	}
+	
+	public void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type) {
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		exchangeStatus.setFreqIdx(freqIdx);
+		exchangeStatus.setType(type);
+		exchangeRepository.updateExchangeStatus(exchangeStatus);
+	}
+
 
 	public ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx) {
 		return exchangeRepository.selectExchangeStatusWithReqIdx(reqIdx);
+	}
+	
+	public ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx) {
+		return exchangeRepository.selectExchangeStatusWithFreqIdx(freqIdx);
 	}
 
 	public List<Card> selectCardList(Set<Integer> cardIdxSet) {
@@ -140,7 +178,7 @@ public class CardServiceImpl implements CardService {
 		Card card = new Card();
 		card.setCardIdx(previousCardIdx);
 		card.setExchangeStatus(status);
-		cardRepository.updateCard(card);
+		cardRepository.modifyCard(card);
 	}
 
 	public List<Card> searchCategoryCard(String category) {
@@ -256,4 +294,154 @@ public class CardServiceImpl implements CardService {
 		return Map.of("card",card,"files",fileDTOs ,"wishCard",wishCard);
 	}
 
+	
+	public void insertExchangeStatusByFreeRequesetList(FreeRequestList freeRequest) {
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		exchangeStatus.setFreqIdx(freeRequest.getFreqIdx());
+		exchangeStatus.setRequestedMemIdx(freeRequest.getRequestedMemIdx());
+		exchangeStatus.setRequestMemIdx(freeRequest.getRequestMemIdx());
+		exchangeRepository.insertExchangeStatus(exchangeStatus);
+		
+	}
+
+	public List<Map<String, Object>> selectCardsTop5() {
+		/*
+		 * if(schedule.getCardsTop5().isEmpty()) { 
+		 * schedule.setCardsTop5(); } return
+		 * schedule.getCardsTop5();
+		 */
+		List<Map<String, Object>> cardsTop5 = new ArrayList<>();
+		List<Card> cards = cardRepository.selectCardsTop5();
+		if(cards != null) {
+			for (Card card : cards) {
+				cardsTop5.add(
+						Map.of("card", card, 
+								"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0), 
+								"cardOwnerRate", Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(card.getMemberIdx()).orElse("0"))
+								)
+						);
+			}
+		}
+		return cardsTop5;
+	}
+
+	public List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember) {
+		List<Map<String, Object>> cardlist = new ArrayList<>();
+		List<Card> myCardList = cardRepository.selectCardListIsDelAndStatus(certifiedMember.getMemberIdx());
+		if (myCardList != null) {
+			for (Card card : myCardList) {
+				cardlist.add(selectCard(card.getCardIdx()));
+			}
+		}
+		return cardlist;
+	}
+
+	public Map<String, Object> selectCard(int cardIdx) {
+		return Map.of("cardInfo", cardRepository.selectCardByCardIdx(cardIdx), "fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0));
+	}
+
+	public List<Map<String, Object>> selectRequestCardListByReqIdx(CardRequestList cardRequestList) {
+		List<Map<String,Object>> cardList = new ArrayList<Map<String,Object>>();
+		for (Integer cardIdx : getCardIdxSet(cardRequestList)) {
+			cardList.add(selectCard(cardIdx));
+		}
+		return cardList;
+	}
+
+	public void rejectRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList, status);
+		deleteCardRequestList(cardRequestList.getReqIdx());
+		
+	}
+
+	public void acceptRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList,status);
+		insertExchangeStatus(cardRequestList);
+	}
+
+	public void requestCancelRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList,status);
+		deleteCardRequestList(cardRequestList.getReqIdx());
+		
+	}
+
+	public void exchangeCancelRequest(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList,status);
+		deleteCardRequestList(cardRequestList.getReqIdx());
+		deleteExchangeStatus(cardRequestList.getReqIdx());
+		
+	}
+
+	public void completeExchange(CardRequestList cardRequestList, String status) {
+		updateCardStatusWithCardIdxSet(cardRequestList, status);
+		updateExchangeStatus(cardRequestList.getReqIdx(), status);
+		
+	}
+
+	public List<Map<String, Object>> selectCardListForRevise(Set<Integer> cardIdxSet) {
+		List<Map<String, Object>> cardlist = new ArrayList<>();
+		List<Card> cardList = selectCardList(cardIdxSet);
+		if(cardList != null) {
+			for (Card card : cardList) {
+				cardlist.add(selectCard(card.getCardIdx()));
+			}
+		}
+		return cardlist;
+	}
+
+	public CardRequestCancelList selectCardRequestCancelListWithReqIdx(int reqIdx) {
+		return cardRequestCancelListRepository.selectCardRequestCancelList(reqIdx);
+	}
+
+	public void requestCancel(Integer reqIdx, String status) {
+		updateExchangeStatus(reqIdx, status);
+	}
+
+	public void updateCardViews(Card card) {
+		card.setViews(card.getViews() + 1);
+		updateCardWithCardIdx(card);
+	}
+
+
+	public void cancelRequestReject(Integer reqIdx, String status) {
+		updateExchangeStatus(reqIdx, status);
+	}
+
+	public List<Map<String, Object>> selectWishCard(Integer memberIdx) {
+		List<Map<String, Object>> wishCard = new ArrayList();
+		List<Card> cardList = cardRepository.selectWishCardByMemberIdx(memberIdx);
+		for (Card card : cardList) {
+			wishCard.add(Map.of("wishCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return wishCard;
+	}
+
+	public List<Map<String, Object>> selectMyCardListExceptRequestCardList(MemberAccount certifiedMember,
+			Set<Integer> cardIdxSet) {
+		List<Map<String, Object>> cardlist = new ArrayList<>();
+		List<Card> cardList = cardRepository.selectCardByMemberIdx(certifiedMember.getMemberIdx());
+		if(cardList != null) {
+			for (Card card : cardList) {
+				for (Integer cardIdx : cardIdxSet) {
+					if(!card.getCardIdx().equals(cardIdx)) {
+						cardlist.add(selectCard(card.getCardIdx()));
+					}
+				}
+			}
+		}
+		return cardlist;
+	}
+
+	public List<Card> selectAllCardExceptDone() {
+		return cardRepository.selectAllCardExceptDone();
+	}
+	
 }
+
+
+
+
+
+
+

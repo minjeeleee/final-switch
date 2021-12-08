@@ -142,8 +142,9 @@ section {
 }
 
 .pop-card-list {
-    display: flex;
-    justify-content: space-between;
+     display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    place-items: center;
 }
 
 .card-container {
@@ -177,8 +178,9 @@ section {
 }
 
 .reco-user-inner-list {
-    display: flex;
-    justify-content: space-between;
+     display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    place-items: center;
 }
 
 .user-container {
@@ -206,10 +208,12 @@ section {
 }
 
 .user-image img {
-    position: absolute;
-    bottom: 0;
-    left: 17%;
+	position: absolute;
+    top: 50%;
+    left: 50%;
     object-fit: cover;
+    height: 100%;
+    transform: translate(-50%, -50%);
 }
 
 .user-name {
@@ -290,5 +294,26 @@ section {
     }
     100% {
         transform: rotate(0deg);
+    }
+}
+
+/* 미디어쿼리 */
+
+@media all and (min-width:320px) {
+    .pop-card-list,
+    .reco-user-inner-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media all and (min-width:768px) {
+    .pop-card-list,
+    .reco-user-inner-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media all and (min-width:1024px) {
+    .pop-card-list,
+    .reco-user-inner-list {
+        grid-template-columns: repeat(5, 1fr);
     }
 }

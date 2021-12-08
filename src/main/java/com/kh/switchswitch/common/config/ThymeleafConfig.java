@@ -46,9 +46,13 @@ public class ThymeleafConfig extends WebMvcConfigurerAdapter implements Applicat
   @Override
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
       super.addResourceHandlers(registry);
-      registry.addResourceHandler("/images/**").addResourceLocations("/images/");
+      registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
       registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+      registry.addResourceHandler("/img/**").addResourceLocations("/img/");
       registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+      registry.addResourceHandler("/scss/**").addResourceLocations("/scss/");
+      registry.addResourceHandler("/vendor/**").addResourceLocations("/vendor/");
+      registry.addResourceHandler("/webfont/**").addResourceLocations("/webfont/");
   }
 
   @Bean
