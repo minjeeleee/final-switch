@@ -60,7 +60,7 @@ public class MypageController {
 	}
 
 
-	@GetMapping("profile")
+	@GetMapping("profile2")
 	public void profile(@AuthenticationPrincipal MemberAccount member,Model model) {
 		int myRateCnt = exchangeService.selectMyRateCnt(member.getMemberIdx()).size();
 		List<Integer> totalMyRate = exchangeService.selectMyRateCnt(member.getMemberIdx());
@@ -77,7 +77,7 @@ public class MypageController {
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
-	@PostMapping("profile")
+	@PostMapping("profile2")
 	public String profileModify(@Validated ModifyForm form
 							,Errors errors
 							,@RequestParam(required = false) MultipartFile profileImage
@@ -92,7 +92,7 @@ public class MypageController {
 
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
-			return "mypage/profile";
+			return "mypage/profile2";
 		}
 
 		if(profileImage == null) {
@@ -108,7 +108,7 @@ public class MypageController {
 		newAuth.setDetails(authentication.getDetails());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		return "redirect:/mypage/profile";
+		return "redirect:/mypage/profile2";
 	}
 
 	@GetMapping("leave-member")

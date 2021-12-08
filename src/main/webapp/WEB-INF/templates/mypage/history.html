@@ -30,7 +30,7 @@
 
             <div class="mk-card-list inner-size">
 
-                <div class="card-list" style="overflow: scroll;">
+                <div class="card-list" style="overflow-y: scroll;">
     
 	            <div class="card-container" style="width: 180px; "  th:each="doneCard : ${doneCardList}" th:object="${doneCard}">
 					<input type="hidden" id="memberIdx" th:value="${#authentication.principal.memberIdx}"> 
