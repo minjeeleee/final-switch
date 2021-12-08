@@ -6,7 +6,13 @@
 	<head>
 		<!-- refund -->
 	    <link rel="stylesheet" th:href="@{/resources/css/board/boardList.css}">
+	    <!-- alarm -->
+		<link rel="stylesheet" th:href="@{/resources/css/alarm/alarm.css}">
+		<!-- star -->
+		<link rel="stylesheet" th:href="@{/resources/css/exchange/detail.css}">
+		
 	</head>
+	
 	
 <body>
 
@@ -46,12 +52,15 @@
 							<th:block th:each="alarm,iterStat : ${alarms}"
 								th:object="${alarm.alarm}">
 								<tr th:if="*{isRead} == 0" th:onclick="|updateIsRead(this,*{alarmIdx})|"
-									style="height: 30px; line-height: 30px;">
+									style="height: 30px; line-height: 30px;background-color:lightyellow;">
 									<td th:text="${iterStat.count}"></td>
 									<td th:if="*{alarmType}=='평점요청'">
-									<p th:text="${alarm.message}" th:onclick="move()"></p>
+									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx})|"></p>
 									</td>
-									<td th:unless="*{alarmType}=='평점요청'">
+									<td th:if="*{alarmType}=='요청거절'">
+									<a th:text="${alarm.message}" th:href="@{/mypage/alarm}"></a>
+									</td>
+									<td th:if="*{alarmType!='평점요청' && alarmType!='요청거절'}">
 									<a th:text="${alarm.message}" th:href="|/exchange/detail/*{reqIdx}|"></a>
 									</td>
 									<td th:text="*{sendDate}"></td>
@@ -76,12 +85,12 @@
 			<nav class="paging" th:object=${paging}>
 				<ul class="pagination">
 					<li class="page-item"><a class="page-link"
-						th:href="|*{url}?page=*{prev}|" aria-label="Previous"> <span
-							aria-hidden="true">&laquo;</span>
+						th:href="|*{url}?page=*{prev}|" aria-label="Previous"> 
+						<span aria-hidden="true">&laquo;</span>
 					</a></li>
 
 					<li class="page-item"
-						th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}">
+						th:each="p : ${#numbers.sequence(paging.start,paging.end)}">
 						<a th:href="|*{url}?page=${p}|" class="page-link" th:text="${p}">1</a>
 					</li>
 
@@ -91,8 +100,7 @@
 				</ul>
 			</nav>
 		</div>
-
-
+	<form id="sendResponse"></form>
     </section>
 
 	<footer>
@@ -103,16 +111,27 @@
 		<div class="notice_close_wrap">
 			<i class="fas fa-times" id="notice_close"></i>
 		</div>
-		<div class="notice_msg_wrap">
-			<p id="notice_msg"></p>
+		<div id="myform">
+			<fieldset>
+		        <legend>사용자 별점</legend>
+		        <input type="radio" name="rate" value="5" id="rate1"><label for="rate1"><i class="fas fa-star full-star"></i></label>
+		        <input type="radio" name="rate" value="4" id="rate2"><label for="rate2"><i class="fas fa-star full-star"></i></label>
+		        <input type="radio" name="rate" value="3" id="rate3"><label for="rate3"><i class="fas fa-star full-star"></i></label>
+		        <input type="radio" name="rate" value="2" id="rate4"><label for="rate4"><i class="fas fa-star full-star"></i></label>
+		        <input type="radio" name="rate" value="1" id="rate5"><label for="rate5"><i class="fas fa-star full-star"></i></label>
+		    </fieldset>
 		</div>
 		<div class="notice_btn_wrap">
 			<button type="button" id="submit_btn">제출</button>
 		</div>
+		<input type="hidden" id="reqIdx">
 	</div>
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
 	<script type="text/javascript" th:inline="javascript">
+	
+	
+	
 	function updateIsRead(e,alarmIdx){
 		fetch("http://localhost:9090/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
 		.then(response => {
@@ -125,11 +144,11 @@
 	}
 	
 	<!-- 교환완료 -->
-	function exchangeComplete(){
+	function exchangeComplete(reqIdx){
 		<!-- 사용자평가 모달창 생성 -->
-		let msg = counterpartNick+"님과의 교환은 어떠셨나요?<br>"
-			+ counterpartNick + "에 대한 평점을 남겨주세요.";
-		noticeSet(msg);
+		document.querySelector(".noticePopUp").style.zIndex = 1000;
+		document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
+		document.querySelector("#reqIdx").setAttribute("value",reqIdx);
 	}
 	
 	document.querySelector("#notice_close").addEventListener("click", (e)=> {
@@ -137,20 +156,21 @@
 	});
 	
 	function noticeInitialize(){
-		document.querySelector("#notice_msg").innerHTML = "";
 		document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 	}
 
-	function noticeSet(msg){
-		document.querySelector("#notice_msg").innerHTML = msg;
-		document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
+	function move(reqIdx){
+		exchangeComplete(reqIdx);
 	}
-
-	function move(){
-		exchangeComplete();
+	
+	$("#submit_btn").on("click", function(){
+		$(".notice").appendTo("#sendResponse");
 		<!-- 제출 -->
-		location.href="http://localhost:9090/market/cardmarket";
+		let reqIdx = $("#reqIdx").val();
+		$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
+		$("#sendResponse").submit();
 	})
+	
 	</script>
 
 

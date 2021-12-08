@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.board.model.dto.Board;
-import com.kh.switchswitch.comment.model.dto.Reply;
+import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 
@@ -27,7 +27,7 @@ public interface BoardRepository {
 	Board selectBoardByIdx(int bdIdx);
 	
 	 //게시글목록
-	 @Select("select * from community where  is_del=0 ORDER BY bd_idx DESC")
+	 @Select("select * from community where  is_del=0 ORDER BY REG_DATE DESC")
 	List<Board> selectBoardList(Paging pageUtil);
 
 	//총 게시글 갯수 출력
@@ -42,8 +42,7 @@ public interface BoardRepository {
 			+ " values(sc_file_idx.nextval, sc_bd_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
 	void insertFileInfo(FileDTO fileUpload);
 	
-	//파일다운
-	@Select("select * from file_info where bd_idx = #{bdIdx}")
+	@Select("select * from file_info  where is_del= 0 and bd_idx = #{bdIdx} ORDER BY REG_DATE DESC")
 	List<FileDTO> selectFilesByBdIdx(int bdIdx);
 
 	@Update("update community set is_del = 1 where bd_idx = #{bdIdx}")	
@@ -54,7 +53,7 @@ public interface BoardRepository {
 	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("bdIdx")Integer bdIdx);
 	
 	@Select("select * from (select rownum rnum, BD_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL from community) community"
-			+ " where rnum between #{startBoard} and #{lastBoard}")
+			+ " where is_del=0 and rnum between #{startBoard} and #{lastBoard} ORDER BY REG_DATE DESC")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
 	@Select("SELECT * FROM reply WHERE  is_del=0 and bd_idx=#{bdIdx} ORDER BY cm_idx DESC")
@@ -76,7 +75,7 @@ public interface BoardRepository {
 	@Update("update file_info set is_del = 1 where bd_idx=#{bdIdx}")
 	void deleteBoardImg(Integer bdIdx);
 
-	@Select("select * from community where bd_idx=#{bdIdx}")
+	@Select("select * from community where is_del=0 and bd_idx=#{bdIdx} order by reg_date desc")
 	Board selectBoardModifyBdIdx(int bdIdx);
 
 	@Select("select * from file_info where is_del= 0 and bd_idx=#{bdIdx}")

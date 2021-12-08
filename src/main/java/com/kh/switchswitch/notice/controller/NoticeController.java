@@ -27,7 +27,6 @@ public class NoticeController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private final NoticeService noticeService;
-
 	@GetMapping("notice-form")
 	public void noticeForm() {}
 	

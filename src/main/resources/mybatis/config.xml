@@ -23,5 +23,6 @@
 	  	<mapper resource="mybatis/mapper/inquiryMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/inquiryRealNameMapper.xml"/>
 	  	<mapper resource="mybatis/mapper/pointRefundMapper.xml"/>
+	  	<mapper class="com.kh.switchswitch.point.model.repository.PointHistoryRepository"/>
 	</mappers>
   </configuration>

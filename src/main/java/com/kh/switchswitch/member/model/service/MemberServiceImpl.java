@@ -29,9 +29,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 import com.kh.switchswitch.card.model.repository.CardRepository;
+import com.kh.switchswitch.card.model.repository.CardRequestCancelListRepository;
 import com.kh.switchswitch.card.model.repository.FreeRequestListRepository;
 import com.kh.switchswitch.common.code.Config;
 import com.kh.switchswitch.common.mail.MailSender;
@@ -63,6 +65,8 @@ public class MemberServiceImpl implements MemberService {
 	private final ExchangeRepository exchangeRepository;
 	private final FreeRequestListRepository freeRequestListRepository;
 	private final SavePointRepository savePointRepository;
+	private final CardRequestCancelListRepository cardRequestCancelListRepository;
+	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -172,6 +176,7 @@ public class MemberServiceImpl implements MemberService {
 		//exchangeStatus에 값이 없으면 삭제
 		for (CardRequestList cardRequest: cardRequestList) {
 			if(exchangeRepository.selectExchangeStatusWithReqIdx(cardRequest.getReqIdx()) == null) {
+				cardRequestCancelListRepository.insertCardRequestCancelList(convertCardRequestListToCardRequestCancelList(cardRequest));
 				cardRepository.deleteCardRequestListWithReqIdx(cardRequest.getReqIdx());
 			}
 		}
@@ -190,9 +195,10 @@ public class MemberServiceImpl implements MemberService {
 	public void updateMemberWithFile(Member member, MultipartFile profileImage) {
 		member.setMemberIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getMemberIdx());
 		member.setMemberPass(passwordEncoder.encode(member.getMemberPass()));
+		member.setFlIdx(selectMemberByEmailAndDelN(member.getMemberEmail()).getFlIdx());
 		
-		System.out.println(profileImage);
 		if(profileImage.getSize() != 0) {
+			memberRepository.deleteProfileImg(member.getFlIdx());
 			FileUtil fileUtil = new FileUtil();
 			memberRepository.insertFileInfo(fileUtil.fileUpload(profileImage));
 			memberRepository.updateMemberForFile(member);
@@ -346,4 +352,19 @@ public class MemberServiceImpl implements MemberService {
 		return usersTop5;
 	}
 	
+
+	private CardRequestCancelList convertCardRequestListToCardRequestCancelList(CardRequestList cardRequestList) {
+		CardRequestCancelList cardRequestCancelList = new CardRequestCancelList();
+		cardRequestCancelList.setReqIdx(cardRequestList.getReqIdx());
+		cardRequestCancelList.setRequestedMemIdx(cardRequestList.getRequestedMemIdx());
+		cardRequestCancelList.setRequestMemIdx(cardRequestList.getRequestMemIdx());
+		cardRequestCancelList.setRequestedCard(cardRequestList.getRequestedCard());
+		cardRequestCancelList.setRequestCard1(cardRequestList.getRequestCard1());
+		cardRequestCancelList.setRequestCard2(cardRequestList.getRequestCard2());
+		cardRequestCancelList.setRequestCard3(cardRequestList.getRequestCard3());
+		cardRequestCancelList.setRequestCard4(cardRequestList.getRequestCard4());
+		cardRequestCancelList.setPropBalance(cardRequestList.getPropBalance());
+		return cardRequestCancelList;
+	}
+
 }

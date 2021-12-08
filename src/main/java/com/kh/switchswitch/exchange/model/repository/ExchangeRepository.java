@@ -48,7 +48,7 @@ public interface ExchangeRepository {
 	ExchangeStatus selectExchangeStatusWithReqIdx(Integer reqIdx);
 	
 	//나눔요청 리스트 검색
-	@Select("select * from exchange_satus where freq_idx=#{freqIdx}")
+	@Select("select * from exchange_status where freq_idx=#{freqIdx}")
 	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 	
 	@Insert("insert into exchange_history values(sc_eh_idx.nextval, #{eIdx}, sysdate, #{requestedMemIdx}, #{requestMemIdx})")
@@ -67,5 +67,12 @@ public interface ExchangeRepository {
 			+ "from exchange_history h join exchange_status s on h.e_idx = s.e_idx "
 			+ "where (s.request_mem_idx = #{memberIdx} or s.requested_mem_idx =#{memberIdx})and  not s.freq_idx is null")
 	List<ExchangeHistory> selectExchangeHistoryByMemIdxAndFreqNotNull(Integer memberIdx);
+
+	@Select("select eh_idx from exchange_history "
+			+ "where e_idx = (select e_idx from exchange_status where req_idx=#{reqIdx})")
+	Integer selectEhIdxByReqIdx(Integer reqIdx);
+
+	@Select("select * from exchange_status where req_idx=#{reqIdx}")
+	ExchangeStatus selectExchangeStatus(Integer reqIdx);
 	
 }

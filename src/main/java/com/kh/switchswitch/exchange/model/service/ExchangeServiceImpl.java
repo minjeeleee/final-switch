@@ -3,7 +3,6 @@ package com.kh.switchswitch.exchange.model.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +45,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public float selectMyRate(int certifiedMemberIdx) {
-		List<Float> ratingList = ratingRepository.selectRatingByMemberIdx(certifiedMemberIdx);
-		
-		float sum = 0;
-		for (Float f : ratingList) {
-			sum += f;
-		}
-		if(sum == 0) {
-			return 0;
-		}
-		return sum/ratingList.size();
+		return Float.parseFloat(memberRepository.selectMemberScoreByMemberIdx(certifiedMemberIdx).orElse("0"));
 	}
 
 	public FileDTO selectImgFileByCardIdx(int cardIdx) {
@@ -147,8 +137,6 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 
 	public void updateRequestExchange(CardRequestList cardRequestList, int length) {
-		//card_request_list 테이블에 추가
-		//cardRequestListRepository.updateCardRequestList(cardRequestList);
 			Card card;
 			switch(5-length) {
 			case 1 : 
@@ -301,9 +289,10 @@ public class ExchangeServiceImpl implements ExchangeService{
 		return freerequestListRepository.selectFreeRequestListWithFreqIdx(freqIdx);
 	}
 
-	public void reviseRequest(CardRequestList cardRequestList, int length, Set<Integer> previousCardIdxSet, String[] cardIdxList) {
+	public void reviseRequest(CardRequestList cardRequestList, int length, String[] previousCardIdxArr, String[] cardIdxList) {
+		
+		cardRequestListRepository.updateCardRequestList(cardRequestList);
 		updateRequestExchange(cardRequestList, length);
-		String[] previousCardIdxArr = (String[]) previousCardIdxSet.toArray();
 		for(int i = 0;i < previousCardIdxArr.length; i++) {
 			for(int j = 0; j < cardIdxList.length; j++) {
 				if(previousCardIdxArr[i] == cardIdxList[j]) {
@@ -331,6 +320,10 @@ public class ExchangeServiceImpl implements ExchangeService{
 		card.setCardIdx(previousCardIdx);
 		card.setExchangeStatus(status);
 		cardRepository.modifyCard(card);
+	}
+
+	public ExchangeStatus selectExchangeStatus(Integer reqIdx) {
+		return exchangeRepository.selectExchangeStatus(reqIdx);
 	}
 
 }

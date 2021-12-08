@@ -1,21 +1,16 @@
 package com.kh.switchswitch.mypage.controller;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,21 +26,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.google.gson.Gson;
 import com.kh.switchswitch.card.model.service.CardService;
 import com.kh.switchswitch.common.code.ErrorCode;
 import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.validator.ValidatorResult;
-
 import com.kh.switchswitch.exchange.model.service.ExchangeService;
 import com.kh.switchswitch.inquiry.model.service.InquiryService;
-import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.service.MemberService;
 import com.kh.switchswitch.mypage.validator.ModifyForm;
 import com.kh.switchswitch.mypage.validator.ModifyFormValidator;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +52,6 @@ public class MypageController {
 	private final ExchangeService exchangeService;
 	private final CardService cardService;
 	private final InquiryService inquiryService;
-	private final AuthenticationManager authenticationManager;
 
 
 	@InitBinder(value = "modifyForm")
@@ -72,11 +62,9 @@ public class MypageController {
 
 	@GetMapping("profile")
 	public void profile(@AuthenticationPrincipal MemberAccount member,Model model) {
-		float myRate = exchangeService.selectMyRate(member.getMemberIdx());
 		int myRateCnt = exchangeService.selectMyRateCnt(member.getMemberIdx()).size();
-				
 		List<Integer> totalMyRate = exchangeService.selectMyRateCnt(member.getMemberIdx());
-		model.addAttribute("myRate", Map.of("score",Math.ceil(myRate*10)/10,"cnt",myRateCnt));
+		model.addAttribute("myRate", Map.of("score",exchangeService.selectMyRate(member.getMemberIdx()),"cnt",myRateCnt));
 		model.addAttribute("rateList"
 							,Map.of("one",Math.round((double)Collections.frequency(totalMyRate, 1)/(double)myRateCnt*100)
 									,"two",Math.round((double)Collections.frequency(totalMyRate, 2)/(double)myRateCnt*100)
@@ -114,14 +102,13 @@ public class MypageController {
 		}
 		
 		//security에 다시 회원 등록
-		//=> 로그아웃이 되버림 ,, 왜지?
-		MemberAccount mem = new MemberAccount(memberService.selectMemberByEmailAndDelN(member.getMemberEmail()));
-		//여기를 못 타는 것 같음
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(mem.getUsername(), mem.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());
+		UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, authentication.getCredentials(),newPrincipal.getAuthorities());
+		newAuth.setDetails(authentication.getDetails());
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		//session.setAttribute("SPRING_SECURITY_CONTEXT", authentication);
-		return "/mypage/profile";
+		return "redirect:/mypage/profile";
 	}
 
 	@GetMapping("leave-member")
@@ -132,9 +119,8 @@ public class MypageController {
 									 ,String password 
 									,RedirectAttributes redirectAttr
 									,Model model
+									,HttpSession session
 								){
-
-		System.out.println("비밀번호 : "+password);
 		
 		if(!passwordEncoder.matches(password,member.getMemberPass())) {
 			model.addAttribute("message","비밀번호가 틀렸습니다"); 
@@ -148,7 +134,7 @@ public class MypageController {
 		
 		member.getMember().setMemberDelYn(1);
 		memberService.updateMemberDelYNForLeave(member.getMember());
-		model.addAttribute("msg", "회원탈퇴가 완료되었습니다");
+		session.invalidate();
 		return "redirect:/";
 	}
 	
@@ -209,10 +195,9 @@ public class MypageController {
 		return json;
 	}
 	
-	 @GetMapping("personal-inquiry") 
-	  public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
+	@GetMapping("personal-inquiry") 
+	public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
 		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
-		System.out.println(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
-		return "inquiry/inquiry-list";
+		return "mypage/personal-inquiry";
 	}
 }

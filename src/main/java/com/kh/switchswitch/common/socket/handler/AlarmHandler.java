@@ -39,12 +39,11 @@ public class AlarmHandler extends TextWebSocketHandler {
 
 	@Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		System.out.println("#ChattingController, handleMessage");
 		
 		Alarm newAlarm = new Alarm();
 		
 		Member loginMember = memberRepository.selectMemberByEmailAndDelN(session.getPrincipal().getName());
-		
-		System.out.println("#ChattingController, handleMessage");
         
         //protocol: 알람타입, 수신자IDX, 요청IDX
         String msg = message.getPayload();
@@ -80,6 +79,9 @@ public class AlarmHandler extends TextWebSocketHandler {
 					break;
 				case "교환취소요청거절":
 					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소요청을 거절하였습니다."));
+					break;
+				case "교환취소요청취소":
+					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +","+ loginMember.getMemberNick() + "이 교환취소요청을 취소하였습니다."));
 					break;
 				case "교환취소":
 					receiverSession.sendMessage(new TextMessage(reqIdx +"," + newAlarm.getAlarmIdx() +"," + "교환취소가 완료되었습니다."));

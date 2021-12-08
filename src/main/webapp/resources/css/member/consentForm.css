@@ -1,8 +1,35 @@
-@font-face {
-  font-family: 'Hahmlet-Bold';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Bold.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
+.home_btn {
+    width: 100%;
+    padding: 10px 50px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-weight: 800;
+    font-size: 20px;
+    border-radius: 20px;
+    border: none;
+    margin-bottom: 12px;
+    margin-top: 40px;
+    background-color: rgb(211, 211, 211);
+}
+
+.home_btn:hover {
+	background-color: rgb(129, 129, 129);
+}
+
+.next_btn {
+    width: 100%;
+    padding: 10px 50px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-weight: 800;
+    font-size: 20px;
+    border-radius: 20px;
+    border: none;
+    margin-bottom: 12px;
+    background-color: antiquewhite;
+}
+.next_btn:hover {
+	background-color: rgb(233, 195, 146);
 }
 
 a:hover,a:focus{
@@ -10,22 +37,9 @@ a:hover,a:focus{
     outline: none;
 }
 
-body
-{
-	background-image: url("../../img/background.jpg");
-}
-
 .demo
 {
 	padding: 100px 0;
-}
-
-.heading-title
-{
-	color:#333333;
-	font-family: 'Hahmlet-Bold';
-	font-size: 3.5em;
-	margin-bottom: 100px;
 }
 
 #accordion .panel{
@@ -41,81 +55,24 @@ body
     border: none;
 }
 
-#accordion .panel-title a{
+#accordion .panel-title p{
     display: block;
     font-size: 16px;
     font-weight: bold;
-    color: #554131;
+    color: #7a7a7a129129129;
     padding: 15px 48px 15px 20px;
     background: white;
     position: relative;
     transition: all 0.3s ease 0s;
 }
 
-#accordion .panel-title a.collapsed{
-    color: white;
-    background: #554131;
-    border-bottom: 1px solid #3d3537;
-}
-
-#accordion .panel-title a:after,
-#accordion .panel-title a.collapsed:after{
-    content: "";
-    display: block;
-    width: 3px;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    right: 30px;
-    background: #554131;
-}
-
-#accordion .panel-title a.collapsed:after{
-    background: white;
-}
-
-#accordion .panel-title a:before,
-#accordion .panel-title a.collapsed:before{
-    content: "\f068";
-    font-family: FontAwesome;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
-    border-radius: 50%;
-    background: #554131;
-    position: absolute;
-    top: 12px;
-    right: 19px;
-    font-size: 14px;
-    color: white;
-    text-align: center;
-    z-index: 1;
-}
-
-#accordion .panel-title a.collapsed:before{
-    content: "\f067";
-    color: #554131;
-    background: white;
-}
-
 #accordion .panel-body{
     background: white;
-    color: #554131;
+    color: rgb(129, 129, 129);
     padding: 20px 50px 15px 20px;
     line-height: 25px;
     border: none;
     position: relative;
-}
-
-#accordion .panel-body:after{
-    content: "";
-    display: block;
-    width: 3px;
-    height: 100%;
-    background: #554131;
-    position: absolute;
-    top: 0;
-    right: 30px;
 }
 
 .radio_box{
@@ -125,29 +82,6 @@ body
 
 .radio{
 	display: inline-block;
-}
-
-.btn_box{
-	display: flex;
-	justify-content: flex-end;
-}
-
-.next_btn, .home_btn{
-	font-size: 14px;
-    font-weight: bold;
-    color: #fff;
-    background: #554131;
-    box-shadow: 0 0 8px 0 #a2a2a2;
-    border: none;
-    border-radius: 50px;
-    padding: 12px 40px 12px 40px;
-    transition: all 0.2s ease 0s;
-    margin-left: 5px;
-}
-
-.next_btn:hover, .home_btn:hover{
-    background: #fff;
-    color: #554131;
 }
 
 @charset "utf-8";

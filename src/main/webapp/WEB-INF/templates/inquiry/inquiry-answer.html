@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>        
+		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Switch-Switch</title>
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../resources/css/styles.css" rel="stylesheet" />
+        <!-- fontawesome -->
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+		<link href="../../../resources/css/board/inquiry.css" rel="stylesheet" />
+
+
+<style type="text/css">
+.section{
+	margin-top: 30px;
+	width: 1200px;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 60px;
+}
+.frm_post{
+	width: 80%;
+	height: 100%;
+}
+.frm_header_area{
+	width: 100%;
+	height: 46px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: solid;
+	border-width: 1px;
+}
+.sub_title{
+	font-size: 22px;
+	font-weight: bolder;
+}
+.btn_area{
+	height: 36px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+.btn_area>button{
+	width: 200px;
+	height: 30px;
+	font-size: 15px;
+	background-color: #eeeeee;
+	margin-left:10px;
+	
+	
+}
+/*  */
+.frm_title_area{
+	width: 100%;
+	height: 70px;
+	display: flex;
+	align-items: center;
+}
+.frm_title_area>div{
+	width: 100%;
+	height: 40px;
+	display: flex;
+	border: solid;
+	border-width: 1px;
+}
+.select_subject{
+	width: 20%;
+	height: 40px;
+	font-size: 15px;
+	border: none;
+	background-color: rgba(0,0,0,0.1);
+	text-align: center;
+}
+.post_title{
+	width: 80%;
+	height: 38px;
+	font-size: 15px;
+	border: none;
+	margin-left: 5px;
+}
+
+/*  */
+.frm_content_area{
+	width: 100%;
+	height:100%;
+	display: flex;
+	justify-content: center;
+}
+.frm_content_area>textarea{
+	width:1000px; 
+	height:400px; 
+    resize:none;
+}
+.btn{
+	border-color: transparent;
+}
+.add_file_box{
+	margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+  <section>
+    <div class="container">
+    
+		<div class='section' th:object="${datas}">
+				<div class='frm_header_area'>
+					<h2 class='sub_title'>문의사항 답변페이지</h2>
+					
+				</div>
+			<div class="section_content_box">
+				<div class="section_header">
+					<div class="section_title">
+						<span th:text="|제목 : *{inquiry.title}|"></span>
+					</div>
+					<div class="writer_profile">
+						<span th:text="|등록일 : *{inquiry.regDate}|"></span>
+							<span th:text="|작성자 : *{inquiry.userId}|"></span>
+					</div>
+				</div>
+				<div class="content_area" id=editor1>
+					<pre>[[*{inquiry.content}]]</pre>
+				</div>
+				<input type="hidden" name="inquiryIdx" th:value="*{inquiry.inquiryIdx}"/>
+			</div>
+		</div>
+		
+			<form class='frm_post' th:action="|/inquiry/answer?${_csrf.parameterName}=${_csrf.token}|" method="post" enctype="multipart/form-data">
+				<!-- 답변 -->
+			<div class='frm_content_area' >
+				<textarea id="editor1" name="answer" required="required" placeholder="답변을 입력하세요"data-sample-short></textarea>
+			</div>
+			<div class='btn_area' th:object="${datas}">
+						<button id="btnSubmit" class="btn">등록</button>
+						<input type="hidden" name="inquiryIdx" th:value="*{inquiry.inquiryIdx}"/>
+						<a id="btnSubmit" class="btn" th:href="@{/inquiry/inquiry-list2}">목록</a>
+			</div>
+<!--  			<input type="hidden" name="answerIdx" th:value="*{inquiry.answerIdx}"/> -->
+		</form>
+	</div>
+  </section>
+
+</body>
+</html>

@@ -22,11 +22,12 @@ public interface AlarmRepository {
 	@Select("select sc_alarm_idx.currval from dual")
 	Integer selectCurrScAlarmIdx();
 
-	@Select("select count(*) from alarm")
-	Integer selectAlarmCnt();
+	@Select("select count(*) from alarm where receiver_idx=#{receiverIdx}")
+	Integer selectAlarmCnt(Integer receiverIdx);
 
-	@Select("select * from (select rownum rnum, alarm.* from alarm order by is_read, alarm_idx desc) alarm"
-			+ " where (rnum between #{startAlarm} and #{lastAlarm}) and receiver_idx=#{receiverIdx} and sysdate < send_date + 7 ")
+	@Select("select * from (select rownum rnum, alarmr.* from (select alarm.* from alarm alarm"
+			+ " where receiver_idx=#{receiverIdx} and sysdate < send_date + 7 order by is_read, alarm_idx desc) alarmr"
+			+ " ) where rnum between #{startAlarm} and #{lastAlarm}")
 	List<Alarm> selectAlarmListWithReceiverIdx(Map<String, Integer> map);
 
 }

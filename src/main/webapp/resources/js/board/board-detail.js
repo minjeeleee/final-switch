@@ -1,7 +1,7 @@
 
 function replyList(){
 		$.ajax({
-		url:"http://localhost:9191/board/reply-list",
+		url:"/board/reply-list",
 		type:"post",
 		 dataType: "json",
 		contentType : "application/json",
@@ -45,30 +45,32 @@ function commentCreate(data){
 	}
 	console.log($(".bdIdx").val())
 	$.ajax({
-		url:"http://localhost:9191/board/upload-reply",
+		url:"/board/upload-reply",
 		type:"post",
 		 dataType: "json",
 		contentType : "application/json",
 		data: JSON.stringify(reply),
-		 beforeSend: function (xhr) {
-            xhr.setRequestHeader(header,token);
-        },
 		success:(text) => {
+			alert("댓글이 입력되었습니다.");
 			console.dir(text);
 			console.dir(document.getElementById(cmIdx));
 			document.getElementById(cmIdx).style.visibility = 'visible';
-			alert("댓글이 입력되었습니다.");
+			
 
 		},
 		
 		error:(error) => {
 			 console.log(error)
+			 location.reload();
+
 		}
 	});
-	return false;
+ refreshReply();
 }
 
-
+function refreshReply(){
+		location.reload();
+	}
 
 //댓글 수정
 function updateComment(){
@@ -81,7 +83,7 @@ function updateComment(){
 	}
 
 	$.ajax({
-		url:"http://localhost:9191/board/modify-reply",
+		url:"/board/modify-reply",
 		type:"post",
 		 dataType: "json",
 		contentType : "application/json",
@@ -117,7 +119,7 @@ function commentDelete(idx){
 	console.log(typeof cmIdx)
 	console.log(userId)
 	$.ajax({
-		url:"http://localhost:9191/board/delete-reply?cmIdx="+cmIdx,
+		url:"/board/delete-reply?cmIdx="+cmIdx,
 		type:"post",
 		contentType : "application/json",
 		 beforeSend: function (xhr) {
@@ -144,105 +146,4 @@ function login(){
 	}
 	return false;
 	
-}
-
-//댓글 입력 폼 요청
-function commentForm(id){
-	if("${principal.id}" == ""){
-		login();
-		return;
-	}
-	var dropdownForm = $("#dropdownForm-"+id);
-	var commentForm = $("#commentForm-"+id);
-	var updateForm = $("#updateForm-"+id);
-	var commentTocommentForm = $("#commentTocommentForm-"+id);
-	
-	updateForm.hide();
-	commentTocommentForm.hide();
-	commentForm.show();
-	dropdownForm.show();
-	$("#commentForm-"+id).focus();
-}
-
-// 댓글 업데이트 폼 요청
-function commentUpdateForm(id){
-
-	var dropdownForm = $("#dropdownForm-"+id);
-	var commentForm = $("#commentForm-"+id);
-	var updateForm = $("#updateForm-"+id);
-	var commentTocommentForm = $("#commentTocommentForm-"+id);
-	
-	$("#commentContent-"+id).val($("#comment-"+id).text());
-	commentForm.hide();
-	dropdownForm.hide();
-	commentTocommentForm.hide();
-	updateForm.show();
-	$("#commentContent-"+id).focus();
-}
-
-//대댓글 폼 요청
-function commentTocommentForm(id){
-	if("${principal.id}" == ""){
-		login();
-		return;
-	}
-	var dropdownForm = $("#dropdownForm-"+id);
-	var commentForm = $("#commentForm-"+id);
-	var updateForm = $("#updateForm-"+id);
-	var commentTocommentForm = $("#commentTocommentForm-"+id);
-	
-	$("#commentTocomment-"+id).val("");
-	commentForm.show();
-	dropdownForm.hide();
-	updateForm.hide();
-	commentTocommentForm.show();
-	$("#commentTocomment-"+id).focus();
-}
-
-
-
-
-//대댓글 입력 
-function commentTocomment(id,commentGroup){
-	var content = $("#commentTocomment-"+id).val().replace(/\s|/gi,'');
-	
-	if(content==""){
-		alert("대댓글을 입력해주세요.");
-		$("#commentTocommentForm").val("");
-		$("#commentTocomment-"+id).focus();
-		return false;
-	}
-	
-	var reply = {
-			"bdIdx" : "${reply.bdIdx}",
-			"userId" : "${reply.userId}",
-			"cmParent" : cmParent,
-			"content" : content
-	}
-	
-	$.ajax({
-		url:"/board/upload-reply",
-		type:"post",
-		contentType : "application/json; charset=UTF-8",
-		data: JSON.stringify(reply), 
-		success:function(data){
-			commentList("${reply.cmIdx}");
-		},
-		error:function(request,status,error){
-			jsonValue = jQuery.parseJSON(request.responseText);
-			code = jsonValue.code;
-			if(code == 'C003'){
-				console.log(code +" : "+jsonValue.message);
-				alert("대댓글을 입력해주세요." + id);
-				$("#commentTocommentForm").val("");
-				$("#commentTocomment-"+id).focus();
-			}
-			if(code == 'B001'){
-				console.log(code +" : "+jsonValue.message);
-				alert(jsonValue.message);
-				history.back();
-			}
-		}
-	});
-	return false;
 }

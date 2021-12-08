@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
-<head>        
-		<meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Switch-Switch</title>
-        <!-- Favicon-->
-        <link rel="icon" type="resources/img/x-icon" href="../../../resources/assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../resources/css/styles.css" rel="stylesheet" />
-        <!-- fontawesome -->
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/notice.css" rel="stylesheet" />
-</head>
-<body>
-
-  <section>
-    <div class="container">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<head>
+			<!-- refund -->
+		    <link rel="stylesheet" href="../resources/css/board/notice2.css">
+	</head>
     
+    <body>
+         <header th:replace="fragments/subBodyHeader :: header">
+    	</header>
+        
+        <nav th:replace="fragments/subMenu" :: subNav>
+    	</nav>
+    	
+  <section>
+ <div class="ref-title-container">
+              <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>공지사항 작성페이지</h1>
+                </div>
+
+                <div class="ref-img">
+                    <img src="../resources/img/infoback.png" alt="">
+                </div>
+
+            </div>
 		<div class='section'>
 			<form class='frm_post'  th:action="|/notice/upload?${_csrf.parameterName}=${_csrf.token}|" method="post" enctype="multipart/form-data">
-				<div class='frm_header_area'>
-					<h2 class='sub_title'>공지사항 작성페이지</h2>
-				</div>
 				<div class='frm_tag_area'>
 					<select class='select_subject' name='type'>
 							<option selected value='중요공지'>중요공지</option>
@@ -40,19 +42,19 @@
 				</div>
 				<div class='frm_content_area'>
 					<textarea id="editor1" name="content" placeholder="내용을 입력하세요" data-sample-short></textarea>
-
 				</div>
 				<div class='btn_area'>
 						<a id="btnMove" class="btn" th:href="@{/notice/notice-list}">목록</a>
 						<button id="btnSubmit" class="btn">작성하기</button>
-					</div>
+				</div>
 				
 			</form>
 		</div>
 		
 	</div>
   </section>
-
-
+<footer>
+    <div th:replace="fragments/footer :: footer" ></div>
+</footer>
 </body>
 </html>
