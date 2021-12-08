@@ -230,10 +230,8 @@ public class MemberController {
 		if(!token.equals(persistToken)) {
 			throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
 		}
-		
-		memberService.insertMember(form);
-		
 		//SavePoint 생성
+		memberService.insertMember(form);
 		
 		redirectAttrs.addFlashAttribute("message", "회원가입을 환영합니다. 로그인 해주세요");
 		session.removeAttribute("persistToken");
