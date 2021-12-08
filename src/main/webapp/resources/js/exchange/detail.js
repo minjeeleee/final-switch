@@ -1,22 +1,22 @@
 <!-- 요청취소 -->
 function requestCancel(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/request-cancel/"+reqIdx);
+	$("#sendResponse").attr("action", "/exchange/request-cancel/"+reqIdx);
 	$("#sendResponse").submit();
 }
 <!-- 요청수정 -->
 function requestRevise(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/revise/"+reqIdx);
+	$("#sendResponse").attr("action", "/exchange/revise/"+reqIdx);
 	$("#sendResponse").submit();
 }
 <!-- 요청수락 -->
 function requestAccept(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/accept/"+reqIdx);
+	$("#sendResponse").attr("action", "/exchange/accept/"+reqIdx);
 	console.dir("요청수락 보내기 전");
 	$("#sendResponse").submit();
 }
 <!-- 요청거절 -->
 function requestReject(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/reject/"+reqIdx);
+	$("#sendResponse").attr("action", "/exchange/reject/"+reqIdx);
 	$("#sendResponse").submit();
 }
 <!-- 교환취소요청 -->
@@ -30,17 +30,17 @@ function exchangeCancelRequest(){
 }
 <!-- 교환취소요청수락 -->
 function exchangeRequestCancel(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/exchange-cancel/"+reqIdx);
+	$("#sendResponse").attr("action", "/exchange/exchange-cancel/"+reqIdx);
 	$("#sendResponse").submit();
 }
 <!-- 교환취소요청거절 -->
 function exchangeRequestCancelReject(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/cancel-request-reject/" +reqIdx+ "/" +previousStatus);
+	$("#sendResponse").attr("action", "/exchange/cancel-request-reject/" +reqIdx+ "/" +previousStatus);
 	$("#sendResponse").submit();
 }
 <!-- 교환취소요청취소 -->
 function cancelExchangeRequestCancel(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/cancel-request-cancel/" +reqIdx+ "/" +previousStatus);
+	$("#sendResponse").attr("action", "/exchange/cancel-request-cancel/" +reqIdx+ "/" +previousStatus);
 	$("#sendResponse").submit();
 }
 
@@ -71,7 +71,7 @@ $("#submit_btn").on("click", function(){
 })
 
 function doSubmit(){
-	$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
+	$("#sendResponse").attr("action", "/exchange/complete/"+reqIdx);
 	$("#sendResponse").submit();
 }
 

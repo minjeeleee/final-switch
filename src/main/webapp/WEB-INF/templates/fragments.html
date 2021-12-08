@@ -70,7 +70,7 @@
 
 /* 알림 생성 */
 <script type="text/javascript" th:inline="javascript" th:fragment="alarm">
-	let sock = new SockJS('http://localhost:9090/alarm');
+	let sock = new SockJS('/alarm');
 	sock.onmessage = function(msg){
 		var data = msg.data;
 		console.dir(data);

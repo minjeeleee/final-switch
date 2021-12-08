@@ -26,7 +26,7 @@
   	
   	<select id="selectCardTrim" resultType="com.kh.switchswitch.card.model.dto.Card">
   		select * from card
-  		<trim prefix="where" prefixOverrides="and|or" suffix="and isfree = 'N'">
+  		<trim prefix="where" prefixOverrides="and|or" suffix="and isfree = 'N' and exchange_status != 'DONE'">
   			<if test="category != null and !category.equals('')" >and category = #{category}</if>
   			<if test="region != null and !region.equals('')">and region = #{region}</if>
   			<if test="content != null and !content.equals('')">and (name like '%'||#{content}||'%' or content like '%'||#{content}||'%')</if>
@@ -37,7 +37,7 @@
   	
   	<select id="selectFreeCardTrim" resultType="com.kh.switchswitch.card.model.dto.Card">
   		select * from card
-  		<trim prefix="where" prefixOverrides="and|or" suffix="and isfree = 'Y'">
+  		<trim prefix="where" prefixOverrides="and|or" suffix="and isfree = 'Y' and exchange_status != 'DONE'">
   			<if test="category != null and !category.equals('')" >and category = #{category}</if>
   			<if test="region != null and !region.equals('')">and region = #{region}</if>
   			<if test="content != null and !content.equals('')">and (name like '%'||#{content}||'%' or content like '%'||#{content}||'%')</if>

@@ -1,7 +1,7 @@
 function kakaoLogin(){
 	location.href = "https://kauth.kakao.com/oauth/authorize?"
 					+ "client_id=a66e69c27f0b16ebbfae461ad8678ee0"
-					+ "&redirect_uri=" + encodeURIComponent('http://localhost:9090/member/kakaoLogin')
+					+ "&redirect_uri=" + encodeURIComponent('http://localhost:9898/member/kakaoLogin')
 					+ "&response_type=code";
 }
 
