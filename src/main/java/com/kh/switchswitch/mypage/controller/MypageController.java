@@ -60,7 +60,7 @@ public class MypageController {
 	}
 
 
-	@GetMapping("profile2")
+	@GetMapping("profile")
 	public void profile(@AuthenticationPrincipal MemberAccount member,Model model) {
 		int myRateCnt = exchangeService.selectMyRateCnt(member.getMemberIdx()).size();
 		List<Integer> totalMyRate = exchangeService.selectMyRateCnt(member.getMemberIdx());
@@ -77,7 +77,7 @@ public class MypageController {
 		model.addAttribute(new ModifyForm()).addAttribute("error", new ValidatorResult().getError());
 	}
 	
-	@PostMapping("profile2")
+	@PostMapping("profile")
 	public String profileModify(@Validated ModifyForm form
 							,Errors errors
 							,@RequestParam(required = false) MultipartFile profileImage
@@ -92,7 +92,7 @@ public class MypageController {
 
 		if(errors.hasErrors()) {
 			vr.addErrors(errors);
-			return "mypage/profile2";
+			return "mypage/profile";
 		}
 
 		if(profileImage == null) {
@@ -101,6 +101,7 @@ public class MypageController {
 			memberService.updateMemberWithFile(form.convertToMember(),profileImage);
 		}
 		
+		System.out.println("하이");
 		//security에 다시 회원 등록
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());
@@ -108,7 +109,7 @@ public class MypageController {
 		newAuth.setDetails(authentication.getDetails());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		return "redirect:/mypage/profile2";
+		return "mypage/profile";
 	}
 
 	@GetMapping("leave-member")
