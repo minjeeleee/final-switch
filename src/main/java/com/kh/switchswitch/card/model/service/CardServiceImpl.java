@@ -53,7 +53,6 @@ public class CardServiceImpl implements CardService {
 		}
 	}
 
-	@Override
 	public List<Card> selectAllCard() {
 		return cardRepository.selectAllCard();
 	}
@@ -432,6 +431,10 @@ public class CardServiceImpl implements CardService {
 			}
 		}
 		return cardlist;
+	}
+
+	public List<Card> selectAllCardExceptDone() {
+		return cardRepository.selectAllCardExceptDone();
 	}
 	
 }
