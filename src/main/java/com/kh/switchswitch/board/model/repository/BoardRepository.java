@@ -13,6 +13,7 @@ import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.common.util.pagination.PagingV2;
 
 @Mapper
 public interface BoardRepository {
@@ -28,10 +29,10 @@ public interface BoardRepository {
 	
 	 //게시글목록
 	 @Select("select * from community where  is_del=0 ORDER BY REG_DATE DESC")
-	List<Board> selectBoardList(Paging pageUtil);
+	List<Board> selectBoardList(PagingV2 pageUtil);
 
 	//총 게시글 갯수 출력
-	@Select("select count(*) from community")
+	@Select("select count(*) from community where is_del = 0")
 	int selectContentCnt();
 
 	//수정
@@ -51,9 +52,12 @@ public interface BoardRepository {
 	@Insert("insert into file_info(fl_idx,origin_file_name, rename_file_name, save_path,bd_idx)"
 			+ " values(sc_file_idx.nextval, #{fileUpload.originFileName},#{fileUpload.renameFileName},#{fileUpload.savePath}, #{bdIdx})")
 	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("bdIdx")Integer bdIdx);
+
 	
-	@Select("select * from (select rownum rnum, BD_IDX,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL from community) community"
-			+ " where is_del=0 and rnum between #{startBoard} and #{lastBoard} ORDER BY REG_DATE DESC")
+	
+	@Select("select * from (select rownum rnum, communityr.* from (select community.* from community community"
+			+ " where is_del=0 order by REG_DATE DESC) communityr"
+			+ " ) where rnum between #{startBoard} and #{lastBoard}")
 	List<Board> selectBoardListWithPageNo(Map<String, Integer> map);
 
 	@Select("SELECT * FROM reply WHERE  is_del=0 and bd_idx=#{bdIdx} ORDER BY cm_idx DESC")

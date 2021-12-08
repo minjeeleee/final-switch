@@ -29,7 +29,7 @@ public interface InquiryRepository {
 	List<Inquiry> selectInquiryList(Paging pageUtil);
 
 	//총 게시글 갯수 출력
-	@Select("select count(*) from inquiry")
+	@Select("select count(*) from inquiry where is_del = 0")
 	int selectContentCnt();
 	
 	//나의 게시글 갯수 출력
@@ -41,9 +41,10 @@ public interface InquiryRepository {
 	
 	@Update("update inquiry set is_del = 1 where inquiry_idx = #{inquiryIdx}")	
 	void deleteInquiry(Integer inquiryIdx);
-	
-	@Select("select * from (select rownum rnum, inquiry_idx,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,type from inquiry) inquiry"
-			+ " where rnum between #{startBoard} and #{lastBoard}")
+
+	@Select("select * from (select rownum rnum, inquiryr.* from (select inquiry.* from inquiry inquiry"
+			+ " where is_del=0 order by REG_DATE DESC) inquiryr"
+			+ " ) where rnum between #{startBoard} and #{lastBoard}")	
 	List<Inquiry> selectInquiryListWithPageNo(Map<String, Integer> map);
 	
 	@Select("select * from (select rownum rnum, inquiry_idx,USER_ID,REG_DATE,TITLE,CONTENT,IS_DEL,type from inquiry where user_id=#{userId}) inquiry"
