@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 <head>
-<link rel="stylesheet" href="../resources/css/all.css">
-<link rel="stylesheet" href="../resources/css/reset.css">
-
+<head th:replace="fragments/subHeader :: subHeader"></head>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -21,67 +20,67 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
 	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="../resources/css/member/consentForm.css">
 <link
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 	rel="stylesheet"
 	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
 	crossorigin="anonymous">
-
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+	
+<link rel="stylesheet" href="../resources/css/member/consentForm.css">
 </head>
 <body>
-	<div class="demo">
-		<div class="container">
-			<div class="row text-center">
-				<h1 class="heading-title">Switch-Switch</h1>
-			</div>
-			<div class="row">
-				<div class="col-md-offset-3 col-md-6">
-					<div class="panel-group" id="accordion" role="tablist"
-						aria-multiselectable="true">
-						<div class="panel panel-default">
-							<div class="panel-heading" role="tab" id="headingOne">
-								<h4 class="panel-title">
-									<a role="button" data-toggle="collapse"
-										data-parent="#accordion" href="#collapseOne"
-										aria-expanded="true" aria-controls="collapseOne"> [필수]
-										개인정보 수집·이용 동의 </a>
-								</h4>
-							</div>
-							<div id="collapseOne" class="panel-collapse collapse in"
-								role="tabpanel" aria-labelledby="headingOne">
-								<div class="panel-body">본인은 귀사에 회원가입 양식을 제출함에 따라 [개인정보 보호법] 제15조 및 제17조에 따라 
-아래의 내용으로 개인정보를 수집, 이용 및 제공하는데 동의합니다. 
-<br>□ 개인정보의 수집 및 이용에 관한 사항
-<br>- 수집하는 개인정보 항목 (회원가입 양식 내용 일체) : 성명, 전화번호, 주소, 이메일, 등과 그 外 회원가입 양식 기재 내용 일체
-<br>- 개인정보의 이용 목적 : 수집된 개인정보를 사이트 운영에 활용하며, 목적 외의 용도로는 사용하지 않습니다. 
-<br>□ 개인정보의 보관 및 이용 기간
-<br>- 귀하의 개인정보를 다음과 같이 보관하며, 수집, 이용 및 제공목적이 달성된 경우 [개인정보 보호법] 제21조에 따라 처리합니다. 
+	<header th:replace="fragments/subBodyHeader :: subBodyHeader"></header>
+	<section>
+		<div class="login-conainer">
+			<div class="login-inner inner-size">
+				<div id="collapseOne" class="panel-collapse collapse in"
+					role="tabpanel" aria-labelledby="headingOne">
+					<div class="row">
+						<div class="col-md-offset-3 col-md-6">
+							<div class="panel-group" id="accordion" role="tablist"
+								aria-multiselectable="true">
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab" id="headingOne">
+										<h4 class="panel-title">
+											<p data-parent="#accordion"
+												aria-expanded="true">
+												 [필수]
+												개인정보 수집·이용 동의 </p>
+										</h4>
+									</div>
+									<div class="panel-body">
+										본인은 귀사에 회원가입 양식을 제출함에 따라 [개인정보 보호법] 제15조 및 제17조에 따라 아래의 내용으로
+										개인정보를 수집, 이용 및 제공하는데 동의합니다. <br>□ 개인정보의 수집 및 이용에 관한 사항 <br>-
+										수집하는 개인정보 항목 (회원가입 양식 내용 일체) : 성명, 전화번호, 주소, 이메일, 등과 그 外 회원가입
+										양식 기재 내용 일체 <br>- 개인정보의 이용 목적 : 수집된 개인정보를 사이트 운영에 활용하며,
+										목적 외의 용도로는 사용하지 않습니다. <br>□ 개인정보의 보관 및 이용 기간 <br>-
+										귀하의 개인정보를 다음과 같이 보관하며, 수집, 이용 및 제공목적이 달성된 경우 [개인정보 보호법] 제21조에
+										따라 처리합니다.
+									</div>
+									<form th:action="@{/member/consentForm}" method="post">
+										<div class="radio_box">
+											비동의 <input type="radio" value="refuse" class="radio"
+												name="requiredConsent"> 동의 <input type="radio"
+												value="consent" class="radio" name="requiredConsent">
+										</div>
+									</form>
 								</div>
-								<form th:action="@{/member/consentForm}" method="post">
-								<div class="radio_box">
-									비동의 
-									<input type="radio" value="refuse" class="radio" name="requiredConsent" > 
-									동의 
-									<input type="radio" value="consent" class="radio" name="requiredConsent">
-								</div>
-								</form>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-offset-3 col-md-6">
+					<div class="col-md-offset-3 col-md-6">
 					<div class="btn_box">
-						<a href="/" class="home_btn">메인페이지로 이동</a>
 						<button type="button" class="next_btn">Next</button>
+						<button type="button" class="home_btn" onclick="location.href='/'">메인페이지로 이동</button>
 					</div>
+				</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
+	<footer>
+       <div th:replace="fragments/footer :: footer"></div>
+    </footer>
 	<script type="text/javascript" th:inline="javascript">
 	let csrfHeader = "[(${_csrf.headerName})]";
     let csrfToken = "[(${_csrf.token})]";
