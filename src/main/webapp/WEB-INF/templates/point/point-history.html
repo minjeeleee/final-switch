@@ -25,8 +25,8 @@
 
                 <div class="ref-title">
                     <h1>포인트</h1>
-                    <p>잔여포인트</p><span>[[${savePoint.balance}]]</span>
-                    <p>가용포인트</p><span>[[${savePoint.availableBal}]]</span>
+                    <p>잔여포인트</p><th:block th:if="${savePoint.balance}">${savePoint.balance}</th:block>
+                    <p>가용포인트</p><th:block th:if="${savePoint.availableBal}">${savePoint.availableBal}</th:block>
                 </div>
 
                 <div class="ref-img">
