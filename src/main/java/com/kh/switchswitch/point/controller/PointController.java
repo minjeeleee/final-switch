@@ -107,7 +107,11 @@ public class PointController {
 	
 	@GetMapping("point-history")
 	public void pointHistory(Model model, @AuthenticationPrincipal MemberAccount member) {
-		model.addAttribute("savePoint", pointService.selectSavePointByMemberIdx(member.getMemberIdx()));
+		SavePoint savePoint = new SavePoint();
+		if(pointService.selectSavePointByMemberIdx(member.getMemberIdx()) != null) {
+			savePoint = pointService.selectSavePointByMemberIdx(member.getMemberIdx());
+		}
+		model.addAttribute("savePoint",savePoint );
 	}
 	
 
