@@ -120,25 +120,26 @@
     border-radius: 8px;
 }
 .btn_area{
-	height: 36px;
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
+    height: 36px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 .btn{
 	border-color: transparent;
 }
 .btn_area>button{
-	padding: 6px 50px;
+    padding: 6px 50px;
     border-radius: 8px;
     background: #2b53a9;
     color: white;
     margin-left: 10px;
 }
 .btn_area>a {
-	padding: 6px 50px;
+padding: 11px 66px;
     border-radius: 8px;
     background: #2b53a9;
     color: white;
-    margin-left: 10px;
+    margin-left: 10px
 }
+

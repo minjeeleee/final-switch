@@ -14,7 +14,7 @@ function commentDelete(idx){
 	console.log(typeof answerIdx)
 	console.log(userId)
 	$.ajax({
-		url:"http://localhost:9191/inquiry/delete-answer?answerIdx="+answerIdx,
+		url:"http://localhost:9090/inquiry/delete-answer?answerIdx="+answerIdx,
 		type:"post",
 		contentType : "application/json",
 		 beforeSend: function (xhr) {

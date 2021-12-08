@@ -1,45 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-<head>        
-		<meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Switch-Switch</title>
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../resources/css/styles.css" rel="stylesheet" />
-        <!-- fontawesome -->
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/inquiry.css" rel="stylesheet" />
-		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<head>
+			<!-- refund -->
+			 <link href="../../../resources/css/board/styles.css" rel="stylesheet" />
+		    <link rel="stylesheet" href="../resources/css/board/board3.css">
+		    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <style type="text/css">
+pre {
+    display: block;
+    margin-top: 30px;
+    margin-bottom: 200px;
+    overflow: auto;
+    font-size: 0.875em;
+}
+div#\31 42 {
+    max-width: 1080px;
+    width: 100%;
+    display: flex;
+    padding-right: 780px;
+}
+.cmt_wrap {
+    margin-top: 15px;
+    align-items: baseline;
+    margin-bottom: 15px;
+    display: flex;
+    /* justify-content: space-evenly; */
+    max-width: 1080px;
+    width: 100%;
+    /* display: grid; */
+    /* place-content: center; */
+    /* width: 100%; */
+    /* max-width: 1080px; */
+    padding-left: 210px;
+    padding-right: 100px;
+}
+.writer_profile {
+    /* width: 250px; */
+    height: 50px;
+    margin-left: 10px;
+}
+</style>		    
+	</head>
+    
+    <body>
+         <header th:replace="fragments/subBodyHeader :: header">
+    	</header>
+        
+        <nav th:replace="fragments/subMenu" :: subNav>
+    	</nav>
+    	
+  <section>
+ <div class="ref-title-container">
+              <div class="ref-innerwrap inner-size">
 
-</style>
-</head>
-<body>
+                <div class="ref-title">
+                    <h1>문의사항 상세페이지</h1>
+                </div>
 
+                <div class="ref-img">
+                    <img src="../resources/img/infoback.png" alt="">
+                </div>
 
-	<section>
-		<div class="container" >
-
-			<div class='section' th:object="${datas}">
+            </div>			
+            <div class='section' th:object="${datas}">
 				<div class='section_wrap'>
-					<div class="section_top">
-						<h2>문의하기 상세페이지</h2>
-					</div>
-					<form class='frm_post'
-						th:action="|/inquiry/delete?${_csrf.parameterName}=${_csrf.token}&inquiryIdx=${datas.inquiry.inquiryIdx}|"
-						method="post" enctype="multipart/form-data">
-						<div class='btn_area'>
-						<span th:if="${#authentication.principal.memberName} == ${datas.inquiry.userId}">
-							<a class="btn"
-								th:href="@{/inquiry/inquiry-modify(inquiryIdx=${datas.inquiry.inquiryIdx})}">수정</a>
-							<button id="btnDelete" class="btn">삭제</button>
-						</span>
-							<a class="btn" th:href="@{/inquiry/inquiry-list2}">목록</a>
-						</div>
-					</form>
 					<div class="section_content_box"  th:object="${datas}">
 						<div class="section_header">
 							<div class="section_title">
@@ -53,19 +79,28 @@
 						<div class="content_area" id=editor1>
 							<pre>[[*{inquiry.content}]]</pre>
 						</div>
-<!-- 
-								<form class="frm_write_cmt" action="/reply/add-reply?bd_idx=${board.bdIdx }" method="POST">
-									<div class="cmt_write_box">
-										<div class="cmt_writer_id"></div>
-										<textarea name="content" placeholder="답변을 입력하세요" required="required"></textarea>
-										<button class="cmt_write_btn">등록</button>
-									</div>
-								</form> -->
 					</div>
+					<div class='btn_area'>
+							<form class='frm_post'
+									th:action="|/inquiry/delete?${_csrf.parameterName}=${_csrf.token}&inquiryIdx=${datas.inquiry.inquiryIdx}|"
+									method="post" enctype="multipart/form-data">
+									<div class='btn_area'>
+									<span th:if="${#authentication.principal.memberName} == ${datas.inquiry.userId}">
+										<a class="btn"
+											th:href="@{/inquiry/inquiry-modify(inquiryIdx=${datas.inquiry.inquiryIdx})}">수정</a>
+										<button id="btnDelete" class="btn">삭제</button>
+									</span>
+										<th:block sec:authorize = "hasAuthority('C')">
+											<a class="btnAnswer"  th:href="@{/inquiry/inquiry-answer(inquiryIdx=${datas.inquiry.inquiryIdx})}">답글 작성</a>
+										</th:block>
+										<a class="btn" th:href="@{/inquiry/inquiry-list2}">목록</a>
+									</div>
+							</form>
+						</div>
 				</div>				
 			</div>
-				<a class="btn" th:href="@{/inquiry/inquiry-answer(inquiryIdx=${datas.inquiry.inquiryIdx})}">답글 작성</a>
-					<div  id="answer">
+		</div>
+						<div  id="answer" th:object="${datas}">
 						<div class="cmt_wrap" th:each="answer : ${answer}" th:id="${answer.answerIdx}">
 							<div>
 									<div class="cmt_info">
@@ -82,8 +117,10 @@
 							<input type="hidden"  th:value="${answer.answerIdx}" class="answerIdx">
 						</div>
 					</div>
-		</div>
 </section>
+ <footer>
+    <div th:replace="fragments/footer :: footer" ></div>
+</footer>
 	<script type="text/javascript" th:inline="javascript">
 	let header = "[(${_csrf.headerName})]";
     let token = "[(${_csrf.token})]";
