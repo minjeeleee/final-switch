@@ -6,8 +6,11 @@
 	<head>
 		<!-- refund -->
 	    <link rel="stylesheet" th:href="@{/resources/css/board/boardList.css}">
-	    <!-- star -->
+	    <!-- alarm -->
+		<link rel="stylesheet" th:href="@{/resources/css/alarm/alarm.css}">
+		<!-- star -->
 		<link rel="stylesheet" th:href="@{/resources/css/exchange/detail.css}">
+		
 	</head>
 	
 	
@@ -121,6 +124,7 @@
 		<div class="notice_btn_wrap">
 			<button type="button" id="submit_btn">제출</button>
 		</div>
+		<input type="hidden" id="reqIdx">
 	</div>
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
@@ -140,9 +144,11 @@
 	}
 	
 	<!-- 교환완료 -->
-	function exchangeComplete(){
+	function exchangeComplete(reqIdx){
 		<!-- 사용자평가 모달창 생성 -->
+		document.querySelector(".noticePopUp").style.zIndex = 1000;
 		document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
+		document.querySelector("#reqIdx").setAttribute("value",reqIdx);
 	}
 	
 	document.querySelector("#notice_close").addEventListener("click", (e)=> {
@@ -150,20 +156,21 @@
 	});
 	
 	function noticeInitialize(){
-		document.querySelector("#notice_msg").innerHTML = "";
 		document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 	}
 
 	function move(reqIdx){
-		exchangeComplete();
-		$("#submit_btn").on("click", function(){
-			$(".notice").appendTo("#sendResponse");
-			<!-- 제출 -->
-			$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
-			$("#sendResponse").submit();
-		})
-		
+		exchangeComplete(reqIdx);
 	}
+	
+	$("#submit_btn").on("click", function(){
+		$(".notice").appendTo("#sendResponse");
+		<!-- 제출 -->
+		let reqIdx = $("#reqIdx").val();
+		$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
+		$("#sendResponse").submit();
+	})
+	
 	</script>
 
 
