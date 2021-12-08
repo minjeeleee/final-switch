@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>        
+		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Switch-Switch</title>
+        <!-- Favicon-->
+        <link rel="icon" type="resources/img/x-icon" href="../../../resources/assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../../../resources/css/styles.css" rel="stylesheet" />
+        <!-- fontawesome -->
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+		<link href="../../../resources/css/board/notice.css" rel="stylesheet" />
+
+<style type="text/css">
+
+</style>
+</head>
+<body>
+
+
+	<section>
+		<div class="container">
+			<div class='section' th:object="${datas}">
+				<div class='section_wrap'>
+					<div class="section_top">
+						<h2>공지사항 상세페이지</h2>
+<!-- 						< class='frm_post'  th:action="|/notice/delete?noticeIdx=${datas.notice.noticeIdx}|" method="post" enctype="multipart/form-data">	 -->					
+						<div class='btn_area'>
+							 <a class="btn"  th:href="@{/notice/notice-list2}">목록</a>
+<!-- 							 <span th:if="${#authentication.principal.code} == ${datas.notice.userId}"> -->
+							 <a class="btn" th:href="@{/notice/notice-modify(noticeIdx=${datas.notice.noticeIdx})}">수정</a> 
+							 <a class="btn" th:href="@{/notice/delete(noticeIdx=${datas.notice.noticeIdx})}">삭제</a> 
+
+					 		<!-- <button id="btnDelete" class="btn"th:onclick="deleteNotice([[${datas.notice.noticeIdx}]])">삭제</button> -->
+						</div>
+					</div>
+					
+<input type="hidden" name="noticeIdx" th:value="*{notice.noticeIdx}"/>
+
+					<div class="section_content_box">
+						<div class="section_header">
+							<div class="section_title">
+								<span th:text="|제목 : *{notice.title}|"></span>
+							</div>
+							<div class="writer_info">
+
+								<div class="writer_profile">
+									<span th:text="|등록일 : *{notice.regDate}|"></span>
+								</div>
+								<div class="writer_board_info">
+									<ul class="dep1">
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="section_container">
+							<pre>[[*{notice.content}]]</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+<th:block>
+<script th:inline="javascript">
+
+
+
+</script>
+</th:block>
+
+</body>
+</html>

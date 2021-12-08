@@ -37,30 +37,24 @@
 
             <div class="refund-container inner-size">
 
-                <div class="histroy-table" style="overflow-y:scroll;">
+                <div class="histroy-table"  style="flex-direction: column; overflow-y:scroll; ">
+                
                 <!-- chatting block  -->
-                	<th:block th:if="${chattingList}" th:each="chatting : ${chattingList}" th:object="${chatting}">
-                	<div>
-                    	<a th:href="@{/chat/chat(chattingIdx=*{chatting.chattingIdx})}" style="width: 100%; margin-bottom: 8px; margin-top: 8px;"> </a>
-                        <div>
-                        	<th:block  th:if ="*{FileInfo == null}">
-                            	<img class="rounded-circle" src="../resources/img/no-img.jpg" style="width: 50px; height: 50px;">
-                            </th:block>
-                           	<th:block  th:unless ="*{FileInfo == null}">
-                            	<img class="rounded-circle" th:src="*{FileInfo.getDownloadURL()}" style="width: 50px; height: 50px;">
-                            </th:block>
+               		<div th:each="chatting : ${chattingList}" th:object="${chatting}">
+                   		<a th:href="@{/chat/chat(chattingIdx=*{chatting.chattingIdx})}" style="width: 100%; margin-bottom: 8px; margin-top: 8px;">
+                       	 <div>
+                       		<th:block  th:if ="*{FileInfo == null}">
+                           		<img class="rounded-circle" src="../resources/img/no-img.jpg" style="width: 50px; height: 50px;">
+                           	</th:block>
+                          	<th:block  th:unless ="*{FileInfo == null}">
+                           		<img class="rounded-circle" th:src="*{FileInfo.getDownloadURL()}" style="width: 50px; height: 50px;">
+                           </th:block>
+                           <span style="width: 10vw; vertical-align:top;">[[*{attendee.memberNick}]] &nbsp; <a th:href="@{/chat/delete(chattingIdx=*{chatting.chattingIdx})}" onclick="alert('채팅방이 삭제되었습니다')"><i style="vertical-align:top;" class="fas fa-trash"></i></a></span>
+                           <span style="width: 80%; align-self: center;">[[*{lastMessage}]] &nbsp; &nbsp;<th:block th:if="*{isRead} != 0"><i style="color: red" class="fas fa-plus-circle"></i></th:block></span>
                          </div>
-                         <div>
-                             <div style="width: 30vw;">[[*{lastMessage}]] &nbsp; &nbsp;<th:block th:if="*{isRead} != 0"><i style="color: red" class="fas fa-plus-circle"></i></th:block></div>
-                             <div  style="width: 10vw;">[[*{attendee.memberNick}]] &nbsp; <a th:href="@{/chat/delete(chattingIdx=*{chatting.chattingIdx})}" onclick="alert('채팅방이 삭제되었습니다')"><i class="fas fa-trash"></i></a></div>
-                         </div>
-                         <hr>
-                     </div>
-                    </th:block>
-               		<th:block th:unless="${chattingList}">
-               			<div>채팅방이 존재하지 않습니다</div>
-               		</th:block>
-                              
+                         </a>
+                        <hr>
+                    </div>
                 </div>
        		</div>
          </div>

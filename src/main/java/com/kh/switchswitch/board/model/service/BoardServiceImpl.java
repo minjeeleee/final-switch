@@ -18,6 +18,7 @@ import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.common.util.pagination.PagingV2;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,17 +51,16 @@ public class BoardServiceImpl implements BoardService{
 	//11/23 리스트받아오기
 	public Map<String, Object> selectBoardList(int page) {
 		int cntPerPage = 10;
-		Paging pageUtil = Paging.builder()
-				.url("/board/board-list")
-				.total(boardRepository.selectContentCnt())
-				.curPage(page)
-				.blockCnt(10)
-				.cntPerPage(cntPerPage)
-				.build();
+		int total = (boardRepository.selectContentCnt());
+		int nowPage = page;
+		String url = "/board/board-list2";
+		
+		PagingV2 pagingV2 = new PagingV2(total, nowPage, cntPerPage, url);
+				
 
 		Map<String,Object> commandMap = new HashMap<String,Object>();
-		commandMap.put("paging", pageUtil);
-		commandMap.put("boardList", boardRepository.selectBoardListWithPageNo(Map.of("startBoard",(page-1)*cntPerPage+1,"lastBoard",(page-1)*cntPerPage+cntPerPage)));
+		commandMap.put("paging", pagingV2);
+		commandMap.put("boardList", boardRepository.selectBoardListWithPageNo(Map.of("startBoard",pagingV2.getStartAlarm(),"lastBoard",pagingV2.getEndAlarm())));
 		return commandMap;
 	}
 	
