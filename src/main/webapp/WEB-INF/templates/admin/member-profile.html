@@ -21,14 +21,14 @@ body{
 		<th:block th:replace="admin/fragments/nav :: admin_nav"></th:block>
 		<!-- END NAVBAR -->
 		<!-- LEFT SIDEBAR -->
-		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
+		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar (refuntCount=${refundCount})"></th:block>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
 		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
-					<div class="panel panel-profile">
+					<div class="panel panel-profile" style="height: 800px;">
 						<div class="clearfix">
 							<!-- LEFT COLUMN -->
 							<div class="profile-left">
@@ -44,17 +44,17 @@ body{
 									</div>
 									<div class="profile-stat" style="background-color: white;">
 										<div class="row">
-											<div class="col-md-4 stat-item">
-												[[${cardCnt}]] <span>카드</span>
+											<div class="col-md-4 stat-item" style="color: black">
+												[[${cardCnt}]] <span style="color: black">카드</span>
 											</div>
-											<div class="col-md-4 stat-item">
-												1500 <span>포인트</span>
+											<div class="col-md-4 stat-item" style="color: black">
+												[[${userPoint}]] <span style="color: black">포인트</span>
 											</div>
-											<div class="col-md-4 stat-item" th:unless="${memberInfo.member.memberScore}">
-												0 <span>평점</span>
+											<div class="col-md-4 stat-item" th:unless="${memberInfo.member.memberScore}" style="color: black">
+												0 <span style="color: black">평점</span>
 											</div>
-											<div class="col-md-4 stat-item" th:if="${memberInfo.member.memberScore}">
-												[[${memberInfo.member.memberScore}]] <span>평점</span>
+											<div class="col-md-4 stat-item" th:if="${memberInfo.member.memberScore}" style="color: black">
+												[[${memberInfo.member.memberScore}]] <span style="color: black">평점</span>
 											</div>
 										</div>
 									</div>
@@ -85,7 +85,7 @@ body{
 								<h4 class="heading">[[${memberInfo.member.memberName}]]의 카드</h4>
 								<!-- AWARDS -->
 								<div class="awards">
-									<div class="row" th:if="${memberCardList}">
+									<div class="row" style="display: flex; justify-content: center;" th:if="${memberCardList}">
 										<div class="card col-md-3 col-sm-6" style="width: 18rem; height: 24rem;" th:each="card:${cardList}" th:object="${card}">
 										  <img class="card-img-top" th:src="*{fileDTO.getDownloadURL()}" alt="Card image cap" style="width: 100%; height: 60%;">
 										  <div class="card-body" style="height: 40%;">
@@ -98,8 +98,8 @@ body{
 										  </div>
 										  </div>
 									</div>
-									<div style="height: 200px;" th:unless="${memberCardList}" >sdfsdf</div>
-									<div class="text-center"><a href="#" class="btn btn-default" style="background-color: #FACE7F;color: white;">모든카드보기</a></div>
+									<div style="height: 200px;" th:unless="${memberCardList}" ></div>
+									<div class="text-center"></div>
 								</div>
 								<!-- END AWARDS -->
 								<!-- TABBED CONTENT -->
@@ -107,7 +107,7 @@ body{
 									<ul class="nav" role="tablist">
 										<li class="active"><a href="#tab-bottom-left1" role="tab" data-toggle="tab">포인트 전체 내역</a></li>
 										<li><a href="#tab-bottom-left2" role="tab" data-toggle="tab">포인트 충전 내역</a></li>
-										<li><a href="#tab-bottom-left3" role="tab" data-toggle="tab">포인트 환급 내역</a></li>
+										<li><a href="#tab-bottom-left3" role="tab" data-toggle="tab">포인트 사용 내역</a></li>
 									</ul>
 								</div>
 								<div class="tab-content">
@@ -123,27 +123,14 @@ body{
 														<th class="text-center">날짜</th>
 													</tr>
 												</thead>
-												<tbody>
-													<tr>
-														<td>1</td>
-														<td>포인트 환전</td>
-														<td>-2000</td>
-														<td>0</td>
-														<td>2021-11-14 21:22:45</td>
-													</tr>
-													<tr>
-														<td>2</td>
-														<td>포인트 사용</td>
-														<td>-8000</td>
-														<td>2000</td>
-														<td>2021-11-14 20:19:45</td>
-													</tr>
-													<tr>
-														<td>3</td>
-														<td>포인트 충전</td>
-														<td>+10000</td>
-														<td>10000</td>
-														<td>2021-11-14 19:10:35</td>
+												<tbody th:if="${point}">
+													<tr th:each="point : ${point}">
+														<td th:text="${point.phIdx}"></td>
+														<td th:text="${point.content}"></td>
+														<td th:if="${#strings.equals(pointType, '사용')}">-[[${point.points}]]</td>
+														<td th:if="${#strings.equals(pointType, '충전')}">+[[${point.points}]]</td>
+														<td th:if="${point.resultPoint}"></td>
+														<td th:if="${point.regDate}"></td>
 													</tr>
 												</tbody>
 											</table>
@@ -160,12 +147,12 @@ body{
 														<th class="text-center">날짜</th>
 													</tr>
 												</thead>
-												<tbody>
-													<tr>
-														<td>1</td>
-														<td>포인트 충전</td>
-														<td>+10000</td>
-														<td>2021-11-14 19:10:35</td>
+												<tbody th:if="${savePoint}">
+													<tr th:each="savePoint : ${savePoint}">
+														<td th:text="${savePoint.phIdx}"></td>
+														<td th:text="${savePoint.content}"></td>
+														<td>+[[${savePoint.point}]]</td>
+														<td th:text="${savePoint.regDate}"></td>
 													</tr>
 												</tbody>
 											</table>
@@ -179,23 +166,21 @@ body{
 														<th class="text-center">번호</th>
 														<th class="text-center">내용</th>
 														<th class="text-center">결과</th>
-														<th class="text-center">상태</th>
 														<th class="text-center">날짜</th>
 													</tr>
 												</thead>
-												<tbody>
-													<tr>
-														<td>1</td>
-														<td>포인트 환급</td>
-														<td>-2000</td>
-														<td>완료</td>
-														<td>2021-11-14 21:22:45</td>
+												<tbody th:if="${usePoint}">
+													<tr th:each="usePoint : ${usePoint}">
+														<td th:text="${usePoint.phIdx">1</td>
+														<td th:text="${usePoint.content}">포인트 환급</td>
+														<td>-[[${usePoint.content}]]</td>
+														<td th:text="${usePoint.regDate}"></td>
 													</tr>
 												</tbody>
 											</table>
 										</div>
 									</div>
-									<div class="margin-top-30 text-center"><a href="#" class="btn btn-default" style="background-color: #FACE7F;color: white;">상세 내역</a></div>
+									<div class="margin-top-30 text-center"></div>
 								</div>
 								<!-- END TABBED CONTENT -->
 							</div>

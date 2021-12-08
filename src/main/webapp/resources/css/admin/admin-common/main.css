@@ -1177,7 +1177,7 @@ ul.activity-list > li {
   .profile-header .profile-main {
     position: relative;
     padding: 20px;
-    background-image: url("/resources/img/배경.jpg");
+    background-color:antiquewhite;
     background-repeat: no-repeat;
     background-size: cover; }
   .profile-header .name {

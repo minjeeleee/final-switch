@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.lang.Nullable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
@@ -33,6 +31,7 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.common.validator.ValidatorResult;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.point.model.dto.PointHistory;
 
 @Controller
 @RequestMapping("admin")
@@ -51,7 +50,7 @@ public class AdminController {
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(memberUpdateValidator);
 	}
-
+	
 	@GetMapping("real-time-cards")
 	public void realTimeCards(Model model, @RequestParam(required = false) String type) {
 		if (type != null) {
@@ -69,12 +68,16 @@ public class AdminController {
 		} else {
 			allCardList(model);
 		}
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("real-time-card-img")
 	public void realTimeCardImg(Model model) {
 		List<FileDTO> cardImgList = adminService.selectCardImgList();
 		model.addAttribute("cardImg", cardImgList);
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("all-cards")
@@ -105,6 +108,8 @@ public class AdminController {
 		Paging pageUtil = adminService.selectCardPaging(searchPeriod, searchType, searchKeyword,page);
 		model.addAttribute("cardList", cardList);
 		model.addAttribute("paging",pageUtil);
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("card-delete")
@@ -134,6 +139,8 @@ public class AdminController {
 	public void allMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
 			@Nullable @RequestParam(name = "searchKeyword") String keyword, @RequestParam(required = false, defaultValue = "1") int page) {
 		model.addAllAttributes(adminService.selectMemberAllListByPage(searchType, keyword, page));
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("changeMemberStatus")
@@ -146,6 +153,8 @@ public class AdminController {
 	public void blackListMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
 			@Nullable @RequestParam(name = "searchKeyword") String keyword, @RequestParam(required = false, defaultValue = "1") int page) {
 		model.addAllAttributes(adminService.selectMemberBlackListByPage(searchType, keyword, page));
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("removeMemberBlack")
@@ -167,11 +176,13 @@ public class AdminController {
 		Paging pageUtil = adminService.selectRefundByPaging(statusCode, searchType, searchKeyword,page);
 		model.addAttribute("pointRefund",pointRefund);
 		model.addAttribute("paging",pageUtil);
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 	
 	@GetMapping("change-refund-status")
-	public String changeRefundStatus(@AuthenticationPrincipal MemberAccount member,@RequestParam String statusCode, @RequestParam Integer prIdx ) {
-			adminService.updateStatusCode(member,statusCode, prIdx);
+	public String changeRefundStatus(@AuthenticationPrincipal MemberAccount member,@RequestParam String statusCode, @RequestParam Integer prIdx,@RequestParam Integer refundPoint ) {
+			adminService.updateStatusCode(member,statusCode, prIdx,refundPoint);
 			return "redirect:/admin/refunds-history";
 	}
 
@@ -193,6 +204,18 @@ public class AdminController {
 			}
 			model.addAttribute("cardList", cardList);
 		}
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
+		//회원 포인트 내역
+		List<PointHistory> pointHistories = adminService.selectPointHistoriesByMemberIdxFromAll(memberIdx);
+		List<PointHistory> pointHistoriesUse = adminService.selectPointHistoriesByMemberIdxFromUse(memberIdx);
+		List<PointHistory> pointHistoriesSave = adminService.selectPointHistoriesByMemberIdxFromAllSave(memberIdx);
+		Integer userPoint = adminService.selectPointByMemberIdx(memberIdx);
+		if(userPoint == null) userPoint = 0;
+		model.addAttribute("userPoint", userPoint);
+		model.addAttribute("point", pointHistories);
+		model.addAttribute("usePoint", pointHistoriesUse);
+		model.addAttribute("savePoint", pointHistoriesSave);
 		model.addAttribute("memberCardList", memberCardList);
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute("cardCnt", cardCountFromMember);
@@ -205,7 +228,8 @@ public class AdminController {
 		for (String str : memberInfo.keySet()) {
 			System.out.println(memberInfo.get(str) + "+ " + str);
 		}
-		
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute(new MemberUpdate()).addAttribute("error", new ValidatorResult().getError());
 		return "admin/member-profile-edit";
@@ -274,6 +298,9 @@ public class AdminController {
 		model.addAttribute("parentsMenuList", adminService.selectParentsMenuListByMenu());
 		model.addAttribute("parentsSideMenuList", adminService.selectParentsMenuListBySideMenu());
 		model.addAttribute("codeList", adminService.selectCodeList());
+		
+		Integer refundCount = adminService.selectRefundNewCount();
+		model.addAttribute("refundCount",refundCount);
 	}
 	
 	//@Async
