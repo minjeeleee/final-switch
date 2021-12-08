@@ -18,4 +18,6 @@ public interface PointService {
 
 	SavePoint selectSavePointByMemberIdx(Integer memberIdx);
 
+	void chargePoint(Integer memberIdx, Integer points);
+
 }

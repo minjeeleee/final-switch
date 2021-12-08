@@ -11,11 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.InquiryRealName;
+import com.kh.switchswitch.point.model.dto.PointHistory;
 import com.kh.switchswitch.point.model.dto.PointRefund;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.service.PointService;
@@ -63,11 +65,15 @@ public class PointController {
 	@RequestMapping(value="/verifyIamport/{imp_uid}")
 	public IamportResponse<Payment> paymentByImpUid(
 			Model model
+			,@RequestBody PointHistory pointHistory
+			,@AuthenticationPrincipal MemberAccount memberAccount
 			, Locale locale
 			, HttpSession session
 			, @PathVariable(value= "imp_uid") String imp_uid) throws IamportResponseException, IOException
 	{	
-			return api.paymentByImpUid(imp_uid);
+			
+		pointService.chargePoint(memberAccount.getMemberIdx(),pointHistory.getPoints());
+		return api.paymentByImpUid(imp_uid);
 	}
 	
 	@ResponseBody
