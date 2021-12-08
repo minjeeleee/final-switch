@@ -9,7 +9,7 @@
                 <div sec:authorize="isAnonymous()" class="login-join inner-size">
                     <a th:href="@{/member/login}">로그인</a>
                     <div class="divid"></div>
-                    <a href="@{/member/consentForm}">회원가입</a>
+                    <a th:href="@{/member/consentForm}">회원가입</a>
                 </div>
                 <div sec:authorize="isAuthenticated()" class="login-join inner-size">
                     <a th:href="@{/mypage/profile}">[[${#authentication.principal.memberNick}]]</a>

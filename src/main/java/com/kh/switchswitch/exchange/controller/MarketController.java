@@ -65,7 +65,7 @@ public class MarketController {
     @GetMapping("getcard")
 	public String responseBodyJason(HttpServletResponse response) {
 		
-		List<Card> allCard = cardService.selectAllCard();
+		List<Card> allCard = cardService.selectAllCardExceptDone();
 		
 		for (Card content : allCard) {
 			List imgUrl = new ArrayList();
@@ -88,7 +88,7 @@ public class MarketController {
     @GetMapping("getfreecard")
 	public String responseBodyJason2(HttpServletResponse response) {
 		
-		List<Card> allCard = cardRepository.selectFreeCard();
+		List<Card> allCard = cardRepository.selectAllFreeCardExceptDone();
 		
 		for (Card content : allCard) {
 			List imgUrl = new ArrayList();

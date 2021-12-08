@@ -28,7 +28,7 @@ public class PagingV2 {
 		}
 		// 현재 페이지 기준 시작, 끝 게시글 계산
 		public void calcStartAlarmEndAlarm(int nowPage, int cntPerPage) {
-			this.startAlarm = nowPage == 1 ? 1 : (Math.abs(nowPage/cntPerPage)+1)*cntPerPage;
+			this.startAlarm = nowPage == 1 ? 1 : (nowPage-1)*cntPerPage+1;
 			int end = startAlarm + cntPerPage -1;
 			this.endAlarm = end > total ? total : end;
 			System.out.println("startAlarm:" + startAlarm + ", endAlarm:" + endAlarm);

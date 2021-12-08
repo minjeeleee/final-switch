@@ -125,5 +125,11 @@ public interface CardRepository {
 
 	@Select("select req_idx,requested_card from card_request_list where requested_card = #{cardIdx} and request_mem_idx = #{memberIdx}")
 	CardRequestList selectRequestdCardByMemberIdx(@Param("cardIdx") Integer cardIdx,@Param("memberIdx") Integer memberIdx);
+
+	@Select("select * from card where exchange_status <> 'DONE' and isfree = 'N' order by card_idx desc")
+	List<Card> selectAllCardExceptDone();
+
+	@Select("select * from card where exchange_status <> 'DONE' and isfree = 'Y' order by card_idx desc")
+	List<Card> selectAllFreeCardExceptDone();
 	
 }
