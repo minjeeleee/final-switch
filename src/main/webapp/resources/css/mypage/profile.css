@@ -121,7 +121,7 @@ section {
     margin-left: 15px;
 }
 
-.profile-img {
+.profile {
     position: relative;
     width: 90px;
     height: 90px;
@@ -129,7 +129,7 @@ section {
     overflow: hidden;
 }
 
-.profile-img img {
+.profile img {
     object-fit: cover;
     width: 100%;
     position: absolute;

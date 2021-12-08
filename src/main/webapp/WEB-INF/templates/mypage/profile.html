@@ -29,11 +29,11 @@
             <form class="porfile-form" th:object="${modifyForm}" th:action="|/mypage/profile?${_csrf.parameterName}=${_csrf.token}|" method="post" id="frm_modify"  enctype="multipart/form-data">
             <div class="profile-warp inner-size">
 
-                <div class="profile-img" th:if ="${profileImage == null}">
+                <div class="profile" th:if ="${profileImage == null}">
                     <img class="profile-image" src="../resources/img/no-img.jpg" alt="">
                 </div>
                 
-                <div class="profile-img" th:unless ="${profileImage == null}">
+                <div class="profile" th:unless ="${profileImage == null}">
                     <img class="profile-image" th:src="${profileImage.getDownloadURL()}" alt="">
                 </div>
                 

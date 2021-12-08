@@ -1,54 +1,37 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-   <head>
-		<meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Switch-Switch</title>
-        <!-- Favicon-->
-        <link rel="icon" type="resources/img/x-icon" href="../../../resources/assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="../../../resources/css/styles.css" rel="stylesheet" />
-        <!-- fontawesome -->
-        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-		<link href="../../../resources/css/board/notice.css" rel="stylesheet" />
-    
-<style type="text/css">
-.frm_header_area {
-    width: 100%;
-    height: 46px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: solid;
-    border-width: 1px;
-    }
-.frm_content_area>textarea{
-	width:1000px; 
-	height:400px; 
-    resize:none;
-}
-.frm_title_area>div {
-    width: 100%;
-    height: 40px;
-    display: flex;
-    border: solid;
-    border-width: 1px;
-</style>
-    </head>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<head>
+			<!-- refund -->
+			<link href="../../../resources/css/board/styles.css" rel="stylesheet" />
+		    <link rel="stylesheet" href="../resources/css/board/board3.css">
+		    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+		    
+	</head>
     
     <body>
- 
- <section>
-    <div class="container">   
+         <header th:replace="fragments/subBodyHeader :: header">
+    	</header>
+        
+        <nav th:replace="fragments/subMenu" :: subNav>
+    	</nav>
+    	
+  <section>
+  <div class="ref-title-container">
+              <div class="ref-innerwrap inner-size">
+
+                <div class="ref-title">
+                    <h1>공지사항 수정페이지</h1>
+                </div>
+
+                <div class="ref-img">
+                    <img src="../resources/img/infoback.png" alt="">
+                </div>
+
+            </div>
 		<div class='section'  th:object="${datas}">
 				<form class='frm_post'  th:action="|/notice/modify?${_csrf.parameterName}=${_csrf.token}|" method="post" enctype="multipart/form-data">
-				<div class='frm_header_area'>
-					<h2 class='sub_title'>정보공유 수정페이지</h2>				
-				</div>
 				<div class='frm_tag_area'>
 					<select class='select_subject' name='type'>
 							<option selected value='중요공지'>중요공지</option>
@@ -57,7 +40,7 @@
 				</div>
 				<div class='frm_title_area'>
 					<div>
-					제목 : <input type="text" class="post_title" name="title" required="required" th:value="*{notice.title}" placeholder='제목을 입력하세요'>
+					제목<input type="text" class="post_title" name="title" required="required" th:value="*{notice.title}" placeholder='제목을 입력하세요'>
 					</div>
 				</div>
 				<div class='frm_content_area'>
@@ -73,10 +56,8 @@
 			</div>
 		</div>
   </section>
-<script type="text/javascript">
-
-
-
-</script>
+<footer>
+    <div th:replace="fragments/footer :: footer" ></div>
+</footer>
 </body>
 </html>

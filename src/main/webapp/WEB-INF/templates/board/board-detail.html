@@ -7,7 +7,38 @@
 			 <link href="../../../resources/css/board/styles.css" rel="stylesheet" />
 		    <link rel="stylesheet" href="../resources/css/board/board3.css">
 		    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-		    
+<style type="text/css">
+
+.btn-default{
+    background: #dadce0;
+    width: 1110px;
+    /* display: flex; */
+    align-items: center;
+    text-align: center;
+    border: 0;
+    color: white;
+    /* margin-top: 10px; */
+    border-radius: 8px;
+}
+
+
+.btnReply{
+	order-color: transparent;
+    /* padding: 6px 50px; */
+    border-radius: 8px;
+    background: #dadce0;
+    color: white;
+    border: 0;
+}
+
+.btnReply:hover {
+    color: #fff;
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
+
+</style>		    
 	</head>
     
     <body>
@@ -67,7 +98,7 @@
 							method="post" enctype="multipart/form-data">
 							<div class='btn_area'>
 								<span th:if="${#authentication.principal.memberName} == ${datas.board.userId}">						
-									<a class="btn" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">글수정</a>
+									<a class="btn" id="btnModify" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">수정</a>
 									<button id="btnDelete" class="btn">삭제</button>						
 								</span>
 								<a class="btn" th:href="@{/board/board-list2}">목록</a>	
@@ -77,7 +108,6 @@
 				</div>
 		</div>
 	</div>
-</section>
 					<!-- 댓글 -->				
 					<div  id="commentList">
 						<div class="cmt_wrap" th:each="comment : ${commentList}" th:id="${comment.cmIdx}">
@@ -91,8 +121,8 @@
 								<pre>[[${comment.content}]]</pre>
 							</div>
 							<span th:if="${#authentication.principal.memberName} == ${comment.userId}">
-						        <button id="btn-delete" class="btn btn-danger" type="submit" name="submit" value="delete" th:onclick="'deleteConfirm(' + ${comment.cmIdx} + ')'">삭제</button>
-						        <button id="btn-update" class="btn btn-warning" type="submit" name="submit" value="update" onclick="updateComment()">수정</button>
+						        <button id="btn-delete" class="btnReply" type="submit" name="submit" value="delete" th:onclick="'deleteConfirm(' + ${comment.cmIdx} + ')'">삭제</button>
+						        <!-- <button id="btn-update" class="btnReply" type="submit" name="submit" value="update" onclick="updateComment()">수정</button> -->
 						    </span>
 						    <input type="hidden"  th:value="${comment.cmIdx}" class="cmIdx">
 						</div>
@@ -105,7 +135,7 @@
 							<div style="position: relative; height: 100%">
 								<div>
 										<textarea id="commentContent" name="content" class="form-control z-depth-1" rows="3" maxlength="1000"	 placeholder="댓글을 입력해주세요."></textarea>
-										<input type="button" class="btn btn-default" id="commentCreate" onclick="uploadConfirm()"  value="작성">
+										<input type="button" class="btn-default" id="commentCreate" onclick="uploadConfirm()"  value="작성">
 										<input type="hidden"  th:value="${datas.board.bdIdx}" class="bdIdx">
 								</div>
 							</div>
@@ -113,7 +143,7 @@
 
 					</div>
 					
-  
+ </section> 
  <footer>
     <div th:replace="fragments/footer :: footer" ></div>
 </footer>
