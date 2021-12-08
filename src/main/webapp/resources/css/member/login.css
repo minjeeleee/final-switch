@@ -48,7 +48,7 @@ input[id="idSave"] + label span{
     
 }
 
-.error-msg {
+.error-msg-id, .error-msg-pw {
     color: rgb(255, 30, 30);
     font-size: 14px;
     font-weight: 100;
