@@ -109,7 +109,7 @@ public class MypageController {
 		newAuth.setDetails(authentication.getDetails());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-		return "mypage/profile";
+		return "redirect:/mypage/profile";
 	}
 
 	@GetMapping("leave-member")
