@@ -149,6 +149,9 @@ public class MemberServiceImpl implements MemberService {
 				}
 				memberRepository.updateMember(member);
 			}
+			//세이브포인트 인스턴스 생성
+			savePointRepository.insertSavePointWithMemberIdx(searchedmember.getMemberIdx());
+			
 		} else {
 			//닉네임 중복시 cnt 1씩 증가
 			while(memberRepository.selectMemberByNicknameAndDelN(member.getMemberNick()) != null) {
@@ -163,7 +166,12 @@ public class MemberServiceImpl implements MemberService {
 			//회원 인스턴스 및 kakao login 인스턴스 생성
 			memberRepository.insertMember(member);
 			kakaoRepository.insertKakaoLoginWithId(id);
+			
+			//세이브포인트 인스턴스 생성
+			savePointRepository.insertSavePoint();
 		}
+		
+        
 	}
 
 	public void updateMemberDelYN(Member member) {

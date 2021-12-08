@@ -49,7 +49,7 @@ public class ExchangeController {
 	@GetMapping("exchangeForm/{wishCardIdx}")
 	public String exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
-			,@PathVariable int wishCardIdx
+			,@PathVariable Integer wishCardIdx
 			, Model model){
 		//내카드 리스트
 		model.addAttribute("cardlist", cardService.selectMyCardList(certifiedMember));
@@ -74,13 +74,15 @@ public class ExchangeController {
 			@AuthenticationPrincipal MemberAccount certifiedMember
 			, int wishCardIdx
 			, String offerPoint
-			, int availableBal
+			, String availableBal
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
+		int availableBalInt = availableBal.equals("") ? 0 :  Integer.parseInt(availableBal);
+		//int offerPointInt = offerPoint.equals("") ? 0 :  Integer.parseInt(offerPoint);
 		//교환요청리스트
 		CardRequestList crl = exchangeService.requestExchange(certifiedMember, wishCardIdx, cardIdxList, offerPoint);
 		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
+		pointService.updateSavePointWithAvailableBal(availableBalInt - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
 		model.addAttribute("alarmType", "교환요청");
 		model.addAttribute("reqIdx",crl.getReqIdx());
