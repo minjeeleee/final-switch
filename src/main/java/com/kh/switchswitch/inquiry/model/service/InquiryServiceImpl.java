@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.switchswitch.board.model.dto.Board;
 import com.kh.switchswitch.board.model.dto.Reply;
 import com.kh.switchswitch.common.util.pagination.Paging;
+import com.kh.switchswitch.common.util.pagination.PagingV2;
 import com.kh.switchswitch.inquiry.model.dto.Answer;
 import com.kh.switchswitch.inquiry.model.dto.Inquiry;
 import com.kh.switchswitch.inquiry.model.repository.InquiryRepository;
@@ -36,20 +37,19 @@ public class InquiryServiceImpl implements InquiryService{
 		Inquiry inquiry = inquiryRepository.selectInquiryByIdx(inquiryIdx);
 		return Map.of("inquiry",inquiry);
 	}
-
+	
 	public Map<String, Object> selectInquiryList(int page) {
 		int cntPerPage = 10;
-		Paging pageUtil = Paging.builder()
-				.url("/inquiry/inquiry-list")
-				.total(inquiryRepository.selectContentCnt())
-				.curPage(page)
-				.blockCnt(10)
-				.cntPerPage(cntPerPage)
-				.build();
+		int total = (inquiryRepository.selectContentCnt());
+		int nowPage = page;
+		String url = "/inquiry/inquiry-list2";
+		
+		PagingV2 pagingV2 = new PagingV2(total, nowPage, cntPerPage, url);
+				
 
 		Map<String,Object> commandMap = new HashMap<String,Object>();
-		commandMap.put("paging", pageUtil);
-		commandMap.put("inquiryList", inquiryRepository.selectInquiryListWithPageNo(Map.of("startBoard",(page-1)*cntPerPage+1,"lastBoard",(page-1)*cntPerPage+cntPerPage)));
+		commandMap.put("paging", pagingV2);
+		commandMap.put("inquiryList", inquiryRepository.selectInquiryListWithPageNo(Map.of("startBoard",pagingV2.getStartAlarm(),"lastBoard",pagingV2.getEndAlarm())));
 		return commandMap;
 	}
 	
