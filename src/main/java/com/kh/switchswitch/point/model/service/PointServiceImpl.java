@@ -23,6 +23,7 @@ import com.kh.switchswitch.point.model.dto.PointHistory;
 import com.kh.switchswitch.point.model.dto.PointRefund;
 import com.kh.switchswitch.point.model.dto.SavePoint;
 import com.kh.switchswitch.point.model.repository.InquiryRealNameRepository;
+import com.kh.switchswitch.point.model.repository.PointHistoryRepository;
 import com.kh.switchswitch.point.model.repository.PointRefundRepository;
 import com.kh.switchswitch.point.model.repository.SavePointRepository;
 
@@ -36,6 +37,7 @@ public class PointServiceImpl implements PointService{
 	private final RestTemplate http;
 	private final InquiryRealNameRepository inquiryRealNameRepository;
 	private final PointRefundRepository pointRefundRepository;
+	private final PointHistoryRepository pointHistoryRepository;
 
 	public void updateSavePointWithAvailableBal(int availableBal, int memberIdx) {
 		SavePoint savePoint = new SavePoint();
@@ -169,6 +171,22 @@ public class PointServiceImpl implements PointService{
 
 	public SavePoint selectSavePointByMemberIdx(Integer memberIdx) {
 		return savePointRepository.selectSavePointByMemberIdx(memberIdx);
+	}
+
+	public void chargePoint(Integer memberIdx, Integer points) {
+		PointHistory pointHistory = new PointHistory();
+		pointHistory.setUserIdx(memberIdx);
+		pointHistory.setPoints(points);
+		pointHistory.setResultPoint(savePointRepository.selectSavePointByMemberIdx(memberIdx).getBalance());
+		pointHistory.setType("충전");
+		
+		pointHistoryRepository.insertPointHistory(pointHistory);
+		
+		SavePoint savePoint = savePointRepository.selectSavePointByMemberIdx(memberIdx);
+		savePoint.setBalance(savePoint.getBalance()+points);
+		savePoint.setAvailableBal(savePoint.getAvailableBal() + points);
+		
+		savePointRepository.updateSavePoint(savePoint);
 	}
 	
 	
