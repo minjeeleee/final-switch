@@ -1,4 +1,13 @@
 @charset "UTF-8";
+
+.form-group.shadow-textarea {
+    display: grid;
+    /* place-content: center; */
+    /* width: 100%; */
+    /* max-width: 1080px; */
+    padding-left: 210px;
+    padding-right: 100px;
+}
 .section * {
     font-size: 15px;
 }
@@ -132,13 +141,18 @@
 	justify-content: flex-end;
 	align-items: center;
 }
+
+#commentCreate {
+    width: 1110px;
+}
+
 .btn {
-    border-color: transparent;
-    padding: 6px 50px;
+border-color: transparent;
+    /* padding: 6px 50px; */
     border-radius: 8px;
     background: #dadce0;
     color: white;
-    margin-left: 10px;
+    /* margin-left: 10px; */
 }
 .btn_area>button{
 	padding: 6px 50px;
@@ -197,8 +211,12 @@
 
 .cmt_wrap{
 	margin-top: 15px;
-	margin-bottom: 15px;
-	display: flex;
+    align-items: baseline;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-evenly;
+    max-width: 1080px;
+    width: 100%;
 }
 .cmter_picture{
 	width: 50px;
