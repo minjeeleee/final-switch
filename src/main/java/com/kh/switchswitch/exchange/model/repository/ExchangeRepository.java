@@ -38,6 +38,9 @@ public interface ExchangeRepository {
 	//교환요청 업데이트용
 	@Update("update exchange_status set type=#{type} where req_idx=#{reqIdx} ")
 	void updateExchangeStatus(ExchangeStatus exchangeStatus);
+	
+	@Update("update exchange_status set type=#{type} where freq_idx=#{freqIdx} ")
+	void updateFreeExchangeStatus(ExchangeStatus exchangeStatus);
 
 	//나눔요청 상태 업데이트용
 	@Update("update exchange_status set type=#{type} where freq_idx=#{freqIdx} ")

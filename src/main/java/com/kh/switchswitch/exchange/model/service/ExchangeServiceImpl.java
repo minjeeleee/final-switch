@@ -230,6 +230,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 				opponentNickList.add(memberRepository.selectMemberWithMemberIdx(exchangeHistory.getRequestMemIdx()).getMemberNick());
 			}
 		}
+		System.out.println(ehList);
 		List<String> requestedCardNameList = getFreeRequestedCardNameList(frlList);
 		
 		List<Map<String, Object>> exchangeHistoryList = new ArrayList();

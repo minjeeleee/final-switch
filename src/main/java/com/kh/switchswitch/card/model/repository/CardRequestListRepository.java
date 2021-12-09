@@ -26,7 +26,7 @@ public interface CardRequestListRepository {
 	void updateCardRequestList(CardRequestList cardRequestList);
 
 	@Select("select distinct req_idx from card_request_list where requested_card=#{cardIdx}")
-	Integer selectReqIdxByRequestedCardIdx(Integer cardIdx);
+	List<Integer> selectReqIdxByRequestedCardIdx(Integer cardIdx);
 	
 	//교환카드 요청
 	@Select("select req_idx from card_request_list"

@@ -164,11 +164,11 @@ public class CardServiceImpl implements CardService {
 		exchangeRepository.updateExchangeStatus(exchangeStatus);
 	}
 	
-	public void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type) {
+	public void updateExchangeStatusWithFreqIdx(Integer freqIdx, String type) {
 		ExchangeStatus exchangeStatus = new ExchangeStatus();
 		exchangeStatus.setFreqIdx(freqIdx);
 		exchangeStatus.setType(type);
-		exchangeRepository.updateExchangeStatus(exchangeStatus);
+		exchangeRepository.updateFreeExchangeStatus(exchangeStatus);
 	}
 
 
@@ -214,10 +214,10 @@ public class CardServiceImpl implements CardService {
 		}
 		
 		for (Integer reqIdx : reqIdxListOrigin) {
-			System.out.println(reqIdx);
+			System.out.println("requested reqIdx: " + reqIdx);
 			//카드 리스트 (진행중, 완료)
 			for (Integer exReqIdx : exchangeRepository.selectReqIdxWithMemberIdx(memberIdx)) {
-				System.out.println(exReqIdx);
+				System.out.println("requested exReqIdx: " + exReqIdx);
 				if(reqIdx.equals(exReqIdx)) {
 					reqIdxList.remove(reqIdx);
 				}
@@ -225,7 +225,7 @@ public class CardServiceImpl implements CardService {
 		}
 		
 		for (Integer integer : reqIdxList) {
-			System.out.println(integer);
+			System.out.println("requested reqIdx: " + integer);
 		}
 		
 		List<Card> cardList = new ArrayList();
@@ -234,9 +234,12 @@ public class CardServiceImpl implements CardService {
 			cardList.add(cardRepository.selectCardByCardIdx(cardRepository.selectCardRequestListWithReqIdx(reqIdx).getRequestedCard()));
 		}
 		for (Card card : cardList) {
-			requestedCardList.add(Map.of("requestedCard",card,
-					"reqIdx",cardRequestListRepository.selectReqIdxByRequestedCardIdx(card.getCardIdx()),
-					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			List<Integer> reqIdxs= cardRequestListRepository.selectReqIdxByRequestedCardIdx(card.getCardIdx());
+			for (Integer reqIdx : reqIdxs) {
+				requestedCardList.add(Map.of("requestedCard",card,
+						"reqIdx", reqIdx,
+						"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			}
 		}
 		return requestedCardList;
 	}
@@ -248,8 +251,10 @@ public class CardServiceImpl implements CardService {
 		List<Integer> reqIdxListForRequest = cardRequestListRepository.selectReqIdxForRequestByOngoingCardIdx(memberIdx);
 		//요청한 경우
 		for (Integer reqIdx : reqIdxListForRequest) {
+			System.out.println("ongoing ex request reqIdx: " + reqIdx);
 			CardRequestList cardRequestList = cardRepository.selectCardRequestListWithReqIdx(reqIdx);
 			for (Integer cardIdx : getCardIdxSet(cardRequestList)) {
+				System.out.println("ongoing card request cardIdx: " + cardIdx);
 				ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardIdx),
 						"reqIdx", reqIdx,
 						"fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0)));
@@ -259,6 +264,7 @@ public class CardServiceImpl implements CardService {
 		List<Integer> reqIdxListForRequested = cardRequestListRepository.selectReqIdxForRequestedByOngoingCardIdx(memberIdx);
 		//요청받은 경우
 		for (Integer reqIdx : reqIdxListForRequested) {
+			System.out.println("ongoing ex requested cardIdx: " + reqIdx);
 			CardRequestList cardRequestList = cardRepository.selectCardRequestListWithReqIdx(reqIdx);
 			ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()),
 					"reqIdx", reqIdx,
@@ -270,7 +276,30 @@ public class CardServiceImpl implements CardService {
 
 	//Request 교환 카드
 	public List<Map<String, Object>> selectRequestCardList(Integer memberIdx) {
-		return null;
+		List<Map<String, Object>> requestCardList = new ArrayList<>();
+		//요청 카드
+		List<Card> myRequestCardList = cardRepository.selectCardByMemberIdxWithRequest(memberIdx);
+		
+		for (Card card : myRequestCardList) {
+			System.out.println("request card: " + card);
+			//이전 요청 
+			List<Integer> reqIdxListOrigin = cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx());
+			List<Integer> reqIdxList = new ArrayList<Integer>();
+			for (Integer reqIdx : reqIdxListOrigin) {
+				reqIdxList.add(reqIdx);
+			}
+			//exchange_status에 존재하는 경우를 제외(교환중)
+			for (Integer reqIdx : reqIdxListOrigin) {
+				if(exchangeRepository.selectExchangeStatusWithReqIdx(reqIdx) != null) {
+					reqIdxList.remove(reqIdx);
+				}
+			}
+			requestCardList.add(Map.of("requestCard",card,
+					"reqIdx",reqIdxList.get(0),
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		}
+		
+		return requestCardList;
 	}
 
 	
@@ -513,7 +542,7 @@ public class CardServiceImpl implements CardService {
 		for (Integer freqIdx : freqIdxListForRequest) {
 			FreeRequestList cardRequestList = freeRequestListRepository.selectFreeRequestListWithReqIdx(freqIdx);
 			ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()),
-					"reqIdx", freqIdx,
+					"freqIdx", freqIdx,
 					"fileDTO", cardRepository.selectFileInfoByCardIdx(cardRequestList.getRequestedCard()).get(0)));
 		}
 		
@@ -527,9 +556,11 @@ public class CardServiceImpl implements CardService {
 			if(freeRequestedList!=null) {
 				for (FreeRequestList frl : freeRequestedList) {
 					Card card = cardRepository.selectCardByCardIdx(frl.getRequestedCard());
-					requestedCardList.add(Map.of("requestCard",card,
-							"freqIdx",frl.getFreqIdx(),
-							"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+					if(card.getExchangeStatus() == "REQUEST") {
+						requestedCardList.add(Map.of("requestedCard",card,
+								"freqIdx",frl.getFreqIdx(),
+								"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+					}
 				}
 			}
 			return requestedCardList;
