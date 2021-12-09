@@ -56,7 +56,6 @@ document.querySelector("#notice_close").addEventListener("click", (e)=> {
 });
 
 function noticeInitialize(){
-	document.querySelector("#notice_msg").innerHTML = "";
 	document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 }
 
