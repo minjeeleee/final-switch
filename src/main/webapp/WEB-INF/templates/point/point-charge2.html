@@ -17,10 +17,8 @@
 
                 <div class="ref-title">
                     <h1>포인트</h1>
-                    <p>잔여포인트</p><th:block th:if="${savePoint.balance}"><span>[[${savePoint.balance}]]</span></th:block>
-                    			  <th:block th:unless="${savePoint.balance}"><span>0</span></th:block>
-                    <p>가용포인트</p><th:block th:if="${savePoint.availableBal}"><span>[[${savePoint.availableBal}]]</span></th:block>
-                    			  <th:block th:unless="${savePoint.availableBal}"><span>0</span></th:block>
+                    <p>잔여포인트</p><th:block th:if="${savePoint.balance}">${savePoint.balance}</th:block>
+                    <p>가용포인트</p><th:block th:if="${savePoint.availableBal}">${savePoint.availableBal}</th:block>
                 </div>
 
                 <div class="ref-img">
@@ -43,7 +41,6 @@
                             <p>신청금액</p>
                             <input type="number" id="point" name="refundPoint">
                         </div>
-						<!-- 계좌조회 버튼 필요  -->
                         <button class="ref-submit-button" onclick="requestPay()" type="submit">신청하기</button>
                     </div>
                 </div>
