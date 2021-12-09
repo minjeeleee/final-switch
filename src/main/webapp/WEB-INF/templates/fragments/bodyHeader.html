@@ -14,6 +14,8 @@
                 <div sec:authorize="isAuthenticated()" class="login-join inner-size">
                     <a th:href="@{/mypage/profile}">[[${#authentication.principal.memberNick}]]</a>
                     <div class="divid"></div>
+                    <a sec:authorize="hasAuthority('C')" th:href="@{/admin/real-time=cards}">관리자 페이지로 이동</a>
+                    <div sec:authorize="hasAuthority('C')" class="divid"></div>
                     <form th:action="@{/member/logout}" method="post"><button style="border:none; background: none; color:white; font-size:12px; font-weight: 100;">로그아웃</button></form>
                 </div>
             </div>
