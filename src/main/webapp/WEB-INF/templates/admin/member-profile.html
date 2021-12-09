@@ -119,19 +119,18 @@ body{
 														<th class="text-center">번호</th>
 														<th class="text-center">내용</th>
 														<th class="text-center">결과</th>
-														<th class="text-center">잔여포인트</th>
 														<th class="text-center">날짜</th>
 													</tr>
 												</thead>
 												<tbody th:if="${point}">
-													<tr th:each="point : ${point}">
-														<td th:text="${point.phIdx}"></td>
-														<td th:text="${point.content}"></td>
-														<td th:if="${#strings.equals(pointType, '사용')}">-[[${point.points}]]</td>
-														<td th:if="${#strings.equals(pointType, '충전')}">+[[${point.points}]]</td>
-														<td th:if="${point.resultPoint}"></td>
-														<td th:if="${point.regDate}"></td>
-													</tr>
+														<tr th:each="point : ${point}">
+															<td th:text="${point.phIdx}"></td>
+															<td th:text="${point.type}"></td>
+															<td th:if="${#strings.equals(point.type, '사용')}">-[[${point.points}]]</td>
+															<td th:if="${#strings.equals(point.type, '충전')}">+[[${point.points}]]</td>
+															<td th:if="${#strings.equals(point.type, '환전')}">-[[${point.points}]]</td>
+															<td th:text="${point.regDate}"></td>
+														</tr>
 												</tbody>
 											</table>
 										</div>
@@ -148,12 +147,12 @@ body{
 													</tr>
 												</thead>
 												<tbody th:if="${savePoint}">
-													<tr th:each="savePoint : ${savePoint}">
-														<td th:text="${savePoint.phIdx}"></td>
-														<td th:text="${savePoint.content}"></td>
-														<td>+[[${savePoint.point}]]</td>
-														<td th:text="${savePoint.regDate}"></td>
-													</tr>
+														<tr th:each="savePoint : ${savePoint}">
+															<td th:text="${savePoint.phIdx}"></td>
+															<td th:text="${savePoint.type}"></td>
+															<td>+[[${savePoint.points}]]</td>
+															<td th:text="${savePoint.regDate}"></td>
+														</tr>
 												</tbody>
 											</table>
 										</div>
@@ -170,12 +169,12 @@ body{
 													</tr>
 												</thead>
 												<tbody th:if="${usePoint}">
-													<tr th:each="usePoint : ${usePoint}">
-														<td th:text="${usePoint.phIdx">1</td>
-														<td th:text="${usePoint.content}">포인트 환급</td>
-														<td>-[[${usePoint.content}]]</td>
-														<td th:text="${usePoint.regDate}"></td>
-													</tr>
+														<tr th:each="usePoint : ${usePoint}">
+															<td th:text="${usePoint.phIdx"></td>
+															<td th:text="${usePoint.type}">포인트 환급</td>
+															<td>-[[${usePoint.points}]]</td>
+															<td th:text="${usePoint.regDate}"></td>
+														</tr>
 												</tbody>
 											</table>
 										</div>

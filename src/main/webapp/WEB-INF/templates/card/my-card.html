@@ -31,7 +31,7 @@
 				<div>교환 카드</div>
                 <div class="card-list">
     
-	            <div class="card-container" style="width: 180px;" th:each="myExchangeCard : ${myExchangeCards}" th:object="${myExchangeCard}">
+	            <div class="card-container" style="width: 180px;" th:each="myExchangeCard : ${myExchangeCards}" th:object="${myExchangeCard}" >
 					<div class="card-name">
 						<p>[[*{myExchangeCard.name}]]</p>
 					</div>
@@ -82,7 +82,7 @@
 					</div>
 					<div class="card">
 						<input type="hidden" th:value="*{myExchangeCard.condition}"> <img
-							class="card-box" alt="">
+							class="card-box" alt="" th:onclick="|window.location.href='/card/card-modify?cardIdx=*{myExchangeCard.cardIdx}'|">
 						<div class="card-img">
 							<!-- 카드 물건 이미지 -->
 							<img th:src="*{fileDTO.getDownloadURL()}" alt="">
