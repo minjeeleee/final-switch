@@ -1,59 +1,80 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<link rel="stylesheet" href="../resources/css/all.css">
-		<link rel="stylesheet" href="../resources/css/reset.css">
-		
-		<meta charset="UTF-8">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-		
-		<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		
-		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-		<link rel="stylesheet" href="../resources/css/member/login.css">
-		
-		<title>Insert title here</title>
-	
-	</head>
-	<body>
-	<div class="demo form-bg">
-	        <div class="container-fluid">
-	            <div class="row text-center">
-	                <div class="col-lg-12">
-	                    <h1 class="heading-title"> Switch-Switch </h1>
-	                </div>
-	            </div>
-	
-	            <div class="row">
-	                <div class="col-md-offset-3 col-md-6">
-	                    <form id="findingId" th:action="@{/member/findingId}" method="post">
-	                        <h1 class="heading">finding id</h1>
-	                        <div class="form-group" th:unless="${email}">
-	                            <label class="control-label">Nickname</label>
-	                            <input type="text" class="form-control" name="nickname" placeholder="Nickname"/>
-	                            <label class="control-label">Phone</label>
-	                            <input type="text" class="form-control" name="tell" placeholder="9-11 Number"/>
-	                            <button type="submit" class="btn btn-default">아이디 찾기<i class="fa fa-arrow-circle-right fa-2x"></i></button>
-	                        </div>
-	                        <div class="form-group" th:if="${email}">
-	                            <label class="control-label">Email</label>
-	                            <span style="font-size:18px">[[${email}]]</span>
-	                        </div>
-	                        <span class="form-footer">아직 회원이 아니신가요? <a href="/member/consentForm">회원가입</a></span>
-	                        <div class="finding">
-	                        	<span class="form-footer"><a href="/member/reissuePw">비밀번호 재발급</a></span> / 
-	                        	<span class="form-footer"><a href="/member/login">로그인</a></span>
-	                        </div>
-	                    </form>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	    <script type="text/javascript" th:inline="javascript">
-	    	if('[(${error})]') alert("[(${error})]");
-	    </script>
-	</body>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<head th:replace="fragments/subHeader :: subHeader"></head>
+<!-- findingcss -->
+<link rel="stylesheet" th:href="@{/resources/css/member/finding.css}">
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+</head>
+<body>
+
+	<header th:replace="fragments/subBodyHeader :: header"></header>
+
+	<section>
+
+		<div class="finding-conainer">
+			<div class="finding-inner inner-size">
+				<form class="finding" th:action="@{/member/findingId}" method="post">
+					<div class="title">
+						<h3>아이디 찾기</h3>
+					</div>
+					<div class="nick-input"  th:unless="${email}">
+						<input type="text" name="nickname" class="nickname"
+							placeholder="닉네임을 입력해주세요.">
+						<div class="error-msg-nick" style="visibility: hidden">
+							<p>닉네임은 필수 입력입니다.</p>
+						</div>
+					</div>
+					<div class="tel-input"  th:unless="${email}">
+						<input type="tel" name="tell" class="tell"
+							placeholder="전화번호를 입력해주세요.">
+						<div class="error-msg-tell" style="visibility: hidden">
+							<p>전화번호는 필수 입력입니다.</p>
+						</div>
+					</div>
+					<div class="finding-sm"  th:unless="${email}">
+						<button type="button" class="findingButton" onclick="checkBlank()">아이디 찾기</button>
+					</div>
+				</form>
+				<div class="form-group" th:if="${email}">
+					<span class="result-box" style="font-size: 18px">[[${email}]]</span>
+				</div>
+				<div class="find-container">
+					아직 회원이 아니신가요? <a class="" th:href="@{/member/consentForm}">회원가입</a>
+					<div class="divid"></div>
+					<a th:href="@{/member/reissuePw}">비밀번호 재발급</a>
+					<div class="divid"></div>
+					<a th:href="@{/member/login}">로그인</a>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<script type="text/javascript" th:inline="javascript">
+		if ('[(${error})]'){
+			alert("[(${error})]");
+		}
+
+		function checkBlank() {
+			document.querySelector(".error-msg-nick").style.visibility = 'hidden';
+			document.querySelector(".error-msg-tell").style.visibility = 'hidden';
+			let flg = true;
+			if (!$(".nickname").val() || !document.querySelector(".nickname").value.trim()) {
+				document.querySelector(".error-msg-nick").style.visibility = 'visible';
+				flg = false;
+			}
+			if (!$(".tell").val() || !document.querySelector(".tell").value.trim()) {
+				document.querySelector(".error-msg-tell").style.visibility = 'visible';
+				flg = false;
+			}
+			if (flg) {
+				$(".finding").submit();
+			}
+
+		}
+	</script>
+</body>
 </html>
+	

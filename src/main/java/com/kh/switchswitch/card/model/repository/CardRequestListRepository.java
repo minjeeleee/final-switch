@@ -23,4 +23,15 @@ public interface CardRequestListRepository {
 
 	void updateCardRequestList(CardRequestList cardRequestList);
 
+	@Select("select req_idx from card_request_list where requested_card=#{cardIdx}")
+	Integer selectReqIdxByRequestedCardIdx(Integer cardIdx);
+
+	@Select("select req_idx from card_request_list "
+			+ "where request_card1=#{cardIdx} or request_card2=#{cardIdx} or request_card3=#{cardIdx} or request_card4=#{cardIdx}")
+	Integer selectReqIdxByRequestCardIdx(Integer cardIdx);
+
+	@Select("select req_idx from card_request_list where "
+			+ "(requested_card=#{cardIdx} or request_card1=#{cardIdx} or request_card2=#{cardIdx} or request_card3=#{cardIdx} or request_card4=#{cardIdx})"
+			+ "and req_idx in(select req_idx from exchange_status where type='ONGOING' and (request_mem_idx=#{memberIdx} or requested_mem_idx=#{memberIdx}))")
+	Integer selectReqIdxByOngoingCardIdx(Integer memberIdx, Integer cardIdx);
 }

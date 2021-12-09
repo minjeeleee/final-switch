@@ -207,7 +207,9 @@ public class CardServiceImpl implements CardService {
 			cardList.add(cardRepository.selectCardByCardIdx(cardIdx));
 		}
 		for (Card card : cardList) {
-			requestedCardList.add(Map.of("requestedCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			requestedCardList.add(Map.of("requestedCard",card,
+					"reqIdx",cardRequestListRepository.selectReqIdxByRequestedCardIdx(card.getCardIdx()),
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 		}
 		return requestedCardList;
 	}
@@ -216,7 +218,9 @@ public class CardServiceImpl implements CardService {
 		List<Map<String, Object>> ongoingCardList = new ArrayList<>();
 		List<Card> cardList = cardRepository.selectCardByMemberIdxWithOngoing(memberIdx);
 		for (Card card : cardList) {
-			ongoingCardList.add(Map.of("ongoingCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			ongoingCardList.add(Map.of("ongoingCard",card,
+					"reqIdx", cardRequestListRepository.selectReqIdxByOngoingCardIdx(memberIdx,card.getCardIdx()),
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 		}
 		return ongoingCardList;
 	}
@@ -225,7 +229,9 @@ public class CardServiceImpl implements CardService {
 		List<Map<String, Object>> requestCardList = new ArrayList<>();
 		List<Card> myRequestCardList = cardRepository.selectCardByMemberIdxWithRequest(memberIdx);
 		for (Card card : myRequestCardList) {
-			requestCardList.add(Map.of("requestCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			requestCardList.add(Map.of("requestCard",card,
+					"reqIdx",cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx()),
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 		}
 		return requestCardList;
 	}
