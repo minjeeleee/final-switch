@@ -20,12 +20,12 @@ public class RatingServiceImpl implements RatingService {
 	private final ExchangeRepository exchangeRepository;
 	private final MemberRepository memberRepository;
 	
-	public void createRating(ExchangeStatus exchangeStatus, Integer rate, MemberAccount certifiedMember) {
+	public void createRating(ExchangeStatus exchangeStatus, Integer rate, Integer memberIdx) {
 		
 		Integer ehIdx = exchangeRepository.selectEhIdxByReqIdx(exchangeStatus.getReqIdx());
 		Rating rating = new Rating();
 		rating.setEhIdx(ehIdx);
-		if(certifiedMember.getMemberIdx()==exchangeStatus.getRequestedMemIdx()) {
+		if(memberIdx == exchangeStatus.getRequestedMemIdx()) {
 			rating.setUserIdx(exchangeStatus.getRequestMemIdx());
 		} else {
 			rating.setUserIdx(exchangeStatus.getRequestedMemIdx());

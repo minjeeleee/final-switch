@@ -337,8 +337,11 @@ public class ExchangeController {
 						, Model model) {
 		//교환완료 알림 확인 시 상대방 평가 받아오기
 		ExchangeStatus exchangeStatus = exchangeService.selectExchangeStatus(reqIdx);
+		System.out.println(exchangeStatus);
+		System.out.println(rate);
+		System.out.println(certifiedMember);
 		if(exchangeStatus.getType().equals("DONE")) {
-			ratingService.createRating(exchangeStatus,rate, certifiedMember);
+			ratingService.createRating(exchangeStatus,rate, certifiedMember.getMemberIdx());
 			return "redirect:/exchange/detail/"+reqIdx;
 		}
 		
@@ -355,7 +358,7 @@ public class ExchangeController {
 		
 		//교환완료 버튼 클릭 시 front에서 상대방 평가폼 생성해서 함께 정보 받아오기?
 		if(rate != null) {
-			ratingService.createRating(exchangeStatus,rate, certifiedMember);
+			ratingService.createRating(exchangeStatus,rate, certifiedMember.getMemberIdx());
 		}
 		
 		//교환완료 알림 보내기
