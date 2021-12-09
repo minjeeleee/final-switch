@@ -5,6 +5,7 @@
 
 <head>
 	<link rel="stylesheet" href="../resources/css/card/wishCard.css">
+	<link rel="stylesheet" href="../resources/css/card/wishPopup.css">
 <style type="text/css">
 .wscd-innerwrap {
     height: 170px;
@@ -22,6 +23,9 @@
 </head>
 
 <body>
+
+<div th:replace="fragments/wishPopup" :: wishPopup> 
+	</div>
 
 <header th:replace="fragments/subBodyHeader :: subBodyHeader">
 </header>
