@@ -45,11 +45,11 @@
 						      <li style="margin-bottom: 0px !important;"><a href="/admin/real-time-cards?type=freeCard">무료나눔</a></li>
 						    </ul>
 					</div>	    
-						    <select class="form-control" style="width: 120px; float: right; margin-top: 2%;" onchange="changeReloadTime(this.value)">
+						    <select class="form-control" style="width: 120px; float: right; margin-top: 2%;" onchange="changeReloadTime(this.value)" name="selectTime">
 								  <option>시간선택</option>
-								  <option value="7000">7초</option>
-								  <option value="5000">5초</option>
-								  <option value="3000">3초</option>
+								  <option class="time" value="7000">7초</option>
+								  <option class="time" value="5000">5초</option>
+								  <option class="time" value="3000">3초</option>
 							</select>
 						</div>
  					 </div>
@@ -128,6 +128,8 @@
 				})
 			}
 		})
+		
+		
 		
 		var seconds = 5000;
 		var interval;
