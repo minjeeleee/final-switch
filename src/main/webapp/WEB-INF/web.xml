@@ -66,6 +66,8 @@
    <!-- 에러 페이지 -->
    <error-page>
    		<error-code>404</error-code>
-   		<location>/error/404.html</location>
+   		<location>/error/404</location>
+   		<error-code>403</error-code>
+   		<location>/error/403</location>
    </error-page>
 </web-app>
