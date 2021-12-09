@@ -55,17 +55,17 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 10%;">No</th>
-                                <th style="width: 75%;">제목</th>
+                                <th style="width: 70%;">제목</th>
+                                <th style="width: 15%;">작성자</th>
                                 <th style="width: 15%;">작성일</th>
                             </tr>  
                         </thead>
                         <tbody>
                             <tr th:each="board : ${boardList}"
 									style="height: 30px; line-height: 30px;">
-									<td th:text="${board.bdIdx}"></td>
 									<td><a th:text="${board.title}"
 										th:href="@{/board/board-detail(bdIdx=${board.bdIdx})}"></a></td>
+									<td th:text="${board.userId}"></td>
 									<td th:text="${board.regDate}"></td>
 								</tr>
                         </tbody>
