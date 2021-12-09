@@ -48,13 +48,19 @@ public class PointController {
 	}
 
 	@GetMapping("point-charge")
-	public void pointCharge() {}
+	public void pointCharge(@AuthenticationPrincipal MemberAccount memberAccount, Model model) {
+		SavePoint savePoint = pointService.selectSavePointByMemberIdx(memberAccount.getMemberIdx());
+		model.addAttribute("savePoint", savePoint);
+		
+	}
+	
+	
 	
 	
 	@GetMapping("point-return")
 	public void pointReturn(@AuthenticationPrincipal MemberAccount memberAccount, Model model) {
 		SavePoint savePoint = pointService.selectSavePointByMemberIdx(memberAccount.getMemberIdx());
-		model.addAttribute("availableBal", savePoint.getAvailableBal());
+		model.addAttribute("savePoint", savePoint);
 	}
 	
 	@GetMapping("point-return2")
@@ -107,10 +113,7 @@ public class PointController {
 	
 	@GetMapping("point-history")
 	public void pointHistory(Model model, @AuthenticationPrincipal MemberAccount member) {
-		SavePoint savePoint = new SavePoint();
-		if(pointService.selectSavePointByMemberIdx(member.getMemberIdx()) != null) {
-			savePoint = pointService.selectSavePointByMemberIdx(member.getMemberIdx());
-		}
+		SavePoint savePoint = pointService.selectSavePointByMemberIdx(member.getMemberIdx());
 		model.addAttribute("savePoint",savePoint );
 	}
 	
