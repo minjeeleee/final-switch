@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.switchswitch.alarm.model.dto.Alarm;
+import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
@@ -37,6 +40,7 @@ public class CardServiceImpl implements CardService {
 	private final CardRequestCancelListRepository cardRequestCancelListRepository;
 	private final ExchangeRepository exchangeRepository;
 	private final MemberRepository memberRepository;
+	private final AlarmRepository alarmRepository;
 	
 	@Override
 	public void insertCard(List<MultipartFile> imgList, Card card) {
@@ -138,6 +142,14 @@ public class CardServiceImpl implements CardService {
 		exchangeRepository.deleteExchangeStatusWithReqIdx(reqIdx);
 	}
 	
+	//교환취소 시 사용
+	public void updateExchangeStatusWithReject(Integer reqIdx) {
+		ExchangeStatus exchangeStatus = new ExchangeStatus();
+		exchangeStatus.setReqIdx(reqIdx);
+		exchangeStatus.setType("REJECT");
+		exchangeRepository.updateExchangeStatus(exchangeStatus);
+	}
+	
 	public void deleteExchangeStatusWithFreqIdx(Integer freqIdx) {
 		exchangeRepository.deleteExchangeStatusWithFreqIdx(freqIdx);
 	}
@@ -188,36 +200,53 @@ public class CardServiceImpl implements CardService {
 	public Card selectCardByReqIdx(Integer reqIdx) {
 		return cardRepository.selectCardByReqIdx(reqIdx);
 	}
-
+	
 	public List<Map<String, Object>> selectRequestedCardList(Integer memberIdx) {
 		List<Map<String, Object>> requestedCardList = new ArrayList<>();
 		
-		List<Integer> crlCardIdxList = cardRequestListRepository.selectCardIdxWithMemberIdx(memberIdx);
+		//요청받은 카드 리스트 (요청신청, 진행중, 완료)
+		List<Integer> reqIdxList = cardRequestListRepository.selectReqIdxWithMemberIdx(memberIdx);
 		
-		for (Integer crlCardIdx : crlCardIdxList) {
-			for (Integer esCardIdx : exchangeRepository.selectCardIdxWithMemberIdx(memberIdx)) {
-				if(crlCardIdx.equals(esCardIdx)) {
-					crlCardIdxList.remove(crlCardIdx);
-				}
-			}
+		for (Integer integer : reqIdxList) {
+			System.out.println(integer);
 		}
 		
 		List<Card> cardList = new ArrayList();
-		for (Integer cardIdx : crlCardIdxList) {
-			cardList.add(cardRepository.selectCardByCardIdx(cardIdx));
+		//요청 받은 카드 리스트 (요청신청) with info
+		for (Integer reqIdx : reqIdxList) {
+			cardList.add(cardRepository.selectCardByCardIdx(cardRepository.selectCardRequestListWithReqIdx(reqIdx).getRequestedCard()));
 		}
 		for (Card card : cardList) {
-			requestedCardList.add(Map.of("requestedCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			requestedCardList.add(Map.of("requestedCard",card,
+					"reqIdx",cardRequestListRepository.selectReqIdxByRequestedCardIdx(card.getCardIdx()),
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 		}
 		return requestedCardList;
 	}
 
 	public List<Map<String, Object>> selectOngoingCardList(Integer memberIdx) {
 		List<Map<String, Object>> ongoingCardList = new ArrayList<>();
-		List<Card> cardList = cardRepository.selectCardByMemberIdxWithOngoing(memberIdx);
-		for (Card card : cardList) {
-			ongoingCardList.add(Map.of("ongoingCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+		//exchange_status(진행중, 완료, 거절) -> 진행중(ongoing) & request_mem_idx
+		List<Integer> reqIdxListForRequest = cardRequestListRepository.selectReqIdxForRequestByOngoingCardIdx(memberIdx);
+		//요청한 경우
+		for (Integer reqIdx : reqIdxListForRequest) {
+			CardRequestList cardRequestList = cardRepository.selectCardRequestListWithReqIdx(reqIdx);
+			for (Integer cardIdx : getCardIdxSet(cardRequestList)) {
+				ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardIdx),
+						"reqIdx", reqIdx,
+						"fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0)));
+			}
 		}
+		//exchange_status(진행중, 완료, 거절) -> 진행중(ongoing) & requested_mem_idx
+		List<Integer> reqIdxListForRequested = cardRequestListRepository.selectReqIdxForRequestedByOngoingCardIdx(memberIdx);
+		//요청받은 경우
+		for (Integer reqIdx : reqIdxListForRequested) {
+			CardRequestList cardRequestList = cardRepository.selectCardRequestListWithReqIdx(reqIdx);
+			ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()),
+					"reqIdx", reqIdx,
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(cardRequestList.getRequestedCard()).get(0)));
+		}
+		
 		return ongoingCardList;
 	}
 
@@ -225,7 +254,12 @@ public class CardServiceImpl implements CardService {
 		List<Map<String, Object>> requestCardList = new ArrayList<>();
 		List<Card> myRequestCardList = cardRepository.selectCardByMemberIdxWithRequest(memberIdx);
 		for (Card card : myRequestCardList) {
-			requestCardList.add(Map.of("requestCard",card,"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			Integer reqIdx = cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx());
+			if(cardRepository.selectCardRequestListWithReqIdx(reqIdx)!=null) {
+				requestCardList.add(Map.of("requestCard",card,
+						"reqIdx",cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx()),
+						"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+			}
 		}
 		return requestCardList;
 	}
@@ -327,9 +361,13 @@ public class CardServiceImpl implements CardService {
 
 	public List<Map<String, Object>> selectMyCardList(MemberAccount certifiedMember) {
 		List<Map<String, Object>> cardlist = new ArrayList<>();
-		List<Card> myCardList = cardRepository.selectCardListIsDelAndStatus(certifiedMember.getMemberIdx());
+		List<Card> myCardList = cardRepository.selectCardListIsDelAndStatusNone(certifiedMember.getMemberIdx());
+		
 		if (myCardList != null) {
+			
 			for (Card card : myCardList) {
+				System.out.println(card);
+				System.out.println(card.getCardIdx());
 				cardlist.add(selectCard(card.getCardIdx()));
 			}
 		}
@@ -337,6 +375,8 @@ public class CardServiceImpl implements CardService {
 	}
 
 	public Map<String, Object> selectCard(int cardIdx) {
+		System.out.println(cardRepository.selectCardByCardIdx(cardIdx));
+		System.out.println(cardRepository.selectFileInfoByCardIdx(cardIdx).get(0));
 		return Map.of("cardInfo", cardRepository.selectCardByCardIdx(cardIdx), "fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0));
 	}
 
@@ -357,6 +397,25 @@ public class CardServiceImpl implements CardService {
 	public void acceptRequest(CardRequestList cardRequestList, String status) {
 		updateCardStatusWithCardIdxSet(cardRequestList,status);
 		insertExchangeStatus(cardRequestList);
+		
+		//요청 카드 status "REQUEST" -> "NONE", 요청 받은 리스트 card_request_list 삭제 및 card_request_cancel_list 생성
+		List<CardRequestList> otherListForRequestedCard = 
+				cardRepository.getOtherListForRequestedCard(cardRequestList.getRequestedCard(),cardRequestList.getReqIdx());
+		if(otherListForRequestedCard!=null) {
+			for (CardRequestList crl : otherListForRequestedCard) {
+				//요청 카드 status "REQUEST" -> "NONE"
+				updateCardStatusWithCardIdxSet(crl,"NONE");
+				//요청 받은 리스트 card_request_list 삭제 및 card_request_cancel_list 생성
+				deleteCardRequestList(crl.getReqIdx());
+				//취소 알림 보내기
+				Alarm alarm = new Alarm();
+				alarm.setAlarmType("요청거절");
+				alarm.setReceiverIdx(crl.getRequestMemIdx());
+				alarm.setSenderIdx(crl.getRequestedMemIdx());
+				alarm.setReqIdx(crl.getReqIdx());
+				alarmRepository.insertAlarm(alarm);
+			}
+		}
 	}
 
 	public void requestCancelRequest(CardRequestList cardRequestList, String status) {
@@ -368,7 +427,7 @@ public class CardServiceImpl implements CardService {
 	public void exchangeCancelRequest(CardRequestList cardRequestList, String status) {
 		updateCardStatusWithCardIdxSet(cardRequestList,status);
 		deleteCardRequestList(cardRequestList.getReqIdx());
-		deleteExchangeStatus(cardRequestList.getReqIdx());
+		updateExchangeStatusWithReject(cardRequestList.getReqIdx());
 		
 	}
 

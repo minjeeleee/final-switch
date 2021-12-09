@@ -30,7 +30,7 @@ public interface CardRepository {
 			+ " ,sc_card_idx.currval)")
 	void insertFileInfo(FileDTO fileUpload);
 
-	@Select("select * from card where member_idx=#{certifiedMemberIdx} and is_del=0 and exchange_status in('NONE','REQUEST','REQUESTED')")
+	@Select("select * from card where member_idx=#{certifiedMemberIdx} and is_del=0 and exchange_status in('NONE','REQUEST','ONGOING')")
 	List<Card> selectCardListIsDelAndStatus(int certifiedMemberIdx);
 
 	@Select("select * from file_info where card_idx=#{cardIdx}")
@@ -131,5 +131,11 @@ public interface CardRepository {
 
 	@Select("select * from card where exchange_status <> 'DONE' and isfree = 'Y' order by card_idx desc")
 	List<Card> selectAllFreeCardExceptDone();
+
+	@Select("select * from card where member_idx=#{certifiedMemberIdx} and is_del=0 and exchange_status in('NONE')")
+	List<Card> selectCardListIsDelAndStatusNone(Integer memberIdx);
+
+	@Select("select * from card_request_list where requested_card=#{requestedCard} and req_idx <> #{reqIdx}")
+	List<CardRequestList> getOtherListForRequestedCard(@Param("requestedCard") Integer requestedCard,@Param("reqIdx") Integer reqIdx);
 	
 }

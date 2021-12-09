@@ -49,7 +49,7 @@ public class ExchangeController {
 	@GetMapping("exchangeForm/{wishCardIdx}")
 	public String exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
-			,@PathVariable int wishCardIdx
+			,@PathVariable Integer wishCardIdx
 			, Model model){
 		//내카드 리스트
 		model.addAttribute("cardlist", cardService.selectMyCardList(certifiedMember));
@@ -74,13 +74,15 @@ public class ExchangeController {
 			@AuthenticationPrincipal MemberAccount certifiedMember
 			, int wishCardIdx
 			, String offerPoint
-			, int availableBal
+			, String availableBal
 			, @RequestParam(required = false)  String[] cardIdxList
 			, Model model) {
+		int availableBalInt = availableBal.equals("") ? 0 :  Integer.parseInt(availableBal);
+		//int offerPointInt = offerPoint.equals("") ? 0 :  Integer.parseInt(offerPoint);
 		//교환요청리스트
 		CardRequestList crl = exchangeService.requestExchange(certifiedMember, wishCardIdx, cardIdxList, offerPoint);
 		//포인트 holding ?? 후 가용 포인트
-		pointService.updateSavePointWithAvailableBal(availableBal - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
+		pointService.updateSavePointWithAvailableBal(availableBalInt - Integer.parseInt(offerPoint), certifiedMember.getMemberIdx());
 		
 		model.addAttribute("alarmType", "교환요청");
 		model.addAttribute("reqIdx",crl.getReqIdx());
@@ -176,7 +178,8 @@ public class ExchangeController {
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 생성
+		//card status ->'REQUEST->'ONGOING' 및 교환현황 테이블 
+		//요청 카드 status "REQUEST" -> "NONE"( v2 : 요청거절 알림 ), 요청 받은 리스트 거절(card_request_cancel_list), card_request_list의 request_card 상태 
 		cardService.acceptRequest(cardRequestList,"ONGOING");
 		//요청 수락시 채팅방 생성
 		chatService.makeChatRoom(cardRequestList.getRequestedMemIdx(),cardRequestList.getRequestMemIdx());

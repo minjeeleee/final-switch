@@ -27,7 +27,7 @@ public interface ExchangeRepository {
 	@Select("select * from exchange_status where (request_mem_idx=#{memberIdx} or requested_mem_idx =#{memberIdx}) and type='ONGOING'")
 	List<ExchangeStatus> selectEsByMemberIdxAndTypeOngoing(Integer memberIdx);
 
-	//교환요청 삭제용
+	//교환요청 삭제용(X)
 	@Delete("delete from exchange_status where req_idx=#{reqIdx}")
 	void deleteExchangeStatusWithReqIdx(Integer reqIdx);
 	
@@ -55,7 +55,7 @@ public interface ExchangeRepository {
 	void insertExchangeHistory(ExchangeHistory exchangeHistory);
 
 	@Select("select req_idx from exchange_status where requested_mem_idx=#{memberIdx}")
-	List<Integer> selectCardIdxWithMemberIdx(Integer memberIdx);
+	List<Integer> selectReqIdxWithMemberIdx(Integer memberIdx);
 
 	@Select("select h.EH_IDX,h.E_IDX,h.EXCHANGE_DATE,h.REQUESTED_MEM_IDX,h.REQUEST_MEM_IDX,s.req_idx "
 			+ "from exchange_history h join exchange_status s on h.e_idx = s.e_idx "
