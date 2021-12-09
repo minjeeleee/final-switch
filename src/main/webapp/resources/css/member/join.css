@@ -10,11 +10,6 @@
 	padding: 100px 0;
 }
 
-body
-{
-	background-image: url("../../img/background.jpg");
-}
-
 form{
     font-family: 'Roboto', sans-serif;
 }
@@ -24,7 +19,7 @@ label{
 }
 
 .header{
-    background: #554131;
+    background: #f9c0a8;
     padding: 30px 25px;
     font-size: 30px;
     font-weight: bolder;
@@ -37,7 +32,7 @@ label{
 .heading{
     font-size: 16px;
     font-weight: bolder;
-    color: #554131;
+    color: #bebebe211211211;
     margin: 10px 0 20px 0;
     text-transform: capitalize;
 }

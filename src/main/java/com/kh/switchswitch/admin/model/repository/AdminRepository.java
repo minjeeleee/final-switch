@@ -15,7 +15,9 @@ import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.card.model.dto.Card;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.member.model.dto.Member;
+import com.kh.switchswitch.point.model.dto.PointHistory;
 import com.kh.switchswitch.point.model.dto.PointRefund;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 
 @Mapper
 public interface AdminRepository {
@@ -133,6 +135,48 @@ public interface AdminRepository {
 	Member selectMemberByIdxWithDetail(@Param("memberIdx")Integer memberIdx, @Param("searchType")String searchType, @Param("searchKeyword")String searchKeyword);
 	
 	List<PointRefund> selectRefundHistoryListForCount(String statusCode);
+	
+	@Select("select * from point_history where user_idx = #{memberIdx} and rownum < 4")
+	List<PointHistory> selectPointHistoriesByMemberIdxFromAll(Integer memberIdx);
+	
+	@Select("select * from point_history where user_idx = #{memberIdx} and type = '사용' and rownum < 4")
+	List<PointHistory> selectPointHistoriesByMemberIdxFromUse(Integer memberIdx);
+	
+	@Select("select * from point_history where user_idx = #{memberIdx} and type = '충전' and rownum < 4")
+	List<PointHistory> selectPointHistoriesByMemberIdxFromAllSave(Integer memberIdx);
+	
+	@Select("select balance from save_point where member_idx = #{memberIdx}")
+	Integer selectPointByMemberIdx(Integer memberIdx);
+	
+	@Select("select * from save_point where member_idx = #{memberIdx}")
+	SavePoint selectGetPoint(Integer memberIdx);
+	
+	@Update("update save_point set balance = #{balance}-#{refundPoint} where member_idx = #{memberIdx}")
+	void updatePointByComplate(@Param("memberIdx")Integer memberIdx, @Param("availableBal")Integer balance, @Param("refundPoint")Integer refundPoint);
+	
+	@Update("update save_point set balance = #{availableBal}+#{refundPoint} where member_idx = #{memberIdx}")
+	void updatePointByCencel(@Param("memberIdx")Integer memberIdx,@Param("availableBal")Integer availableBal,@Param("refundPoint")Integer refundPoint);
+	
+	@Select("select status_code from point_refund where pr_idx = #{prIdx}")
+	String selectStatusCodeByPrIdx(Integer prIdx);
+	
+	@Select("select count(confirm_check) from point_refund where confirm_check = 'N'")
+	Integer selectRefundNewCount();
+	
+	@Select("select count(*) from point_refund where confirm_check = 'N'")
+	Integer selectConfirmCheck();
+	
+	@Update("update point_refund set confirm_check = 'Y' where confirm_check = 'N'")
+	void updateConfirmCheck();
+	
+	@Select("select code from member where member_idx = #{memberIdx}")
+	String selectCheckAdmin(Integer memberIdx);
+	
+	@Select("select member_idx from point_refund where pr_idx = #{prIdx}")
+	Integer selectMemberIdxByPrIdxFromPointRefund(Integer prIdx);
+	
+	@Insert("insert into point_history(ph_idx,user_idx,type,points,reg_date,content) values(sc_ph_idx.nextval,#{userIdx},#{type},#{points},sysdate,#{content})")
+	void insertHistory(PointHistory pointHistory);
 	
 	
 	

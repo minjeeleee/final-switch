@@ -48,7 +48,7 @@
 	<div>진행 중인 카드리스트</div>
 	<div class="card-list" >	
 		<div th:each="ongoingCard : ${ongoingCardList}" th:object="${ongoingCard}" style="display:flex; flex-wrap: wrap;">
-			<div class="card-container" style="width: 180px;" >
+			<div class="card-container" style="width: 180px;" th:onclick="|move(*{reqIdx})|">
 				<div class="card-name">
 					<p>[[*{ongoingCard.name}]]</p>
 				</div>
@@ -115,7 +115,7 @@
 	<div>신청 카드리스트</div>
 	<div class="card-list">
 		<div th:each="requestCard : ${requestCardList}" th:object="${requestCard}">
-			<div class="card-container" style="width: 180px;">
+			<div class="card-container" style="width: 180px;" th:onclick="|move(*{reqIdx})|">
 				<div class="card-name">
 					<p>[[*{requestCard.name}]]</p>
 				</div>
@@ -181,7 +181,7 @@
 	<div>요청받은 카드리스트</div>
 	<div class="card-list">
 		<div th:each="requestedCard : ${requestedCardList}" th:object="${requestedCard}" style="display:flex; flex-wrap: wrap;">
-			<div class="card-container" style="width: 180px;">
+			<div class="card-container" style="width: 180px;" th:onclick="|move(*{reqIdx})|">
 				<div class="card-name">
 					<p>[[*{requestedCard.name}]]</p>
 				</div>
@@ -250,6 +250,12 @@
 </footer>
 
 <script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
+<script type="text/javascript" th:inline="javascript">
+/* 카드 클릭 시 해당 교환창으로 이동 */
+function move(reqIdx){
+	location.href = "/exchange/detail/"+reqIdx;
+}
+</script>
 
 </body>
 </html>
