@@ -10,7 +10,7 @@
 <style type="text/css">
 
 .valid-msg, .valid-msg-e{
-	font-size: 2vw !important;
+	font-size: 0.5vw !important;
 	color : red !important;
 }
 body{
@@ -40,33 +40,45 @@ body{
 							<!-- PROFILE HEADER -->
 							<div class="profile-header">
 								<div class="overlay"></div>
+								<!-- 
 								<div class="profile-main">
-									<img th:if="${memberInfo.member.flIdx}" th:src="${memberInfo.memberImg.getDownloadURL()}" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
-										<img th:unless="${memberInfo.member.flIdx}" src="/resources/img/undraw_profile.svg" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									<th:block th:if="${memberDetail.member.flIdx}">
+										<img  th:src="|/${memberDetail.memberImg.getDownloadURL()}|" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									</th:block>
+									<th:block th:unless="${memberDetail.member.flIdx}">
+										<img  th:src="@{/resources/img/undraw_profile.svg}" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									</th:block>
 									<h3 class="name" style="color: white;"
-										th:text="${memberInfo.member.memberName}"></h3>
+										th:text="${memberDetail.member.memberName}"></h3>
 								</div>
+								 -->
 							</div>
 							<!-- END PROFILE HEADER -->
 							<!-- PROFILE DETAIL -->
 							<div class="profile-detail">
-								<form th:action="|/admin/member-profile-edit-success?${_csrf.headerName}=${_csrf.token}&memberIdx=${memberInfo.member.memberIdx}|"
+								<form
+									th:action="@{/admin/member-profile-edit-success/{memberIdx}(${_csrf.headerName}=${_csrf.token})}|"
 									th:object="${memberUpdate}" id="frm_modify" method="post">
 									<div class="profile-info">
 										<h4 class="heading">사용자 정보</h4>
 										<ul class="list-unstyled list-justify">
 											<li>이메일</li>
-											<li th:text="${memberInfo.member.memberEmail}"></li>
-											<li>비밀번호 <input type="password" name="memberPass" id="memberPass"
-												class="form-control" placeholder="비밀번호 입력">
-												<span id="pwCheck" class="valid-msg">
-												</span>
+											<li th:text="${memberDetail.member.memberEmail}"></li>
+											<li>비밀번호 <input type="password" name="memberPass"
+												class="form-control" placeholder="비밀번호 입력" th:field="*{memberPass}">
+												<span
+												th:unless="${#fields.hasErrors('memberPass')}"
+												id="" class="valid-msg"></span>
+												<span th:if="${#fields.hasErrors('memberPass')}"
+												th:errors="*{memberPass}" class="valid-msg-e"></span>
 											</li>
 											<li>닉네임 <input type="text" name="memberNick"
 												id="memberNick" class="form-control" placeholder="닉네임 입력" th:field="*{memberNick}">
 												<button type="button" id="btnNickCheck">중복확인</button> <span
-												id="nickNameCheck" class="valid-msg"></span> 
-												<span class="valid-msg"></span>
+												th:unless="${#fields.hasErrors('memberNick')}"
+												id="nickNameCheck" class="valid-msg"></span> <span
+												th:if="${#fields.hasErrors('memberNick')}"
+												th:errors="*{memberNick}" class="valid-msg"></span>
 											</li>
 											<li>연락처 <input type="text" name="memberTell"
 												class="form-control" placeholder="연락처 입력"></li>
@@ -82,10 +94,10 @@ body{
 												name="address" type="text" readonly="readonly"></li>
 											<li><br>
 											<a
-												th:href="@{/admin/memberLeave(memberIdx=${memberInfo.member.memberIdx})}">회원탈퇴</a></li>
+												th:href="@{/admin/memberLeave(memberIdx=${memberDetail.member.memberIdx})}">회원탈퇴</a></li>
 										</ul>
-										<input type="hidden" name="memberIdx" id="memberIdx"
-											th:value="${memberInfo.member.memberIdx}">
+										<input type="hidden" name="memberIdx"
+											th:value="${memberDetail.member.memberIdx}">
 									</div>
 									<div class="profile-info"></div>
 									<div class="profile-info"></div>
@@ -115,7 +127,7 @@ body{
 	<!-- END WRAPPER -->
 	<!-- Javascript -->
 	<th:block th:replace="admin/fragments/footer :: admin_footer"></th:block>
-	<script type="text/javascript" th:inline="javascript"
+	<script type="text/javascript"
 		src="../resources/js/admin/adminModifyForm.js"></script>
 	<script type="text/javascript">
 	var pop;

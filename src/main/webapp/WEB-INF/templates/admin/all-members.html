@@ -67,7 +67,7 @@ body{
 									</thead>
 									<tbody>
 										<tr class="" th:each="memberList : ${memberList}">
-											<td><a th:href="|/admin/member-profile?memberIdx=${memberList.memberIdx}|" th:text="${memberList.memberIdx}"></a></td>
+											<td><a th:href="|/admin/member-profile/${memberList.memberIdx}|" th:text="${memberList.memberIdx}"></a></td>
 											<td th:text="${memberList.memberEmail}"></td>
 											<td th:text="${memberList.memberName}"></td>
 											<td th:text="${memberList.memberNick}"></td>

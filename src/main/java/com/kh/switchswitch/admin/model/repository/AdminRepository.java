@@ -157,7 +157,7 @@ public interface AdminRepository {
 	@Update("update save_point set balance = #{availableBal}+#{refundPoint} where member_idx = #{memberIdx}")
 	void updatePointByCencel(@Param("memberIdx")Integer memberIdx,@Param("availableBal")Integer availableBal,@Param("refundPoint")Integer refundPoint);
 	
-	@Select("select status_code from point_history where member_idx = #{memberIdx}")
+	@Select("select content from point_history where member_idx = #{memberIdx}")
 	String selectStatusCodeByMemberIdx(Integer memberIdx);
 	
 	@Select("select count(confirm_check) from point_refund where confirm_check = 'N'")

@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ import com.kh.switchswitch.common.exception.HandlableException;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.common.validator.ValidatorResult;
+import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.point.model.dto.PointHistory;
 
@@ -172,8 +174,8 @@ public class AdminController {
 			return "redirect:/admin/refunds-history";
 	}
 
-	@GetMapping("member-profile")
-	public String memberProfile(@RequestParam Integer memberIdx, Model model) {
+	@GetMapping("member-profile/{memberIdx}")
+	public String memberProfile(@PathVariable(required = false, name = "memberIdx") Integer memberIdx, Model model) {
 		
 		String adminCheck = adminService.selectCheckAdmin(memberIdx);
 		if(adminCheck.equals("C")) {
@@ -213,29 +215,33 @@ public class AdminController {
 			return "admin/member-profile";
 	}
 
-	@GetMapping("member-profile-edit")
-	public void memberProfileEdit(@RequestParam Integer memberIdx, Model model) {
+	@GetMapping("member-edit/{memberIdx}")
+	public String memberProfileEdit(@PathVariable(required = false, name = "memberIdx") Integer memberIdx, Model model) {
 		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
 		
 		Integer refundCount = adminService.selectRefundNewCount();
 		model.addAttribute("refundCount",refundCount);
 		
-		model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("memberDetail", memberInfo);
 		model.addAttribute(new MemberUpdate()).addAttribute("error", new ValidatorResult().getError());
+		return "admin/member-edit";
 	}
 
-	@PostMapping("member-profile-edit-success")
-	@ResponseBody
-	public String memberProfileEditSuccess(@Validated MemberUpdate form, Errors errors, 
-			@RequestParam Integer memberIdx, Model model, HttpSession session) {
-		System.out.println("여기는옴?");
-		if (memberIdx != null) {
-			adminService.updateMemberInfo(form.convertToMember(), memberIdx);
-			System.out.println("여기는?");
-			return "success";
-		}else {
-			return "redirect:/admin/member-profile?memberIdx=" + memberIdx;
+	@PostMapping("member-profile-edit-success/{memberIdx}")
+	public String memberProfileEditSuccess(@Validated@ModelAttribute("memberUpdate") MemberUpdate form, Errors errors, 
+			Integer memberIdx,@AuthenticationPrincipal Member member,
+			Model model) {
+		Map<String, Object> memberInfo = adminService.selectMemberByIdx(memberIdx);
+		System.out.println(memberIdx);
+		model.addAttribute("memberDetail",memberInfo);
+		ValidatorResult vr = new ValidatorResult();
+		model.addAttribute("error", vr.getError());
+		if (errors.hasErrors()) {
+			vr.addErrors(errors);
+			return "admin/member-edit";
 		}
+		adminService.updateMemberInfo(form.convertToMember(), memberIdx);
+		return "admin/member-profile";
 	}
 
 	@GetMapping("nick-check")

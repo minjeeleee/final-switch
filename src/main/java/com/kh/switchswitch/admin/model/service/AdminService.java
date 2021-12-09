@@ -177,7 +177,7 @@ public class AdminService {
 		return Map.of("memberList", memberList,"paging",pageUtil);
 	}
 
-	public Map<String, Object> selectMemberByIdx(int memberIdx) {
+	public Map<String, Object> selectMemberByIdx(Integer memberIdx) {
 		Member memberInfo = adminRepository.selectMemberByIdx(memberIdx);
 		if(memberInfo.getFlIdx() != null) {
 			FileDTO memberImg = adminRepository.selectFileByMemberIdx(memberInfo.getFlIdx());
