@@ -44,12 +44,17 @@
                                         <img src="../resources/img/no-img.jpg" >
                                     </th:block>
                                     <th:block  th:unless ="*{FileInfo == null}">
-                                        <img th:src="*{FileInfo.getDownloadURL()}" >
+                                    	<th:block th:if="*{memberNick} != '(알수없음)'">
+                                        	<img th:src="*{FileInfo.getDownloadURL()}" >
+                                        </th:block>
+                                        <th:block th:if="*{memberNick} == '(알수없음)'">
+                                        	<img src="../resources/img/no-img.jpg" >
+                                        </th:block>
                                     </th:block>
 	                            </div>
 	                            <div class="info-detail">
 	                                <div class="info-name">
-	                                    <p>[[*{attendee.memberNick}]]</p>
+	                                    <p>[[*{memberNick}]]</p>
 	                                </div>
 	                                <div class="message">
 	                                    <div class="content">

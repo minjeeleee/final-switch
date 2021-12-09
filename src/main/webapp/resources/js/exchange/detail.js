@@ -48,9 +48,6 @@ function cancelExchangeRequestCancel(){
 <!-- 평점요청창 생성 -->
 function exchangeComplete(){
 	<!-- 사용자평가 모달창 생성 -->
-	let msg = counterpartNick+"님과의 교환은 어떠셨나요?<br>"
-		+ counterpartNick + "에 대한 평점을 남겨주세요.";
-	document.querySelector("#notice_msg").innerHTML = msg;
 	document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
 }
 
@@ -59,7 +56,6 @@ document.querySelector("#notice_close").addEventListener("click", (e)=> {
 });
 
 function noticeInitialize(){
-	document.querySelector("#notice_msg").innerHTML = "";
 	document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 }
 

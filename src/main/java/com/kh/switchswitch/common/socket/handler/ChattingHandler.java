@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.switchswitch.alarm.model.dto.Alarm;
 import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
 import com.kh.switchswitch.chat.model.dto.ChatMessages;
+import com.kh.switchswitch.chat.model.dto.Chatting;
 import com.kh.switchswitch.chat.model.repository.ChatRepository;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
@@ -60,17 +61,18 @@ public class ChattingHandler extends TextWebSocketHandler {
 			break;
 			
 		// CLIENT 메세지
-		case "CMD_MSG_SEND":
+		case "CMD_MSG_SEND":               
 			// 같은 채팅방에 메세지 전송
-			Integer senderId = 0;
+			
+			Integer senderId = Integer.parseInt(mapReceive.get("myIdx"));
 			for (int i = 0; i < sessionList.size(); i++) {
 				Map<String, Object> mapSessionList = sessionList.get(i);
 				String bang_id = (String) mapSessionList.get("bang_id");
 				WebSocketSession sess = (WebSocketSession) mapSessionList.get("session");
 
 				if (bang_id.equals(mapReceive.get("bang_id"))) {
-					
 					if(loginMember.getMemberIdx().equals(mapSessionList.get("memberIdx"))) {
+						System.out.println(loginMember.getMemberIdx());
 						senderId = loginMember.getMemberIdx();
 						ChatMessages chatMessages = new ChatMessages();
 						chatMessages.setChattingIdx(Integer.parseInt(bang_id));
@@ -83,8 +85,10 @@ public class ChattingHandler extends TextWebSocketHandler {
 					Map<String, String> mapToSend = new HashMap<String, String>();
 					int isRead = 1;
 					if(sessionList.size() == 2) isRead = 0;
+					Member member = memberRepository.selectMemberWithMemberIdx(senderId);
 					
-					Member member =memberRepository.selectMemberWithMemberIdx(senderId);
+					
+					System.out.println("senderId : " + senderId);
 					mapToSend.put("bang_id", bang_id);
 					mapToSend.put("cmd", "CMD_MSG_SEND");
 					mapToSend.put("senderId", member.getMemberNick());

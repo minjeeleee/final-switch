@@ -86,14 +86,6 @@
 		
 		let alarmBox = document.createElement("div");
 		alarmBox.setAttribute("id", "alarm");
-		alarmBox.style.position = "fixed";
-		alarmBox.style.right = "0px";
-		alarmBox.style.bottom = "0px";
-		alarmBox.style.backgroundColor = "rgba(252, 236, 3, 0.67)";
-		alarmBox.style.fontSize = "18px";
-		alarmBox.style.textAlign = "center";
-		alarmBox.style.padding = "20px 5px 20px 5px"
-		alarmBox.style.zIndex = "5000";
 		
 		alarmBox.innerHTML = receivedMsg;
 		document.body.appendChild(alarmBox);

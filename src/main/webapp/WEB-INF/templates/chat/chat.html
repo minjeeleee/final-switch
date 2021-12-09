@@ -56,9 +56,12 @@
                         
                     </div>
                     <input type="hidden" id="memberNcik" th:value="${#authentication.principal.memberNick}"> 
+                     <input type="hidden" id="memberIdx" th:value="${#authentication.principal.memberIdx}"> 
                     <div class="chat-input-wrap">
                     	<th:block th:if="${senderNick} == '(알수없음)'">
-                    		<input type="text" id="message" value="상대방이 탈퇴하여 채팅할 수 없습니다." readonly>
+                    		<div class="chat-input">
+                    			<input type="text" id="message" value="상대방이 탈퇴하여 채팅할 수 없습니다." readonly>
+                    		</div>
 						</th:block>
 						<th:block th:if="${senderNick} != '(알수없음)'">
 							<div class="chat-input">
@@ -85,6 +88,7 @@
 	let roomUrl = window.location.search;
 	let roomNo = roomUrl.split('=')[1];
 	let myNick = $('#memberNcik').val();
+	let myIdx = $('#memberIdx').val();
 	var memberNick= $('input[type="hidden"]').val();
 	var d = new Date();
 	
@@ -94,11 +98,11 @@
 				this._initSocket();
 			},
 			sendChat: function() {
-				this._sendMessage(roomNo, 'CMD_MSG_SEND', $('#message').val());
+				this._sendMessage(roomNo, 'CMD_MSG_SEND', $('#message').val(),myIdx);
 				$('#message').val('');
 			},
 			sendEnter: function() {
-				this._sendMessage(roomNo, 'CMD_ENTER', $('#message').val());
+				this._sendMessage(roomNo, 'CMD_ENTER', $('#message').val(),myIdx);
 				$('#message').val('');
 			},
 			receiveMessage: function(msgData) {
@@ -131,14 +135,16 @@
 					webSocket.receiveMessage(JSON.parse(evt.data));
 				};
 				this._socket.onclose = function(evt) {
+					webSocket. connect(webSocket.init({ url: 'http://localhost:9090/chat' }), 100); // 웹소켓을 재연결하는 코드 삽입
 					webSocket.closeMessage(JSON.parse(evt.data));
 				}
 			},
-			_sendMessage: function(bang_id, cmd, msg) {
+			_sendMessage: function(bang_id, cmd, msg,myIdx) {
 				var msgData = {
 						bang_id : bang_id,
 						cmd : cmd,
 						msg : msg,
+						myIdx : myIdx
 				};
 				var jsonData = JSON.stringify(msgData);
 				this._socket.send(jsonData);
@@ -182,6 +188,7 @@
         $(window).on('load', function () {
 			webSocket.init({ url: 'http://localhost:9090/chat' });	
 		});
+        
 	</script>
 	<script type="text/javascript">
 	$("#message").keydown(function (key) {
