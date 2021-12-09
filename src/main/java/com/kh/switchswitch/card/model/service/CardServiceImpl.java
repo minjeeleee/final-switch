@@ -527,9 +527,11 @@ public class CardServiceImpl implements CardService {
 			if(freeRequestedList!=null) {
 				for (FreeRequestList frl : freeRequestedList) {
 					Card card = cardRepository.selectCardByCardIdx(frl.getRequestedCard());
-					requestedCardList.add(Map.of("requestedCard",card,
-							"freqIdx",frl.getFreqIdx(),
-							"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+					if(card.getExchangeStatus() == "REQUEST") {
+						requestedCardList.add(Map.of("requestedCard",card,
+								"freqIdx",frl.getFreqIdx(),
+								"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+					}
 				}
 			}
 			return requestedCardList;
