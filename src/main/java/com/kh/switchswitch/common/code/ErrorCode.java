@@ -18,7 +18,9 @@ public enum ErrorCode {
 	FAILED_TO_UPDATE_INFO("변경할 정보가 없습니다.","/admin/all-members"),
 	FAILED_TO_DELETE_CARD("이미 삭제된 사진입니다.","/admin/real-time-cards"),
 	FAILED_TO_DELETE_IMG("존재하지 않은 이미지 입니다.","/admin/real-time-card-img"), 
-	FAILED_TO_LOAD_WITH_BAD_REQUEST("올바른 요청이 아닙니다.");
+	FAILED_TO_LOAD_WITH_BAD_REQUEST("올바른 요청이 아닙니다."),
+	FAILED_TO_REFUND_STATUSCODE_ALREADY_COMPLATE("이미 완료나 취소된 요청에 대해서는 변경할 수 없습니다.","/admin/refunds-history"),
+	FAILED_TO_ACCESS_ADMIN_PROFILE("관리자 계정은 접근할 수 없습니다.","/admin/all-members");
 	
 	public final String MESSAGE;
 	public final String URL;

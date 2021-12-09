@@ -10,7 +10,7 @@
 <style type="text/css">
 
 .valid-msg, .valid-msg-e{
-	font-size: 2vw !important;
+	font-size: 0.5vw !important;
 	color : red !important;
 }
 body{
@@ -30,7 +30,7 @@ body{
 		<th:block th:replace="admin/fragments/sidebar :: admin_sidebar"></th:block>
 		<!-- END LEFT SIDEBAR -->
 		<!-- MAIN -->
-		<div class="main" th:object="${memberInfo}">
+		<div class="main">
 			<!-- MAIN CONTENT -->
 			<div class="main-content">
 				<div class="container-fluid">
@@ -40,28 +40,30 @@ body{
 							<!-- PROFILE HEADER -->
 							<div class="profile-header">
 								<div class="overlay"></div>
+								<!-- 
 								<div class="profile-main">
-									<th:block th:if="*{member.flIdx}">
-										<img  th:src="|/${memberInfo.memberImg.getDownloadURL()}|" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
+									<th:block th:if="${memberDetail.member.flIdx}">
+										<img  th:src="|/${memberDetail.memberImg.getDownloadURL()}|" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
 									</th:block>
-									<th:block th:unless="*{member.flIdx}}">
+									<th:block th:unless="${memberDetail.member.flIdx}">
 										<img  th:src="@{/resources/img/undraw_profile.svg}" class="img-circle" alt="Avatar"  style="width: 55px; height: 55px;">
 									</th:block>
 									<h3 class="name" style="color: white;"
-										th:text="${memberInfo.member.memberName}"></h3>
+										th:text="${memberDetail.member.memberName}"></h3>
 								</div>
+								 -->
 							</div>
 							<!-- END PROFILE HEADER -->
 							<!-- PROFILE DETAIL -->
 							<div class="profile-detail">
 								<form
-									th:action="|/admin/member-profile-edit-success/${memberInfo.member.memberIdx}?${_csrf.headerName}=${_csrf.token}|"
+									th:action="@{/admin/member-profile-edit-success/{memberIdx}(${_csrf.headerName}=${_csrf.token})}|"
 									th:object="${memberUpdate}" id="frm_modify" method="post">
 									<div class="profile-info">
 										<h4 class="heading">사용자 정보</h4>
 										<ul class="list-unstyled list-justify">
 											<li>이메일</li>
-											<li th:text="${memberInfo.member.memberEmail}"></li>
+											<li th:text="${memberDetail.member.memberEmail}"></li>
 											<li>비밀번호 <input type="password" name="memberPass"
 												class="form-control" placeholder="비밀번호 입력" th:field="*{memberPass}">
 												<span
@@ -92,10 +94,10 @@ body{
 												name="address" type="text" readonly="readonly"></li>
 											<li><br>
 											<a
-												th:href="@{/admin/memberLeave(memberIdx=${memberInfo.member.memberIdx})}">회원탈퇴</a></li>
+												th:href="@{/admin/memberLeave(memberIdx=${memberDetail.member.memberIdx})}">회원탈퇴</a></li>
 										</ul>
 										<input type="hidden" name="memberIdx"
-											th:value="${memberInfo.member.memberIdx}">
+											th:value="${memberDetail.member.memberIdx}">
 									</div>
 									<div class="profile-info"></div>
 									<div class="profile-info"></div>

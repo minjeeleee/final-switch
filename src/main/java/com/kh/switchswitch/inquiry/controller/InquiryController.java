@@ -32,7 +32,7 @@ public class InquiryController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private final InquiryService inquiryService;
-	
+	 
 	@GetMapping("inquiry-form")
 	public void inquiryForm() {}
 

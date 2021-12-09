@@ -93,9 +93,9 @@ body{
 											    <span class="caret"></span>
 											  </button>
 											  <ul class="dropdown-menu" aria-labelledby="dLabel">
-											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=보류중,prIdx=*{point.prIdx})}">보류중</a></li>
-											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=완료,prIdx=*{point.prIdx})}">완료</a></li>
-											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=취소,prIdx=*{point.prIdx})}">취소</a></li>
+											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=보류중,prIdx=*{point.prIdx},refundPoint=*{point.refundPoint})}">보류중</a></li>
+											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=완료,prIdx=*{point.prIdx},refundPoint=*{point.refundPoint})}">완료</a></li>
+											    <li><a th:href="@{/admin/change-refund-status(${_csrf.headerName}=${_csrf.token},statusCode=취소,prIdx=*{point.prIdx},refundPoint=*{point.refundPoint})}">취소</a></li>
 											  </ul>
 											</div></td>
 										</tr>

@@ -21,7 +21,7 @@ public class MemberUpdateValidator implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return clazz.equals(MemberUpdate.class);
+		return MemberUpdate.class.equals(clazz);
 	}
 
 	@Override

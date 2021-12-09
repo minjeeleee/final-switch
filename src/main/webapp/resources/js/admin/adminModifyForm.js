@@ -1,7 +1,4 @@
-/**
- * 
- */
- (()=>{
+(()=>{
 	  let cofirmPw = "";
 	  let cofirmNick = document.querySelector('#memberNick').value;
 	  

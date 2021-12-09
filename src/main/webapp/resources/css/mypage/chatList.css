@@ -59,7 +59,7 @@ section {
     font-size: 23px;
 }
 
-.refund-input {
+.chatList-input {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -72,7 +72,7 @@ section {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.247);
 }
 
-.refund-input form {
+.chatList-input form {
     display: flex;
     width: 100%;
     align-items: center;
@@ -80,7 +80,7 @@ section {
     margin: 0 auto;
 }
 
-.refund-input form input[type="text"] {
+.chatList-input form input[type="text"] {
     width: 100%;
     max-width: 150px;
     border: none;
@@ -90,7 +90,7 @@ section {
     border-bottom: 1px solid #000;
 }
 
-.refund-input form input[type="text"]:focus {
+.chatList-input form input[type="text"]:focus {
     outline: none;
 }
 

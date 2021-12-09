@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,7 +19,9 @@ import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.pagination.Paging;
 import com.kh.switchswitch.member.model.dto.Member;
 import com.kh.switchswitch.member.model.dto.MemberAccount;
+import com.kh.switchswitch.point.model.dto.PointHistory;
 import com.kh.switchswitch.point.model.dto.PointRefund;
+import com.kh.switchswitch.point.model.dto.SavePoint;
 
 import lombok.RequiredArgsConstructor;
 
@@ -94,9 +95,8 @@ public class AdminService {
 	public void insertMenu(Menu menu) {
 		
 		try {
-			Thread.sleep(30000);
 			adminRepository.insertMenu(menu);
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -177,7 +177,7 @@ public class AdminService {
 		return Map.of("memberList", memberList,"paging",pageUtil);
 	}
 
-	public Map<String, Object> selectMemberByIdx(int memberIdx) {
+	public Map<String, Object> selectMemberByIdx(Integer memberIdx) {
 		Member memberInfo = adminRepository.selectMemberByIdx(memberIdx);
 		if(memberInfo.getFlIdx() != null) {
 			FileDTO memberImg = adminRepository.selectFileByMemberIdx(memberInfo.getFlIdx());
@@ -254,6 +254,13 @@ public class AdminService {
 		Integer cntPerPage = 10;
 		List<PointRefund> pointRefundList = adminRepository.selectRefundHistoryList(statusCode,1+(page-1)*cntPerPage,page*cntPerPage);
 		
+		Integer confirmCheck = adminRepository.selectConfirmCheck();
+		System.out.println(confirmCheck);
+		if(confirmCheck != 0) {
+			adminRepository.updateConfirmCheck();
+			System.out.println(confirmCheck);
+		}
+		
 		if(pointRefundList != null) {
 			for (PointRefund pointRefund : pointRefundList) {
 				Member member = adminRepository.selectMemberByIdxWithDetail(pointRefund.getMemberIdx(),searchType,searchKeyword);
@@ -266,10 +273,38 @@ public class AdminService {
 		return refundList;
 	}
 
-	public void updateStatusCode(MemberAccount member, String statusCode, Integer prIdx) {
+	public void updateStatusCode(MemberAccount member, String statusCode, Integer prIdx, Integer refundPoint) {
 		Member adminInfo = adminRepository.selectMemberByEmail(member.getMemberEmail());
 		String adminName = adminInfo.getMemberName();
-		adminRepository.updateStatusCode(statusCode,adminName,prIdx);
+		String selectStatus = adminRepository.selectStatusCodeByPrIdx(prIdx);
+		Integer memberIdx = adminRepository.selectMemberIdxByPrIdxFromPointRefund(prIdx);
+		Member clientInfo = adminRepository.selectMemberByIdx(memberIdx);
+		
+		PointHistory pointHistory = new PointHistory();
+		pointHistory.setUserIdx(clientInfo.getMemberIdx());
+		pointHistory.setType("충전");
+		pointHistory.setPoints(refundPoint);
+		pointHistory.setContent(statusCode+"-"+adminName);
+		if(selectStatus.equals("취소")&&selectStatus.equals("완료")) {
+			throw new HandlableException(ErrorCode.FAILED_TO_REFUND_STATUSCODE_ALREADY_COMPLATE);
+		}else {
+			if(statusCode.equals("심사중")&&statusCode.equals("보류중")) {
+				adminRepository.updateStatusCode(statusCode,adminName,prIdx);
+				adminRepository.insertHistory(pointHistory);
+			}else if(statusCode.equals("완료")){
+				//완료시에 포인트 차감
+				adminRepository.updateStatusCode(statusCode,adminName,prIdx);
+				SavePoint savePoint = adminRepository.selectGetPoint(member.getMemberIdx());
+				adminRepository.updatePointByComplate(member.getMemberIdx(),savePoint.getBalance(),refundPoint);
+				adminRepository.insertHistory(pointHistory);
+			}else {
+				//취소시에 포인트 복구
+				adminRepository.updateStatusCode(statusCode,adminName,prIdx);
+				SavePoint savePoint = adminRepository.selectGetPoint(member.getMemberIdx());
+				adminRepository.updatePointByCencel(member.getMemberIdx(),savePoint.getAvailableBal(),refundPoint);
+				adminRepository.insertHistory(pointHistory);
+			}
+		}
 	}
 
 	public Paging selectRefundByPaging(String statusCode, String searchType, String searchKeyword, int page) {
@@ -297,6 +332,30 @@ public class AdminService {
 				.build();
 		
 		return pageUtil;
+	}
+
+	public List<PointHistory> selectPointHistoriesByMemberIdxFromAll(Integer memberIdx) {
+		return adminRepository.selectPointHistoriesByMemberIdxFromAll(memberIdx);
+	}
+
+	public List<PointHistory> selectPointHistoriesByMemberIdxFromUse(Integer memberIdx) {
+		return adminRepository.selectPointHistoriesByMemberIdxFromUse(memberIdx);
+	}
+
+	public List<PointHistory> selectPointHistoriesByMemberIdxFromAllSave(Integer memberIdx) {
+		return adminRepository.selectPointHistoriesByMemberIdxFromAllSave(memberIdx);
+	}
+
+	public Integer selectPointByMemberIdx(Integer memberIdx) {
+		return adminRepository.selectPointByMemberIdx(memberIdx);
+	}
+
+	public Integer selectRefundNewCount() {
+		return adminRepository.selectRefundNewCount();
+	}
+
+	public String selectCheckAdmin(Integer memberIdx) {
+		return adminRepository.selectCheckAdmin(memberIdx);
 	}
 
 	

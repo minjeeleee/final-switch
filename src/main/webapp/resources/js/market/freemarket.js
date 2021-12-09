@@ -109,7 +109,7 @@ function createPopup(value,productStar,memberStar) {
     result += '</div>'
     result += '<div class="deail-buttons">'
     result += '<form action="/freeSharing/request/'+value.cardIdx+'">'
-    result += '<button class="exchange-button">나눔신청</button>'
+    result += '<button class="exchange-button">나눔받기</button>'
     result += '<button type="button" class="close-button">닫기</button>'
     result += '</form>'
     result += '</div>'
@@ -353,7 +353,7 @@ function search() {
     $.ajax({
 
         type: 'post',
-        url: "/market/category",
+        url: "/market/freecategory",
         dataType: "json",
         async: false,
         data: JSON.stringify(category),
