@@ -74,7 +74,7 @@ public interface CardService {
 	
 	void deleteExchangeStatusWithFreqIdx(Integer freqIdx);
 	
-	void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type);
+	void updateExchangeStatusWithFreqIdx(Integer freqIdx, String type);
 	
 	ExchangeStatus selectExchangeStatusWithFreqIdx(Integer freqIdx);
 	
