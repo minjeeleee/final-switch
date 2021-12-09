@@ -27,6 +27,7 @@ public class FreeSharingController {
 	@GetMapping("request/{cardIdx}")
 	public String freeSharingRequest(@AuthenticationPrincipal MemberAccount member,@PathVariable Integer cardIdx) {
 		//신청하면 freeRequestList에 추가
+		cardService.updateCardWithStatus(cardIdx, "REQUEST");
 		exchangeService.requestFreeSharing(member.getMemberIdx(),cardIdx);
 		return "redirect:/";
 	}
