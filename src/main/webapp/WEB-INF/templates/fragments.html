@@ -85,7 +85,7 @@
 		document.body.appendChild(alarmIdxInput);
 		
 		let alarmBox = document.createElement("div");
-		alarmBox.setAttribute("id", "alarm");
+		alarmBox.setAttribute("class", "alarm");
 		
 		alarmBox.innerHTML = receivedMsg;
 		document.body.appendChild(alarmBox);
@@ -95,7 +95,14 @@
 		}, 5000);
 		
 		alarmBox.addEventListener("click",function(){
-			location.href="/exchange/detail/"+reqIdx;
+			fetch("alarm/read?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
+			.then((response)=>{
+				if(response.ok){
+					location.href="/exchange/detail/"+reqIdx;
+				} else {
+					throw new Error(response.status);
+				}
+			})
 		})
 	};
 </script>

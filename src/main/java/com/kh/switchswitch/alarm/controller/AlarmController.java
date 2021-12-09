@@ -6,6 +6,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,10 +33,21 @@ public class AlarmController {
 		model.addAttribute("alarms", pageAndAlarm.get(1));
 	}
 	
-	@GetMapping("read/alarm")
+	@GetMapping("alarm/read")
 	@ResponseBody
 	public void readAlarm(Alarm alarm) {
 		alarmService.updateAlarm(alarm);
+	}
+	
+	@PostMapping("alarm/check-rating")
+	@ResponseBody
+	public String checkRating(@RequestBody Alarm alarm) {
+		System.out.println(alarm);
+		if(alarmService.checkRating(alarm)) {
+			return "exist";
+		} else {
+			return "nothing";
+		}
 	}
 	
 }

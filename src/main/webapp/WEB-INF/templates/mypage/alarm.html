@@ -55,7 +55,7 @@
 									style="height: 30px; line-height: 30px;background-color:lightyellow;">
 									<td th:text="${iterStat.count}"></td>
 									<td th:if="*{alarmType}=='평점요청'">
-									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx})|"></p>
+									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx},*{senderIdx})|"></p>
 									</td>
 									<td th:if="*{alarmType}=='요청거절'">
 									<a th:text="${alarm.message}" th:href="@{/mypage/alarm}"></a>
@@ -67,6 +67,9 @@
 								</tr>
 								<tr th:if="*{isRead} == 1" style="height: 30px; line-height: 30px;">
 									<td th:text="${iterStat.count}"></td>
+									<td th:if="*{alarmType}=='평점요청'">
+									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx},*{senderIdx})|"></p>
+									</td>
 									<td><a th:text="${alarm.message}"
 										th:href="|/exchange/detail/*{reqIdx}|"></a></td>
 									<td th:text="*{sendDate}"></td>
@@ -135,7 +138,7 @@
 	
 	
 	function updateIsRead(e,alarmIdx){
-		fetch("/read/alarm?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
+		fetch("/alarm/read?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
 		.then(response => {
 			if(response.ok){
 				e.style.backgroundColor = "lightyellow";
@@ -161,8 +164,43 @@
 		document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 	}
 
-	function move(reqIdx){
-		exchangeComplete(reqIdx);
+	function move(reqIdx, senderIdx){
+		let alarm = {
+				"reqIdx" : reqIdx,
+				"senderIdx" : senderIdx
+		};
+		
+		let header = function (){
+			let headerObj = new Headers();
+	       let csrfHeader = "[(${_csrf.headerName})]";
+	       let csrfToken = "[(${_csrf.token})]";
+	       headerObj.append(csrfHeader,csrfToken);
+	       headerObj.append("Content-Type","application/json");
+	       return headerObj;
+		}
+		
+		console.log(alarm);
+		console.log(header());
+		
+		let myInit = {
+				'method' : 'post',
+				'headers' : header(),
+				'body' : JSON.stringify(alarm)
+		};
+		fetch("/alarm/check-rating", myInit)
+		.then((response)=>{
+			if(response.ok){
+				return response.text();
+			} else {
+				throw new Error(response.status);
+			}
+		}).then((text)=>{
+			if(text != 'exist'){
+				exchangeComplete(reqIdx);
+			} else {
+				location.href = "/exchange/detail/"+ reqIdx;
+			}
+		})
 	}
 	
 	$("#submit_btn").on("click", function(){

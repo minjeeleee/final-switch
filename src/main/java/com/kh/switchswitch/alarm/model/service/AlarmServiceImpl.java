@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import com.kh.switchswitch.alarm.model.dto.Alarm;
 import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
 import com.kh.switchswitch.common.util.pagination.PagingV2;
+import com.kh.switchswitch.exchange.model.repository.ExchangeRepository;
+import com.kh.switchswitch.exchange.model.repository.RatingRepository;
+import com.kh.switchswitch.exchange.model.service.ExchangeService;
+import com.kh.switchswitch.member.model.dto.MemberAccount;
 import com.kh.switchswitch.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,8 @@ public class AlarmServiceImpl implements AlarmService {
 	
 	private final AlarmRepository alarmRepository;
 	private final MemberRepository memberRepository;
+	private final ExchangeRepository exchangeRepository;
+	private final RatingRepository ratingRepository;
 	
 	public List<Object> selectAlarmListWithReceiverIdx(Integer receiverIdx, int page) {
 		List<Object> pageAndAlarm = new ArrayList<Object>();
@@ -77,6 +83,18 @@ public class AlarmServiceImpl implements AlarmService {
 	public void updateAlarm(Alarm alarm) {
 		alarm.setIsRead(1);
 		alarmRepository.updateAlarmIsRead(alarm);
+	}
+
+	public boolean checkRating(Alarm alarm) {
+		Integer ehIdx = exchangeRepository.selectEhIdxByReqIdx(alarm.getReqIdx());
+		System.out.println(ratingRepository.selectRatingByMemIdxAndEhIdx(alarm.getSenderIdx(),ehIdx));
+		System.out.println(ratingRepository.selectRatingByMemIdxAndEhIdx(alarm.getSenderIdx(),ehIdx) == 1);
+		
+		if(ratingRepository.selectRatingByMemIdxAndEhIdx(alarm.getSenderIdx(),ehIdx) == 1) {
+			return true;
+		}
+		return false;
+		
 	}
 
 }
