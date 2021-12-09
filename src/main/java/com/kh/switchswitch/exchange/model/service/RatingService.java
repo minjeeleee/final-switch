@@ -5,6 +5,6 @@ import com.kh.switchswitch.member.model.dto.MemberAccount;
 
 public interface RatingService {
 
-	void createRating(ExchangeStatus exchangeStatus, Integer rate, MemberAccount certifiedMember);
+	void createRating(ExchangeStatus exchangeStatus, Integer rate, Integer memberIdx);
 	
 }
