@@ -205,7 +205,22 @@ public class CardServiceImpl implements CardService {
 		List<Map<String, Object>> requestedCardList = new ArrayList<>();
 		
 		//요청받은 카드 리스트 (요청신청, 진행중, 완료)
-		List<Integer> reqIdxList = cardRequestListRepository.selectReqIdxWithMemberIdx(memberIdx);
+		List<Integer> reqIdxListOrigin = cardRequestListRepository.selectReqIdxWithMemberIdx(memberIdx);
+		List<Integer> reqIdxList = new ArrayList<Integer>();
+		for (Integer reqIdx : reqIdxListOrigin) {
+			reqIdxList.add(reqIdx);
+		}
+		
+		for (Integer reqIdx : reqIdxListOrigin) {
+			System.out.println(reqIdx);
+			//카드 리스트 (진행중, 완료)
+			for (Integer exReqIdx : exchangeRepository.selectReqIdxWithMemberIdx(memberIdx)) {
+				System.out.println(exReqIdx);
+				if(reqIdx.equals(exReqIdx)) {
+					reqIdxList.remove(reqIdx);
+				}
+			}
+		}
 		
 		for (Integer integer : reqIdxList) {
 			System.out.println(integer);
