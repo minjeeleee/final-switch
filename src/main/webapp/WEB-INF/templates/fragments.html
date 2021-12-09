@@ -73,32 +73,33 @@
 	let sock = new SockJS('/alarm');
 	sock.onmessage = function(msg){
 		var data = msg.data;
-		console.dir(data);
-		let reqIdx = data.split(",")[0];
-		let alarmIdx = data.split(",")[1]; //알림idx
-		let receivedMsg = data.split(",")[2]; //받은 알림 메시지
-		//알림 생성 (5초)
+		//JSON -> 객체 또는 JavaScript 값 
+		let message = JSON.parse(data);
+		console.dir(message);
+		
+		//알림 생성
 		let alarmIdxInput = document.createElement("input");
 		alarmIdxInput.setAttribute("name","alarmIdx");
 		alarmIdxInput.setAttribute("type","hidden");
-		alarmIdxInput.setAttribute("value",alarmIdx);
+		alarmIdxInput.setAttribute("value",message.alarmIdx);
 		document.body.appendChild(alarmIdxInput);
 		
 		let alarmBox = document.createElement("div");
 		alarmBox.setAttribute("class", "alarm");
 		
-		alarmBox.innerHTML = receivedMsg;
+		alarmBox.innerHTML = message.message;
 		document.body.appendChild(alarmBox);
 		
+		//5초동안 보이게
 		setTimeout(()=>{
 			alarmBox.style.display = "none";
 		}, 5000);
 		
 		alarmBox.addEventListener("click",function(){
-			fetch("alarm/read?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
+			fetch("/alarm/read?alarmIdx=" + message.alarmIdx, { headers : getCsrfHeader()})
 			.then((response)=>{
 				if(response.ok){
-					location.href="/exchange/detail/"+reqIdx;
+					location.href="/exchange/detail/"+ message.reqIdx;
 				} else {
 					throw new Error(response.status);
 				}

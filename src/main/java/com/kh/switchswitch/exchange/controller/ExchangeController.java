@@ -46,6 +46,7 @@ public class ExchangeController {
 	private final ChatService chatService;
 	private final RatingService ratingService;
 	
+	//카드교환 생성 폼
 	@GetMapping("exchangeForm/{wishCardIdx}")
 	public String exchagneForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
@@ -69,6 +70,7 @@ public class ExchangeController {
 		return "exchange/exchangeForm";
 	}
 	
+	//카드교환 요청 (알람 : 교환요청 & (다른 요청에 대한 교환취소 알람))
 	@PostMapping("exchangeForm")
 	public String exchangeForm(
 			@AuthenticationPrincipal MemberAccount certifiedMember
@@ -92,6 +94,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//카드교환창
 	@GetMapping("detail/{reqIdx}")
 	public String detail(
 			@AuthenticationPrincipal MemberAccount certifiedMember,
@@ -148,6 +151,7 @@ public class ExchangeController {
 		return "exchange/detail";
 	}
 
+	//요청거절 (알람 : 요청거절)
 	@GetMapping("reject/{reqIdx}")
 	public String reject(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
@@ -170,11 +174,11 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//요청수락 (알람 : 요청수락)
 	@GetMapping("accept/{reqIdx}")
 	public String accept(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
 		CardRequestList cardRequestList = cardService.selectCardRequestListWithReqIdx(reqIdx);
-		logger.info(cardRequestList.toString());
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
@@ -192,7 +196,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	//요청취소
+	//요청취소 (알람 : 요청취소)
 	@GetMapping("request-cancel/{reqIdx}")
 	public String requestCancel(@PathVariable Integer reqIdx, Model model) {
 		//교환요청리스트
@@ -215,7 +219,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	//교환취소요청
+	//교환취소요청 (알람 : 교환취소요청)
 	@GetMapping("cancel-request/{reqIdx}/{status}")
 	public String cancelRequest(@PathVariable Integer reqIdx
 								,@PathVariable String status
@@ -242,7 +246,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	//교환취소요청거절
+	//교환취소요청거절 (알람 : 교환취소요청거절)
 	@GetMapping("cancel-request-reject/{reqIdx}/{status}")
 	public String cancelRequestReject(@PathVariable Integer reqIdx
 								,@PathVariable String status
@@ -270,7 +274,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	//교환취소요청취소
+	//교환취소요청취소 (알람 : 교환취소요청취소)
 	@GetMapping("cancel-request-cancel/{reqIdx}/{status}")
 	public String cancelRequestCancel(@PathVariable Integer reqIdx
 								,@PathVariable String status
@@ -298,7 +302,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
-	//교환취소
+	//교환취소 (알람 : 교환취소)
 	@GetMapping("exchange-cancel/{reqIdx}")
 	public String exchangeCancel(@PathVariable Integer reqIdx
 								,@AuthenticationPrincipal MemberAccount certifiedMember
@@ -320,15 +324,18 @@ public class ExchangeController {
 		model.addAttribute("reqIdx",cardRequestList.getReqIdx());
 		if(certifiedMember.getMemberIdx().equals(cardRequestList.getRequestMemIdx())) {
 			model.addAttribute("receiverIdx",cardRequestList.getRequestedMemIdx());
+			logger.info("receiverIdx : " + cardRequestList.getReqIdx());
 		} else {
 			model.addAttribute("receiverIdx",cardRequestList.getRequestMemIdx());
+			logger.info("receiverIdx : " + cardRequestList.getRequestMemIdx());
 		}
 		model.addAttribute("url","/market/cardmarket");
-		
+		logger.info("reqIdx : " + cardRequestList.getReqIdx());
+		logger.info("receiverIdx : " + cardRequestList.getReqIdx());
 		return "/common/alarm";
 	}
 	
-	//교환완료
+	//교환완료 (알람 : 평점요청)
 	@GetMapping("complete/{reqIdx}")
 	public String complete(
 						@AuthenticationPrincipal MemberAccount certifiedMember
@@ -370,6 +377,7 @@ public class ExchangeController {
 		return "/common/alarm";
 	}
 	
+	//요청 내역 수정폼
 	@GetMapping("revise/{reqIdx}")
 	public String revise(@PathVariable Integer reqIdx
 						, @AuthenticationPrincipal MemberAccount certifiedMember
@@ -406,6 +414,7 @@ public class ExchangeController {
 		return "exchange/detailReviseForm";
 	}
 	
+	//요청 내역 수정.do
 	@PostMapping("reviseForm/{reqIdx}")
 	public String revise(@AuthenticationPrincipal MemberAccount certifiedMember
 			, @PathVariable int reqIdx
@@ -426,6 +435,7 @@ public class ExchangeController {
 		return "redirect:/exchange/detail/"+reqIdx;
 	}
 	
+	//CardRequestList 생성
 	private CardRequestList createCardRequestList(MemberAccount certifiedMember, String[] cardIdxList, int wishCardIdx, String offerPoint, int reqIdx) {
 		CardRequestList cardRequestList = new CardRequestList();
 		if(cardIdxList != null) {
@@ -444,6 +454,7 @@ public class ExchangeController {
 		return cardRequestList;
 	}
 	
+	//CardRequestCancelList -> CardRequestList
 	private CardRequestList convertToCardRequestList(CardRequestCancelList cardRequstCancelList) {
 		CardRequestList cardRequestList = new CardRequestList();
 		cardRequestList.setReqIdx(cardRequstCancelList.getReqIdx());

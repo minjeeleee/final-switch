@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.switchswitch.alarm.model.dto.Alarm;
+import com.kh.switchswitch.alarm.model.repository.AlarmRepository;
 import com.kh.switchswitch.card.model.dto.CardRequestCancelList;
 import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
@@ -66,6 +70,7 @@ public class MemberServiceImpl implements MemberService {
 	private final FreeRequestListRepository freeRequestListRepository;
 	private final SavePointRepository savePointRepository;
 	private final CardRequestCancelListRepository cardRequestCancelListRepository;
+	private final AlarmRepository alarmRepository;
 	
 	
 	@Override
@@ -196,7 +201,11 @@ public class MemberServiceImpl implements MemberService {
 				freeRequestListRepository.deleteFreeRequestList(freeRequest.getFreqIdx());
 			}
 		}
+		//알림
+		alarmRepository.deleteAlarmByMemberIdx(member.getMemberIdx());
 		cardRepository.updateAllCardByMemIdx(member.getMemberIdx());
+		//삭제날짜
+		member.setMemberDelDate(Date.valueOf(LocalDate.now()));
 		memberRepository.updateMember(member);
 	}
 	

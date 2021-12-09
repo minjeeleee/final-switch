@@ -6,24 +6,23 @@
 알림 거쳐가는 페이지~~~~~
 	<script type="text/javascript" th:inline="javascript">
 		
-		let alarmType = '[(${alarmType})]';
-		let receiverIdx = '[(${receiverIdx})]';
-		let reqIdx = '[(${reqIdx})]';
-		let url = '[(${url})]';
+		//알람타입, 수신자IDX, 요청IDX
+		let jsonObj = {
+				'alarmType' : '[(${alarmType})]',
+				'receiverIdx' : '[(${receiverIdx})]',
+				'reqIdx' : '[(${reqIdx})]'
+		}
 		
 		sock.onopen = function(){
-			if(alarmType) {
-				let message = alarmType+ ','
-							+ receiverIdx + ',' 
-							+ reqIdx;
-				//알람타입, 수신자IDX, 요청IDX
+			if('[(${alarmType})]') {
+				let message = JSON.stringify(jsonObj);
+				
 				sock.send(message);
-				if(url){
-					location.href = url;
+				if('[(${url})]'){
+					location.href = '[(${url})]';
 				} else {
 					history.back();
 				}
-				
 			}
 		};
 		

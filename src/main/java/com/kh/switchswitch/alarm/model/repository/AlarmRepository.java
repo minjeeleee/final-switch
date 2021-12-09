@@ -3,12 +3,15 @@ package com.kh.switchswitch.alarm.model.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.kh.switchswitch.alarm.model.dto.Alarm;
+
+import lombok.Delegate;
 
 @Mapper
 public interface AlarmRepository {
@@ -29,5 +32,8 @@ public interface AlarmRepository {
 			+ " where receiver_idx=#{receiverIdx} and sysdate < send_date + 7 order by is_read, alarm_idx desc) alarmr"
 			+ " ) where rnum between #{startAlarm} and #{lastAlarm}")
 	List<Alarm> selectAlarmListWithReceiverIdx(Map<String, Integer> map);
+
+	@Delete("delete from alarm where receiverIdx =#{memberIdx}")
+	void deleteAlarmByMemberIdx(Integer memberIdx);
 
 }
