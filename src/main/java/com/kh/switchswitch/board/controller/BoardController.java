@@ -48,7 +48,7 @@ public class BoardController {
 	@PostMapping("upload")
 	public String uploadBoard(@RequestParam(required = false) List<MultipartFile> imgList, Board board, @AuthenticationPrincipal MemberAccount member) {
 		// ,@SessionAttribute("authentication") Member member
-		board.setUserId(member.getMemberName());
+		board.setUserId(member.getMemberNick());
 		boardService.insertBoard(imgList, board);
 
 		return "redirect:/board/board-list2";

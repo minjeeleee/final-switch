@@ -97,7 +97,7 @@
 							th:action="|/board/delete?${_csrf.parameterName}=${_csrf.token}&bdIdx=${datas.board.bdIdx}|"
 							method="post" enctype="multipart/form-data">
 							<div class='btn_area'>
-								<span th:if="${#authentication.principal.memberName} == ${datas.board.userId}">						
+								<span th:if="${#authentication.principal.memberNick} == ${datas.board.userId}">						
 									<a class="btn" id="btnModify" th:href="@{/board/board-modify(bdIdx=${datas.board.bdIdx})}">수정</a>
 									<button id="btnDelete" class="btn">삭제</button>						
 								</span>

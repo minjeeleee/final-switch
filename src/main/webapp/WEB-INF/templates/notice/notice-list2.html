@@ -47,16 +47,14 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 10%;">No</th>
                                 <th style="width: 20%">유형</th>
-                                <th style="width: 45%;">제목</th>
+                                <th style="width: 55%;">제목</th>
                                 <th style="width: 25%;">작성일</th>
                             </tr>  
                         </thead>
                         <tbody>
                             <tr th:each="notice : ${noticeList}"
 									style="height: 30px; line-height: 30px;">
-									<td th:text="${notice.noticeIdx}"></td>
 									<td th:text="${notice.type}"></td>
 									<td><a th:text="${notice.title}"
 										th:href="@{/notice/notice-detail(noticeIdx=${notice.noticeIdx})}"></a></td>
