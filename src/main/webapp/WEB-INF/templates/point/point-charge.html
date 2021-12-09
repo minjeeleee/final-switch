@@ -31,7 +31,7 @@
 
             <div class="single-title inner-size">
 
-                <p>환급</p>
+                <p>충전</p>
                 
             </div>
 
@@ -39,12 +39,14 @@
 
                 <div class="refund-input">
                     <div class="refund-form" id="refundInfo">
-                        <div class="req_point">
-                            <p>신청금액</p>
-                            <input type="number" id="point" name="refundPoint">
+                        <div class="charge-input">
+	                        <div class="req_point">
+	                            <p>신청금액</p>
+	                            <input type="number" id="point" name="refundPoint">
+	                        </div>
+							<!-- 계좌조회 버튼 필요  -->
+	                        <button class="ref-submit-button" onclick="requestPay()" type="submit">신청하기</button>
                         </div>
-						<!-- 계좌조회 버튼 필요  -->
-                        <button class="ref-submit-button" onclick="requestPay()" type="submit">신청하기</button>
                     </div>
                 </div>
 
@@ -61,6 +63,7 @@
        <div th:replace="fragments/footer :: footer" ></div>
    	</footer>
     
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
     <script type="text/javascript" th:inline="javascript">
 
     IMP.init("imp40776009");
