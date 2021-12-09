@@ -101,6 +101,7 @@ public class MypageController {
 			memberService.updateMemberWithFile(form.convertToMember(),profileImage);
 		}
 		
+		System.out.println("하이");
 		//security에 다시 회원 등록
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());

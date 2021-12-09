@@ -37,7 +37,6 @@
                     <input type="text" placeholder="검색어를 입력해주세요." maxlength="15">
                 </div>
                 <a class="board-write" href="/inquiry/inquiry-form">글쓰기</a>
-                
             </div>
 
             <div class="refund-container inner-size">
@@ -67,7 +66,7 @@
 
         </div>
 
-        <!-- 페이징 -->
+       <!-- 페이징 -->
         <div class="pagin-wrap">
             <nav th:fragment="paging" class="paging inner-size" th:object=${paging}>
                 <ul class="pagination">
@@ -76,7 +75,7 @@
                             aria-hidden="true">&laquo;</span>
                     </a></li>
                     <li class="page-item"
-                        th:each="p : ${#numbers.sequence(paging.blockStart,paging.blockEnd)}">
+                        th:each="p : ${#numbers.sequence(paging.start,paging.end)}">
                         <a th:href="|*{url}?page=${p}|" class="page-link"
                         th:text="${p}">1</a>
                     </li>
@@ -86,6 +85,7 @@
                 </ul>
             </nav>
         </div>
+
 
 
     </section>

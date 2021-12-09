@@ -14,6 +14,7 @@
 
 .home_btn:hover {
 	background-color: rgb(129, 129, 129);
+	color: #fff;
 }
 
 .next_btn {
@@ -30,6 +31,7 @@
 }
 .next_btn:hover {
 	background-color: rgb(233, 195, 146);
+	color: rgb(121, 121, 121);
 }
 
 a:hover,a:focus{

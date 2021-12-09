@@ -27,7 +27,7 @@
 	<!-- 메일 발송 : JavaMailSenderImpl -->
 	<bean class="org.springframework.mail.javamail.JavaMailSenderImpl" id="JavaMailSenderImpl">
 		<property name="username" value="projectteamyong@gmail.com"></property>
-		<property name="password" value="switch1234!"></property>
+		<property name="password" value="tkffrlmlrveaonsg"></property>
 		<property name="host" value="smtp.gmail.com"></property>
 		<property name="port" value="587"></property>
 		<property name="javaMailProperties">

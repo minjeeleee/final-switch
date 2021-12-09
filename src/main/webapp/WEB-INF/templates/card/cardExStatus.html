@@ -1,18 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/subHeader :: subHeader">
-    
+<head th:replace="fragments/subHeader :: subHeader"></head>
+
+<head>
+	<link rel="stylesheet" href="../resources/css/card/wishCard.css">
+<style type="text/css">
+.wscd-innerwrap {
+    height: 170px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    box-sizing: border-box;
+    background-color: #ff5403;
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
 </head>
+
 <body>
+
 <header th:replace="fragments/subBodyHeader :: subBodyHeader">
 </header>
-
 <section>
-	<p>진행 중인 카드리스트</p>
-	<div style="display:flex; flex-wrap: wrap;">
+
+        <div class="wscd-title-container">
+
+            <div class="wscd-innerwrap inner-size">
+                <div class="wscd-title">
+                    <h1>카드 교환 현황</h1>
+                </div>
+
+                <div class="wscd-img">
+                    <img src="../resources/img/wishCardBack.png" alt="">
+                </div>
+
+            </div>
+
+<div class="mk-card-list inner-size">
+	<div>진행 중인 카드리스트</div>
+	<div class="card-list" >	
 		<div th:each="ongoingCard : ${ongoingCardList}" th:object="${ongoingCard}" style="display:flex; flex-wrap: wrap;">
-			<div class="card-container" style="width: 180px;" >
+			<div class="card-container" style="width: 180px;" th:onclick="|move(*{reqIdx})|">
 				<div class="card-name">
 					<p>[[*{ongoingCard.name}]]</p>
 				</div>
@@ -72,10 +104,14 @@
 			</div>
 		</div>
 	</div>
-	<p>신청 카드리스트</p>
-	<div style="display:flex; flex-wrap: wrap;">
+</div>	
+
+
+<div class="mk-card-list inner-size">	
+	<div>신청 카드리스트</div>
+	<div class="card-list">
 		<div th:each="requestCard : ${requestCardList}" th:object="${requestCard}">
-			<div class="card-container" style="width: 180px;">
+			<div class="card-container" style="width: 180px;" th:onclick="|move(*{reqIdx})|">
 				<div class="card-name">
 					<p>[[*{requestCard.name}]]</p>
 				</div>
@@ -135,10 +171,13 @@
 			</div>
 		</div>
 	</div>
-	<p>요청받은 카드리스트</p>
-	<div style="display:flex; flex-wrap: wrap;">
+</div>	
+	
+<div class="mk-card-list inner-size">	
+	<div>요청받은 카드리스트</div>
+	<div class="card-list">
 		<div th:each="requestedCard : ${requestedCardList}" th:object="${requestedCard}" style="display:flex; flex-wrap: wrap;">
-			<div class="card-container" style="width: 180px;">
+			<div class="card-container" style="width: 180px;" th:onclick="|move(*{reqIdx})|">
 				<div class="card-name">
 					<p>[[*{requestedCard.name}]]</p>
 				</div>
@@ -197,7 +236,9 @@
 			</div>
 		</div>
 	</div>
-	
+</div>
+
+</div>	
 </section>
 
 <footer>
@@ -205,6 +246,12 @@
 </footer>
 
 <script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
+<script type="text/javascript" th:inline="javascript">
+/* 카드 클릭 시 해당 교환창으로 이동 */
+function move(reqIdx){
+	location.href = "/exchange/detail/"+reqIdx;
+}
+</script>
 
 </body>
 </html>

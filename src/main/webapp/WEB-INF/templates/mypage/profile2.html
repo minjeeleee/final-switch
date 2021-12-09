@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>내 프로필</title>
+    <!-- Custom fonts for this template-->
+    <link href="../resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="../resources/css/mypage/sb-admin-2.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="../resources/css/mypage/mypage-form.css" />
+    <link href="../resources/css/mypage/styles.css" rel="stylesheet" />
+<style type="text/css">
+	.card-header{
+		background-image: url("../resources/img/상단탑배경.png");
+		color: white;
+	}
+	
+	</style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+ 	<!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"
+        style="background-image: url('../resources/img/상단탑배경.png');">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <div class="sidebar-brand-icon rotate-n-15" style="margin-left: 12px;">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SwitchSwitch</div>
+            </a>
+
+           <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="/mypage/profile">
+                    <i class="fas fa-user-alt"></i>
+                    <span>내 프로필</span></a>
+            </li>
+			
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+           <li class="nav-item">
+                <a class="nav-link" href="/mypage/history">
+                   <i class="fas fa-history"></i>
+                    <span>카드 거래 내역 관리</span></a>
+            </li>            
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-coins"></i>
+                    <span>포인트</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">포인트</h6>
+                        <a class="collapse-item" href="/point/point-history">포인트 사용 및 충전 내역</a>
+                        <a class="collapse-item" href="/point/point-charge">포인트 충전</a>
+                        <a class="collapse-item" href="/point/point-return">포인트 환급</a>
+                    </div>
+                </div>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="/mypage/mypage-inquiry">
+                   <i class="fas fa-question-circle"></i>
+                    <span>문의 내역</span></a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="/mypage/chatting">
+                   <i class="fas fa-comment-dots"></i>
+                    <span>채팅 목록</span></a>
+            </li>
+
+        </ul>
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content" style="background-image: url('../resources/img/배경.jpg');">
+
+               <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                       
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">new</span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li>
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="/mypage/chatting" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+                                <span class="badge badge-danger badge-counter">new</span>
+                            </a>
+                        </li>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                    src="../resources/img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">내 프로필</h1>
+                        
+                    </div>
+
+               
+                    <!-- Content Row -->
+                    <div class="row">  
+
+                        <!-- Content Column -->
+                        <div class="col-lg-6 mb-4">
+
+                            <!-- Project Card Example -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold ">프로필 수정</h6>
+                                </div>
+                                <div class="card-body" style="overflow: scroll;">
+                                    <form  th:object="${modifyForm}" action="|/mypage/profile?${_csrf.parameterName}=${_csrf.token}|" method="post" id="frm_modify"   enctype="multipart/form-data">
+										<table class="mypage-form">
+											<tr>
+												<th>프로필 사진</th>
+												<td>
+													<th:block  th:if ="${profileImage == null}">
+														<img class="profile-img" src="../resources/img/no-img.jpg"></img>
+													</th:block>
+													<th:block  th:unless ="${profileImage == null}">
+														<img class="profile-img" th:src="${profileImage.getDownloadURL()}"></img>
+													</th:block>
+													<br/>
+													<span class="msg">JPG/GIF/PNG 파일만 업로드 가능</span>
+													<input type="file" name="profileImage" id="profileImage" onchange="fileCheck(this.files)">
+													<div class="rejectMsg"></div>
+													<div class="preview">
+						                               <p>No files currently selected for upload</p>
+						                            </div>
+												</td>
+											</tr>
+											<tr>
+												<th>이름</th>
+												<td th:text="${#authentication.principal.memberName}"></td>
+											</tr>
+											<tr>
+												<th>이메일</th>
+												<td>
+													<input type="email" name="memberEmail" id="memberEmail" th:value="${#authentication.name}" readonly="readonly"/>
+												</td>
+											</tr>
+											<tr>
+												<th>현재비밀번호</th>
+												<td>
+													<input type="password" name="memberPass" id="memberPass"/>
+													<button type="button" name="btnPwCheck" id="btnPwCheck">확인</button>
+													<br/>
+													<span id="passwordCheck" class="valid-msg"></span>
+												</td>
+											</tr>
+											<tr>
+												<th>새 비밀번호</th>
+												<td>
+													<input type="password" name="newMemberPass" id="newMemberPass" placeholder="띄어쓰기 없는 6~15자 영문 대/소문자 포함" />
+													<br/>
+													<span th:if="${#fields.hasErrors('newMemberPass')}" th:errors="*{newMemberPass}" class="valid-msg"></span>		
+												</td>
+											</tr>
+											<tr>
+												<th>새 비밀번호 확인</th>
+												<td>
+													<input type="password" name="checkMemberPss" id="checkMemberPss"\/>
+													<br/>
+													<span th:if="${#fields.hasErrors('checkMemberPss')}" th:errors="*{checkMemberPss}" class="valid-msg"></span>		
+												</td>
+											</tr>
+											
+											<tr>
+												<th>닉네임</th>
+												<td>
+													<input type="text" name="memberNick" id="memberNick" size="6"  placeholder="2~6자의 한글,영문" 
+													th:value="${#authentication.principal.memberNick}"
+													required />
+													<button type="button" id="btnNickCheck">중복확인</button>
+													<br/>
+													<span th:unless="${#fields.hasErrors('memberNick')}" id="nickNameCheck" class="valid-msg"></span>
+           	  										<span th:if="${#fields.hasErrors('memberNick')}" th:errors="*{memberNick}" class="valid-msg"></span>
+												</td>
+											</tr>
+											<tr>
+												<th>연락처</th>
+												<td>
+													<input  type="tel" id="memberTell" name="memberTell" placeholder="숫자만 입력" 
+												 	th:value="${#authentication.principal.memberTell}"		
+													required />
+													<br/>
+													<span th:if="${#fields.hasErrors('memberTell')}" th:errors="*{memberTell}" class="valid-msg"></span>
+												</td>
+											</tr>
+											<tr>
+												<th>주소</th>
+												<td>
+													<input id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly" style="width: 150px" 
+															th:value="${#strings.arraySplit(#strings.replace(#authentication.principal.memberAddress,'[',''),']')[0]}"
+													required/>
+					                               <button type="button" id="searchAddr" >주소검색</button>
+					                               <div class="col-sm-12">
+						                           <input class="form-control" id="address" name="address" type="text" readonly="readonly" style="width: 300px"
+						                           		th:value="${#strings.arraySplit(#authentication.principal.memberAddress,']')[1]}"	
+						                            required/>
+						                           </div>
+						                           <br/>
+						                           <span th:if="${#fields.hasErrors('zipNo')}" th:errors="*{zipNo}" class="valid-msg"></span>
+												</td>
+											</tr>
+											<tr>
+												<th>회원 탈퇴</th>
+												<td>
+													<button type="button"  onclick="location.href='leave-member'">탈퇴하기</button>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="2">
+													<button type="submit" class="btn btn-facebook btn-block">변경하기</button>
+												</td>
+											</tr>
+										</table>
+									</form>	
+                                </div>
+                            </div>
+
+                           
+                        </div>
+
+                        <div class="col-lg-6 mb-4">
+
+                            <!-- Illustrations -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold ">내 평점</h6>
+                                </div>
+                                 <div class="card-body">
+									<div class="mypage-con">
+										<div style=" width: 30%; margin-left: 33%">
+											<div style="text-align: center; font-size: 40px; font-weight: bolder;" th:text="${myRate.score}"></div>
+											<div style="text-align: center; font-size: 25px;">
+												<th:block th:if="${myRate.score} >= 1">
+		                                    		<th:block th:each="num : ${#numbers.sequence(1,myRate.score)}">
+													<i class="fas fa-star full-star"></i>
+													</th:block>
+		                                    	</th:block>
+												<th:block th:if="${myRate.score%1!=0}">
+													<i class="fas fa-star-half-alt"></i>
+												</th:block>
+												<th:block th:each="num : ${#numbers.sequence(0,5-myRate.score)}">
+													<i th:unless="${num == 0}" class="far fa-star"></i>
+												</th:block>
+											</div>
+											<div style="text-align: center; font-size: 18px; margin-top: 10px;">([[${myRate.cnt}]]개의 평가)</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+
+                            <!-- Approach -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold ">내가 받은 평점</h6>
+                                </div>
+                                <!-- Project Card Example -->
+                                <div class="card-body">
+                                    <h4 class="small font-weight-bold">★ <span
+                                            class="float-right">[[${rateList.one}]]</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-danger" role="progressbar" th:style="|width: ${rateList.one}%|"
+                                            aria-valuenow="${rateList.one}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">★★ <span
+                                            class="float-right">[[${rateList.two}]]</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-warning" role="progressbar" th:style="|width: ${rateList.two}%|"
+                                            aria-valuenow="${rateList.two}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">★★★ <span
+                                            class="float-right">[[${rateList.three}]]</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar" role="progressbar" th:style="|width: ${rateList.three}%|"
+                                            aria-valuenow="${rateList.three}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">★★★★ <span
+                                            class="float-right">[[${rateList.four}]]</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-info" role="progressbar" th:style="|width: ${rateList.four}%|"
+                                            aria-valuenow="${rateList.four}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">★★★★★<span
+                                            class="float-right">[[${rateList.five}]]</span></h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" th:style="|width: ${rateList.five}%|"
+                                            aria-valuenow="${rateList.five}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white" style="background-image: url('../resources/img/상단탑배경.png');">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span style="color: white;">Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../resources/vendor/jquery/jquery.min.js"></script>
+    <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../resources/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../resources/js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="../resources/js/member/modifyForm.js"></script>
+    <script type="text/javascript" th:inline="javascript" >
+   
+    var input = document.querySelector('#profileImage');
+    var preview = document.querySelector('.preview');
+
+    input.addEventListener('change', updateImageDisplay);
+
+    function updateImageDisplay() {
+    	  while(preview.firstChild) {
+    	    preview.removeChild(preview.firstChild);
+    	  }
+
+    	  const curFiles = input.files;
+    	  if(curFiles.length === 0) {
+    	    const para = document.createElement('p');
+    	    para.textContent = 'No files currently selected for upload';
+    	    preview.appendChild(para);
+    	  } else {
+    	    for(const file of curFiles) {
+    	      const para = document.createElement('p');
+    	      if(validFileType(file)) {
+    	        const image = document.querySelector('.profile-img');
+    	       
+    	        image.src = URL.createObjectURL(file);
+
+    	      } else {
+    	        para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
+    	        listItem.appendChild(para);
+    	      }
+    	    }
+    	  }
+    }
+    	
+    const fileTypes = [
+    	  "image/gif",
+    	  "image/jpeg",
+    	  "image/png",
+    	  "image/jpg"
+    ];
+
+    function validFileType(file) {
+    	 return fileTypes.includes(file.type);
+    }
+    	
+    function returnFileSize(number) {
+    	if(number < 1024) {
+    		return number + 'bytes';
+    	} else if(number >= 1024 && number < 1048576) {
+    		return (number/1024).toFixed(1) + 'KB';
+    	} else if(number >= 1048576) {
+    		return (number/1048576).toFixed(1) + 'MB';
+    	}
+    }
+    
+    let fileCheck = (e) => {
+        
+    	console.dir(e);
+    	let file = e[0].name.split('.');
+   		let filetype = file[file.length-1].toLowerCase();
+   		if(filetype == 'jpg' || filetype == 'gif' || filetype == 'jpeg' || filetype=='png'){
+   			document.querySelector(".rejectMsg").innerHTML = '';
+   		} else{
+   			document.querySelector(".rejectMsg").innerHTML = '<i class="fas fa-times-circle"></i>JPG/GIF/PNG 파일만 업로드 가능합니다.';
+   			let files = document.getElementsByName('profileImage');
+   			files[0].value='';
+   			return false;
+   		}
+	
+    }
+    
+   
+    
+    var pop;
+	
+    $("#searchAddr").click(function(){
+    	//경로는 시스템에 맞게 수정하여 사용
+    	//호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
+    	pop = window.open("/member/addrPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
+    })
+    var jusoCallBack = function(zipNo, roadFullAddr){
+    	$('#zipNo').val(zipNo);
+    	$('#address').val(roadFullAddr);
+    } 
+    </script>
+</body>
+
+</html>
