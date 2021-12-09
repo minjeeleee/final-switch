@@ -226,7 +226,6 @@ public class CardServiceImpl implements CardService {
 
 	public List<Map<String, Object>> selectOngoingCardList(Integer memberIdx) {
 		List<Map<String, Object>> ongoingCardList = new ArrayList<>();
-<<<<<<< HEAD
 		//exchange_status(진행중, 완료, 거절) -> 진행중(ongoing) & request_mem_idx
 		List<Integer> reqIdxListForRequest = cardRequestListRepository.selectReqIdxForRequestByOngoingCardIdx(memberIdx);
 		//요청한 경우
@@ -237,13 +236,6 @@ public class CardServiceImpl implements CardService {
 						"reqIdx", reqIdx,
 						"fileDTO", cardRepository.selectFileInfoByCardIdx(cardIdx).get(0)));
 			}
-=======
-		List<Card> cardList = cardRepository.selectCardByMemberIdxWithOngoing(memberIdx);
-		for (Card card : cardList) {
-			ongoingCardList.add(Map.of("ongoingCard",card,
-					"reqIdx", cardRequestListRepository.selectReqIdxByOngoingCardIdx(memberIdx,card.getCardIdx()),
-					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
->>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch.git
 		}
 		//exchange_status(진행중, 완료, 거절) -> 진행중(ongoing) & requested_mem_idx
 		List<Integer> reqIdxListForRequested = cardRequestListRepository.selectReqIdxForRequestedByOngoingCardIdx(memberIdx);
@@ -262,18 +254,12 @@ public class CardServiceImpl implements CardService {
 		List<Map<String, Object>> requestCardList = new ArrayList<>();
 		List<Card> myRequestCardList = cardRepository.selectCardByMemberIdxWithRequest(memberIdx);
 		for (Card card : myRequestCardList) {
-<<<<<<< HEAD
 			Integer reqIdx = cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx());
 			if(cardRepository.selectCardRequestListWithReqIdx(reqIdx)!=null) {
 				requestCardList.add(Map.of("requestCard",card,
 						"reqIdx",cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx()),
 						"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 			}
-=======
-			requestCardList.add(Map.of("requestCard",card,
-					"reqIdx",cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx()),
-					"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
->>>>>>> branch 'main' of https://github.com/minjeeleee/final-switch.git
 		}
 		return requestCardList;
 	}
