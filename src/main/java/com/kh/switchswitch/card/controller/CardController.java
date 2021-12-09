@@ -57,6 +57,17 @@ public class CardController {
 		
 	}
 	
+	@GetMapping("freeCardExStatus")
+	public void freeCardExStatus(@AuthenticationPrincipal MemberAccount certifiedMember
+			, Model model) {
+		model.addAttribute("myRate", exchangeService.selectMyRate(certifiedMember.getMemberIdx()));
+		
+		model.addAttribute("ongoingCardList", cardService.selectOngoingFreeCardList(certifiedMember.getMemberIdx()));
+		
+		model.addAttribute("requestedCardList", cardService.selectRequestedFreeCardList(certifiedMember.getMemberIdx()));
+		
+	}
+	
 	@GetMapping("card-modify")
 	public void cardModify(@RequestParam(name = "cardIdx") Integer cardIdx, Model model) {
 		Map<String, Object> modifyCard = cardService.selectModifyCard(cardIdx); 

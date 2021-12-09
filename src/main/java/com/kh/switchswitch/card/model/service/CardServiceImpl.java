@@ -20,6 +20,7 @@ import com.kh.switchswitch.card.model.dto.SearchCard;
 import com.kh.switchswitch.card.model.repository.CardRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestCancelListRepository;
 import com.kh.switchswitch.card.model.repository.CardRequestListRepository;
+import com.kh.switchswitch.card.model.repository.FreeRequestListRepository;
 import com.kh.switchswitch.common.util.FileDTO;
 import com.kh.switchswitch.common.util.FileUtil;
 import com.kh.switchswitch.exchange.model.dto.ExchangeStatus;
@@ -41,6 +42,7 @@ public class CardServiceImpl implements CardService {
 	private final ExchangeRepository exchangeRepository;
 	private final MemberRepository memberRepository;
 	private final AlarmRepository alarmRepository;
+	private final FreeRequestListRepository freeRequestListRepository;
 	
 	@Override
 	public void insertCard(List<MultipartFile> imgList, Card card) {
@@ -239,6 +241,7 @@ public class CardServiceImpl implements CardService {
 		return requestedCardList;
 	}
 
+	//Ongoing 교환 카드
 	public List<Map<String, Object>> selectOngoingCardList(Integer memberIdx) {
 		List<Map<String, Object>> ongoingCardList = new ArrayList<>();
 		//exchange_status(진행중, 완료, 거절) -> 진행중(ongoing) & request_mem_idx
@@ -265,18 +268,9 @@ public class CardServiceImpl implements CardService {
 		return ongoingCardList;
 	}
 
+	//Request 교환 카드
 	public List<Map<String, Object>> selectRequestCardList(Integer memberIdx) {
-		List<Map<String, Object>> requestCardList = new ArrayList<>();
-		List<Card> myRequestCardList = cardRepository.selectCardByMemberIdxWithRequest(memberIdx);
-		for (Card card : myRequestCardList) {
-			Integer reqIdx = cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx());
-			if(cardRepository.selectCardRequestListWithReqIdx(reqIdx)!=null) {
-				requestCardList.add(Map.of("requestCard",card,
-						"reqIdx",cardRequestListRepository.selectReqIdxByRequestCardIdx(card.getCardIdx()),
-						"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
-			}
-		}
-		return requestCardList;
+		return null;
 	}
 
 	
@@ -510,8 +504,38 @@ public class CardServiceImpl implements CardService {
 	public List<Card> selectAllCardExceptDone() {
 		return cardRepository.selectAllCardExceptDone();
 	}
+
+	//Ongoing 나눔 카드 
+	public List<Map<String, Object>> selectOngoingFreeCardList(Integer memberIdx) {
+		List<Map<String, Object>> ongoingCardList = new ArrayList<>();
+		//exchange_status(진행중, 완료, 거절) -> 진행중(ongoing) & request_mem_idx or requested_mem_idx
+		List<Integer> freqIdxListForRequest = cardRequestListRepository.selectReqIdxForRequestByOngoingFreeCardIdx(memberIdx);
+		for (Integer freqIdx : freqIdxListForRequest) {
+			FreeRequestList cardRequestList = freeRequestListRepository.selectFreeRequestListWithReqIdx(freqIdx);
+			ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()),
+					"reqIdx", freqIdx,
+					"fileDTO", cardRepository.selectFileInfoByCardIdx(cardRequestList.getRequestedCard()).get(0)));
+		}
+		
+		return ongoingCardList;
+	}
 	
-}
+	//Request 나눔 카드
+	public List<Map<String, Object>> selectRequestedFreeCardList(Integer memberIdx) {
+		List<Map<String, Object>> requestedCardList = new ArrayList<>();
+			List<FreeRequestList> freeRequestedList = cardRequestListRepository.selectFreeRequestListByRequestedFreeCardIdx(memberIdx);
+			if(freeRequestedList!=null) {
+				for (FreeRequestList frl : freeRequestedList) {
+					Card card = cardRepository.selectCardByCardIdx(frl.getRequestedCard());
+					requestedCardList.add(Map.of("requestCard",card,
+							"freqIdx",frl.getFreqIdx(),
+							"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
+				}
+			}
+			return requestedCardList;
+		}
+	}
+	
 
 
 
