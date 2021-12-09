@@ -284,7 +284,7 @@ public class AdminService {
 		pointHistory.setUserIdx(clientInfo.getMemberIdx());
 		pointHistory.setType("충전");
 		pointHistory.setPoints(refundPoint);
-		pointHistory.setContent(statusCode+"-"+adminName);
+		pointHistory.setContent(statusCode);
 		if(selectStatus.equals("취소")&&selectStatus.equals("완료")) {
 			throw new HandlableException(ErrorCode.FAILED_TO_REFUND_STATUSCODE_ALREADY_COMPLATE);
 		}else {
