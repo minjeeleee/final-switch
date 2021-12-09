@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.switchswitch.card.model.dto.CardRequestList;
 import com.kh.switchswitch.card.model.dto.FreeRequestList;
 
 @Mapper
@@ -24,6 +25,7 @@ public interface FreeRequestListRepository {
 	@Select("select * from free_request_list where REQUESTED_MEM_IDX=#{memberIdx} or REQUEST_MEM_IDX=#{memberIdx}")
 	List<FreeRequestList> selectFreeRequestListByMemIdx(Integer memberIdx);
 
-
+	@Select("select * from free_request_list where req_idx=#{reqIdx}")
+	FreeRequestList selectFreeRequestListWithReqIdx(Integer reqIdx);
 	
 }

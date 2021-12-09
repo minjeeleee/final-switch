@@ -72,6 +72,7 @@ public interface CardRepository {
 	@Select("select * from card where member_idx=#{memberIdx}")
 	List<Card> selectCardByMemberIdx(Integer memberIdx);
 
+	//교환/나눔
 	@Select("select * from card where member_idx=#{memberIdx} and exchange_status='REQUEST'")
 	List<Card> selectCardByMemberIdxWithRequest(Integer memberIdx);
 
@@ -116,7 +117,8 @@ public interface CardRepository {
 
 	@Select("select * from (select c.* from card c order by views desc) where rownum < 6")
 	List<Card> selectCardsTop5();
-
+	
+	//교환
 	@Select("select * from Card_Request_List where req_idx=#{reqIdx}")
 	CardRequestList selectCardRequestListWithReqIdx(Integer reqIdx);
 

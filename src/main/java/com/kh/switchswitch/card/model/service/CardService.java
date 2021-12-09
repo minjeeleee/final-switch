@@ -113,4 +113,8 @@ public interface CardService {
 	List<Map<String, Object>> selectMyCardListExceptRequestCardList(MemberAccount certifiedMember, Set<Integer> cardIdxSet);
 
 	List<Card> selectAllCardExceptDone();
+
+	List<Map<String, Object>> selectOngoingFreeCardList(Integer memberIdx);
+
+	List<Map<String, Object>> selectRequestedFreeCardList(Integer memberIdx);
 }
