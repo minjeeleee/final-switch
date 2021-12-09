@@ -164,11 +164,11 @@ public class CardServiceImpl implements CardService {
 		exchangeRepository.updateExchangeStatus(exchangeStatus);
 	}
 	
-	public void updateExchangeStatusWithFreqIDx(Integer freqIdx, String type) {
+	public void updateExchangeStatusWithFreqIdx(Integer freqIdx, String type) {
 		ExchangeStatus exchangeStatus = new ExchangeStatus();
 		exchangeStatus.setFreqIdx(freqIdx);
 		exchangeStatus.setType(type);
-		exchangeRepository.updateExchangeStatus(exchangeStatus);
+		exchangeRepository.updateFreeExchangeStatus(exchangeStatus);
 	}
 
 
@@ -542,7 +542,7 @@ public class CardServiceImpl implements CardService {
 		for (Integer freqIdx : freqIdxListForRequest) {
 			FreeRequestList cardRequestList = freeRequestListRepository.selectFreeRequestListWithReqIdx(freqIdx);
 			ongoingCardList.add(Map.of("ongoingCard",cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()),
-					"reqIdx", freqIdx,
+					"freqIdx", freqIdx,
 					"fileDTO", cardRepository.selectFileInfoByCardIdx(cardRequestList.getRequestedCard()).get(0)));
 		}
 		
@@ -556,7 +556,7 @@ public class CardServiceImpl implements CardService {
 			if(freeRequestedList!=null) {
 				for (FreeRequestList frl : freeRequestedList) {
 					Card card = cardRepository.selectCardByCardIdx(frl.getRequestedCard());
-					requestedCardList.add(Map.of("requestCard",card,
+					requestedCardList.add(Map.of("requestedCard",card,
 							"freqIdx",frl.getFreqIdx(),
 							"fileDTO", cardRepository.selectFileInfoByCardIdx(card.getCardIdx()).get(0)));
 				}
