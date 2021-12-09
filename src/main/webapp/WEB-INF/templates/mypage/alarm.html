@@ -49,14 +49,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<th:block th:each="alarm,iterStat : ${alarms}"
-								th:object="${alarm.alarm}">
-								<tr th:if="*{isRead} == 0" th:onclick="|updateIsRead(this,*{alarmIdx})|"
+							<th:block th:each="alarm,iterStat : ${alarms}" th:object="${alarm.alarm}">
+								<tr th:if="*{isRead == 0 && alarmType!='평점요청'}" th:onclick="|updateIsRead(this,*{alarmIdx})|"
 									style="height: 30px; line-height: 30px;background-color:lightyellow;">
 									<td th:text="${iterStat.count}"></td>
-									<td th:if="*{alarmType}=='평점요청'">
-									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx},*{senderIdx})|"></p>
-									</td>
 									<td th:if="*{alarmType}=='요청거절'">
 									<a th:text="${alarm.message}" th:href="@{/mypage/alarm}"></a>
 									</td>
@@ -65,13 +61,21 @@
 									</td>
 									<td th:text="*{sendDate}"></td>
 								</tr>
-								<tr th:if="*{isRead} == 1" style="height: 30px; line-height: 30px;">
+								<tr th:if="*{isRead == 1 && alarmType!='평점요청'}" style="height: 30px; line-height: 30px;">
 									<td th:text="${iterStat.count}"></td>
-									<td th:if="*{alarmType}=='평점요청'">
-									<p th:text="${alarm.message}" th:onclick="|move(*{reqIdx},*{senderIdx})|"></p>
-									</td>
 									<td><a th:text="${alarm.message}"
 										th:href="|/exchange/detail/*{reqIdx}|"></a></td>
+									<td th:text="*{sendDate}"></td>
+								</tr>
+								<tr th:if="*{alarmType=='평점요청' && isRead == 0}" th:onclick="|updateIsRead(this,*{alarmIdx})|"
+								style="height: 30px; line-height: 30px;background-color:lightyellow;">
+									<td th:text="${iterStat.count}"></td>
+									<td><p th:text="${alarm.message}" th:onclick="|move(*{reqIdx},*{senderIdx})|"></p></td>
+									<td th:text="*{sendDate}"></td>
+								</tr>
+								<tr th:if="*{alarmType=='평점요청' && isRead == 1}" style="height: 30px; line-height: 30px;">
+									<td th:text="${iterStat.count}"></td>
+									<td><p th:text="${alarm.message}" th:onclick="|move(*{reqIdx},*{senderIdx})|"></p></td>
 									<td th:text="*{sendDate}"></td>
 								</tr>
 							</th:block>
@@ -134,9 +138,7 @@
 	
 	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
 	<script type="text/javascript" th:inline="javascript">
-	
-	
-	
+	//알림 읽음 처리
 	function updateIsRead(e,alarmIdx){
 		fetch("/alarm/read?alarmIdx=" + alarmIdx, { headers : getCsrfHeader()})
 		.then(response => {
@@ -147,23 +149,23 @@
 			}
 		})
 	}
-	
-	<!-- 교환완료 -->
+	<!-- alarm type: 교환완료 -->
 	function exchangeComplete(reqIdx){
 		<!-- 사용자평가 모달창 생성 -->
 		document.querySelector(".noticePopUp").style.zIndex = 1000;
 		document.querySelector(".noticePopUp").style.setProperty("visibility","visible");
 		document.querySelector("#reqIdx").setAttribute("value",reqIdx);
 	}
-	
+	//평점요청 알림 팝업 닫기 버튼
 	document.querySelector("#notice_close").addEventListener("click", (e)=> {
 		noticeInitialize();
 	});
-	
+	//평점요청 알림 팝업 초기화 (hidden)
 	function noticeInitialize(){
 		document.querySelector(".noticePopUp").style.setProperty("visibility","hidden");
 	}
 
+	//평점요청 알림 시 평점요청 창 생성
 	function move(reqIdx, senderIdx){
 		let alarm = {
 				"reqIdx" : reqIdx,
