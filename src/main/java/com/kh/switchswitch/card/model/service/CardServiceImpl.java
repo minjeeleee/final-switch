@@ -270,7 +270,7 @@ public class CardServiceImpl implements CardService {
 
 	//Request 교환 카드
 	public List<Map<String, Object>> selectRequestCardList(Integer memberIdx) {
-		
+		return null;
 	}
 
 	
