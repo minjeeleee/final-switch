@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/subHeader :: subHeader"></head>
+
+<body>
+
+	</div>
+
+    <header th:replace="fragments/subBodyHeader :: header">
+    </header>
+
+    <section class="market-section" style="height: 465px;background-color: white;text-align: center;">
+	    <div>
+			<div>접근권한이 없는 사용자입니다.</div>
+			<a class="btn btn-warning" href="/" style="position:relative;b">목록으로 이동</a>
+	    </div>
+    </section>
+
+    <footer>
+       <div th:replace="fragments/footer :: footer" ></div>
+   	</footer>
+   	
+   	<input class="id-Check" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.memberNick} != null" type="hidden" th:value="${#authentication.principal.memberNick}">
+   	
+   	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: ajax-csrf-header"></script>
+	<script type="text/javascript" th:inline="javascript" th:replace="fragments :: view"></script>
+   	
+</body>
+
+</html>
