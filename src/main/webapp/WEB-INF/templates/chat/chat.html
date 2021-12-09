@@ -59,7 +59,9 @@
                      <input type="hidden" id="memberIdx" th:value="${#authentication.principal.memberIdx}"> 
                     <div class="chat-input-wrap">
                     	<th:block th:if="${senderNick} == '(알수없음)'">
-                    		<input type="text" id="message" value="상대방이 탈퇴하여 채팅할 수 없습니다." readonly>
+                    		<div class="chat-input">
+                    			<input type="text" id="message" value="상대방이 탈퇴하여 채팅할 수 없습니다." readonly>
+                    		</div>
 						</th:block>
 						<th:block th:if="${senderNick} != '(알수없음)'">
 							<div class="chat-input">

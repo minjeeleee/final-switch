@@ -43,8 +43,12 @@ public class ChatServiceImpl implements ChatService{
 	public String getSenderNick(Integer chattingIdx,Integer memberIdx) {
 		Chatting chatting = chatRepository.selectChattingByChattingIdx(chattingIdx);
 		Integer senderIdx = 0;
-		if(chatting.getAttendee1() != memberIdx) senderIdx = chatting.getAttendee1();
-		if(chatting.getAttendee2() != memberIdx) senderIdx = chatting.getAttendee2();
+		if(chatting.getAttendee1() != memberIdx && chatting.getAttendee1() != null) senderIdx = chatting.getAttendee1();
+		if(chatting.getAttendee2() != memberIdx && chatting.getAttendee1() != null) senderIdx = chatting.getAttendee2();
+		
+		if(senderIdx == null) {
+			return "(알수없음)";
+		}
 		Member member = memberRepository.selectMemberWithMemberIdx(senderIdx);
 		if(member.getMemberDelYn() == 1) {
 			return "(알수없음)";
@@ -84,7 +88,7 @@ public class ChatServiceImpl implements ChatService{
 		List<Chatting> chattingList = chatRepository.selectAllChattingByMemberIdx(memberIdx);
 		//해당 채팅방들의 마지막 전송 메세지 찾기
 		//상대방의 프로필 받기
-		List<Member> attendeeList = new ArrayList<Member>();
+		List<String> attendeeList = new ArrayList<String>();
 		List<String> lastMessageList = new ArrayList<String>();
 		List<FileDTO> attendeeFileList = new ArrayList<FileDTO>();
 		List<Integer> isReadList = new ArrayList<Integer>();
@@ -97,15 +101,27 @@ public class ChatServiceImpl implements ChatService{
 			}
 			
 			if(chatting.getAttendee1() != memberIdx) {
-				attendeeIdx=chatting.getAttendee1();
-				attendeeList.add(memberRepository.selectMemberByMemberIdx(chatting.getAttendee1()));
+				if(chatting.getAttendee1() == null) {
+					attendeeList.add("(알수없음)");
+				}else {
+					attendeeIdx=chatting.getAttendee1();
+					attendeeList.add(getNick(chatting.getAttendee1()));
+				}
 			}
 			else if(chatting.getAttendee2() != memberIdx) {
-				attendeeIdx=chatting.getAttendee2();
-				attendeeList.add(memberRepository.selectMemberByMemberIdx(chatting.getAttendee2()));
+				if(chatting.getAttendee2() == null) {
+					attendeeList.add("(알수없음)");
+				}else {
+					attendeeIdx=chatting.getAttendee2();
+					attendeeList.add(getNick(chatting.getAttendee2()));
+				}
 			}
-			if(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx() != null) {
-				attendeeFileList.add(memberRepository.selectFileInfoByFlIdx(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx()));
+			if(attendeeIdx != 0){
+				if(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx() != null) {
+					attendeeFileList.add(memberRepository.selectFileInfoByFlIdx(memberRepository.selectMemberByMemberIdx(attendeeIdx).getFlIdx()));
+				}else {
+					attendeeFileList.add(new FileDTO());
+				}
 			}else {
 				attendeeFileList.add(new FileDTO());
 			}
@@ -114,7 +130,7 @@ public class ChatServiceImpl implements ChatService{
 		for (int i = 0; i < chattingList.size(); i++) {
 			chattingInfoList.add(Map.of("chatting",chattingList.get(i)
 					,"lastMessage",lastMessageList.get(i)
-					,"attendee",attendeeList.get(i)
+					,"memberNick",attendeeList.get(i)
 					,"FileInfo",attendeeFileList.get(i)
 					,"isRead",isReadList.get(i)));
 		}
