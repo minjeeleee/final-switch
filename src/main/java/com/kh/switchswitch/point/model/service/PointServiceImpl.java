@@ -161,10 +161,10 @@ public class PointServiceImpl implements PointService{
 		savePointRepository.updateSavePoint(savePoint);
 		if(savePointRepository.updateSavePoint(savePoint)) {
 			PointHistory pointHistory = new PointHistory();
-			pointHistory.setContent("환전");
+			pointHistory.setContent("심사중");
 			pointHistory.setPoints(pointRefund.getRefundPoint());
 			pointHistory.setResultPoint(savePoint.getBalance());
-			pointHistory.setType("사용");
+			pointHistory.setType("환전");
 			pointHistory.setUserIdx(certifiedMember.getMemberIdx());
 			savePointRepository.registHistory(pointHistory);
 		}

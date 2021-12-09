@@ -157,8 +157,8 @@ public interface AdminRepository {
 	@Update("update save_point set balance = #{availableBal}+#{refundPoint} where member_idx = #{memberIdx}")
 	void updatePointByCencel(@Param("memberIdx")Integer memberIdx,@Param("availableBal")Integer availableBal,@Param("refundPoint")Integer refundPoint);
 	
-	@Select("select content from point_history where member_idx = #{memberIdx}")
-	String selectStatusCodeByMemberIdx(Integer memberIdx);
+	@Select("select status_code from point_refund where pr_idx = #{prIdx}")
+	String selectStatusCodeByPrIdx(Integer prIdx);
 	
 	@Select("select count(confirm_check) from point_refund where confirm_check = 'N'")
 	Integer selectRefundNewCount();
@@ -171,6 +171,12 @@ public interface AdminRepository {
 	
 	@Select("select code from member where member_idx = #{memberIdx}")
 	String selectCheckAdmin(Integer memberIdx);
+	
+	@Select("select member_idx from point_refund where pr_idx = #{prIdx}")
+	Integer selectMemberIdxByPrIdxFromPointRefund(Integer prIdx);
+	
+	@Insert("insert into point_history(ph_idx,user_idx,type,points,reg_date,content) values(sc_ph_idx.nextval,#{userIdx},#{type},#{points},sysdate,#{content})")
+	void insertHistory(PointHistory pointHistory);
 	
 	
 	
