@@ -56,7 +56,7 @@ public class AdminService {
 	public List<Map<String, Object>> selectCardListDetail(String searchPeriod, String searchType, String searchKeyword,Integer page) {
 		//List<Card> cardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword);
 		List<Map<String, Object>> cardList = new ArrayList<>();
-		Integer cntPerPage = 10;
+		Integer cntPerPage = 16;
 		List<Card> memberCardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword, 1+(page-1)*cntPerPage,page*cntPerPage);
 		if (memberCardList != null) {
 			for (Card card : memberCardList) {
@@ -71,7 +71,7 @@ public class AdminService {
 	
 	public Paging selectCardPaging(String searchPeriod, String searchType, String searchKeyword, int page) {
 		
-		Integer cntPerPage = 10;
+		Integer cntPerPage = 16;
 		Paging pageUtil = Paging.builder()
 				.url("/admin/all-cards")
 				.total(adminRepository.cardCount(searchPeriod, searchType, searchKeyword))
@@ -140,7 +140,7 @@ public class AdminService {
 
 	public Map<String, Object> selectMemberAllListByPage(String searchType, String keyword, int page) {
 		
-		int cntPerPage = 3;
+		int cntPerPage = 5;
 		
 		List<Member> memberList = adminRepository.selectMemberAllList(searchType, keyword,1+(page-1)*cntPerPage,page*cntPerPage);
 		
@@ -163,7 +163,7 @@ public class AdminService {
 
 	public Map<String, Object> selectMemberBlackListByPage(String searchType, String keyword, int page) {
 		
-		int cntPerPage = 3;
+		int cntPerPage = 5;
 		
 		List<Member> memberList = adminRepository.selectMemberBlackList(searchType, keyword, 1+(page-1)*cntPerPage,page*cntPerPage);
 		
