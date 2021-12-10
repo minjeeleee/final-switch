@@ -5,11 +5,13 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -327,14 +329,23 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	public void reissuePwAndSendToEmail(Member foundMember) {
-		String reissuedPw = String.valueOf(((int)(Math.random()*100000)+1));
-		foundMember.setMemberPass(passwordEncoder.encode(reissuedPw));
+		int reissuedPw;
+		do{
+			SecureRandom random = new SecureRandom();
+			reissuedPw = random.nextInt(100000);
+			logger.info("reissuedPw:"+reissuedPw);
+		}while(reissuedPw < 10000);
+		
+		System.out.println("random : " + String.valueOf(reissuedPw));
+		System.out.println("reissuedPw : " + String.valueOf(reissuedPw));
+		
+		foundMember.setMemberPass(passwordEncoder.encode(String.valueOf(reissuedPw)));
 		memberRepository.updateMember(foundMember);
 		
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("mail-template", "reissue-pw-email");
 		body.add("name", foundMember.getMemberName());
-		body.add("password", reissuedPw);
+		body.add("password", String.valueOf(reissuedPw));
 		
 		try {
 			URI uri = new URI(Config.DOMAIN.DESC + "/mail");
