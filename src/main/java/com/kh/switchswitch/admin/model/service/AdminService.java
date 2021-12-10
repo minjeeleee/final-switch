@@ -279,30 +279,30 @@ public class AdminService {
 		String selectStatus = adminRepository.selectStatusCodeByPrIdx(prIdx);
 		Integer memberIdx = adminRepository.selectMemberIdxByPrIdxFromPointRefund(prIdx);
 		Member clientInfo = adminRepository.selectMemberByIdx(memberIdx);
-		
-		PointHistory pointHistory = new PointHistory();
-		pointHistory.setUserIdx(clientInfo.getMemberIdx());
-		pointHistory.setType("충전");
-		pointHistory.setPoints(refundPoint);
-		pointHistory.setContent(statusCode);
+		System.out.println(selectStatus);
+		//PointHistory pointHistory = new PointHistory();
+		//pointHistory.setUserIdx(clientInfo.getMemberIdx());
+		//pointHistory.setType("충전");
+		//pointHistory.setPoints(refundPoint);
+		//pointHistory.setContent(statusCode);
 		if(selectStatus.equals("취소")&&selectStatus.equals("완료")) {
 			throw new HandlableException(ErrorCode.FAILED_TO_REFUND_STATUSCODE_ALREADY_COMPLATE);
 		}else {
 			if(statusCode.equals("심사중")&&statusCode.equals("보류중")) {
 				adminRepository.updateStatusCode(statusCode,adminName,prIdx);
-				adminRepository.insertHistory(pointHistory);
+				//adminRepository.insertHistory(pointHistory);
 			}else if(statusCode.equals("완료")){
 				//완료시에 포인트 차감
 				adminRepository.updateStatusCode(statusCode,adminName,prIdx);
 				SavePoint savePoint = adminRepository.selectGetPoint(member.getMemberIdx());
 				adminRepository.updatePointByComplate(member.getMemberIdx(),savePoint.getBalance(),refundPoint);
-				adminRepository.insertHistory(pointHistory);
+				//adminRepository.insertHistory(pointHistory);
 			}else {
 				//취소시에 포인트 복구
 				adminRepository.updateStatusCode(statusCode,adminName,prIdx);
 				SavePoint savePoint = adminRepository.selectGetPoint(member.getMemberIdx());
 				adminRepository.updatePointByCencel(member.getMemberIdx(),savePoint.getAvailableBal(),refundPoint);
-				adminRepository.insertHistory(pointHistory);
+				//adminRepository.insertHistory(pointHistory);
 			}
 		}
 	}

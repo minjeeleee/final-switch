@@ -198,8 +198,8 @@
   	 			<if test="searchType == 'name'">
   	 				and name like '%'||#{searchKeyword}||'%'
   	 			</if>
-  	 			<if test="searchType == 'user_idx'">
-  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 			<if test="searchType == 'member_idx'">
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 		</if>
   	 		<if test="searchPeriod == 'week'">
@@ -211,9 +211,9 @@
   	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
   	 				and name like '%'||#{searchKeyword}||'%'
   	 			</if>
-  	 			<if test="searchType == 'user_idx'">
+  	 			<if test="searchType == 'member_idx'">
   	 				and (reg_date > to_char(sysdate-7,'yyyy-mm-dd')) 
-  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 		</if>
   	 		<if test="searchPeriod == 'month'">
@@ -225,9 +225,9 @@
   	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
   	 				and name like '%'||#{searchKeyword}||'%'
   	 			</if>
-  	 			<if test="searchType == 'user_idx'">
+  	 			<if test="searchType == 'member_idx'">
   	 				and (reg_date &lt; to_char(add_months(sysdate,-1),'yyyy-mm-dd')) 
-  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 		</if>
   	 		<if test="searchPeriod == 'year'">
@@ -239,9 +239,9 @@
   	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
   	 				and name like '%'||#{searchKeyword}||'%'
   	 			</if>
-  	 			<if test="searchType == 'user_idx'">
+  	 			<if test="searchType == 'member_idx'">
   	 				and (reg_date &lt; to_char(add_months(sysdate,-12),'yyyy-mm-dd')) 
-  	 				and user_idx like '%'||#{searchKeyword}||'%'
+  	 				and member_idx like '%'||#{searchKeyword}||'%'
   	 			</if>
   	 		</if>
   	 	</if>

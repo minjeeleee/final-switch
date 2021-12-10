@@ -151,7 +151,7 @@ public interface AdminRepository {
 	@Select("select * from save_point where member_idx = #{memberIdx}")
 	SavePoint selectGetPoint(Integer memberIdx);
 	
-	@Update("update save_point set balance = #{balance}-#{refundPoint} where member_idx = #{memberIdx}")
+	@Update("update save_point set balance = #{availableBal}-#{refundPoint} where member_idx = #{memberIdx}")
 	void updatePointByComplate(@Param("memberIdx")Integer memberIdx, @Param("availableBal")Integer balance, @Param("refundPoint")Integer refundPoint);
 	
 	@Update("update save_point set balance = #{availableBal}+#{refundPoint} where member_idx = #{memberIdx}")
