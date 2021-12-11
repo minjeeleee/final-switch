@@ -93,15 +93,23 @@
                             <p>Address</p><button type="button" id="searchAddr">주소검색</button>
                         </div>
                         <div class="address-input">
-                            <input id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly"  
-							th:value="${#strings.arraySplit(#strings.replace(#authentication.principal.memberAddress,'[',''),']')[0]}"
-							required>
-                            <input class="form-control" id="address" name="address" type="text" readonly="readonly" 
-						    th:value="${#strings.arraySplit(#authentication.principal.memberAddress,']')[1]}"	
-						    required>
+                        	<th:block th:if="${#authentication.principal.memberAddress}">
+	                            <input id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly"  
+								th:value="${#strings.arraySplit(#strings.replace(#authentication.principal.memberAddress,'[',''),']')[0]}"
+								required>
+	                            <input class="form-control" id="address" name="address" type="text" readonly="readonly" 
+							    th:value="${#strings.arraySplit(#authentication.principal.memberAddress,']')[1]}"	
+							    required>
+                       		</th:block>
+                       		<th:block th:unless="${#authentication.principal.memberAddress}">
+	                            <input id="zipNo" name="zipNo" placeholder="우편번호" type="text" readonly="readonly"  
+								required>
+	                            <input class="form-control" id="address" name="address" type="text" readonly="readonly" 
+							    required>
+                       		</th:block>
                         </div>
                         <p th:if="${#fields.hasErrors('zipNo')}" th:errors="*{zipNo}" class="valid-msg"></p>
-                    </div>
+                    </div>	
                     <button type="submit" class="form-submit">변경하기</button>
 
                     <div class="my-score">
