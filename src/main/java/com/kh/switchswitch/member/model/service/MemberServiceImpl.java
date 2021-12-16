@@ -74,7 +74,6 @@ public class MemberServiceImpl implements MemberService {
 	private final CardRequestCancelListRepository cardRequestCancelListRepository;
 	private final AlarmRepository alarmRepository;
 	
-	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Member member = memberRepository.selectMemberByEmailAndDelN(username);
