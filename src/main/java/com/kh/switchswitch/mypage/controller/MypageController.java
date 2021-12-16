@@ -106,7 +106,6 @@ public class MypageController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetails newPrincipal = memberService.loadUserByUsername(member.getMemberEmail());
 		UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, authentication.getCredentials(),newPrincipal.getAuthorities());
-		newAuth.setDetails(authentication.getDetails());
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
 		return "redirect:/mypage/profile";
