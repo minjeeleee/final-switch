@@ -2,10 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	<head th:replace="fragments/subHeader :: subHeader"></head>
-	<head>
-			<!-- refund -->
-		    <link rel="stylesheet" href="../resources/css/board/notice2.css">
-	</head>
+	<head th:replace="fragments/subHeader :: noticeForm-header"></head>
     
     <body>
          <header th:replace="fragments/subBodyHeader :: header">
