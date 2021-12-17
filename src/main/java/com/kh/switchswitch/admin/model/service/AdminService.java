@@ -57,6 +57,7 @@ public class AdminService {
 		//List<Card> cardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword);
 		List<Map<String, Object>> cardList = new ArrayList<>();
 		Integer cntPerPage = 16;
+		System.out.println(searchPeriod);
 		List<Card> memberCardList = adminRepository.selectCardsDetail(searchPeriod, searchType, searchKeyword, 1+(page-1)*cntPerPage,page*cntPerPage);
 		if (memberCardList != null) {
 			for (Card card : memberCardList) {

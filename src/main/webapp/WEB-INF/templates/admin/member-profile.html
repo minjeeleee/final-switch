@@ -44,11 +44,9 @@ body{
 									</div>
 									<div class="profile-stat" style="background-color: white;">
 										<div class="row">
-											<div class="col-md-4 stat-item" style="color: black">
-												[[${cardCnt}]] <span style="color: black">카드</span>
+											<div class="col-md-4 stat-item" style="color: black" th:utext="${cardCnt}">
 											</div>
-											<div class="col-md-4 stat-item" style="color: black">
-												[[${userPoint}]] <span style="color: black">포인트</span>
+											<div class="col-md-4 stat-item" style="color: black" th:utext="${userPoint}">
 											</div>
 											<div class="col-md-4 stat-item" th:unless="${memberInfo.member.memberScore}" style="color: black">
 												0 <span style="color: black">평점</span>

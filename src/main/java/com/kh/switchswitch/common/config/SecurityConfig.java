@@ -93,6 +93,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		//.maxSessionsPreventsLogin(true) 				//false : 기존 세션 만료(defualt)
         .expiredUrl("/member/login?session=expired");	//세션이 만료된 경우 이동할 URL
 
+		http.exceptionHandling().accessDeniedPage("/member/login");
+		
 		
 		http.csrf().ignoringAntMatchers("/mail");
 		http.csrf().ignoringAntMatchers("/member/addrPopup");
