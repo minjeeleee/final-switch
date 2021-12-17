@@ -57,6 +57,9 @@ public class AdminController {
 		webDataBinder.addValidators(memberUpdateValidator);
 	}
 	
+	
+	
+	
 	@GetMapping("real-time-cards")
 	public void realTimeCards(Model model, @RequestParam(required = false) String type) {
 		if (type != null) {
@@ -74,16 +77,12 @@ public class AdminController {
 		} else {
 			allCardList(model);
 		}
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("real-time-card-img")
 	public void realTimeCardImg(Model model) {
 		List<FileDTO> cardImgList = adminService.selectCardImgList();
 		model.addAttribute("cardImg", cardImgList);
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("all-cards")
@@ -96,8 +95,6 @@ public class AdminController {
 		Paging pageUtil = adminService.selectCardPaging(searchPeriod, searchType, searchKeyword,page);
 		model.addAttribute("cardList", cardList);
 		model.addAttribute("paging",pageUtil);
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("card-delete")
@@ -127,8 +124,6 @@ public class AdminController {
 	public void allMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
 			@Nullable @RequestParam(name = "searchKeyword") String keyword, @RequestParam(required = false, defaultValue = "1") int page) {
 		model.addAllAttributes(adminService.selectMemberAllListByPage(searchType, keyword, page));
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("changeMemberStatus")
@@ -141,8 +136,6 @@ public class AdminController {
 	public void blackListMembers(Model model, @Nullable @RequestParam(name = "searchDetail") String searchType,
 			@Nullable @RequestParam(name = "searchKeyword") String keyword, @RequestParam(required = false, defaultValue = "1") int page) {
 		model.addAllAttributes(adminService.selectMemberBlackListByPage(searchType, keyword, page));
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
 	}
 
 	@GetMapping("removeMemberBlack")
@@ -164,8 +157,6 @@ public class AdminController {
 		Paging pageUtil = adminService.selectRefundByPaging(statusCode, searchType, searchKeyword,page);
 		model.addAttribute("pointRefund",pointRefund);
 		model.addAttribute("paging",pageUtil);
-		Integer refundCount = adminService.selectRefundNewCount();
-		model.addAttribute("refundCount",refundCount);
 	}
 	
 	@GetMapping("change-refund-status")
@@ -205,13 +196,15 @@ public class AdminController {
 			List<PointHistory> pointHistoriesSave = adminService.selectPointHistoriesByMemberIdxFromAllSave(memberIdx);
 			Integer userPoint = adminService.selectPointByMemberIdx(memberIdx);
 			if(userPoint == null) userPoint = 0;
-			model.addAttribute("userPoint", userPoint);
+			
 			model.addAttribute("point", pointHistories);
 			model.addAttribute("usePoint", pointHistoriesUse);
 			model.addAttribute("savePoint", pointHistoriesSave);
 			model.addAttribute("memberCardList", memberCardList);
+			
+			model.addAttribute("userPoint", userPoint + "<span style=\"color: black\">포인트</span>");
 			model.addAttribute("memberInfo", memberInfo);
-			model.addAttribute("cardCnt", cardCountFromMember);
+			model.addAttribute("cardCnt", cardCountFromMember + "<span style=\"color: black\">카드</span>");
 			return "admin/member-profile";
 	}
 
