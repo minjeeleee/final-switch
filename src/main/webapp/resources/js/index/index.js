@@ -1,6 +1,6 @@
 let userId = $('.id-Check').val()
 
-function slickControll() {
+function slickControl() {
     $('.detail-img').slick({
         autoplay: true,
         infinite: true,
@@ -9,15 +9,9 @@ function slickControll() {
     });
 }
 
-function createPopup(value) {
-	
-	let productStar = createStar(value);
-
-    let cardShape = createShape(value);
+function createPopup(value,productStar,memberStar) {
 
     let icon = createIcon(value);
-	
-    let memberStar = createMemberStar(value);
     
 	let imgUrls = ''
 	
@@ -172,61 +166,62 @@ function cardClose() {
 }
 
 // popupAjax
-function cardClick() {
+function cardClick(e) {
 	
-        $('.card-container').on("click",(e) => {
-            
-            let cardIdx = e.target.id
-            console.log(cardIdx);
+	let cardIdx = e
+    console.log(cardIdx);
 
-            let card={"cardIdx" : cardIdx}
-            
-            $.ajax({
+    let card={"cardIdx" : cardIdx}
+    
+    $.ajax({
 
-                type: 'post',
-                url: "/market/card",
-                dataType: "json",
-                async: false,
-                data: JSON.stringify(card),
-                contentType: 'application/json',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header,token);
-                },
-        
-                success: (data) => {
-					
-					if(data.requestedCardIdx != null) {
-							if(data.requestedCardIdx == data.cardIdx) {
-								alert("거래중인카드입니다.")
-								location.href = "/exchange/detail/"+data.reqIdx
-								stopPropagation()
-								return false;
-							} 
-					}
-		
-					myCard(data)
-					$('.popup-detail').removeClass('hide')
-                    $(".popup-detail").empty();
+        type: 'post',
+        url: "/market/card",
+        dataType: "json",
+        async: false,
+        data: JSON.stringify(card),
+        contentType: 'application/json',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(csrfHeader,csrfToken);
+        },
 
-                    var result = '';
-                    var lastindex = '';
-                        
-                    result = createPopup(data)
-                    console.log(data)
-                        
-                    $('.popup-detail').append(result);  
-        
-                },
-        
-                error: (err) => {
-                    console.log(err)
-                }
-        
-            })
+        success: (data) => {
+			
+			if(data.requestedCardIdx != null) {
+					if(data.requestedCardIdx == data.cardIdx) {
+						alert("거래중인카드입니다.")
+						location.href = "/exchange/detail/"+data.reqIdx
+						stopPropagation()
+						return false;
+					} 
+			}
 
-            cardClose() 
-            slickControll()
-        })
+			myCard(data)
+			$('.popup-detail').removeClass('hide')
+            $(".popup-detail").empty();
+
+            var result = '';
+            var lastindex = '';
+
+            let productStar = createStar(data);
+
+            let memberStar = createMemberStar(data);
+                
+            result = createPopup(data,productStar,memberStar)
+            console.log(data)
+                
+            $('.popup-detail').append(result);  
+
+        },
+
+        error: (err) => {
+            console.log(err)
+        }
+
+    })
+
+    cardClose() 
+    slickControl()
 }
 
 function myCard(value) {
