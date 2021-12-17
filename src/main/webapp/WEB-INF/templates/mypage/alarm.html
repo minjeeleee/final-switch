@@ -1,26 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-	<head th:replace="fragments/subHeader :: subHeader"></head>
-	<head>
-		<!-- refund -->
-	    <link rel="stylesheet" th:href="@{/resources/css/board/boardList.css}">
-	    <!-- alarm -->
-		<link rel="stylesheet" th:href="@{/resources/css/alarm/alarm.css}">
-		<!-- star -->
-		<link rel="stylesheet" th:href="@{/resources/css/exchange/detail.css}">
-		
-	</head>
-	
-	
+<head th:replace="fragments/subHeader :: subHeader"></head>
+<head th:replace="fragments/subHeader :: alarm-header"></head>
 <body>
 
-    <header th:replace="fragments/subBodyHeader :: header">
-    </header>
+    <header th:replace="fragments/subBodyHeader :: header"></header>
 	
-	<nav th:replace="fragments/subMenu" :: subNav>
-    </nav>
+	<nav th:replace="fragments/subMenu :: subNav"></nav>
 
     <section>
 

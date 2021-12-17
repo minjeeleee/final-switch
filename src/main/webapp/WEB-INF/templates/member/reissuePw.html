@@ -3,10 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <head th:replace="fragments/subHeader :: subHeader"></head>
-<!-- findingcss -->
-<link rel="stylesheet" th:href="@{/resources/css/member/finding.css}">
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<head th:replace="fragments/subHeader :: findingIdReissuePw-header"></head>
 </head>
 <body>
 
@@ -20,17 +17,19 @@
 				<div class="title">
 					<h3>비밀번호 재발급</h3>
 				</div>
-				<div class="email-input"  th:unless="${success}">
+				<th:block th:unless="${success}">
+				<div class="email-input">
 					<input type="text" name="email" class="email"
 						placeholder="이메일을 입력해주세요.">
 					<div class="error-msg-email" style="visibility: hidden">
 						<p>이메일은 필수 입력입니다.</p>
 					</div>
 				</div>
-				<div class="finding-sm"  th:unless="${success}">
+				<div class="finding-sm">
 					<button type="button" class="findingButton" onclick="checkBlank()">
 						비밀번호 재발급</button>
 				</div>
+				</th:block>
 			</form>
 			<div class="form-group" th:if="${success}">
 				<span class="result-box" style="font-size: 18px">[[${success}]]</span>

@@ -3,10 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <head th:replace="fragments/subHeader :: subHeader"></head>
-<!-- findingcss -->
-<link rel="stylesheet" th:href="@{/resources/css/member/finding.css}">
-
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<head th:replace="fragments/subHeader :: findingIdReissuePw-header"></head>
 </head>
 <body>
 
@@ -20,23 +17,25 @@
 					<div class="title">
 						<h3>아이디 찾기</h3>
 					</div>
-					<div class="nick-input"  th:unless="${email}">
+					<th:block th:unless="${email}">
+					<div class="nick-input">
 						<input type="text" name="nickname" class="nickname"
 							placeholder="닉네임을 입력해주세요.">
 						<div class="error-msg-nick" style="visibility: hidden">
 							<p>닉네임은 필수 입력입니다.</p>
 						</div>
 					</div>
-					<div class="tel-input"  th:unless="${email}">
+					<div class="tel-input">
 						<input type="tel" name="tell" class="tell"
 							placeholder="전화번호를 입력해주세요.">
 						<div class="error-msg-tell" style="visibility: hidden">
 							<p>전화번호는 필수 입력입니다.</p>
 						</div>
 					</div>
-					<div class="finding-sm"  th:unless="${email}">
+					<div class="finding-sm">
 						<button type="button" class="findingButton" onclick="checkBlank()">아이디 찾기</button>
 					</div>
+					</th:block>
 				</form>
 				<div class="form-group" th:if="${email}">
 					<span class="result-box" style="font-size: 18px">[[${email}]]</span>

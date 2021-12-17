@@ -2,42 +2,34 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	<head th:replace="fragments/subHeader :: subHeader"></head>
+	<head th:replace="fragments/subHeader :: boardDetail-header"></head>
 	<head>
-			<!-- refund -->
-			 <link href="../../../resources/css/board/styles.css" rel="stylesheet" />
-		    <link rel="stylesheet" href="../resources/css/board/board3.css">
-		    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <style type="text/css">
-
-.btn-default{
-    background: #dadce0;
-    width: 1110px;
-    /* display: flex; */
-    align-items: center;
-    text-align: center;
-    border: 0;
-    color: white;
-    /* margin-top: 10px; */
-    border-radius: 8px;
-}
-
-
-.btnReply{
-	order-color: transparent;
-    /* padding: 6px 50px; */
-    border-radius: 8px;
-    background: #dadce0;
-    color: white;
-    border: 0;
-}
-
-.btnReply:hover {
-    color: #fff;
-    background-color: #bb2d3b;
-    border-color: #b02a37;
-}
-
-
+	.btn-default{
+	    background: #dadce0;
+	    width: 1110px;
+	    /* display: flex; */
+	    align-items: center;
+	    text-align: center;
+	    border: 0;
+	    color: white;
+	    /* margin-top: 10px; */
+	    border-radius: 8px;
+	}
+	.btnReply{
+		order-color: transparent;
+	    /* padding: 6px 50px; */
+	    border-radius: 8px;
+	    background: #dadce0;
+	    color: white;
+	    border: 0;
+	}
+	
+	.btnReply:hover {
+	    color: #fff;
+	    background-color: #bb2d3b;
+	    border-color: #b02a37;
+	}
 </style>		    
 	</head>
     
@@ -62,7 +54,6 @@
 
             </div>
 			<div class='section' th:object="${datas}">
-
 				<div class='section_wrap'>
 					<div class="section_content_box">
 						<div class="section_header">
