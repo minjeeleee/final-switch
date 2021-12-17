@@ -21,7 +21,7 @@
 
             <div class="pop-card-list inner-size">
 
-                <div class="card-container" th:each="card : ${cardsTop5}" th:object="${card}">
+                <div class="card-container" th:each="card : ${cardsTop5}" th:object="${card}" th:onclick="createPopup(${card})">
                     <div class="card-name">
                         <p>[[*{card.name}]]</p>
                     </div>
@@ -110,6 +110,10 @@
     <footer>
        <div th:replace="fragments/footer :: footer"></div>
     </footer>
+    
+    <input class="id-Check" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.memberNick} != null" type="hidden" th:value="${#authentication.principal.memberNick}">
+    
+    <script type="text/javascript" th:inline="javascript" th:src="@{/resources/js/index/index.js}"></script>
     <script type="text/javascript" th:inline="javascript" th:replace="fragments :: card"></script>
 </body>
 
