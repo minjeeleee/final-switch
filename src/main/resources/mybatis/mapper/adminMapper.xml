@@ -109,6 +109,7 @@
   	 	select count(*) 
 			 from member where 
 			 member_del_yn=0 
+			 and code in('B','D') 
   	 	<if test="searchType != null">
 	  	 	<if test="searchType == 'member_idx'">
 	  	 	and member_idx like '%'||#{keyword}||'%'
