@@ -147,3 +147,41 @@ function login(){
 	return false;
 	
 }
+
+// 댓글 업데이트 폼 요청
+function replyUpdateForm(id){
+	if("${principal.id}" == ""){
+		login();
+		return;
+	}
+	var dropdownForm = $("#dropdownForm-"+id);
+	var replyForm = $("#replyForm-"+id);
+	var updateForm = $("#updateForm-"+id);
+	var replyToReplyForm = $("#replyToReplyForm-"+id);
+	
+	$("#replyContent-"+id).val($("#reply-"+id).text());
+	replyForm.hide();
+	dropdownForm.hide();
+	replyToReplyForm.hide();
+	updateForm.show();
+	$("#replyContent-"+id).focus();
+}
+
+//대댓글 폼 요청
+function replyToReplyForm(id){
+	if("${principal.id}" == ""){
+		login();
+		return;
+	}
+	var dropdownForm = $("#dropdownForm-"+id);
+	var replyForm = $("#replyForm-"+id);
+	var updateForm = $("#updateForm-"+id);
+	var replyToReplyForm = $("#replyToReplyForm-"+id);
+	
+	$("#replyToReply-"+id).val("");
+	replyForm.show();
+	dropdownForm.hide();
+	updateForm.hide();
+	replyToReplyForm.show();
+	$("#replyToReply-"+id).focus();
+}
