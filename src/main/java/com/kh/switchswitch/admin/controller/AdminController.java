@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.switchswitch.admin.model.dto.Menu;
 import com.kh.switchswitch.admin.model.service.AdminService;
@@ -220,7 +217,7 @@ public class AdminController {
 		return "admin/member-edit";
 	}
 
-	@PostMapping("member-profile-edit-success/{memberIdx}")
+	@PostMapping("member-edit/{memberIdx}")
 	public String memberProfileEditSuccess(@Validated@ModelAttribute("memberUpdate") MemberUpdate form, Errors errors, 
 			Integer memberIdx,@AuthenticationPrincipal Member member,
 			Model model) {
@@ -234,7 +231,7 @@ public class AdminController {
 			return "admin/member-edit";
 		}
 		adminService.updateMemberInfo(form.convertToMember(), memberIdx);
-		return "admin/member-profile";
+		return "redirect:/admin/member-profile/{memberIdx}";
 	}
 
 	@GetMapping("nick-check")
