@@ -22,13 +22,13 @@ import com.kh.switchswitch.point.model.dto.SavePoint;
 @Mapper
 public interface AdminRepository {
 	
-	@Select("select * from card where is_del = 0")
+	@Select("select * from card where is_del = 0 and rownum <= 32")
 	List<Card> selectCardList();
 	
-	@Select("select * from card where is_del = 0 and isfree = 'N'")
+	@Select("select * from card where is_del = 0 and isfree = 'N' rownum <= 32")
 	List<Card> selectCardListByTrade();
 	
-	@Select("select * from card where is_del = 0 and isfree = 'Y'")
+	@Select("select * from card where is_del = 0 and isfree = 'Y' rownum <= 32")
 	List<Card> selectCardListByFree();
 	
 	//@Select("select * from card where is_del = 0")
@@ -111,7 +111,7 @@ public interface AdminRepository {
 	@Select("select * from card where member_idx = #{memberIdx} and rownum < 6 and is_del = 0")
 	List<Card> selectCardListByMemberIdx(int memberIdx);
 	
-	@Select("select * from file_info where card_idx is not null and is_del = 0 ")
+	@Select("select * from file_info where card_idx is not null and is_del = 0 and rownum <= 32")
 	List<FileDTO> selectCardImgList();
 	
 	@Select("select card_idx from file_info where fl_idx = #{flIdx}")
