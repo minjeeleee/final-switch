@@ -197,7 +197,8 @@ public class MypageController {
 	
 	@GetMapping("personal-inquiry") 
 	public String inquiryList(Model model, @RequestParam(required = true, defaultValue = "1") int page,@AuthenticationPrincipal MemberAccount member) {
-		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberNick()));
+		model.addAllAttributes(inquiryService.selectMyInquiryList(page,member.getMemberName()));
+		System.out.println(inquiryService.selectMyInquiryList(page,member.getMemberName()));
 		return "mypage/personal-inquiry";
 	}
 }

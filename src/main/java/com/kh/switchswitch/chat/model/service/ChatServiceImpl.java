@@ -46,10 +46,13 @@ public class ChatServiceImpl implements ChatService{
 		if(chatting.getAttendee1() != memberIdx && chatting.getAttendee1() != null) senderIdx = chatting.getAttendee1();
 		if(chatting.getAttendee2() != memberIdx && chatting.getAttendee1() != null) senderIdx = chatting.getAttendee2();
 		
-		if(senderIdx == null) {
+		Member member = memberRepository.selectMemberWithMemberIdx(senderIdx);
+		
+		if(member == null) {
 			return "(알수없음)";
 		}
-		Member member = memberRepository.selectMemberWithMemberIdx(senderIdx);
+		
+		
 		if(member.getMemberDelYn() == 1) {
 			return "(알수없음)";
 		}

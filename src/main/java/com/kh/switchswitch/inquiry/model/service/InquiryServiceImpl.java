@@ -54,20 +54,19 @@ public class InquiryServiceImpl implements InquiryService{
 	}
 	
 	
-	public Map<String, Object> selectMyInquiryList(int page,String memberNick) {
+	public Map<String, Object> selectMyInquiryList(int page,String memberName) {
+		
 		int cntPerPage = 10;
-		Paging pageUtil = Paging.builder()
-				.url("/mypage/personal-inquiry")
-				.total(inquiryRepository.selectMyContentCnt(memberNick))
-				.curPage(page)
-				.blockCnt(10)
-				.cntPerPage(cntPerPage)
-				.build();
+		int total = (inquiryRepository.selectMyContentCnt(memberName));
+		int nowPage = page;
+		String url = "/mypage/personal-inquiry";
+		
+		PagingV2 pagingV2 = new PagingV2(total, nowPage, cntPerPage, url);
+				
 
 		Map<String,Object> commandMap = new HashMap<String,Object>();
-		commandMap.put("paging", pageUtil);
-		System.out.println("startBoard"+(page-1)*cntPerPage+1);
-		commandMap.put("inquiryList", inquiryRepository.selectInquiryListWitchUserId(Map.of("startBoard",(page-1)*cntPerPage+1,"lastBoard",(page-1)*cntPerPage+cntPerPage,"userId",memberNick)));
+		commandMap.put("paging", pagingV2);
+		commandMap.put("inquiryList", inquiryRepository.selectInquiryListWitchUserId(Map.of("startBoard",pagingV2.getStartAlarm(),"lastBoard",pagingV2.getEndAlarm(),"userId",memberName)));
 		return commandMap;
 	}
 	@Transactional

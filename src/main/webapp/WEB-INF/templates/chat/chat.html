@@ -24,7 +24,7 @@
 		                        <div class="other-message">
 		                            <div class="other">
 		                                <div class="other-name">
-		                                    <p>[[*{senderName}]]</p>
+		                                    <p>[[${senderNick}]]</p>
 		                                </div>
 		                                <div class="other-content">
 		                                    <p>[[*{chatMessage.message}]]</p>
@@ -60,7 +60,7 @@
                     <div class="chat-input-wrap">
                     	<th:block th:if="${senderNick} == '(알수없음)'">
                     		<div class="chat-input">
-                    			<input type="text" id="message" value="상대방이 탈퇴하여 채팅할 수 없습니다." readonly>
+                    			<input type="text" id="message" placeholder="상대방이 채팅방을 나가 채팅할 수 없습니다." readonly>
                     		</div>
 						</th:block>
 						<th:block th:if="${senderNick} != '(알수없음)'">
@@ -135,7 +135,7 @@
 					webSocket.receiveMessage(JSON.parse(evt.data));
 				};
 				this._socket.onclose = function(evt) {
-					webSocket. connect(webSocket.init({ url: 'http://localhost:9090/chat' }), 100); // 웹소켓을 재연결하는 코드 삽입
+					webSocket. connect(webSocket.init({ url: 'http://localhost:9898/chat' }), 100); // 웹소켓을 재연결하는 코드 삽입
 					webSocket.closeMessage(JSON.parse(evt.data));
 				}
 			},
@@ -186,7 +186,7 @@
 	</script>	
 	<script type="text/javascript">
         $(window).on('load', function () {
-			webSocket.init({ url: 'http://localhost:9090/chat' });	
+			webSocket.init({ url: 'http://localhost:9898/chat' });	
 		});
         
 	</script>

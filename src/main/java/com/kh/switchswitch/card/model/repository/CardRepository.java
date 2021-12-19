@@ -104,8 +104,8 @@ public interface CardRepository {
 
 	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"
 			+ ",c.REQUEST_CARD3,c.REQUEST_CARD4,"
-			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE "
-			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e USING (req_idx) "
+			+ "c.REQUESTED_MEM_IDX,c.REQUEST_MEM_IDX,c.PROP_BALANCE, c.req_idx "
+			+ "from card_request_list c RIGHT OUTER JOIN exchange_status e on c.req_idx = e.req_idx  "
 			+ "where e_idx =#{eIdx}")
 	CardRequestList selectCardRequestByEIdx(Integer eIdx);
 	

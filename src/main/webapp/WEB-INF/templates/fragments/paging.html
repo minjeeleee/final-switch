@@ -9,7 +9,7 @@
                             aria-hidden="true">&laquo;</span>
                     </a></li>
                     <li class="page-item"
-                        th:each="p : ${#numbers.sequence(paging.start,paging.end)}">
+                         th:each="p : ${#numbers.sequence(paging.start,paging.end)}">
                         <a th:href="|*{url}?page=${p}|" class="page-link"
                         th:text="${p}">1</a>
                     </li>

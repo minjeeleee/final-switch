@@ -187,9 +187,18 @@ public class ExchangeServiceImpl implements ExchangeService{
 		List<String> opponentNickList = new ArrayList<>();
 
 		List<Integer> isRateList = new ArrayList<>();
+		for (int i = 0; i < ehList.size(); i++) {
+			if(cardRepository.selectCardRequestByEIdx(ehList.get(i).getEIdx()) == null) {
+				ehList.remove(i);
+			}
+		}
+		
 		for (ExchangeHistory exchangeHistory : ehList) {
+		
+			if(cardRepository.selectCardRequestByEIdx(exchangeHistory.getEIdx()) != null) {
+				crlList.add(cardRepository.selectCardRequestByEIdx(exchangeHistory.getEIdx()));
+			}
 			
-			crlList.add(cardRepository.selectCardRequestByEIdx(exchangeHistory.getEIdx()));
 			
 			isRateList.add(ratingRepository.selectRatingByMemIdxAndEhIdx(memberIdx,exchangeHistory.getEhIdx()));
 			if(memberIdx.equals(exchangeHistory.getRequestMemIdx())) {
@@ -202,6 +211,12 @@ public class ExchangeServiceImpl implements ExchangeService{
 		
 		List<String> requestCardNameList = getRequestCardNameList(crlList);
 		
+		System.out.println(ehList.size());
+		System.out.println(crlList.size());
+		System.out.println(isRateList.size());
+		System.out.println(requestedCardNameList.size());
+		System.out.println(requestCardNameList.size());
+		System.out.println(opponentNickList.size());
 		List<Map<String, Object>> exchangeHistoryList = new ArrayList();
 		for (int i = 0; i < ehList.size(); i++) {
 			exchangeHistoryList.add(Map.of("eh",ehList.get(i),"crl",crlList.get(i)
@@ -244,9 +259,17 @@ public class ExchangeServiceImpl implements ExchangeService{
 	}
 	
 	public List<String> getRequestedCardNameList(List<CardRequestList> crlList){
+		System.out.println(crlList);
 		List<String> requestedCardNameList = new ArrayList();
 		for (CardRequestList cardRequestList : crlList) {
-			requestedCardNameList.add(cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()).getName());
+			String cardName = "";
+			if(cardRequestList != null) {
+				if(cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()) != null) {
+					cardName = cardRepository.selectCardByCardIdx(cardRequestList.getRequestedCard()).getName();
+					System.out.println(cardName);
+					requestedCardNameList.add(cardName);
+				}
+			}
 		}
 		return requestedCardNameList;
 	}
@@ -263,11 +286,15 @@ public class ExchangeServiceImpl implements ExchangeService{
 		List<String> requestCardNameList = new ArrayList();
 		for (CardRequestList cardRequestList : crlList) {
 			String cardNames = "";
-			cardNames += cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard1()).getName();
-			if(cardRequestList.getRequestCard2()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard2()).getName();
-			if(cardRequestList.getRequestCard3()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard3()).getName();
-			if(cardRequestList.getRequestCard4()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard4()).getName();
-			requestCardNameList.add(cardNames);
+			if(cardRequestList != null) {
+				if(cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard1()) != null) {
+					cardNames += cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard1()).getName();
+				}
+				if(cardRequestList.getRequestCard2()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard2()).getName();
+				if(cardRequestList.getRequestCard3()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard3()).getName();
+				if(cardRequestList.getRequestCard4()!= null)cardNames += ","+cardRepository.selectCardByCardIdx(cardRequestList.getRequestCard4()).getName();
+				requestCardNameList.add(cardNames);
+			}
 		}
 		return requestCardNameList;
 	}

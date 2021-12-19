@@ -16,7 +16,7 @@ public interface InquiryService {
 	void modifyInquiry(Inquiry inquiry);
 	void deleteInquiry(Integer inquiryIdx);
 	//mypage inquiryList
-	Map<String, Object> selectMyInquiryList(int page,String memberNick);
+	Map<String, Object> selectMyInquiryList(int page,String memberName);
 	//answer
 	void insertAnswer(Answer answer);
 	List<Answer> getAnswer(Map<String, Object> commandMap);

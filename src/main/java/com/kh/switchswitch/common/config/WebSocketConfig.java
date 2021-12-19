@@ -25,7 +25,7 @@ public class WebSocketConfig implements WebSocketConfigurer  {
 		 	.addHandler(alarmHandler, "/alarm")
 		 	.addInterceptors(new HttpSessionHandshakeInterceptor())
 		 	.setAllowedOrigins("http://localhost:9090")
-		 	.setAllowedOrigins("http://localhost:9090")
+		 	.setAllowedOrigins("http://localhost:9898")
 		 	.withSockJS();
 	}
 
