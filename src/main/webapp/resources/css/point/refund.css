@@ -132,9 +132,24 @@ section {
     background-color: #ff5403;
     border-radius: 8px;
     border:none;
+    margin: 0 10px;
 }
 
 .ref-submit-button:hover {
+    background-color: #ff0901;
+}
+
+.ref-submit-button2 {
+    width: 15%;
+    color: #fff;
+    padding:7px 10px;
+    background-color: #ff5403;
+    border-radius: 8px;
+    border:none;
+    margin: 0 10px;
+}
+
+.ref-submit-button2:hover {
     background-color: #ff0901;
 }
 

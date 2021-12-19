@@ -151,14 +151,14 @@ public class PointServiceImpl implements PointService{
 	}
 
 	public void refundPoint(MemberAccount certifiedMember, PointRefund pointRefund) {
-		//환급 객체 생성
+		//환급 객체 생성 후 DB에 insert
 		pointRefund.setMemberIdx(certifiedMember.getMemberIdx());
 		pointRefundRepository.insertPointRefund(pointRefund);
-		//가용 포인트 차감(refundPoint)
+		//가용 포인트 차감(refundPoint) balance는 관리자 확인  후 차감
 		SavePoint savePoint = savePointRepository.selectSavePointByMemberIdx(certifiedMember.getMemberIdx());
 		Integer availableBal = savePoint.getAvailableBal() - pointRefund.getRefundPoint();
 		savePoint.setAvailableBal(availableBal);
-		savePointRepository.updateSavePoint(savePoint);
+		//가용 포인트 DB 업데이트 후 point_history 객체 생성
 		if(savePointRepository.updateSavePoint(savePoint)) {
 			PointHistory pointHistory = new PointHistory();
 			pointHistory.setContent("심사중");

@@ -1,5 +1,6 @@
 package com.kh.switchswitch.board.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -130,24 +131,24 @@ public class BoardController {
 		return "success";
 	}
 	
-//	
-//	@PostMapping("comment")
-//    public String viewPostMethod(Model model, @RequestParam Map<String, Object> paramMap) {
-//        Comment commet = new Comment();
-//        commet.setUserId(paramMap.get("userId").toString());
-//        commet.setContent(paramMap.get("content").toString());
-//
-//        // DB 댓글 추가
-//        commentService.saveComment(commet);
-//
-//        // 댓글 리스트 추가
-//        model.addAttribute("commentList", commentService.selectCommentList(commet));
-//
-//        // 수정&삭제 버튼 게시를 위한 유저 정보 전달
-//        Map<String, Object> userInform = new HashMap<String, Object>();
-//        userInform.put("userId", paramMap.get("userId"));
-//        model.addAttribute("userInform", userInform);
-//
-//        return null;
-//    }
+ 
+ @PostMapping("reply")
+    public String viewPostMethod(Model model, @RequestParam Map<String, Object> paramMap) {
+        Reply reply = new Reply();
+        reply.setUserId(paramMap.get("userId").toString());
+        reply.setContent(paramMap.get("content").toString());
+
+        // DB 댓글 추가
+      //  boardService.saveReply(reply);
+
+        // 댓글 리스트 추가
+  //      model.addAttribute("replyList", boardService.selectReplyList(reply));
+
+        // 수정&삭제 버튼 게시를 위한 유저 정보 전달
+        Map<String, Object> userInform = new HashMap<String, Object>();
+       userInform.put("userId", paramMap.get("userId"));
+        model.addAttribute("userInform", userInform);
+
+        return null;
+    }
 }

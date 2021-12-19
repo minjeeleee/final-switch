@@ -21,7 +21,7 @@ public interface SavePointRepository {
 	@Insert("insert into save_point(POINT_IDX,MEMBER_IDX) values(sc_point_idx.nextval,memberIdx)")
 	void insertSavePointWithMemberIdx(Integer memberIdx);
 	
-	@Insert("insert into save_point(ph_idx,user_idx,type,points,result_point,reg_date,content) values(sc_ph_idx.nextval,#{userIdx},#{type},#{points},#{resultPoint},sysdate,#{content})")
+	@Insert("insert into point_history(ph_idx,user_idx,type,points,result_point,reg_date,content) values(sc_ph_idx.nextval,#{userIdx},#{type},#{points},#{resultPoint},sysdate,#{content})")
 	void registHistory(PointHistory pointHistory);
 
 	
