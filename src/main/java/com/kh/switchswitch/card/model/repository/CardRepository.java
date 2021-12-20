@@ -115,7 +115,7 @@ public interface CardRepository {
 			+ "where e_idx =#{eIdx}")
 	FreeRequestList selectFreeRequestByEIdx(Integer eIdx);
 
-	@Select("select * from (select c.* from card c order by views desc) where rownum < 6")
+	@Select("select * from (select c.* from card c order by views desc) where rownum < 6 and exchange_status = 'NONE'")
 	List<Card> selectCardsTop5();
 	
 	//교환

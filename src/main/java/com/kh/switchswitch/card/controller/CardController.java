@@ -91,10 +91,10 @@ public class CardController {
 			,Model model) {
 		
 		List<Map<String, Object>> myExchangeCards = cardService.selectMyExchangeCard(memberAccount.getMemberIdx()); 
-		List<Map<String, Object>> myFreeCards = cardService.selectMyFreeCard(memberAccount.getMemberIdx());
+		// List<Map<String, Object>> myFreeCards = cardService.selectMyFreeCard(memberAccount.getMemberIdx());
 		
 		model.addAttribute("myExchangeCards",myExchangeCards);
-		model.addAttribute("myFreeCards",myFreeCards);
+		// model.addAttribute("myFreeCards",myFreeCards);
 		model.addAttribute("myRate", exchangeService.selectMyRate(memberAccount.getMemberIdx()));
 		
 		return "card/my-card";
