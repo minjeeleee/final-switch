@@ -99,7 +99,7 @@ public interface CardRepository {
 			+ " ,#{cardIdx})")
 	void modifyFileInfo(@Param("fileUpload")FileDTO fileUpload, @Param("cardIdx")Integer cardIdx);
 
-	@Select("select * from card where member_idx = #{memberIdx} and isfree = #{isfree} and is_del = 0 and exchange_status <> 'done'")
+	@Select("select * from card where member_idx = #{memberIdx} and isfree = #{isfree} and is_del = 0 and exchange_status <> 'DONE'")
 	List<Card> selectCardByMemberIdxAndIsFreeExceptDone(@Param("memberIdx") Integer memberIdx, @Param("isfree") String isfree);
 
 	@Select("select c.REQUESTED_CARD,c.REQUEST_CARD1,c.REQUEST_CARD2"

@@ -86,7 +86,14 @@ public class CardServiceImpl implements CardService {
 	}
 	
 	public void updateCardStatusWithCardIdxSet(CardRequestList cardRequestList, String status) {
-		for (Integer cardIdx : getCardIdxSet(cardRequestList)) {
+		Set<Integer> cardIdxSet = new LinkedHashSet<Integer>();
+		cardIdxSet.add(cardRequestList.getRequestCard1());
+		cardIdxSet.add(cardRequestList.getRequestCard2());
+		cardIdxSet.add(cardRequestList.getRequestCard3());
+		cardIdxSet.add(cardRequestList.getRequestCard4());
+		cardIdxSet.add(cardRequestList.getRequestedCard());
+		cardIdxSet.remove(null);
+		for (Integer cardIdx : cardIdxSet) {
 			Card card = new Card();
 			card.setCardIdx(cardIdx);
 			card.setExchangeStatus(status);

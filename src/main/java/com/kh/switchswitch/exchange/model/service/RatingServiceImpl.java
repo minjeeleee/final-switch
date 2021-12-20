@@ -37,6 +37,7 @@ public class RatingServiceImpl implements RatingService {
 		
 		//member table 업데이트 평가 반영
 		Integer memberScore = ratingRepository.calAvgRate(exchangeStatus.getRequestedMemIdx());
+		if(memberScore == null) memberScore = 0;
 		Member member = new Member();
 		member.setMemberIdx(exchangeStatus.getRequestedMemIdx());
 		member.setMemberScore(memberScore);
