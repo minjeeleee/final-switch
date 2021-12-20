@@ -22,7 +22,7 @@ public interface CardRepository {
 			+ " CARD_IDX, MEMBER_IDX,CATEGORY,NAME,CONDITION,DELIVERY_CHARGE"
 			+ " ,ISFREE,CONTENT,REGION,REGION_DETAIL,METHOD,HOPE_KIND) "
 			+ " values(SC_CARD_IDX.nextval, #{memberIdx},#{category},#{name},#{condition},#{deliveryCharge}"
-			+ " , #{isfree},#{content},#{region},#{regionDetail},#{method},#{hopeKind})")
+			+ " , 'N',#{content},#{region},#{regionDetail},#{method},#{hopeKind})")
 	void insertCard(Card card);
 
 	@Insert("insert into file_info(FL_IDX,ORIGIN_FILE_NAME,RENAME_FILE_NAME,SAVE_PATH,CARD_IDX) "

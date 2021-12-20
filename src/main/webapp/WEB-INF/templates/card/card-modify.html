@@ -30,13 +30,13 @@
                 	th:action="|/card/card-modify?${_csrf.parameterName}=${_csrf.token}&cardIdx=*{card.cardIdx}|" method="post" name="card" id="frm_card" enctype="multipart/form-data">
                     <div class="header">new card</div>
                     <div class="form-content">
-                    	<h4 class="heading">교환 나눔</h4>
+                    	<!-- <h4 class="heading">교환 나눔</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
 								<label><input type="radio" name="isfree" value="N" th:checked="*{card.isfree eq 'Y' ? 'checked' : ''}" >교환</label>
 								<label><input type="radio"  name="isfree" value="Y" th:checked="*{card.isfree eq 'N' ? 'checked' : ''}">나눔</label>
                             </div>
-                        </div>
+                        </div> -->
                     	<h4 class="heading">카테고리</h4>
                         <div class="form-group">
                             <div class="col-sm-12">
