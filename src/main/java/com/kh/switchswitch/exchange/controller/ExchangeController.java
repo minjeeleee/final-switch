@@ -204,7 +204,7 @@ public class ExchangeController {
 		if(cardRequestList == null) {
 			throw new HandlableException(ErrorCode.FAILED_TO_LOAD_INFO);
 		}
-		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환요청거절리스트 생성
+		//card status ->'REQUEST->'NONE' 및 교환요청리스트 삭제 및 교환요청취소리스트 생성
 		cardService.requestCancelRequest(cardRequestList,"NONE");
 		
 		//돈 돌려줘야됨

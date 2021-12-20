@@ -25,7 +25,7 @@ public interface AlarmRepository {
 	@Select("select sc_alarm_idx.currval from dual")
 	Integer selectCurrScAlarmIdx();
 
-	@Select("select count(*) from alarm where receiver_idx=#{receiverIdx}")
+	@Select("select count(*) from alarm where receiver_idx=#{receiverIdx} and sysdate < send_date + 7")
 	Integer selectAlarmCnt(Integer receiverIdx);
 
 	@Select("select * from (select rownum rnum, alarmr.* from (select alarm.* from alarm alarm"
