@@ -135,7 +135,7 @@
 					webSocket.receiveMessage(JSON.parse(evt.data));
 				};
 				this._socket.onclose = function(evt) {
-					webSocket. connect(webSocket.init({ url: 'http://localhost:9898/chat' }), 100); // 웹소켓을 재연결하는 코드 삽입
+					webSocket. connect(webSocket.init({ url: 'http://toy-khj1220.ga/chat' }), 100); // 웹소켓을 재연결하는 코드 삽입
 					webSocket.closeMessage(JSON.parse(evt.data));
 				}
 			},
@@ -186,7 +186,7 @@
 	</script>	
 	<script type="text/javascript">
         $(window).on('load', function () {
-			webSocket.init({ url: 'http://localhost:9898/chat' });	
+			webSocket.init({ url: 'http://toy-khj1220.ga/chat' });	
 		});
         
 	</script>

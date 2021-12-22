@@ -173,7 +173,7 @@ public class MemberController {
 	@GetMapping("addrPopup")
 	public void addrPopupG(String inputYn, Model model) {
 		
-		String confmKey = "devU01TX0FVVEgyMDIxMTExODAxMTE0MDExMTkwMDg=";
+		String confmKey = "U01TX0FVVEgyMDIxMTIyMjE4NTE0NDExMjA2MDM=";
 		 
 		model.addAttribute("confmKey", confmKey); 
 		model.addAttribute("inputYn", inputYn);

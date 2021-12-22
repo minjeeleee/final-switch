@@ -2,11 +2,11 @@ package com.kh.switchswitch.common.code;
 
 public enum Config {
 	
-	//DOMAIN("http://www.pclass.com"),
-	DOMAIN("http://localhost:9090"),
+	DOMAIN("https://toy-khj1220.ga"),
+	//DOMAIN("http://localhost:9090"),
 	COMPANY_EMAIL("projectteamyong@gmail.com"),
-	//UPLOAD_PATH("C:\\CODE\\upload") 운영서버
-	UPLOAD_PATH("C:\\CODE\\upload\\");//개발서버
+	UPLOAD_PATH("/usr/local/upload/"); //운영서버
+	//UPLOAD_PATH("C:\\CODE\\upload\\");//개발서버
 	
 	public final String DESC;
 	

@@ -230,7 +230,7 @@ public class MemberServiceImpl implements MemberService {
 	public String getAccessTokenJsonData(String code) {
 		String grant_type= "authorization_code";
 		String client_id = "a66e69c27f0b16ebbfae461ad8678ee0";
-		String redirect_uri = "http://localhost:9090/member/kakaoLogin";
+		String redirect_uri = "http://toy-khj1220.ga/member/kakaoLogin";
 		String client_secret = "rniH7XNqqtaV3XuC9sfRNF9Fr3g9wbIk";
 		String token_url = "https://kauth.kakao.com/oauth/token";
 	    // 헤더 설정
