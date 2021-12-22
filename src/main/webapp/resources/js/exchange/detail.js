@@ -23,7 +23,7 @@ function requestReject(){
 function exchangeCancelRequest(){
 	$("#sendResponse")
 	.attr("action", 
-			"http://localhost:9090/exchange/cancel-request/"+reqIdx
+			"/exchange/cancel-request/"+reqIdx
 			+"/"+updateStatus);
 	console.dir("요청수락 보내기 후");
 	$("#sendResponse").submit();

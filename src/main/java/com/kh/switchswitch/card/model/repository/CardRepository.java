@@ -69,7 +69,7 @@ public interface CardRepository {
 	@Select("select * from card where req_idx=#{reqIdx}")
 	Card selectCardByReqIdx(Integer reqIdx);
 
-	@Select("select * from card where member_idx=#{memberIdx}")
+	@Select("select * from card where member_idx=#{memberIdx} and exchange_status<>'DONE'")
 	List<Card> selectCardByMemberIdx(Integer memberIdx);
 
 	//교환/나눔

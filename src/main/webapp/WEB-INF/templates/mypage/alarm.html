@@ -195,7 +195,7 @@
 		$(".notice").appendTo("#sendResponse");
 		<!-- 제출 -->
 		let reqIdx = $("#reqIdx").val();
-		$("#sendResponse").attr("action", "http://localhost:9090/exchange/complete/"+reqIdx);
+		$("#sendResponse").attr("action", "/exchange/complete/"+reqIdx);
 		$("#sendResponse").submit();
 	})
 	

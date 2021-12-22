@@ -2,7 +2,7 @@ package com.kh.switchswitch.common.code;
 
 public enum Config {
 	
-	DOMAIN("https://toy-khj1220.ga"),
+	DOMAIN("http://toy-khj1220.ga"),
 	//DOMAIN("http://localhost:9090"),
 	COMPANY_EMAIL("projectteamyong@gmail.com"),
 	UPLOAD_PATH("/usr/local/upload/"); //운영서버
